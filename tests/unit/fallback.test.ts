@@ -102,6 +102,12 @@ describe("fallback: several capabilities", () => {
     expect(r.asked).toContain("motion-interaction");
   });
 
+  it("on a tie, prints a decision rather than the problem statement", () => {
+    const r = fallbackAnswer({ topics: ["data"] });
+    const hhcd = r.sheets.find((s) => s.project === "hhcd-data-platform")!;
+    expect(findEntry(hhcd.project, hhcd.section)!.section.kind).not.toBe("problem");
+  });
+
   it("orders sheets by strength", () => {
     const r = fallbackAnswer({ topics: ["accessibility"] });
     // HHCD shows accessibility in more sections than anyone, so it leads.

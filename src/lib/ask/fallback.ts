@@ -4,7 +4,8 @@
  *   1. Understand: score the brief against synonyms for each content signal; chosen topics come first.
  *   2. Print: for every project with a section showing an asked capability, pick that project's
  *      single best section (signal match first, with the first-listed signal weighing most, then
- *      word overlap with the brief). At most five sheets, strongest first.
+ *      word overlap with the brief, then decisions before problem statements). At most five sheets,
+ *      strongest first.
  *   3. Be honest: capabilities with no matching work, and common asks the work never mentions
  *      (A/B testing, native mobile, …), are reported as missing.
  * Everything is driven by content/, so a new project or section is matched without code changes.
@@ -224,8 +225,16 @@ function scoreSection(project: Project, section: Section, order: number, asked: 
   return { section, order, signalScore, overlap, signal };
 }
 
-const better = (a: Candidate, b: Candidate) =>
-  a.signalScore !== b.signalScore ? a.signalScore > b.signalScore : a.overlap !== b.overlap ? a.overlap > b.overlap : a.order < b.order;
+/** On a tie, a decision or evidence shows more of the work than the problem statement. */
+const KIND_RANK: Record<Section["kind"], number> = { decision: 0, evidence: 1, outcome: 2, role: 3, retrospective: 4, problem: 5 };
+
+const better = (a: Candidate, b: Candidate) => {
+  if (a.signalScore !== b.signalScore) return a.signalScore > b.signalScore;
+  if (a.overlap !== b.overlap) return a.overlap > b.overlap;
+  const ka = KIND_RANK[a.section.kind];
+  const kb = KIND_RANK[b.section.kind];
+  return ka !== kb ? ka < kb : a.order < b.order;
+};
 
 function truncate(text: string, max: number): string {
   return text.length <= max ? text : `${text.slice(0, max - 1).trimEnd()}…`;

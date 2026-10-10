@@ -23,8 +23,8 @@ export const profile: Profile = {
   location: "London",
   headline: "I design interfaces and build them, from the data model to the last detail of motion.",
   summary: [
-    "I work across design and code: design systems that ship as packages, data-heavy interfaces that stay accessible, and brand work that has to earn a tap.",
-    "I'm currently the only designer at a logistics infrastructure company, where I run the design system and build its front-end tools. Before that I built research platforms for the Royal College of Art and Brunel University, and later taught data visualisation to the Helen Hamlyn Centre's summer interns.",
+    "My work spans design systems that ship as code packages, data-heavy interfaces that stay accessible, and brand work that has to earn a tap.",
+    "I'm the only designer at a logistics infrastructure company, where I run the design system and build front-end tools. Before that I built research platforms for Brunel University and the Royal College of Art, and taught data visualisation to the Helen Hamlyn Centre's summer interns.",
   ],
   education: ["MA Service Design, Royal College of Art, 2024"],
   contact: {

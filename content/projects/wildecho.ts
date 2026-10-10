@@ -5,7 +5,7 @@ export const wildecho: Project = {
   title: "WildEcho",
   oneLiner: "What if wildlife tourists listened instead of photographing?",
   context: "Royal College of Art, MA Service Design · team project",
-  role: "Shaped the project's structure and line of thinking in a close-knit team",
+  role: "Problem framing and research structure, in a team",
   status: "Concept",
   stack: ["Figma", "Physical prototyping", "User testing"],
   links: [],
@@ -24,7 +24,7 @@ export const wildecho: Project = {
       kind: "problem",
       title: "The camera gets in the way",
       body: [
-        "Wildlife photography pushes tourists closer to animals and, often, makes them remember less. Guides already use sound to identify and explain species.",
+        "Wildlife photography pushes tourists closer to animals and often makes them remember less [source for this]. Guides already use sound to identify and explain species.",
       ],
       signals: ["research"],
     },
@@ -33,8 +33,8 @@ export const wildecho: Project = {
       kind: "decision",
       title: "Prototyping a new kind of attention",
       body: [
-        "We prototyped tours built around listening, with bone-conduction headphones, recording microphones and an app concept that turns a day's recordings into a personal sound journey.",
-        "Over three rounds of testing, listeners felt more immersed and remembered more. Testing also showed recording alone wasn't enough: guides were essential, so the next iteration built them in.",
+        "We prototyped listening tours with bone-conduction headphones, recording microphones and an app concept that turns a day's recordings into a personal sound journey.",
+        "Over three rounds of testing [number of participants], listeners felt more immersed and remembered more. Guides proved essential, so the next iteration built them in.",
       ],
       signals: ["prototyping", "research", "judgement"],
     },
@@ -43,7 +43,7 @@ export const wildecho: Project = {
       kind: "role",
       title: "My part",
       body: [
-        "In a close-knit RCA team, I shaped the project's structure: framing the problem, organising the research into a clear line of thinking and connecting it to the concept.",
+        "In a close-knit RCA team [team size], I framed the problem, organised the research into a clear line of thinking and connected it to the concept.",
       ],
       signals: ["research"],
     },

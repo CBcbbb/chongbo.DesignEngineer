@@ -7,7 +7,7 @@ export const componentStore: Project = {
   title: "Component Store",
   oneLiner: "Letting every customer preview our components with their own live data.",
   context: "Logistics infrastructure company · current role",
-  role: "Only designer; designed and built it, working with AI coding tools",
+  role: "Only designer; designed and built it",
   status: "In use",
   stack: ["React", "TypeScript", "Tailwind", "Design tokens"],
   links: [],
@@ -24,7 +24,7 @@ export const componentStore: Project = {
       kind: "problem",
       title: "Components that only knew sample data",
       body: [
-        "Our customers build their own logistics platforms from our components, and no two customers' data look alike. In the Component Store, every component could only show static sample data, so nobody could see how it would look with their own.",
+        "Every component in the store showed only static sample data, so customers couldn't see it with their own. They build logistics platforms from our components, and no two customers' data look alike.",
         "It was a long-standing problem the front-end team hadn't solved.",
       ],
       signals: ["design-eng-gap", "data"],
@@ -34,8 +34,8 @@ export const componentStore: Project = {
       kind: "decision",
       title: "Three layers joined by two data contracts",
       body: [
-        "I proposed separating the problem into layers. The first contract turns any of the platform's live data streams into fields in a shared format: dates, numbers, names. Two unrelated streams that both carry an arrival time now look the same to everything downstream.",
-        "The second contract lets each component declare the fields it needs. A pie chart asks for a label and a value; a timeline asks for dates.",
+        "I proposed three layers joined by two contracts. The first turns any live data stream into shared fields: dates, numbers, names.",
+        "The second lets each component declare the fields it needs; a pie chart asks for a label and a value.",
       ],
       signals: ["design-eng-gap", "reusable-components", "judgement"],
       media: { kind: "diagram", diagram: "data-contracts", caption: "Stream → fields → component." },
@@ -43,10 +43,10 @@ export const componentStore: Project = {
     {
       id: "mapping",
       kind: "decision",
-      title: "Mapping as a design problem, not a settings form",
+      title: "Connecting data as a guided choice",
       body: [
-        "With the contracts in place, connecting data becomes a small, guided choice. You pick a stream, the component shows which fields it needs, you map each one, and a live preview updates as you go.",
-        "The preview starts from sample data, so the component still explains itself before any data is connected.",
+        "The contracts make connecting data a short guided choice: pick a stream, see the fields the component needs, map each one and watch the live preview update.",
+        "The preview starts on sample data, so the component explains itself before anything is connected.",
       ],
       signals: ["motion-interaction", "prototyping", "data"],
       media: {
@@ -62,8 +62,8 @@ export const componentStore: Project = {
       kind: "evidence",
       title: "A design system in two layers",
       body: [
-        "As the only designer, I also run the design system. It began in Figma, with components and palettes built for accessibility and every screen size, and now ships in code as a shared token package across five product lines.",
-        "Each app imports it and retunes only what it needs, and customers can re-skin their platform with their own colours, fonts and button shapes.",
+        "My design system began in Figma, built for accessibility and every screen size, and now ships as a shared token package across five product lines.",
+        "Each app overrides only what it needs, and customers apply their own colours, fonts and button shapes.",
       ],
       signals: ["design-systems", "cross-platform", "reusable-components"],
       media: { kind: "diagram", diagram: "token-layers", caption: "Shared tokens, per-app overrides, per-customer themes." },
@@ -73,7 +73,7 @@ export const componentStore: Project = {
       kind: "evidence",
       title: "Contrast rules built into the scales",
       body: [
-        "Each colour scale has fixed roles: one step for surfaces, one for borders, one for text on white and one for text on tinted surfaces. Components use role names such as success or warning, never raw hues, so they stay readable whichever theme they're in.",
+        "Each colour scale has fixed roles: one step for surfaces, one for borders, one for text on white and one for text on tints. Components use role names such as success or warning, never raw hues, so they stay readable in any theme.",
       ],
       signals: ["accessibility", "design-systems", "cross-platform"],
       media: {
@@ -92,9 +92,10 @@ export const componentStore: Project = {
       kind: "outcome",
       title: "In use across the platform",
       body: [
-        "Customers can now preview any component with their own data before using it, and the design system keeps five product lines consistent while letting each one, and each customer, adapt it.",
+        "Customers now preview any component with their own data before using it. Five product lines share the design system, and each line and customer adapts it.",
+        "I built it with AI coding tools. [How many customers use live previews]",
       ],
-      signals: ["end-to-end", "cross-platform"],
+      signals: ["end-to-end", "cross-platform", "ai-tools"],
     },
   ],
   prompts: [

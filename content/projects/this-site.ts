@@ -3,7 +3,7 @@ import type { Project } from "../schema";
 export const thisSite: Project = {
   slug: "this-site",
   title: "This site",
-  oneLiner: "A portfolio you can ask questions, built to be read without asking any.",
+  oneLiner: "A portfolio that prints the work you ask to see.",
   context: "Personal project · 2026",
   role: "Designed and built, working with AI coding tools",
   status: "Live",
@@ -23,19 +23,19 @@ export const thisSite: Project = {
     {
       id: "idea",
       kind: "decision",
-      title: "Ask, and a ticket is printed",
+      title: "Ask, and it prints the matching work",
       body: [
-        "Recruiters care about different things, so the site lets you ask. A small model reads your question and picks the cards from my work that answer it; the interface does the rest.",
-        "The model never writes the page. It can only choose from content I wrote, which keeps answers accurate and the design consistent.",
+        "Recruiters want different things, so the site lets them ask. A small model picks the sections of my work that show what they asked for, one per project, choosing only from content I wrote.",
+        "I designed and built it with AI coding tools.",
       ],
-      signals: ["prototyping", "ai-tools", "motion-interaction"],
+      signals: ["prototyping", "ai-tools", "motion-interaction", "end-to-end"],
     },
     {
       id: "content",
       kind: "evidence",
-      title: "Written once, shown two ways",
+      title: "Written once, shown three ways",
       body: [
-        "Every project is a typed set of section cards. The same content powers the dealt cards, the full case files and the answers to questions, so adding a project means adding one file.",
+        "Every project is a typed set of section cards. The same content feeds the browse view, the case files and the printed answers, so adding a project means adding one file.",
       ],
       signals: ["publishing-workflow", "reusable-components"],
     },
@@ -44,7 +44,7 @@ export const thisSite: Project = {
       kind: "evidence",
       title: "The unglamorous parts",
       body: [
-        "Every page is static HTML with its own metadata, everything works by keyboard, motion respects reduced-motion settings, and the site still works if the AI is unavailable: it falls back to matching your question against the cards' topics.",
+        "Every page is static HTML with its own metadata, everything works by keyboard, and motion respects reduced-motion settings. If the AI is unavailable, the site still answers by matching the request against each section's topics.",
       ],
       signals: ["seo-performance", "accessibility", "judgement"],
     },

@@ -38,10 +38,10 @@ test.describe("ask flow", () => {
     await page.fill("#q", "What matters most to us is accessibility");
     await page.press("#q", "Enter");
     const title = page.locator("#ans-title");
-    await expect(title).toHaveText("Two views instead of a simpler graph", { timeout: 10_000 });
+    await expect(title).toHaveText("A table view beside the graph", { timeout: 10_000 });
     await expect(page.locator(".stamp")).toContainText("Accessibility");
     await expect(page.locator("#ticket")).toBeFocused();
-    await expect(page.getByRole("status")).toContainText("Accessibility shaped this");
+    await expect(page.getByRole("status")).toContainText("projects show accessibility");
     await expect(page.getByRole("link", { name: /Open the case file/ })).toHaveAttribute(
       "href",
       "/work/hhcd-data-platform#dual-view",
@@ -119,7 +119,7 @@ test.describe("without JavaScript", () => {
     await page.fill("#q", "accessibility");
     await page.press("#q", "Enter");
     await expect(page).toHaveURL(/\/ask\?q=accessibility/);
-    await expect(page.locator("#ans-title")).toHaveText("Two views instead of a simpler graph");
+    await expect(page.locator("#ans-title")).toHaveText("A table view beside the graph");
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
     // Suggestion links also work without JS
     await page.goto("/");
@@ -142,7 +142,7 @@ test.describe("layout", () => {
 
   test("case files deep-link to section anchors", async ({ page }) => {
     await page.goto("/work/hhcd-data-platform#dual-view");
-    await expect(page.locator("section#dual-view h2")).toHaveText("Two views instead of a simpler graph");
+    await expect(page.locator("section#dual-view h2")).toHaveText("A table view beside the graph");
     await expect(page.locator("section#dual-view .meta").first()).toHaveText(/Decision 02/);
   });
 

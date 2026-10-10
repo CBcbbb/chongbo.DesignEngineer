@@ -22,10 +22,10 @@ export const nike: Project = {
     {
       id: "problem",
       kind: "problem",
-      title: "Readers loved the stories, not the products",
+      title: "Readers loved the stories but skipped the products",
       body: [
-        "Athletes Closet is a members' feature in the Nike app, where athletes and stylists share looks and recommend products. Engagement with the stories was high, but few readers tapped through to the products in them.",
-        "Behind the scenes, inconsistent components were slowing every release.",
+        "Athletes Closet is a members' feature in the Nike app where athletes and stylists share looks and recommend products. Readers engaged with the stories, but few tapped through to the products [engagement and tap-through figures].",
+        "Inconsistent components were also slowing every release.",
       ],
       signals: ["conversion", "brand-storytelling"],
     },
@@ -34,10 +34,10 @@ export const nike: Project = {
       kind: "decision",
       title: "From one-off screens to a layout system",
       body: [
-        "I audited every element in the feature, unified sizes, spacing and naming, and rebuilt it as reusable components with documentation for the developers.",
+        "I audited every element, unified sizes, spacing and naming, and rebuilt the feature as reusable components with documentation for developers.",
         "At its heart is a headline frame I designed to adapt to its content, so each season's stories could change without a redesign.",
       ],
-      signals: ["reusable-components", "typography", "design-eng-gap"],
+      signals: ["reusable-components", "typography", "design-eng-gap", "design-systems"],
       media: {
         kind: "image",
         asset: "nike/components.png",
@@ -51,7 +51,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Making the product part of the story",
       body: [
-        "I redesigned the product card so the item a story mentioned was large, clear and obviously tappable, closing the gap between reading and shopping.",
+        "I redesigned the product card so the item a story mentions is large, clear and obviously tappable. [Change in product taps after launch, if known]",
       ],
       signals: ["conversion", "brand-storytelling"],
       media: {
@@ -84,7 +84,7 @@ export const nike: Project = {
       kind: "outcome",
       title: "Shipped, and extended",
       body: [
-        "The feature shipped in the Nike app. Developers spent less time going back and forth, the client reported more interest in the products, and the agency kept the UI work for two more quarters.",
+        "The feature shipped in the Nike app in [month and year]. Developers spent less time going back and forth, the client reported more interest in the products, and the agency kept the UI work for two more quarters.",
       ],
       signals: ["end-to-end", "conversion"],
     },
