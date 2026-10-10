@@ -22,16 +22,17 @@ Capabilities follow playbook §2. Lens roles: `lead` (opens here), `in` (printed
 | `workshop` | Features ranked by 14 stakeholders | research, E | in | · | · | Wall Three photo (paper fig. 12) and a redrawn ranking | [vote counts, optional] [higher-resolution Wall Three photo] |
 | `four-types` | Why the data is collected by person but mapped by type | B, C | in | in | · | Redrawn diagram: one person-first row becomes four linked record types | |
 | `three-views` | Three views of the same network | E, D | in | lead | in | **Signature module:** the Constellation / By type switch (animated move of the same entries), plus the table | |
+| `guide` | A guide inside the map | D, E | in | in | in | Recording of the four steps; `home-1440.png` (first card) | |
 | `keyboard` | Accessibility – keyboard navigation | E, D | · | in | · | Recording of arrow-key navigation in both arrangements | |
 | `narrow-screens` | Responsive design | E, D | in | in | in | `path-390.png`: details as a sheet over the map | |
 | `contrast` | Accessibility – colour contrast | E, C | · | in | in | Map names in the original brand colours as bold large text; darker variants when zoomed out. WAVE result cropped (paper fig. 22) | |
-| `own-page` | A link for every person, project and method | E, B | · | in | lead | Rebuild project page (`project-1440.png`) | [public URL of the deployed rebuild] |
+| `own-page` | A link for every person, project and method | E, B | · | in | lead | Rebuild project page (`project-1440.png`) | https://helen-hamlyn-centre-for-design-data.vercel.app/ |
 | `outcome` | Launched, then taken up by the Helen Hamlyn Centre | B | in | in | in | Metric strip: Lighthouse 99 · WAVE 0 errors · axe 0 violations · 27/27 contrast pairs | |
 | `role` | Designed, specified and built alone | B, F | in | in | in | None needed | |
 
 Dropped: `homepage-removed`. The turn isn't needed, and the map-first decision isn't written up.
 
-Proposed, not yet agreed: a `guide` card for the first-visit guide inside the map (D, E).
+Added: `guide`, for the first-visit guide inside the map.
 
 ## Facts and their sources
 
@@ -73,7 +74,7 @@ Copy may only use these, or what Chongbo adds later.
   - Mobile: details open as a sheet over the lower part of the map, which stays usable. Map controls have 40px touch targets, and nothing scrolls sideways at 320px.
   - Arrow keys move to the nearest entry in either arrangement. The guide works by keyboard alone.
   - Checks: 57 unit and component tests, 43 Playwright tests at 1440px and 390px (including axe on the guide, the path and the columns), and 27 contrast pairings.
-- Not yet tested with a screen reader, in Safari or in Firefox (REPORT.md). Deployed by Chongbo [public URL].
+- Not yet tested with a screen reader, in Safari or in Firefox (REPORT.md). Live at https://helen-hamlyn-centre-for-design-data.vercel.app/ (48 entries, 104 connections). The Centre uses this version.
 
 ## Image inventory
 
@@ -84,7 +85,7 @@ Copy may only use these, or what Chongbo adds later.
 | Keep | Paper fig. 12 (Wall Three: features ranked) | The one workshop photo that drove decisions |
 | Keep | Paper fig. 22 (WAVE result, cropped to the summary) | Automated accessibility evidence |
 | Keep | Rebuild `columns-1440`, `path-390`, `table-1440`, `project-1440` | Columns arrangement, phone sheet, table, entry page |
-| Keep | Rebuild `home-1440` (guide's first card) | Only if the `guide` card is agreed |
+| Keep | Rebuild `home-1440` (guide's first card) | `guide` card |
 | Cut | Paper figs 6–8 (star-field) | Not to be mentioned |
 | Cut | Paper figs 2, 3, 5, 17–21 | Duplicates, or too much text to read |
 | Cut | Paper figs 9–11, 23; rebuild `home-390`, `columns-390`, `path-1440`, `table-390`, `project-390` | Process material that carries no decision, or duplicates |
@@ -95,10 +96,7 @@ Copy may only use these, or what Chongbo adds later.
 
 ## Gaps
 
-1. The public URL of the deployed rebuild. The link given is the Vercel dashboard, which needs a sign-in.
-2. Does the Centre now use the rebuild, or still the original?
-3. Has it been tested with a screen reader (for example VoiceOver)?
-4. Should the guide get its own card?
+1. Has it been tested with a screen reader (for example VoiceOver), in Safari or in Firefox?
 
 ## Id changes (for `SHARED-CHANGES.md` at build)
 
