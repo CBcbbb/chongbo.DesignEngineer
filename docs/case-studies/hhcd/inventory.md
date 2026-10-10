@@ -24,8 +24,8 @@ Capabilities follow playbook §2. Lens roles: `lead` (opens here), `in` (printed
 | `narrow-screens` | Responsive design | E, D | in | in | in | Rebuild map at 390px (`explore-390.png`) | |
 | `contrast` | Accessibility – colour contrast | E, C | · | in | in | Code: brand colour and text variant; WAVE result cropped (paper fig. 22) | |
 | `own-page` | A link for every person, project and method | E, B | · | in | lead | Rebuild project page (`project-1440.png`) | [rebuild link, if deployed] |
-| `outcome` | Launched, then taken up by the Helen Hamlyn Centre | B | in | in | in | Metric strip: Lighthouse 99 · WAVE 0 errors · axe 0 violations · 27/27 contrast pairs | [HHCD launch date] [is the Centre using it?] |
-| `role` | Designed, specified and built alone | B, F | in | in | in | None needed | [what failed first] [what I'd change now] |
+| `outcome` | Launched, then taken up by the Helen Hamlyn Centre | B | in | in | in | Metric strip: Lighthouse 99 · WAVE 0 errors · axe 0 violations · 27/27 contrast pairs | |
+| `role` | Designed, specified and built alone | B, F | in | in | in | None needed | |
 
 Dropped: `homepage-removed`. The turn isn't needed. The map-first decision can be one sentence in `three-views` [confirm].
 
@@ -42,6 +42,8 @@ Copy may only use these, or what Chongbo adds later.
 - He made the design files, wrote the requirements document, built many of the early prototypes, and wrote all the code with AI coding tools. Those tools were weaker then, so it took a lot of work.
 - Accessibility was his goal from the start, and it's why he knows the field well.
 - The paper was accepted at DRS 2026. Write only that.
+- The Centre uses the platform now. No launch date in the copy.
+- No teaching line, and no "what failed / what I'd change" in the copy.
 - In the final design, the map is the homepage, because it's a tool, not a marketing site. The map is free by default, with an option to sort it into four columns.
 
 **From the DRS 2026 paper (Chongbo's own unpublished record, VOICE):**
@@ -81,14 +83,11 @@ Copy may only use these, or what Chongbo adds later.
 
 ## Gaps
 
-1. When did the HHCD original launch? Is the Centre using it now? This decides "taken up by" versus "reused by".
-2. Is the free / columns switch built? Needed for the cover and the signature module.
-3. Map-first decision: keep one sentence in `three-views`, or leave it out?
-4. Does the teaching get one line (in `role`), or none?
-5. Will the rebuild be deployed? Is there a link?
-6. Has it been tested with a screen reader (for example VoiceOver)?
-7. What failed first? What would you change now?
-8. The case study's name. "HHCD Data Platform" doesn't cover VOICE. Keep the slug `hhcd-data-platform`.
+1. The free / columns switch is not on GitHub `main` yet (latest commit `41ff7c9`, still columns only). Needed for the cover and the signature module.
+2. Map-first decision: keep one sentence in `three-views`, or leave it out?
+3. Will the rebuild be deployed? Is there a link?
+4. Has it been tested with a screen reader (for example VoiceOver)?
+5. The case study's title.
 
 ## Id changes (for `SHARED-CHANGES.md` at build)
 
