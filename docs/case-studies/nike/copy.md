@@ -65,7 +65,7 @@ I designed the feature's creative system: logo lock-up, type, colour, framing de
 
 Earlier screens used inconsistent sizes, which made extra work for the engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout. A documented handover cut the back-and-forth between design and build.
 
-*Caption:* [component overview, from the Figma export]
+*Caption:* Every element on one set of sizes, spacing and names.
 
 ## 7 · guests
 
