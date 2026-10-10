@@ -7,7 +7,7 @@ export const thisSite: Project = {
   context: "Personal project · 2026",
   role: "Designed and built, working with AI coding tools",
   status: "Live",
-  stack: ["Next.js", "TypeScript", "Tailwind", "Motion", "Claude API"],
+  stack: ["Next.js", "TypeScript", "Tailwind", "CSS animation", "Claude API"],
   // Add { label: "Source", href: "https://github.com/CBcbbb/chongbo.DesignEngineer" } once the repo is public.
   links: [],
   tier: "main",
@@ -15,7 +15,7 @@ export const thisSite: Project = {
   cover: {
     kind: "image",
     asset: "this-site/cover.png",
-    alt: "The portfolio's homepage: an index-card drawer with a typed question card in front of it.",
+    alt: "The portfolio's homepage: a red ticket printer with a question typed in, printing a ticket that answers it.",
     need: "Generated automatically from the finished site.",
     ratio: "16:10",
   },
@@ -23,7 +23,7 @@ export const thisSite: Project = {
     {
       id: "idea",
       kind: "decision",
-      title: "Ask, and a card is pulled from the drawer",
+      title: "Ask, and a ticket is printed",
       body: [
         "Recruiters care about different things, so the site lets you ask. A small model reads your question and picks the cards from my work that answer it; the interface does the rest.",
         "The model never writes the page. It can only choose from content I wrote, which keeps answers accurate and the design consistent.",
