@@ -3,7 +3,7 @@ import type { Project } from "../schema";
 export const thisSite: Project = {
   slug: "this-site",
   title: "This site",
-  oneLiner: "A portfolio that prints the work you ask to see.",
+  oneLiner: "Prints the work you ask to see.",
   context: "Personal project · 2026",
   role: "Designed and built, working with AI coding tools",
   status: "Live",
@@ -15,7 +15,7 @@ export const thisSite: Project = {
   cover: {
     kind: "image",
     asset: "this-site/cover.png",
-    alt: "The portfolio's homepage: a red ticket printer with a question typed in, printing a ticket that answers it.",
+    alt: "The homepage: a printer with skill cards above it and a sheet of paper rising from its top slot.",
     need: "Generated automatically from the finished site.",
     ratio: "16:10",
   },
