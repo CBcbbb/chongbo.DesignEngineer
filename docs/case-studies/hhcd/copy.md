@@ -1,46 +1,78 @@
-# Helen Hamlyn Centre Data Platform: copy, draft 1
+# Helen Hamlyn Centre Data Platform: copy, draft 2
 
-Playbook §8 step 4. Every fact traces to `inventory.md` → "Facts and their sources". `[brackets]` are gaps.
+Playbook §8 step 4. Every fact traces to `inventory.md` → "Facts and their sources". `[brackets]` are gaps. Use "we" for VOICE team decisions and "I" for Chongbo's own work.
 
 ## Cover
 
 - **Title:** Helen Hamlyn Centre Data Platform
-- **One line:** A map of a research network that anyone can explore, with a mouse, a keyboard or on a phone.
+- **One line:** A research repository that anyone can explore, with a mouse, a keyboard or on a phone.
 - **Context:** First built for VOICE, an EU-funded arts research project. Now used by the Helen Hamlyn Centre for Design, Royal College of Art.
 - **Role:** Design, data model and build, alone, with AI coding tools.
 - **Outcome:** Live and in use. Paper accepted at DRS 2026.
 - **Link:** https://helen-hamlyn-centre-for-design-data.vercel.app/
 - **What this shows:** Accessibility · Idea to production · Craft and interaction
 
-## Cards
+## Part 1 · VOICE
 
 ### `brief`: Accessibility as the starting point
 
-The first version was for VOICE, an EU-funded arts research project. Its map was for artists, researchers, community groups and policy makers. Network maps are usually built for sighted mouse users, so I treated accessibility as the first design decision rather than a later fix.
+VOICE was an EU-funded arts research project with partners in several countries. Its platform was for artists, researchers, community groups and policy makers. With an audience that broad, I built accessibility into the design from the first prototype.
 
-*Image caption:* The VOICE map and its table view, launched together.
+*Image caption:* The VOICE platform at launch.
 
 ### `no-borders`: A network instead of a geographical map
 
-My first prototypes placed communities of practice on a map of Europe, filtered by country. Grouping people by region suggested a separation the project set out to overcome. I moved to a network where people, projects, organisations and methods connect directly, with no centre.
+To show all the work together, we first placed communities and projects on a map of Europe, grouped by country. The work was diverse, and we didn't want geography to divide it. So we moved to a network, where people, projects, organisations and methods connect directly.
 
-*Image caption:* Placed by country, the communities looked separate.
+*Image caption:* Grouped by country, the work looked divided by place.
 
-### `workshop`: Features ranked by 14 stakeholders
+### `sample-data`: Working prototypes on sample data
 
-I ran a 75-minute workshop with people from the seven partner organisations, each playing a different kind of user. They ranked filters, search and visible connections highest. Translation scored low, but several argued it was essential for inclusion, so I kept it.
+I coded the prototype ideas with sample data, so people could try them rather than imagine them. That gave us a first round of testing before any real data existed. The workshop started from these prototypes.
 
-*Image caption:* The ranking that set the tool's first features.
+*Image caption:* An early prototype, running on sample entries.
+
+### `workshop`: A 75-minute workshop with 14 stakeholders
+
+I ran the workshop with members of the seven partner organisations. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view. Three walls collected their answers, with sticky notes and dot votes.
+
+*Steps:*
+
+1. **Content.** What each entry should contain. Every type got a consistent structure, and methods were linked to the projects and people that used them.
+2. **Scope.** What the platform should include. Entries should touch at least two of three themes: technology, community and environment. The scope went beyond Europe.
+3. **Functionality.** Which features mattered most. Filters, search and visible connections ranked highest. Translation scored low, but participants argued it was essential for inclusion, so we kept it.
+
+*Image caption:* Wall Three, where the features were ranked.
 
 ### `four-types`: Why the data is collected by person but mapped by type
 
-I made people the entry point for collecting data: anyone can say what they worked on, with which methods, and who supported it. Drawn as collected, though, people would sit at the centre of every view. So I split the records into four linked types of equal weight: people, projects, organisations and methods.
+To make the survey easy to fill in, I started it from each person's own work: their projects, the methods they used and who supported them. Collecting was easy, but every row of the spreadsheet had a person at its centre. After a first round of cleaning, I split it into four linked types of equal weight and decided what each point on the map stands for.
 
-*Image caption:* One person's row becomes four linked records.
+*Stepper (animated):*
 
-### `three-views`: Three views of the same network
+1. Decide what the platform needs to know.
+2. Survey each person about their own work.
+3. Clean the first round of answers.
+4. Split each row into people, projects, organisations and methods.
+5. Link the records and load them into the prototype.
 
-The map opens as a free network where every entry is the same size, so nothing ranks above anything else. One switch moves the same entries into four columns by type, which are easier to scan and to follow by keyboard. A table holds the same data for screen readers, with the same search and filters.
+### `dual-view`: A table view beside the network
+
+A network graph is hard to use without a mouse or without sight. So I added a table of the same data, with the same search and filters, and a shortcut to switch between them. The workshop also led to zoom buttons and a panel on accessibility and translation.
+
+*Image caption:* The same entries as a table, for screen readers and keyboards.
+
+## Part 2 · Helen Hamlyn Centre
+
+### `taken-up`: Taken up by the Helen Hamlyn Centre
+
+VOICE soft-launched in September 2025. The Helen Hamlyn Centre then took up the platform for its own research: 48 entries and 104 connections, in its fixed brand colours. I rebuilt it for the Centre in Next.js and TypeScript.
+
+*Image caption:* The Centre's research as one map.
+
+### `arrangements`: Two arrangements of the same map
+
+The map opens as a free network, with every entry the same size. One switch moves the same entries into four columns by type, which are easier to scan and to follow by keyboard. Both layouts are calculated in advance, so the switch is a single animated move.
 
 *Module caption:* Try the switch: the same 48 entries, rearranged.
 
@@ -73,18 +105,12 @@ The Centre's brand colours are fixed, and two of them fail contrast as small tex
 --color-projects-text: #A8470F; /* small text on white: 5.88:1 */
 ```
 
-### `own-page`: A link for every person, project and method
+### `results`: Results
 
-The first version drew everything in the browser under one address, so no project could be linked to or found by search. Each of the 48 entries now has its own page, with its connections as ordinary links and a preview image for sharing. Pages load without JavaScript.
-
-*Image caption:* Every page links on to what it is connected to.
-
-### `outcome`: Launched, then taken up by the Helen Hamlyn Centre
-
-The VOICE platform soft-launched in September 2025. The Helen Hamlyn Centre now uses the rebuilt version to map its research: 48 entries and 104 connections. A paper on the accessibility approach was accepted at DRS 2026.
+The platform is live and in use at the Helen Hamlyn Centre. A paper on the accessibility approach was accepted at DRS 2026.
 
 *Metric strip:* Lighthouse accessibility 99 (VOICE) · WAVE 0 errors (VOICE) · axe 0 violations at 1440 and 390px (rebuild) · 27 of 27 contrast pairings pass
 
 ### `role`: Designed, specified and built alone
 
-I made the design files, wrote the specification, built many of the early prototypes and ran the workshop. I wrote all of the code with AI coding tools, which at the start needed close direction. [Screen-reader, Safari and Firefox testing: done, or still to do?]
+I made the design files, wrote the specification and wrote all of the code, with AI coding tools that at the start needed close direction. [Screen-reader, Safari and Firefox testing: done, or still to do?]
