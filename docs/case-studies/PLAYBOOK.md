@@ -62,7 +62,12 @@ Expect 8 to 12 cards per main project and 4 to 6 for earlier work.
 
 > One line of context → the tension (what was wrong, for whom, why it mattered) → two to four decisions, each "I chose X over Y because Z", each with proof → the outcome → my role, and what I'd change.
 
-- **The heading test.** Read only the headings and captions, top to bottom. The story must still make sense. Every heading is a claim, not a topic: "Making the stories shoppable", not "Solutions".
+- **The heading test.** Read only the headings and captions, top to bottom. The story must still make sense.
+- **How headings work.**
+  - A heading tells the reader what the section is about and which way the decision went, but doesn't sum it all up. The reason and the how stay in the body, so there's something to read on for.
+  - Most headings are plain and calm: a short phrase or a direct label. "A network instead of a geographical map", "Responsive design", "Accessibility – keyboard navigation".
+  - A few are written to draw the reader in, such as a question or a more memorable line. Use two or three per project at most, never two in a row, and only once the reader has the context. Don't open a case with questions.
+  - No "I" in headings; "I" belongs in the body. No slogans: no wordplay, parallel phrasing, rhetorical contrasts or punchlines.
 - **One decision, traced honestly.** Show what I tried first, what didn't work, what I traded away. The strongest cases have a turn in them.
 - **Contribution is unmistakable.** Say what I did with "I". Use "we" only for genuine team work, and then say which part was mine.
 - **Outcomes are concrete.** A number, a shipped thing, a live link, a real consequence. If there's no number, say what happened. Never invent one.
@@ -79,6 +84,8 @@ Professional, plain and exact, in British English. Every sentence earns its plac
 - **Banned words:** leverage, seamless, empower, robust, holistic, enhance, elevate, delightful, cutting-edge, "in today's world", "it's worth noting".
 - **Facts over adjectives.** "Every entry has its own page" beats "highly discoverable".
 - **Name the trade-off.** "I dropped X to keep Y."
+- **Write decisions as my choices.** Avoid words that turn my judgement into someone else's instruction: requirement, the brief asked, had to, needed to. "Accessibility as the starting point", not "Accessibility was a requirement".
+- **The design-review test.** Would I say this sentence aloud to a colleague in a design review, or in an interview? If it sounds like an advert or an aphorism, rewrite it.
 - **Tone:** confident, warm, unshowy. Granola's own site is a good model.
 - **Never fabricate.** Every claim must trace to a source: the original portfolio, a repo, the live product, or my own words in conversation. If something is missing, write `[what's missing]` in the copy and add it to the gaps list. Never smooth a gap over with plausible filler.
 
