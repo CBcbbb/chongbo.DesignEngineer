@@ -8,9 +8,10 @@ it("sends structured-output params through the SDK and parses the reply", async 
   const fakeFetch = async (_url: RequestInfo | URL, init?: RequestInit) => {
     sent = JSON.parse(String(init?.body));
     const out = {
-      reply: "Accessibility was designed in from the start.",
-      picks: [{ project: "hhcd-data-platform", section: "dual-view", reason: "An accessible table view." }],
-      matched: "accessibility",
+      asked: ["accessibility"],
+      missing: [],
+      sheets: [{ project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "An accessible table view." }],
+      line: "One project shows accessibility.",
     };
     return new Response(
       JSON.stringify({
@@ -30,5 +31,6 @@ it("sends structured-output params through the SDK and parses the reply", async 
   const r = await askModel("accessibility", { client: client as unknown as ParseClient });
   expect(sent.model).toBe("claude-haiku-5-5");
   expect((sent.output_config as { format: { type: string } }).format.type).toBe("json_schema");
-  expect(r).toMatchObject({ source: "model", matched: "accessibility" });
+  expect(r).toMatchObject({ source: "model", asked: ["accessibility"], matched: "accessibility", line: "One project shows accessibility." });
+  expect(JSON.stringify(sent.messages)).toContain("<brief>");
 });

@@ -1,39 +1,68 @@
 import { describe, expect, it } from "vitest";
-import { AskRequestSchema, AskResponseSchema } from "@/lib/ask/schema";
+import { AskRequestSchema, AskResponseSchema, withLegacy } from "@/lib/ask/schema";
 
 describe("AskRequestSchema", () => {
-  it("accepts 1–300 characters and trims", () => {
-    expect(AskRequestSchema.parse({ question: "  hi  " }).question).toBe("hi");
-    expect(AskRequestSchema.safeParse({ question: "x".repeat(300) }).success).toBe(true);
+  it("accepts a brief, topics or both, trimming and de-duplicating", () => {
+    expect(AskRequestSchema.parse({ brief: "  accessibility  " })).toEqual({ brief: "accessibility", topics: [] });
+    expect(AskRequestSchema.parse({ topics: ["data", "data", "research"] })).toEqual({ brief: "", topics: ["data", "research"] });
+    expect(AskRequestSchema.parse({ brief: "x", topics: ["accessibility"] }).topics).toEqual(["accessibility"]);
+    expect(AskRequestSchema.safeParse({ brief: "x".repeat(4000) }).success).toBe(true);
   });
-  it("rejects empty, whitespace, too long and wrong types", () => {
-    expect(AskRequestSchema.safeParse({ question: "" }).success).toBe(false);
-    expect(AskRequestSchema.safeParse({ question: "   " }).success).toBe(false);
-    expect(AskRequestSchema.safeParse({ question: "x".repeat(301) }).success).toBe(false);
-    expect(AskRequestSchema.safeParse({ question: 42 }).success).toBe(false);
+
+  it("maps the legacy question field to the brief", () => {
+    expect(AskRequestSchema.parse({ question: "  hi  " })).toEqual({ brief: "hi", topics: [] });
+    expect(AskRequestSchema.parse({ question: "old", brief: "new" }).brief).toBe("new");
+  });
+
+  it("needs at least one of brief or topics", () => {
     expect(AskRequestSchema.safeParse({}).success).toBe(false);
+    expect(AskRequestSchema.safeParse({ brief: "   " }).success).toBe(false);
+    expect(AskRequestSchema.safeParse({ question: "" }).success).toBe(false);
+    expect(AskRequestSchema.safeParse({ brief: "", topics: [] }).success).toBe(false);
+  });
+
+  it("rejects too long, too many, unknown topics and wrong types", () => {
+    expect(AskRequestSchema.safeParse({ brief: "x".repeat(4001) }).success).toBe(false);
+    expect(AskRequestSchema.safeParse({ topics: ["vibes"] }).success).toBe(false);
+    expect(
+      AskRequestSchema.safeParse({
+        topics: ["end-to-end", "design-systems", "cross-platform", "design-eng-gap", "accessibility", "data", "research"],
+      }).success,
+    ).toBe(false);
+    expect(AskRequestSchema.safeParse({ brief: 42 }).success).toBe(false);
+    expect(AskRequestSchema.safeParse({ question: 42 }).success).toBe(false);
+    expect(AskRequestSchema.safeParse("accessibility").success).toBe(false);
+    expect(AskRequestSchema.safeParse(null).success).toBe(false);
   });
 });
 
 describe("AskResponseSchema", () => {
-  const ok = {
-    reply: "Accessibility shaped this from the first sketch.",
-    picks: [{ project: "hhcd-data-platform", section: "dual-view", reason: "Accessible table view." }],
-    matched: "accessibility",
-    source: "model",
-  };
-  it("accepts a valid response", () => {
+  const sheet = { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility" as const, reason: "Accessible table view." };
+  const ok = withLegacy({ asked: ["accessibility"], sheets: [sheet], missing: [], line: "One project shows accessibility.", source: "model" });
+
+  it("accepts a valid response with legacy fields derived", () => {
     expect(AskResponseSchema.safeParse(ok).success).toBe(true);
+    expect(ok.reply).toBe(ok.line);
+    expect(ok.picks).toEqual([{ project: sheet.project, section: sheet.section, reason: sheet.reason }]);
+    expect(ok.matched).toBe("accessibility");
   });
+
   it("enforces limits", () => {
-    expect(AskResponseSchema.safeParse({ ...ok, reply: "x".repeat(161) }).success).toBe(false);
-    expect(AskResponseSchema.safeParse({ ...ok, picks: [] }).success).toBe(false);
-    expect(AskResponseSchema.safeParse({ ...ok, picks: Array(4).fill(ok.picks[0]) }).success).toBe(false);
-    expect(AskResponseSchema.safeParse({ ...ok, picks: [{ ...ok.picks[0], reason: "x".repeat(91) }] }).success).toBe(false);
-    expect(AskResponseSchema.safeParse({ ...ok, matched: "vibes" }).success).toBe(false);
+    const other = { ...sheet, project: "component-store", section: "contrast-in-tokens" };
+    expect(AskResponseSchema.safeParse({ ...ok, line: "x".repeat(91) }).success).toBe(false);
+    expect(AskResponseSchema.safeParse({ ...ok, asked: [] }).success).toBe(false);
+    expect(AskResponseSchema.safeParse({ ...ok, asked: ["vibes"] }).success).toBe(false);
+    expect(AskResponseSchema.safeParse({ ...ok, sheets: [] }).success).toBe(false);
+    expect(AskResponseSchema.safeParse({ ...ok, sheets: Array(6).fill(sheet) }).success).toBe(false);
+    expect(AskResponseSchema.safeParse({ ...ok, sheets: [sheet, { ...sheet, section: "rebuild" }] }).success).toBe(false);
+    expect(AskResponseSchema.safeParse({ ...ok, sheets: [sheet, other] }).success).toBe(true);
+    expect(AskResponseSchema.safeParse({ ...ok, sheets: [{ ...sheet, reason: "x".repeat(91) }] }).success).toBe(false);
+    expect(AskResponseSchema.safeParse({ ...ok, sheets: [{ ...sheet, signal: "vibes" }] }).success).toBe(false);
+    expect(AskResponseSchema.safeParse({ ...ok, missing: Array(7).fill("x") }).success).toBe(false);
     expect(AskResponseSchema.safeParse({ ...ok, source: "magic" }).success).toBe(false);
   });
-  it("accepts start-here", () => {
-    expect(AskResponseSchema.safeParse({ ...ok, matched: "start-here" }).success).toBe(true);
+
+  it("accepts start-here as the legacy matched key", () => {
+    expect(AskResponseSchema.safeParse(withLegacy(ok, { startHere: true })).success).toBe(true);
   });
 });

@@ -1,15 +1,27 @@
 /**
  * Deterministic fallback: answers without a model.
  *
- * Scores every section card against the question using
- *   1. synonyms for each content signal (weighted by the signal's position on the card),
- *   2. project names and places mentioned in the question,
- *   3. plain word overlap with the card's title and body.
- * Everything is driven by content/, so a new project is matched without code changes.
+ *   1. Understand: score the brief against synonyms for each content signal; chosen topics come first.
+ *   2. Print: for every project with a section showing an asked capability, pick that project's
+ *      single best section (signal match first, with the first-listed signal weighing most, then
+ *      word overlap with the brief). At most five sheets, strongest first.
+ *   3. Be honest: capabilities with no matching work, and common asks the work never mentions
+ *      (A/B testing, native mobile, …), are reported as missing.
+ * Everything is driven by content/, so a new project or section is matched without code changes.
  */
-import { SIGNALS, type Signal } from "@content";
-import { catalogue, type CatalogueEntry } from "./catalogue";
-import { MAX_PICKS, REASON_MAX, type AskResponse, type Matched, type Pick } from "./schema";
+import { projects, SIGNALS, type Project, type Section, type Signal } from "@content";
+import { catalogue, findEntry } from "./catalogue";
+import {
+  ASKED_MAX,
+  LINE_MAX,
+  MAX_SHEETS,
+  MISSING_MAX,
+  REASON_MAX,
+  withLegacy,
+  type AskRequest,
+  type AskResponse,
+  type Sheet,
+} from "./schema";
 
 /**
  * Synonyms per signal. A term matches at the start of a word ("access" matches "accessible").
@@ -21,7 +33,7 @@ export const KEYS: Record<Signal, string[]> = {
   "cross-platform": ["platform", "multiple product", "product line", "several product", "many product", "scale", "scaling", "cross platform", "multi brand", "ios!", "android", "web and mobile"],
   "design-eng-gap": ["engineer", "handoff", "hand off", "developer", "dev!", "devs!", "front end", "frontend", "code", "coding", "bridge", "gap", "react", "typescript", "tailwind", "css!", "html!", "implement", "between design"],
   "end-to-end": ["end to end", "ship", "from scratch", "solo", "alone", "own!", "ownership", "deliver", "launch", "zero to one", "idea to", "whole thing", "full stack", "fullstack"],
-  "seo-performance": ["seo!", "performance", "fast", "search engine", "lighthouse", "speed", "web vitals", "metadata", "static", "discoverab"],
+  "seo-performance": ["seo!", "performance", "fast", "search engine", "lighthouse", "speed", "web vitals", "metadata", "static", "discoverab", "website", "web site", "web!"],
   "publishing-workflow": ["cms!", "publish", "content", "template", "workflow", "editor", "admin"],
   "reusable-components": ["reusab", "reuse", "component", "modular", "pattern librar", "building block"],
   "brand-storytelling": ["brand", "marketing", "story", "stories", "storytell", "landing", "campaign", "editorial", "narrative", "consumer", "website", "web site", "web!"],
@@ -35,29 +47,41 @@ export const KEYS: Record<Signal, string[]> = {
   judgement: ["decision", "trade off", "tradeoff", "why!", "approach", "think", "judgement", "judgment", "process", "prioriti", "choose", "choice", "opinion", "hard part"],
 };
 
-/** First-person replies per matched signal. Each is one factual sentence, at most 160 characters. */
-export const REPLY: Record<Matched, string> = {
-  accessibility: "Accessibility shaped this from the first sketch, not the last sprint.",
-  "design-systems": "I run a design system that ships as a code package across five product lines.",
-  "cross-platform": "One shared token layer keeps five product lines consistent; each app retunes only what it needs.",
-  "design-eng-gap": "This is the problem I like most: the space between the design and the code.",
-  "end-to-end": "I take work from the first question to the shipped thing, often on my own.",
-  "seo-performance": "Every page is static HTML with real metadata, so it can be found and shared.",
-  "publishing-workflow": "Content is written once and shown in more than one way.",
-  "reusable-components": "I build components once so the next story, season or customer needs no redesign.",
-  "brand-storytelling": "Brand work that had to earn a tap, shipped in the Nike app.",
-  conversion: "The stories were working; the products weren't. This closed the gap.",
-  "motion-interaction": "I use motion only where it pays off.",
-  typography: "Hierarchy first, decoration never.",
-  data: "My data work starts with the model, long before the chart.",
-  prototyping: "I prototype in whatever is fastest: Figma, code or AI tools.",
-  "ai-tools": "I build with AI coding tools every day, from research platforms to this site, which uses a model to pick its answers.",
-  research: "Here's a decision I changed after watching real people use the thing.",
-  judgement: "Here's a trade-off I made, and why.",
-  "start-here": "Good question. Here's where I'd start: three pieces that show how I work.",
+/** How each capability reads in "Three projects show …". */
+export const LINE_LABEL: Record<Signal, string> = {
+  "end-to-end": "end-to-end delivery",
+  "design-systems": "design systems",
+  "cross-platform": "consistency across platforms",
+  "design-eng-gap": "design and engineering together",
+  accessibility: "accessibility",
+  "seo-performance": "SEO and performance",
+  "publishing-workflow": "publishing workflows",
+  "reusable-components": "reusable components",
+  "brand-storytelling": "brand and storytelling",
+  conversion: "conversion work",
+  "motion-interaction": "motion and interaction",
+  typography: "typography and layout",
+  data: "data work",
+  prototyping: "prototyping",
+  "ai-tools": "work with AI tools",
+  research: "research and testing",
+  judgement: "judgement and trade-offs",
 };
 
-/** Names and places in a question that point at one project. */
+/**
+ * Common asks the signals don't cover. Reported as missing when the brief mentions one
+ * and no section, title or stack in content/ does. Patterns run on normalised text.
+ */
+export const MISSING_ASKS: { label: string; pattern: RegExp }[] = [
+  { label: "A/B testing", pattern: /\b(a b|ab|split|multivariate) test/ },
+  { label: "native iOS or Android", pattern: /\b(native (mobile|apps?|ios|android)|ios|android)\b/ },
+  { label: "Swift", pattern: /\bswift(ui)?\b/ },
+  { label: "Kotlin", pattern: /\b(kotlin|jetpack compose)\b/ },
+  { label: "backend and databases", pattern: /\b(back ?end|databases?|sql|postgres(ql)?|mysql|mongo(db)?|server side)\b/ },
+  { label: "analytics", pattern: /\b(analytics|amplitude|mixpanel)\b/ },
+];
+
+/** Names and places in a brief that point at one project. */
 const PROJECT_HINTS: Record<string, string[]> = {
   "hhcd-data-platform": ["hhcd", "helen hamlyn", "hamlyn", "royal college", "rca!", "archive", "brunel"],
   "component-store": ["component store", "logistics", "current role", "current job", "day job"],
@@ -66,11 +90,11 @@ const PROJECT_HINTS: Record<string, string[]> = {
   wildecho: ["wildecho", "wild echo", "wildlife", "tourist", "sound", "listening"],
 };
 
-/** Strong defaults when nothing matches. */
-export const DEFAULT_PICKS: Pick[] = [
-  { project: "hhcd-data-platform", section: "dual-view", reason: "Accessibility and data, designed and built end to end." },
-  { project: "component-store", section: "contracts", reason: "Closing a gap between design and engineering with data contracts." },
-  { project: "nike-athletes-closet", section: "system", reason: "A reusable layout system that shipped in the Nike app." },
+/** Strong defaults when nothing in the brief is understood. */
+export const DEFAULT_SHEETS: Sheet[] = [
+  { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "Accessibility and data, designed and built end to end." },
+  { project: "component-store", section: "contracts", signal: "design-eng-gap", reason: "Closing a gap between design and engineering with data contracts." },
+  { project: "nike-athletes-closet", section: "system", signal: "reusable-components", reason: "A reusable layout system that shipped in the Nike app." },
 ];
 
 const STOPWORDS = new Set(
@@ -99,11 +123,6 @@ const HINT_REGEX = Object.fromEntries(
   Object.entries(PROJECT_HINTS).map(([slug, terms]) => [slug, terms.map(termRegex)]),
 ) as Record<string, RegExp[]>;
 
-const STACK_REGEX: [string, RegExp[]][] = [...new Map(catalogue.map((e) => [e.project.slug, e.project])).values()].map((p) => [
-  p.slug,
-  p.stack.map((tool) => termRegex(`${tool}!`)),
-]);
-
 function count(text: string, patterns: RegExp[]): number {
   let n = 0;
   for (const re of patterns) {
@@ -118,104 +137,178 @@ function stem(word: string): string {
   return word.replace(/(ing|ed|es|s)$/, "");
 }
 
-export function signalHits(question: string): Partial<Record<Signal, number>> {
-  const q = normalise(question);
+const SIGNAL_ORDER = Object.keys(SIGNALS) as Signal[];
+
+export function signalHits(brief: string): Partial<Record<Signal, number>> {
+  const q = normalise(brief);
   const hits: Partial<Record<Signal, number>> = {};
-  for (const sig of Object.keys(KEY_REGEX) as Signal[]) {
+  for (const sig of SIGNAL_ORDER) {
     const n = count(q, KEY_REGEX[sig]);
     if (n) hits[sig] = n;
   }
   return hits;
 }
 
-export type Scored = { entry: CatalogueEntry; score: number; order: number };
+/** Signals that at least one section shows. */
+const SHOWN = new Set<Signal>(catalogue.flatMap((e) => e.section.signals));
 
-export function scoreSections(question: string): Scored[] {
-  const q = normalise(question);
-  const hits = signalHits(question);
-  const projectBoost: Record<string, number> = {};
-  for (const [slug, res] of Object.entries(HINT_REGEX)) {
-    const n = count(q, res);
-    if (n) projectBoost[slug] = n;
-  }
-  // Tools named in the question point at projects whose stack uses them (data-driven from content).
-  const stackBoost: Record<string, number> = {};
-  for (const [slug, res] of STACK_REGEX) {
-    const n = count(q, res);
-    if (n) stackBoost[slug] = n;
-  }
-  const words = [...new Set(q.trim().split(" "))].filter((w) => w.length >= 4 && !STOPWORDS.has(w)).map(stem);
+/** Everything content/ says, normalised, for checking whether a missing ask is really missing. */
+const CONTENT_TEXT = normalise(
+  projects.map((p) => [p.title, p.oneLiner, p.stack.join(" "), ...p.sections.map((s) => `${s.title} ${s.body.join(" ")}`)].join(" ")).join(" "),
+);
 
-  return catalogue.map((entry, order) => {
-    let score = 0;
-    entry.section.signals.forEach((sig, i) => {
-      const h = hits[sig];
-      if (h) score += h * (i === 0 ? 3 : 1.5);
-    });
-    const boost = projectBoost[entry.project.slug];
-    if (boost) score += 2.5 * boost + (entry.section.kind === "problem" || entry.section.kind === "decision" ? 0.5 : 0);
-    const stack = stackBoost[entry.project.slug];
-    if (stack) score += 1.5 * stack;
-    for (const w of words) {
-      if (w.length < 4) continue;
-      if (entry.titleText.includes(w)) score += 1;
-      else if (entry.text.includes(w)) score += 0.4;
-    }
-    // Earlier work only wins when it is clearly the better answer.
-    if (entry.project.tier === "earlier" && !boost) score *= 0.6;
-    return { entry, score, order };
-  });
+export function detectMissing(brief: string): string[] {
+  const q = normalise(brief);
+  return MISSING_ASKS.filter((m) => m.pattern.test(q) && !m.pattern.test(CONTENT_TEXT)).map((m) => m.label);
 }
+
+export type Understood = {
+  /** Capabilities asked for that the work shows, most important first. */
+  asked: Signal[];
+  /** Plain labels of asks the work doesn't show. */
+  missing: string[];
+  /** Projects named in the brief. */
+  named: Set<string>;
+};
+
+/** Turn a brief and chosen topics into the capabilities asked for. */
+export function understand(brief: string, topics: Signal[] = []): Understood {
+  const hits = signalHits(brief);
+  const ranked = (Object.entries(hits) as [Signal, number][]).sort(
+    (a, b) => b[1] - a[1] || SIGNAL_ORDER.indexOf(a[0]) - SIGNAL_ORDER.indexOf(b[0]),
+  );
+  // In a long brief, a stray single mention shouldn't count as an ask.
+  const floor = Math.max(1, (ranked[0]?.[1] ?? 0) * 0.25);
+  const fromBrief = ranked.filter(([, n]) => n >= floor).map(([s]) => s);
+  const wanted = [...new Set([...topics, ...fromBrief])];
+
+  const asked = wanted.filter((s) => SHOWN.has(s)).slice(0, ASKED_MAX);
+  const missing = [...wanted.filter((s) => !SHOWN.has(s)).map((s) => SIGNALS[s]), ...detectMissing(brief)].slice(0, MISSING_MAX);
+
+  const q = normalise(brief);
+  const named = new Set(Object.entries(HINT_REGEX).filter(([, res]) => count(q, res) > 0).map(([slug]) => slug));
+  return { asked, missing, named };
+}
+
+const POSITION_WEIGHT = [3, 2, 1.5, 1];
+const positionWeight = (i: number) => POSITION_WEIGHT[Math.min(i, POSITION_WEIGHT.length - 1)]!;
+/** The first capability asked for matters most. */
+const rankWeight = (r: number) => 1 / (1 + 0.25 * r);
+
+type Candidate = { section: Section; order: number; signalScore: number; overlap: number; signal: Signal | undefined };
+
+function briefWords(brief: string): string[] {
+  return [...new Set(normalise(brief).trim().split(" "))].filter((w) => w.length >= 4 && !STOPWORDS.has(w)).map(stem);
+}
+
+function scoreSection(project: Project, section: Section, order: number, asked: Signal[], words: string[]): Candidate {
+  let signalScore = 0;
+  let signal: Signal | undefined;
+  let bestContribution = 0;
+  section.signals.forEach((sig, i) => {
+    const r = asked.indexOf(sig);
+    if (r < 0) return;
+    const contribution = positionWeight(i) * rankWeight(r);
+    signalScore += contribution;
+    if (contribution > bestContribution) {
+      bestContribution = contribution;
+      signal = sig;
+    }
+  });
+  const entry = findEntry(project.slug, section.id)!;
+  let overlap = 0;
+  for (const w of words) {
+    if (entry.titleText.includes(w)) overlap += 1;
+    else if (entry.text.includes(w)) overlap += 0.4;
+  }
+  return { section, order, signalScore, overlap, signal };
+}
+
+const better = (a: Candidate, b: Candidate) =>
+  a.signalScore !== b.signalScore ? a.signalScore > b.signalScore : a.overlap !== b.overlap ? a.overlap > b.overlap : a.order < b.order;
 
 function truncate(text: string, max: number): string {
   return text.length <= max ? text : `${text.slice(0, max - 1).trimEnd()}…`;
 }
 
-function reasonFor(entry: CatalogueEntry, hits: Partial<Record<Signal, number>>): string {
-  const sig = entry.section.signals.find((s) => hits[s]) ?? entry.section.signals[0];
-  const label = sig ? SIGNALS[sig] : "How I work";
-  return truncate(`${label}, from ${entry.project.title}.`, REASON_MAX);
+export function reasonFor(signal: Signal, section: Section): string {
+  return truncate(`${SIGNALS[signal]}: ${section.title}.`, REASON_MAX);
 }
 
-export function fallbackAnswer(question: string): AskResponse {
-  const hits = signalHits(question);
-  const scored = scoreSections(question)
-    .filter((s) => s.score > 0)
-    .sort((a, b) => b.score - a.score || a.order - b.order);
+/** One sheet per project that shows an asked capability, strongest first. */
+export function pickSheets(asked: Signal[], brief = "", named: Set<string> = new Set()): Sheet[] {
+  const words = briefWords(brief);
+  const ranked: { sheet: Sheet; strength: number; overlap: number; order: number }[] = [];
 
-  if (!scored.length) {
-    return { reply: REPLY["start-here"], picks: DEFAULT_PICKS, matched: "start-here", source: "fallback" };
-  }
+  projects.forEach((project, projectOrder) => {
+    const scored = project.sections.map((s, i) => scoreSection(project, s, i, asked, words));
+    const matching = scored.filter((c) => c.signalScore > 0);
+    const isNamed = named.has(project.slug);
+    let best: Candidate | undefined;
+    if (matching.length) {
+      best = matching.reduce((a, b) => (better(b, a) ? b : a));
+    } else if (isNamed) {
+      // Named but no capability matched: its best section by overlap, preferring decisions.
+      best = scored.reduce((a, b) => {
+        const sa = a.overlap + (a.section.kind === "decision" || a.section.kind === "problem" ? 0.5 : 0);
+        const sb = b.overlap + (b.section.kind === "decision" || b.section.kind === "problem" ? 0.5 : 0);
+        return sb > sa ? b : a;
+      });
+    }
+    if (!best) return;
+    const signal = best.signal ?? best.section.signals[0];
+    if (!signal) return;
 
-  // Greedy pick with a gentle penalty for repeating a project, so answers show range.
-  const picks: Scored[] = [];
-  const pool = [...scored];
-  const top = scored[0]!.score;
-  while (picks.length < MAX_PICKS && pool.length) {
-    let bestIdx = 0;
-    let best = -Infinity;
-    pool.forEach((s, i) => {
-      const repeats = picks.filter((p) => p.entry.project.slug === s.entry.project.slug).length;
-      const adjusted = s.score * Math.pow(0.8, repeats);
-      if (adjusted > best) {
-        best = adjusted;
-        bestIdx = i;
-      }
+    // A project that shows the capability in several sections is the stronger answer.
+    let strength = best.signalScore + 0.25 * Math.max(0, matching.length - 1) + (isNamed ? 3 : 0);
+    if (project.tier === "earlier" && !isNamed) strength *= 0.6;
+    ranked.push({
+      sheet: { project: project.slug, section: best.section.id, signal, reason: reasonFor(signal, best.section) },
+      strength,
+      overlap: best.overlap,
+      order: projectOrder,
     });
-    const [chosen] = pool.splice(bestIdx, 1);
-    if (!chosen) break;
-    if (picks.length && chosen.score < top * 0.3) break;
-    picks.push(chosen);
+  });
+
+  return ranked
+    .sort((a, b) => b.strength - a.strength || b.overlap - a.overlap || a.order - b.order)
+    .slice(0, MAX_SHEETS)
+    .map((r) => r.sheet);
+}
+
+const NUMBER_WORD = ["No", "One", "Two", "Three", "Four", "Five"];
+
+/** One plain sentence about what was printed. */
+export function lineFor(asked: Signal[], sheets: Sheet[], missing: string[], startHere = false): string {
+  const n = sheets.length;
+  const num = NUMBER_WORD[n] ?? String(n);
+  let line: string;
+  if (startHere) {
+    const where = `${num.toLowerCase()} ${n === 1 ? "place" : "places"} to start`;
+    line = missing.length ? `No project shows ${missing[0]}; here are ${where}.` : `Here are ${where}.`;
+  } else if (asked.length === 1 && sheets.every((s) => s.signal === asked[0])) {
+    line = `${num} ${n === 1 ? "project shows" : "projects show"} ${LINE_LABEL[asked[0]!]}.`;
+  } else {
+    line = `${num} ${n === 1 ? "project matches" : "projects match"} your brief.`;
+  }
+  return truncate(line, LINE_MAX);
+}
+
+export function fallbackAnswer(input: string | Partial<AskRequest>): AskResponse {
+  const { brief = "", topics = [] } = typeof input === "string" ? { brief: input } : input;
+  const { asked, missing, named } = understand(brief, topics);
+  const sheets = pickSheets(asked, brief, named);
+
+  if (!sheets.length) {
+    const sheetsOut = DEFAULT_SHEETS;
+    const askedOut = [...new Set(sheetsOut.map((s) => s.signal))];
+    return withLegacy(
+      { asked: askedOut, sheets: sheetsOut, missing, line: lineFor(askedOut, sheetsOut, missing, true), source: "fallback" },
+      { startHere: true },
+    );
   }
 
-  const first = picks[0]!.entry;
-  const ranked = (Object.entries(hits) as [Signal, number][]).sort((a, b) => b[1] - a[1]).map(([s]) => s);
-  const matched: Matched = ranked.find((s) => first.section.signals.includes(s)) ?? first.section.signals[0] ?? "start-here";
-
-  return {
-    reply: REPLY[matched],
-    picks: picks.map((p) => ({ project: p.entry.project.slug, section: p.entry.section.id, reason: reasonFor(p.entry, hits) })),
-    matched,
-    source: "fallback",
-  };
+  // A named project with no matching capability still printed a sheet; name what it shows.
+  const askedOut = asked.length ? asked : [...new Set(sheets.map((s) => s.signal))].slice(0, ASKED_MAX);
+  return withLegacy({ asked: askedOut, sheets, missing, line: lineFor(askedOut, sheets, missing), source: "fallback" });
 }

@@ -2,13 +2,17 @@ import "server-only";
 import { fallbackAnswer } from "./fallback";
 import { askModel } from "./model";
 import { modelDailyCap } from "./rate-limit";
-import type { AskResponse } from "./schema";
+import type { AskRequest, AskResponse } from "./schema";
 
-/** Shared by POST /api/ask and the /ask page. Model first when configured, keyword fallback otherwise. */
-export async function answerQuestion(question: string): Promise<AskResponse> {
-  if (process.env.ANTHROPIC_API_KEY && modelDailyCap.take()) {
-    const result = await askModel(question);
+/**
+ * Shared by POST /api/ask and the /ask page.
+ * A brief goes to the model first when configured. Topics alone need no reading, so they are
+ * answered deterministically (exactly the projects that show each topic). The fallback answers the rest.
+ */
+export async function answerAsk(req: AskRequest): Promise<AskResponse> {
+  if (req.brief && process.env.ANTHROPIC_API_KEY && modelDailyCap.take()) {
+    const result = await askModel(req);
     if (result) return result;
   }
-  return fallbackAnswer(question);
+  return fallbackAnswer(req);
 }

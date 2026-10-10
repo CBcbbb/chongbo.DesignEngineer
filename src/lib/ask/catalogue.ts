@@ -40,6 +40,18 @@ export function catalogueForPrompt(): string {
   return lines.join("\n");
 }
 
+/** For each signal, every section that carries it (position 1 = the section's main signal). */
+export function signalIndexForPrompt(): string {
+  return (Object.keys(SIGNALS) as Signal[])
+    .map((sig) => {
+      const where = catalogue
+        .filter((e) => e.section.signals.includes(sig))
+        .map((e) => `${e.project.slug}/${e.section.id}@${e.section.signals.indexOf(sig) + 1}`);
+      return `- ${sig}: ${where.length ? where.join(", ") : "(no work)"}`;
+    })
+    .join("\n");
+}
+
 export function signalList(): string {
   return (Object.keys(SIGNALS) as Signal[]).map((k) => `${k} (${SIGNALS[k]})`).join("; ");
 }

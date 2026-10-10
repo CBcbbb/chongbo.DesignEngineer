@@ -4,10 +4,19 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { AnswerTicket, ErrorTicket } from "@/components/Ticket";
-import { answerQuestion } from "@/lib/ask/answer";
+import { answerAsk } from "@/lib/ask/answer";
 import { askLimiter, clientKey } from "@/lib/ask/rate-limit";
-import { AskRequestSchema, QUESTION_MAX, RATE_LIMIT_MESSAGE, type AskResponse } from "@/lib/ask/schema";
+import {
+  AskRequestSchema,
+  BRIEF_MAX,
+  RATE_LIMIT_MESSAGE,
+  SIGNAL_KEYS,
+  TOPICS_MAX,
+  type AskResponse,
+} from "@/lib/ask/schema";
+import { SIGNALS, getProject, type Signal } from "@content";
 import { buildCardIndex } from "@/lib/cards";
+import { caseHref } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Your answer",
@@ -16,20 +25,33 @@ export const metadata: Metadata = {
   alternates: { canonical: "/ask" },
 };
 
-type Props = { searchParams: Promise<{ q?: string | string[] }> };
+type Param = string | string[] | undefined;
+type Props = { searchParams: Promise<{ q?: Param; brief?: Param; topics?: Param }> };
+
+const first = (p: Param) => (Array.isArray(p) ? p[0] : p);
+
+/** `?topics=accessibility,data`: known signal keys only, unknown ones ignored. */
+function parseTopics(raw: Param): Signal[] {
+  const keys = (first(raw) ?? "").split(",").map((t) => t.trim());
+  return [...new Set(keys.filter((k): k is Signal => (SIGNAL_KEYS as string[]).includes(k)))].slice(0, TOPICS_MAX);
+}
 
 export default async function AskPage({ searchParams }: Props) {
-  const { q: rawQ } = await searchParams;
-  const q = (Array.isArray(rawQ) ? rawQ[0] : rawQ)?.slice(0, QUESTION_MAX) ?? "";
-  const parsed = AskRequestSchema.safeParse({ question: q });
+  const params = await searchParams;
+  // `?brief=` is the new name; `?q=` keeps old links and the home page's no-JavaScript form working.
+  const brief = (first(params.brief) ?? first(params.q) ?? "").slice(0, BRIEF_MAX);
+  const topics = parseTopics(params.topics);
+  const parsed = AskRequestSchema.safeParse({ brief, topics });
+  const asked = parsed.success ? parsed.data.brief || parsed.data.topics.map((t) => SIGNALS[t]).join(", ") : "";
 
   let result: AskResponse | null = null;
   let error: string | null = null;
   if (parsed.success) {
     const limit = await askLimiter.limit(clientKey(await headers()));
-    if (limit.ok) result = await answerQuestion(parsed.data.question);
+    if (limit.ok) result = await answerAsk(parsed.data);
     else error = RATE_LIMIT_MESSAGE;
   }
+  const cards = buildCardIndex();
   const time = new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" });
 
   return (
@@ -38,7 +60,7 @@ export default async function AskPage({ searchParams }: Props) {
       <main id="main" tabIndex={-1}>
         <section className="stage" aria-labelledby="ask-title">
           <h1 id="ask-title" className="sr-only">
-            {parsed.success ? `Answer to: ${parsed.data.question}` : "Ask Chongbo a question"}
+            {parsed.success ? `Printed for: ${asked}` : "Ask Chongbo for the work you need to see"}
           </h1>
           <div className="machine" data-state="idle">
             <div className="machine-body">
@@ -50,16 +72,16 @@ export default async function AskPage({ searchParams }: Props) {
                 </span>
               </div>
               <form className="ask" action="/ask" method="get" role="search" aria-label="Ask about Chongbo's work">
-                <label htmlFor="q" className="sr-only">
-                  Ask a question about Chongbo&rsquo;s work
+                <label htmlFor="brief" className="sr-only">
+                  What do you need to see? A capability, a few topics or a job description.
                 </label>
                 <input
-                  id="q"
-                  name="q"
+                  id="brief"
+                  name="brief"
                   type="text"
                   required
-                  maxLength={QUESTION_MAX}
-                  defaultValue={q}
+                  maxLength={BRIEF_MAX}
+                  defaultValue={brief}
                   placeholder="What matters most to your team?"
                   autoComplete="off"
                 />
@@ -79,8 +101,20 @@ export default async function AskPage({ searchParams }: Props) {
           </div>
           <div className="out" data-done="true">
             <div className="feed">
-              {result && parsed.success ? (
-                <AnswerTicket result={result} question={parsed.data.question} cards={buildCardIndex()} number={1} time={time} />
+              {result ? (
+                // One printed sheet per project for now; the redesigned machine will replace this.
+                result.sheets.map((sheet, i) => (
+                  <AnswerTicket
+                    key={sheet.project}
+                    result={{ ...result, picks: [sheet], matched: sheet.signal, reply: i === 0 ? result.line : sheet.reason }}
+                    question={asked}
+                    cards={cards}
+                    number={i + 1}
+                    time={time}
+                    id={i === 0 ? "ticket" : `ticket-${i + 1}`}
+                    headingId={i === 0 ? "ans-title" : `ans-title-${i + 1}`}
+                  />
+                ))
               ) : error ? (
                 <ErrorTicket message={error} />
               ) : (
@@ -91,8 +125,21 @@ export default async function AskPage({ searchParams }: Props) {
           <div className="below">
             {result && (
               <p className="status">
-                {result.reply} {result.picks.length} {result.picks.length === 1 ? "card" : "cards"}.
+                {result.line} {result.sheets.length} {result.sheets.length === 1 ? "sheet" : "sheets"}.
+                {result.missing.length > 0 && <> Not shown in my work: {result.missing.join(", ")}.</>}
               </p>
+            )}
+            {result && (
+              <ul className="status" aria-label="Printed sheets">
+                {result.sheets.map((s) => (
+                  <li key={s.project}>
+                    <Link href={caseHref(s.project, s.section)}>
+                      {getProject(s.project)?.title ?? s.project}
+                    </Link>
+                    : {s.reason}
+                  </li>
+                ))}
+              </ul>
             )}
             <Link className="tear" href="/">
               Tear off and ask again

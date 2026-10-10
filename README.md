@@ -3,7 +3,7 @@
 The portfolio of Chongbo Ning, a design engineer in London. A red ticket printer sits on the page: type what your team cares about, press **Print**, and it prints a ticket with the part of my work that answers it. Every project is also a short case file you can read without asking anything.
 
 - `/` — the machine and the tray of case files
-- `/ask?q=…` — the same answer, server-rendered (works without JavaScript; shareable; `noindex`)
+- `/ask?brief=…&topics=a,b` (or the older `?q=…`) — the same answer, server-rendered (works without JavaScript; shareable; `noindex`)
 - `/work/<slug>` — a case file per project, every section deep-linkable (`/work/<slug>#<section-id>`)
 - `/about` — profile, education and contact
 
@@ -48,23 +48,27 @@ Playwright uses a system Chromium at `/opt/pw-browsers/chromium-1194/chrome-linu
 
 All content lives in `content/` (typed by `content/schema.ts`). Each project is an ordered list of section cards, and each card carries **signals** (accessibility, design systems, …). The ask feature never writes the page; it only **chooses** cards.
 
-`POST /api/ask` with `{ "question": "…" }` (1–300 characters, validated with Zod) returns:
+`POST /api/ask` with `{ "brief"?: "…", "topics"?: ["accessibility"] }` (brief 0–4,000 characters, 0–6 signal keys, at least one present; validated with Zod; the old `{ "question": "…" }` is still accepted as the brief) returns one sheet per project that shows what was asked:
 
 ```json
 {
-  "reply": "One first-person sentence, ≤160 chars",
-  "picks": [{ "project": "hhcd-data-platform", "section": "dual-view", "reason": "≤90 chars" }],
-  "matched": "accessibility",
-  "source": "model"
+  "asked": ["accessibility"],
+  "sheets": [{ "project": "hhcd-data-platform", "section": "dual-view", "signal": "accessibility", "reason": "≤90 chars" }],
+  "missing": ["A/B testing"],
+  "line": "Three projects show accessibility.",
+  "source": "model",
+  "reply": "…", "picks": [], "matched": "accessibility"
 }
 ```
+
+`asked` is 1–6 signal keys, most important first. `sheets` is 1–5, one per project, best first; each links to `/work/<project>#<section>`. `missing` lists requested things no work shows. `reply`, `picks` and `matched` are the old fields, derived from the new ones so the current home page keeps working.
 
 The schema is shared by the API route, the `/ask` page and the client (`src/lib/ask/schema.ts`).
 
 1. **Rate limit** (`src/lib/ask/rate-limit.ts`): a per-IP sliding window. Over the limit → `429` and the machine prints a small "Paused" ticket. Question text is never logged.
 2. **Model path** (`src/lib/ask/model.ts`): if `ANTHROPIC_API_KEY` is set and the daily cap allows, `claude-haiku-5-5` is called through the official SDK with structured JSON output (`output_config.format` via `zodOutputFormat`). The system prompt is a compact catalogue built from `content/` (project and section ids, titles, kinds, signals, one-sentence excerpts). The visitor's question is wrapped and treated as data. A 6-second timeout applies; there are no retries.
-3. **Sanitising** (`src/lib/ask/sanitize.ts`): picks that don't exist are dropped, duplicates removed, at most three kept, reasons clipped; an invalid reply or `matched` key is repaired from the picks. If no valid pick remains, it falls back.
-4. **Fallback** (`src/lib/ask/fallback.ts`): a deterministic scorer over signal synonyms, project names and word overlap with titles and bodies, with a small penalty for repeating a project so answers show range. If nothing matches, it returns three strong defaults (HHCD dual view, Component Store contracts, Nike layout system). Used when there is no key, on error, timeout, refusal, or past the daily cap.
+3. **Sanitising** (`src/lib/ask/sanitize.ts`): sheets that point at sections that don't exist are dropped, only the first sheet per project is kept, at most five, reasons clipped; unknown signal keys are dropped and a sheet's signal is repaired from its section; an invalid `line` is rebuilt from a template. Topics the visitor chose always count as asked. If no valid sheet remains, it falls back.
+4. **Fallback** (`src/lib/ask/fallback.ts`): scores the brief against signal synonyms to find the capabilities asked for (chosen topics first), then picks each project's best section by signal match (the section's first-listed signal weighs most), then word overlap. A short list of common asks the content never mentions (A/B testing, native iOS or Android, Swift, Kotlin, backend and databases, analytics) is reported as `missing`. If nothing is understood, it prints three strong defaults (HHCD dual view, Component Store contracts, Nike layout system). Used for topic-only requests, and when there is no key, on error, timeout, refusal, or past the daily cap.
 
 On the page, the LED blinks and a lip of paper inches at the slot while waiting; the ticket prints when the answer arrives (at least ~400 ms so the motion reads, no other artificial delay). Focus then moves to the ticket and the reply is announced in a polite live region. With reduced motion, everything is instant.
 
