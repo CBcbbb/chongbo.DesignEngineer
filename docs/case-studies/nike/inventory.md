@@ -10,21 +10,23 @@ Capabilities: A web and brand storytelling · B idea to production · C systems 
 |---|---|---|---|---|---|---|---|---|
 | — | cover | Nike Athletes Closet: the stories people read, made shoppable | A D | | | | `hero.jpg` still; the recording plays from it on demand; role and outcome line | |
 | 1 | problem | People read the stories but rarely tapped through to the products | A | lead | | in | Recording frame: story page with no route to product (or the VOL.1–3 "before" card) | |
-| 2 | tags | Tags on the photos turn the story into the shop | A D | in | | lead | Recording clip ~20–24 s (tag on photo) | |
+| 2 | tags | Tags on the photos turn the story into the shop | A D | in | | in | Recording clip ~20–24 s (tag on photo) | |
 | 3 | product-card | Bigger products, so the story sells them | A | in | | in | Compare slider: `product-card-before/after` | |
 | 4 | feed | Sideways pages saved space, so I had to show there was more | D A | in | in | in | Redrawn diagram (vertical scroll vs pages with a peek) + recording clip of the swipe | |
-| 5 | system | One frame carries every guest's headline | C A D | in | in | in | Redrawn component sheet + recording clip ~24–28 s (headline typing in) | [Figma file for 2× exports] |
-| 6 | guests | Each guest gets the same system and their own poster | A C | | | in | `guest-posters.png` | |
-| 7 | draw | A like opens a shoebox | D | in | lead | in | `gift-box.lottie.json`, playable in place | [any capture of it live] |
-| 8 | star-voice | Questions keep people coming back between guests | A D | in | in | in | Recording clip ~36–48 s + one crop of `star-voice-qa.png` | |
-| 9 | ranking | The ranking leads to similar outfits | A | | | in | `ranking-before/after` at detail size, or a recording frame ~48–50 s | |
-| 10 | handoff | The heart shipped flat. Today I'd build it myself | D B | in | in | | Designed (Figma LIKE-0…3 spec + `like-to-draw.lottie.json`) beside shipped (recording ~26 s) | |
-| 11 | outcome | One season became several | A | in | in | in | Shipped, ran across several seasons, contract renewed after the first; link to the full recording | |
-| — | retouching (optional) | Retouching that matches the brand's flash look | A | | | | One pair of `retouch-*` | [larger originals, else cut] |
+| 5 | system | One creative system, so every volume is built from the same parts | A C | in | in | lead | Redrawn component sheet + recording clip ~24–28 s (headline typing in) | [Figma file for 2× exports] |
+| 6 | components | Shared components cut the back-and-forth with Nike's engineers | C | in | in | | Figma component export | |
+| 7 | guests | Every guest gets a poster and the same photographic look | A | | | in | `guest-posters.png` + one retouch pair | |
+| 8 | draw | A like opens a shoebox | D | in | lead | in | `gift-box.lottie.json`, playable in place | [any capture of it live] |
+| 9 | star-voice | Questions keep people coming back between guests | A D | in | in | in | Recording clip ~36–48 s + one crop of `star-voice-qa.png` | |
+| 10 | ranking | The ranking leads to similar outfits | A | | | in | `ranking-before/after` at detail size, or a recording frame ~48–50 s | |
+| 11 | handoff | The heart shipped flat. Today I'd build it myself | D B | in | in | | Designed (Figma LIKE-0…3 spec + `like-to-draw.lottie.json`) beside shipped (recording ~26 s) | |
+| 12 | outcome | One season became several | A | in | in | in | Shipped, ran across several seasons, contract renewed after the first; link to the full recording | |
 
 The role line sits in the outcome block, not in a card: intern at an advertising agency, working on Nike's app in China, the only UI designer, every screen from VOL.4 on, plus the motion, guest posters and retouching. Nike's marketing team set the brief; Nike's engineers built it.
 
-**Turn in the story:** card 4 (the feed) is the decision with a real risk and a fix. Card 10 is the honest one: what shipped differently and what I'd change.
+The creative system is Chongbo's (confirmed: everything in the portfolio is his work), so `web` opens on it.
+
+**Turn in the story:** card 4 (the feed) is the decision with a real risk and a fix. Card 11 is the honest one: what shipped differently and what I'd change.
 
 **Signature module (proposal):** the recording as a chaptered phone. A phone frame plays the real recording; chapter marks ("Tags", "Headline", "Like", "Star Voice", "Ranking") jump to the moment each card talks about, and each card's clip links back to it. It needs a new "chaptered video" block, to propose in `SHARED-CHANGES.md` at step 5.
 
