@@ -61,10 +61,12 @@ h1{margin:clamp(12px,4vh,40px) 0 0;text-align:center;font:600 clamp(30px,4.4vw,4
 .chips button{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:0 10px;border:1px solid #BDB9B1;border-radius:999px;background:transparent;font:500 12px var(--sans);color:var(--paper-ink);cursor:pointer}
 .chips button::after{content:"×";color:var(--paper-dim)}
 .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font:400 15px/1.4 var(--mono)}
-.steps li{display:flex;gap:10px;align-items:baseline;color:var(--paper-dim)}
-.steps li::before{content:"○";width:1em}
-.steps li.done{color:var(--paper-ink)}.steps li.done::before{content:"●"}
-.steps li.now{color:var(--paper-ink)}.steps li.now::before{content:"◌";animation:caret .6s steps(2) infinite}
+.steps li{display:flex;gap:12px;align-items:flex-start;color:var(--paper-ink);opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s}
+.steps li::before{content:"";flex:none;margin-top:.42em;width:10px;height:10px;border-radius:50%;box-sizing:border-box;border:1.5px solid currentColor}
+.steps li.now,.steps li.done{opacity:1;transform:none}
+.steps li.done::before{background:currentColor}
+.steps li.now::before{border-color:currentColor transparent currentColor currentColor;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* sheet edge feeding out of the front opening */
 .outfeed{position:absolute;left:14%;width:65%;top:76%;height:40%;overflow:hidden;z-index:3;pointer-events:none}
@@ -86,16 +88,23 @@ h1{margin:clamp(12px,4vh,40px) 0 0;text-align:center;font:600 clamp(30px,4.4vw,4
 .alt a:hover,.alt button:hover{color:var(--ink)}
 
 /* results */
-.results{margin-top:30px}
+.results{margin-top:30px;overflow-x:clip;padding-top:14px}
 .results[hidden]{display:none}
 .rhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:12px;max-width:1100px;margin:0 auto 22px}
 .rhead h2{margin:0;font:600 26px/1.15 var(--sans);letter-spacing:-.025em}
 .rhead p{margin:4px 0 0;color:var(--ink-2);font-size:15px}
-.sheets{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),340px));justify-content:center;gap:26px;list-style:none;margin:0 auto;padding:0;max-width:1100px}
-.sheet{position:relative;display:flex;flex-direction:column;gap:12px;height:100%;background:var(--paper);color:var(--paper-ink);padding:22px 22px 20px;border-radius:2px;
-  box-shadow:0 1px 1px rgba(0,0,0,.06),0 22px 36px -22px rgba(40,30,20,.5);transform:rotate(var(--r,0deg));transition:transform .3s var(--ease);opacity:0;translate:0 -40px}
-.sheet.in{opacity:1;translate:0 0;transition:opacity .4s ease,translate .5s var(--ease),transform .3s var(--ease)}
-.sheet:hover{transform:rotate(0) translateY(-4px)}
+.deck{position:relative;max-width:1100px;margin:0 auto;touch-action:pan-y;user-select:none;cursor:grab;outline:none}
+.deck.dragging{cursor:grabbing}
+.deck:focus-visible{outline:2px solid var(--focus);outline-offset:8px;border-radius:8px}
+.sheet{position:absolute;top:0;left:0;width:var(--w,340px);display:flex;flex-direction:column;gap:12px;min-height:440px;background:var(--paper);color:var(--paper-ink);padding:22px 22px 20px;border-radius:2px;
+  box-shadow:0 1px 1px rgba(0,0,0,.06),-10px 0 24px -16px rgba(40,30,20,.35),0 22px 36px -22px rgba(40,30,20,.5);transition:transform .45s var(--ease),box-shadow .3s;will-change:transform}
+.deck.dragging .sheet{transition:none}
+.sheet.cur{box-shadow:0 1px 1px rgba(0,0,0,.06),-14px 0 30px -18px rgba(40,30,20,.45),0 34px 50px -26px rgba(40,30,20,.55)}
+.sheet:not(.cur){cursor:pointer}
+.sheet:not(.cur) .full{pointer-events:none}
+.deckbar{display:flex;justify-content:center;align-items:center;gap:16px;margin-top:22px;font:500 13px var(--mono);color:var(--ink-2)}
+.deckbar button{width:44px;height:44px;border-radius:50%;border:1px solid var(--rule);background:transparent;color:var(--ink);font:500 16px var(--sans);cursor:pointer}
+.deckbar button:disabled{opacity:.3;cursor:default}
 .s-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font:500 11.5px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--paper-dim)}
 .s-proj{font:600 14px var(--sans);letter-spacing:-.01em;text-transform:none;color:var(--paper-ink)}
 .sheet h3{margin:4px 0 0;font:600 22px/1.2 var(--sans);letter-spacing:-.02em;text-wrap:balance}
@@ -158,14 +167,14 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
   </header>
 
   <main>
-    <h1 id="h1">What do you need to see?</h1>
+    <h1 id="h1">Who are you hiring?</h1>
 
     <div class="stage">
       <div class="machine" id="machine" data-state="idle">
         <form class="paperbox" id="order" autocomplete="off" aria-labelledby="h1">
           <div class="paper" id="paper">
             <div class="field" id="field">
-              <label for="brief" class="sr">What do you need to see? Type, or paste a job description.</label>
+              <label for="brief" class="sr">Who are you hiring? Describe the role or paste a job description.</label>
               <textarea id="brief" maxlength="4000"></textarea>
               <div class="ghost" id="ghost" aria-hidden="true"></div>
             </div>
@@ -186,7 +195,8 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
 
     <section class="results" id="results" hidden aria-labelledby="r-title">
       <div class="rhead"><div><h2 id="r-title" tabindex="-1"></h2><p id="r-asked"></p></div></div>
-      <ul class="sheets" id="sheets"></ul>
+      <div class="deck" id="deck" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Printed sheets"></div>
+      <div class="deckbar"><button type="button" id="dprev" aria-label="Previous sheet">←</button><span id="dcount"></span><button type="button" id="dnext" aria-label="Next sheet">→</button></div>
       <p class="missing" id="missing"></p>
       <div class="again"><button type="button" id="again">New request</button></div>
     </section>
@@ -238,7 +248,7 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
   const LABEL = DATA.signals;
   const KIND = {problem:"The problem",decision:"Decision",evidence:"Evidence",outcome:"Outcome",role:"My part",retrospective:"Looking back"};
   const NUM = ["No","One","Two","Three","Four","Five"];
-  const EX = ["Accessibility","Design systems across products","A design engineer for our marketing website","Paste a job description"];
+  const EX = ["A design engineer for our marketing website, strong in React and motion","Someone to own our design system across web and mobile","Accessibility and data visualisation for a research tool","Paste a job description"];
 
   const $ = id => document.getElementById(id);
   const machine=$("machine"), brief=$("brief"), ghost=$("ghost"), field=$("field"), chips=$("chips"), box=$("order"), pk=$("pk");
@@ -305,7 +315,7 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
     const nP = res.sheets.length;
     const what = topics.length === 1 && !text.trim() ? TOPICS.find(x => x.id === topics[0]).label : "your brief";
     const list = $("steps"); field.hidden = true; chips.hidden = true; list.hidden = false;
-    list.innerHTML = `<li>Reading ${text.trim().length > 200 ? "the job description" : "your request"}</li><li>${res.asked.length ? res.asked.slice(0,3).map(s => LABEL[s]).join(", ") : "Looking for a match"}</li><li>${nP ? NUM[nP] + (nP === 1 ? " project" : " projects") : "Choosing where to start"}</li><li>Printing</li>`;
+    list.innerHTML = `<li>Reading ${text.trim().length > 200 ? "the job description" : "your request"}</li><li>${topics.length ? topics.map(t => TOPICS.find(x => x.id === t).label).join(", ") : res.asked.length ? res.asked.slice(0,2).map(s => LABEL[s]).join(", ") : "Looking for a match"}</li><li>${nP ? NUM[nP] + (nP === 1 ? " project" : " projects") : "Choosing where to start"}</li><li>Printing</li>`;
     box.style.setProperty("--ph","168px"); $("live").textContent = "Printing.";
     for (let i = 0; i < 4; i++) await step(list, i);
     list.lastElementChild.classList.replace("now","done");
@@ -324,23 +334,69 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
     const n = sheets.length;
     $("r-title").textContent = res.sheets.length ? (topics.length === 1 && !text.trim() ? `${NUM[n]} ${n === 1 ? "project shows" : "projects show"} ${what.toLowerCase()}.` : `${NUM[n]} ${n === 1 ? "project matches" : "projects match"} your brief.`) : "Here are three places to start.";
     $("r-asked").textContent = text.trim() ? `“${text.trim().slice(0,90)}${text.trim().length > 90 ? "…" : ""}”` : "";
-    $("sheets").innerHTML = sheets.map((x,i) => {
+    $("deck").innerHTML = sheets.map((x,i) => {
       const m = x.s.media; const ph = m ? `<div class="ph">${m.kind === "diagram" ? "[diagram: " + esc(m.diagram) + "]" : m.kind === "code" ? "[code sample]" : "[" + esc(m.asset || m.kind) + "]"}</div>` : "";
-      return `<li><article class="sheet" style="--r:${[-1.2,.8,-.5,1,-.8][i]}deg" aria-labelledby="sh-${i}">
+      return `<article class="sheet" data-i="${i}" aria-labelledby="sh-${i}" aria-roledescription="slide">
         <div class="s-top"><span class="s-proj">${esc(x.p.title)}</span><span>${String(i+1).padStart(2,"0")} / ${String(n).padStart(2,"0")}</span></div>
         <h3 id="sh-${i}">${esc(x.s.title)}</h3>
         ${x.s.body.map(b => `<p>${esc(b)}</p>`).join("")}
         ${ph}
         <div class="s-foot"><ul class="tags">${x.s.signals.slice(0,2).map(g => `<li>${esc(LABEL[g])}</li>`).join("")}</ul><button class="full" type="button" data-p="${x.p.slug}" data-s="${x.s.id}">Full project →</button></div>
-      </article></li>`;
+      </article>`;
     }).join("");
+    deckN = n; deckCur = 0;
     $("missing").textContent = res.missing.length ? `No work to show yet for ${res.missing.join(", ")}.` : "";
     $("results").hidden = false; document.querySelector(".topics").hidden = true; document.querySelector(".alt").hidden = true;
-    document.querySelectorAll(".sheet").forEach((s,i) => setTimeout(() => s.classList.add("in"), reduce ? 0 : 120 * i));
+    layoutDeck(0, true);
     $("live").textContent = $("r-title").textContent;
     $("r-title").focus({preventScroll:true});
     $("results").scrollIntoView({behavior: reduce ? "auto" : "smooth", block:"start"});
   }
+
+  // the deck: sheets overlap left to right; the current one opens out and sits on top
+  let deckN = 0, deckCur = 0;
+  function deckGeom(){
+    const wrapW = $("deck").clientWidth || 1000;
+    const W = Math.min(340, wrapW - 44);
+    const step = Math.max(14, Math.min(96, (wrapW - 2 * W) / Math.max(1, deckN - 1)));
+    const total = (deckN - 1) * step + W + (deckN > 1 ? W - step : 0);
+    return {W, step, wrapW, left: Math.max(0, (wrapW - total) / 2)};
+  }
+  function layoutDeck(drag = 0, intro = false){
+    const deck = $("deck"), cards = [...deck.querySelectorAll(".sheet")], g = deckGeom();
+    let h = 0;
+    cards.forEach((c, i) => {
+      const fromCur = i - deckCur;
+      let x = g.left + i * g.step + (i > deckCur ? g.W - g.step : 0) + drag;
+      if (i > deckCur) x = Math.min(x, g.wrapW - 26 - (deckN - 1 - i) * 8 + drag);
+      const rot = i === deckCur ? 0 : (fromCur < 0 ? -1.2 : 1.2) * Math.min(1, Math.abs(fromCur));
+      const y = i === deckCur ? -10 : 0;
+      c.style.setProperty("--w", g.W + "px");
+      c.style.zIndex = i <= deckCur ? 10 + i : 10 + deckN - (i - deckCur);
+      c.classList.toggle("cur", i === deckCur);
+      c.querySelector(".full").tabIndex = i === deckCur ? 0 : -1;
+      c.setAttribute("aria-hidden", i === deckCur ? "false" : "true");
+      if (intro && !reduce){ c.style.transition = "none"; c.style.transform = `translate(${g.left + i * 6}px, -60px) rotate(0)`; c.offsetWidth; c.style.transition = ""; setTimeout(() => { c.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`; }, 80 + 90 * i); }
+      else c.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
+      h = Math.max(h, c.offsetHeight);
+    });
+    deck.style.height = h + 30 + "px";
+    $("dcount").textContent = `${String(deckCur + 1).padStart(2, "0")} / ${String(deckN).padStart(2, "0")}`;
+    $("dprev").disabled = deckCur === 0; $("dnext").disabled = deckCur === deckN - 1;
+  }
+  function goDeck(i){ deckCur = Math.max(0, Math.min(deckN - 1, i)); layoutDeck(); $("live").textContent = `Sheet ${deckCur + 1} of ${deckN}: ${$("sh-" + deckCur).textContent}`; }
+  $("dprev").addEventListener("click", () => goDeck(deckCur - 1));
+  $("dnext").addEventListener("click", () => goDeck(deckCur + 1));
+  $("deck").addEventListener("keydown", e => { if (e.key === "ArrowRight"){ e.preventDefault(); goDeck(deckCur + 1); } if (e.key === "ArrowLeft"){ e.preventDefault(); goDeck(deckCur - 1); } });
+  let dd = null;
+  $("deck").addEventListener("pointerdown", e => { if (e.target.closest(".full")) return; dd = {x: e.clientX, moved: false}; });
+  window.addEventListener("pointermove", e => { if (!dd) return; const dx = e.clientX - dd.x; if (Math.abs(dx) > 6){ dd.moved = true; $("deck").classList.add("dragging"); layoutDeck(dx * 0.6); } });
+  window.addEventListener("pointerup", e => {
+    if (!dd) return; const dx = e.clientX - dd.x, moved = dd.moved; dd = null; $("deck").classList.remove("dragging");
+    if (moved){ const g = deckGeom(); const n = Math.round(-dx / Math.max(60, g.step + 20)); goDeck(deckCur + (n || (Math.abs(dx) > 40 ? (dx < 0 ? 1 : -1) : 0))); return; }
+    const c = e.target.closest(".sheet"); if (c && !c.classList.contains("cur")) goDeck(+c.dataset.i);
+  });
+  window.addEventListener("resize", () => { if (deckN) layoutDeck(); });
 
   // full project with the arrived-at part selected
   let cur = null;
