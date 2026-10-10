@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProject, projects, SIGNALS } from "@content";
+import { NikeCase } from "@/components/case/nike/NikeCase";
 import { MediaSlot } from "@/components/media/MediaSlot";
 import { PartsRail } from "@/components/PartsRail";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -37,6 +38,22 @@ export default async function CaseFile({ params }: Props) {
 
   const index = projects.indexOf(project);
   const next = projects[(index + 1) % projects.length]!;
+  if (project.slug === "nike-athletes-closet") {
+    return (
+      <>
+        <div className="wrap">
+          <SiteHeader current="work" />
+        </div>
+        <main id="main" tabIndex={-1}>
+          <NikeCase project={project} next={next} />
+        </main>
+        <div className="wrap">
+          <SiteFooter />
+        </div>
+      </>
+    );
+  }
+
   const facts: [string, React.ReactNode][] = [
     ["Role", project.role],
     ["Context", project.context],

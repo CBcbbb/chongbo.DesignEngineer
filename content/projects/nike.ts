@@ -100,6 +100,8 @@ export const nike: Project = {
       ],
       steps: [
         { text: "Redesigned the product card layout by enlarging the product visual to emphasise its role in the content flow." },
+        { text: "Enhanced the like-to-draw animation to strengthen the behavioural-reward loop." },
+        { text: "Embedded tappable product tags in the story visuals for a see-to-shop experience." },
       ],
       signals: ["conversion", "brand-storytelling"],
       media: {
@@ -124,6 +126,9 @@ export const nike: Project = {
       ],
       steps: [
         { text: "Designed a surprise prize-draw animation triggered after liking, with a gift-box visual to reinforce the action." },
+        { text: "Redesigned the Star Ranking module into a clear leaderboard, with calls to action to explore similar outfits." },
+        { text: "Turned the storytelling feed from a long vertical scroll into horizontal, page-flipping swipes." },
+        { text: "Created hero visuals and poster cards for each featured guest to build recognition." },
       ],
       signals: ["motion-interaction", "brand-storytelling"],
     },

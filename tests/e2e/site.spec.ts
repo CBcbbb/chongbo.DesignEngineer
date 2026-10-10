@@ -94,7 +94,8 @@ test.describe("printing", () => {
     const href = await page.locator(":focus").getAttribute("href");
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(new RegExp(`${href!.replace(/[#/]/g, "\\$&")}$`));
-    await expect(page.locator('.rail a[aria-current="step"]')).toHaveCount(1);
+    // Each case-file layout marks the part the link landed on (the parts rail, or Nike's section list).
+    await expect(page.locator('a[aria-current="step"]')).toHaveCount(1);
   });
 
   test("Escape clears the paper; Print with nothing focuses the paper", async ({ page }) => {
