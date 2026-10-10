@@ -3,8 +3,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: a paper case file on the studio ground. One reading column (~65ch) with media breaking out to a wide column;
-   a sticky parts rail on wide screens; one full-bleed black field for the recording, the page's single loud moment. */
+/* Layout: the case file is a stack of printed sheets on the studio ground. A sticky contents list on the left
+   (the same on every project); on the right, one sheet per evidence card, grouped into parts.
+   Colour roles: black = evidence (every media mount, the recording); orange = action and position
+   (where you are, what you can press, what a card proves). Paper and type are shared by every project. */
 :root {
   /* shared surfaces (src/app/tokens.css), light */
   --studio: #e9e7e2;
@@ -13,14 +15,12 @@
   --body: #38352f;
   --dim: #5e5b55;
   --rule: #e2dfd8;
-  --red: #c9372a;
-  /* Nike palette: black + orange */
-  --accent: #b8440f;          /* 5.2:1 on page */
-  --accent-strong: #f26522;   /* filled controls */
+  /* Nike palette */
+  --accent: #b8440f;          /* orange text, 5.2:1 on page */
+  --accent-strong: #f26522;   /* orange fills */
   --on-accent: #111010;       /* 6.0:1 on accent-strong */
-  --accent-2: #0e0d0c;        /* black field and media mounts, 18.6:1 on page */
+  --accent-2: #0e0d0c;        /* black: evidence mounts and the recording */
   --accent-tint: #fbefe6;
-  /* the black field keeps one look in both themes */
   --field-ink: #f2f0ec;
   --field-dim: #a8a49c;
   --field-rule: #2b2926;
@@ -29,273 +29,198 @@
   --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --read: 38rem;
-  --wide: 68rem;
+  --toc: 13.5rem;
+  --main: 54rem;
+  --pad: clamp(1.25rem, 3.5vw, 2.5rem);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --studio: #0f0e0d;
-    --page: #161513;
-    --ink: #ecebe7;
-    --body: #c9c6bf;
-    --dim: #9b978f;
-    --rule: #2e2c29;
-    --accent: #ff8a4c;
-    --accent-strong: #ff7a35;
-    --on-accent: #111010;
-    --accent-2: #000000;
-    --accent-tint: #2a1d15;
+    --studio: #0f0e0d; --page: #171614; --ink: #ecebe7; --body: #c9c6bf; --dim: #9b978f; --rule: #2e2c29;
+    --accent: #ff8a4c; --accent-strong: #ff7a35; --on-accent: #111010; --accent-2: #000000; --accent-tint: #2a1d15;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --studio: #0f0e0d;
-  --page: #161513;
-  --ink: #ecebe7;
-  --body: #c9c6bf;
-  --dim: #9b978f;
-  --rule: #2e2c29;
-  --accent: #ff8a4c;
-  --accent-strong: #ff7a35;
-  --on-accent: #111010;
-  --accent-2: #000000;
-  --accent-tint: #2a1d15;
+  --studio: #0f0e0d; --page: #171614; --ink: #ecebe7; --body: #c9c6bf; --dim: #9b978f; --rule: #2e2c29;
+  --accent: #ff8a4c; --accent-strong: #ff7a35; --on-accent: #111010; --accent-2: #000000; --accent-tint: #2a1d15;
   color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body {
-  margin: 0;
-  background: var(--studio);
-  color: var(--body);
-  font: 400 1.0625rem/1.6 var(--sans);
-  -webkit-font-smoothing: antialiased;
-}
-img, video { max-width: 100%; display: block; }
+body { margin: 0; background: var(--studio); color: var(--body); font: 400 1.0625rem/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+img, video { display: block; max-width: 100%; height: auto; }   /* never distort: every image keeps its own ratio */
 a { color: var(--accent); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
 button { font: inherit; color: inherit; }
+h1, h2, h3 { color: var(--ink); text-wrap: balance; margin: 0; font-weight: 600; }
+p { margin: 0; text-wrap: pretty; }
+figure { margin: 0; display: grid; gap: 0.7rem; }
+figcaption { font: 400 0.8125rem/1.5 var(--mono); color: var(--dim); }
+.tri { width: 0; height: 0; border-style: solid; border-width: 0.36rem 0 0.36rem 0.6rem; border-color: transparent transparent transparent currentColor; display: inline-block; }
 
 /* ---------- top bar ---------- */
 .bar {
-  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
   display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  padding: 0.85rem clamp(1rem, 4vw, 2.5rem);
-  background: color-mix(in srgb, var(--studio) 88%, transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--rule);
-  font-size: 0.9375rem;
+  padding: 0.8rem clamp(1rem, 4vw, 2.5rem);
+  background: color-mix(in srgb, var(--studio) 90%, transparent); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule); font-size: 0.9375rem;
 }
 .bar a { color: var(--ink); text-decoration: none; }
 .bar .who strong { font-weight: 600; }
 .bar .who span { color: var(--dim); margin-left: 0.5rem; }
 .bar nav { display: flex; align-items: center; gap: 1.25rem; }
-.theme {
-  border: 1px solid var(--rule); background: var(--page); border-radius: 999px;
-  padding: 0.3rem 0.7rem; font: 500 0.75rem/1 var(--mono); color: var(--dim); cursor: pointer;
-}
+.theme { border: 1px solid var(--rule); background: var(--page); border-radius: 999px; padding: 0.3rem 0.7rem; font: 500 0.75rem/1 var(--mono); color: var(--dim); cursor: pointer; }
 
-/* ---------- paper ---------- */
+/* ---------- frame: contents + sheets ---------- */
+.frame {
+  max-width: calc(var(--toc) + var(--main) + 4rem);
+  margin: 0 auto; padding-inline: clamp(1rem, 4vw, 2.5rem); padding-block: clamp(1.5rem, 4vw, 3rem) 4rem;
+  display: grid; grid-template-columns: var(--toc) minmax(0, var(--main)); gap: 0 4rem; align-items: start;
+}
+.toc { position: sticky; top: 5rem; font-size: 0.875rem; }
+.toc .proj { font-weight: 600; color: var(--ink); display: block; margin-bottom: 1.25rem; text-decoration: none; }
+.toc ol { list-style: none; margin: 0; padding: 0; }
+.toc > ol { display: grid; gap: 1.1rem; }
+.toc .part > a { display: flex; gap: 0.55rem; align-items: baseline; color: var(--ink); text-decoration: none; font-weight: 500; }
+.toc .part > a .n { font: 500 0.75rem/1 var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; }
+.toc .part ol { margin-top: 0.45rem; border-left: 1px solid var(--rule); }
+.toc .part ol a {
+  display: block; padding: 0.28rem 0 0.28rem 0.85rem; margin-left: -1px; border-left: 2px solid transparent;
+  color: var(--dim); text-decoration: none; line-height: 1.35;
+}
+.toc .part ol a:hover { color: var(--ink); }
+.toc a[aria-current="true"] { color: var(--ink); border-left-color: var(--accent-strong); }
+.toc .shows { margin-top: 2rem; display: grid; gap: 0.4rem; }
+.toc .shows span { font: 400 0.75rem/1.3 var(--mono); color: var(--dim); }
+
+.sheets { display: grid; gap: 1.25rem; min-width: 0; }
+
+/* ---------- sheet (shared by every project) ---------- */
 .sheet {
-  max-width: calc(var(--wide) + 2 * clamp(1rem, 5vw, 4rem));
-  margin: clamp(1rem, 3vw, 2.5rem) auto 0;
-  background: var(--page);
-  border: 1px solid var(--rule);
-  border-radius: 6px 6px 0 0;
-  padding-inline: clamp(1rem, 5vw, 4rem);
-  padding-block: clamp(2.5rem, 6vw, 5rem) 0;
-  position: relative;
+  background: var(--page); border: 1px solid var(--rule); border-radius: 8px;
+  padding: var(--pad); display: grid; gap: 1.1rem; scroll-margin-top: 5rem; min-width: 0;
 }
-.col { max-width: var(--read); }
-.wide { max-width: var(--wide); }
+.sheet .meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; }
+.sheet .idx { font: 500 0.75rem/1 var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; }
+.tags { display: flex; flex-wrap: wrap; gap: 0.35rem; list-style: none; margin: 0; padding: 0; }
+.tags li { font: 400 0.6875rem/1 var(--mono); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 999px; padding: 0.3rem 0.55rem; }
+.sheet h3 { font-size: clamp(1.35rem, 2.3vw, 1.7rem); line-height: 1.18; letter-spacing: -0.022em; max-width: 30ch; }
+.sheet .text p { max-width: 62ch; }
+.sheet .text { display: grid; gap: 0.8rem; }
+.seek { justify-self: start; display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 0; padding: 0.2rem 0; cursor: pointer; color: var(--accent); font: 500 0.8125rem/1 var(--mono); }
+.seek .tri { border-width: 0.3rem 0 0.3rem 0.5rem; }
+.sheet .ev { margin-top: 0.4rem; }
+.sheet.printed { box-shadow: 0 0 0 2px var(--accent-strong); }
 
-/* ---------- parts rail ---------- */
-.rail { display: none; }
-@media (min-width: 1320px) {
-  .rail {
-    display: block; position: fixed; left: max(1.25rem, calc(50vw - 48rem)); top: 50%; transform: translateY(-50%);
-    font: 400 0.75rem/1 var(--mono); z-index: 10;
-  }
-  .rail ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; }
-  .rail a {
-    display: grid; grid-template-columns: 1.6rem auto; align-items: center; gap: 0.4rem;
-    padding: 0.45rem 0.5rem 0.45rem 0; color: var(--dim); text-decoration: none; position: relative;
-  }
-  .rail a::before { content: ""; position: absolute; left: -0.75rem; top: 50%; width: 3px; height: 0; background: var(--accent); transform: translateY(-50%); transition: height .3s var(--ease); border-radius: 2px; }
-  .rail a[aria-current="true"] { color: var(--ink); }
-  .rail a[aria-current="true"]::before { height: 1rem; }
-}
+/* evidence mounts */
+.mount { background: var(--accent-2); border-radius: 4px; overflow: hidden; display: grid; place-items: center; }
+.mount.pad { padding: clamp(0.75rem, 3vw, 2rem); }
+.mount > img { width: 100%; }
+.mount.pad > img { width: auto; max-width: 100%; max-height: 40rem; }
+.pairs { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; align-items: flex-end; }
+.pairs figure { flex: 0 1 auto; }
+.pairs img { max-height: var(--h, 22rem); width: auto; max-width: 100%; border-radius: 3px; }
+.pairs figcaption { color: var(--field-dim); font-size: 0.6875rem; }
+.split { display: grid; gap: 0.75rem; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); align-items: stretch; }
 
-/* ---------- type ---------- */
-h1, h2, h3 { color: var(--ink); text-wrap: balance; margin: 0; font-weight: 600; }
-h1 { font-size: clamp(2.6rem, 7vw, 5rem); line-height: 0.98; letter-spacing: -0.045em; }
-h2 { font-size: clamp(1.9rem, 4vw, 2.75rem); line-height: 1.05; letter-spacing: -0.035em; }
-h3 { font-size: clamp(1.3rem, 2.2vw, 1.6rem); line-height: 1.2; letter-spacing: -0.02em; }
-p { margin: 0; text-wrap: pretty; }
-.mono { font-family: var(--mono); }
-figcaption, .cap { font: 400 0.8125rem/1.5 var(--mono); color: var(--dim); }
+/* compare slider: both images share one native ratio */
+.compare { position: relative; width: min(100%, 22rem); margin-inline: auto; border-radius: 4px; overflow: hidden; touch-action: pan-y; }
+.compare img { width: 100%; }
+.compare .top { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--x, 50%)) 0 0); }
+.compare .handle { position: absolute; top: 0; bottom: 0; left: var(--x, 50%); width: 2px; background: var(--accent-strong); transform: translateX(-1px); pointer-events: none; }
+.compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--accent-strong); transform: translate(-50%, -50%); box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.45); }
+.compare input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+.compare .lab { position: absolute; top: 0.6rem; font: 500 0.6875rem/1 var(--mono); padding: 0.3rem 0.45rem; border-radius: 3px; background: var(--accent-2); color: var(--field-ink); pointer-events: none; }
+.compare .lab.l { left: 0.6rem; } .compare .lab.r { right: 0.6rem; }
+.compare:has(input:focus-visible) { outline: 2px solid var(--field-accent); outline-offset: 3px; }
+
+/* wireframe / final */
+.seg { display: inline-flex; border: 1px solid var(--field-rule); border-radius: 999px; padding: 3px; gap: 3px; justify-self: start; }
+.seg button { border: 0; background: none; border-radius: 999px; padding: 0.35rem 0.8rem; font: 500 0.75rem/1 var(--mono); color: var(--field-dim); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--field-accent); color: #111010; }
+.swap { display: grid; }
+.swap > img { grid-area: 1 / 1; width: 100%; transition: opacity 0.35s var(--ease); }
+.swap > img[hidden] { display: block !important; opacity: 0; }
+.stack { display: grid; gap: 0.85rem; width: 100%; }
+
+/* lottie: the stage keeps the file's own 1920 × 1080 ratio */
+.lottie { position: relative; width: 100%; aspect-ratio: 1920 / 1080; }
+.lottie .stage { position: absolute; inset: 0; }
+.ctl { border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.95rem 0.6rem 0.75rem; background: var(--field-accent); color: #111010; font-weight: 600; font-size: 0.875rem; }
+.lottie .ctl { position: absolute; left: 1rem; bottom: 1rem; }
 
 /* ---------- cover ---------- */
-.cover { display: grid; gap: clamp(1.5rem, 3vw, 2.25rem); }
-.client { display: flex; align-items: center; gap: 0.6rem; font: 500 0.8125rem/1 var(--mono); color: var(--dim); }
-.client i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--accent-strong); display: inline-block; }
-.lede { font-size: clamp(1.25rem, 2.4vw, 1.6rem); line-height: 1.3; letter-spacing: -0.015em; color: var(--ink); max-width: 30ch; }
-.intro { display: grid; gap: 2rem; grid-template-columns: minmax(0, var(--read)) minmax(12rem, 1fr); align-items: start; }
-.meta { display: grid; gap: 0.9rem; margin: 0; font-size: 0.9375rem; }
-.meta div { display: grid; gap: 0.15rem; border-top: 1px solid var(--rule); padding-top: 0.6rem; }
-.meta dt { font: 400 0.75rem/1.2 var(--mono); color: var(--dim); }
-.meta dd { margin: 0; color: var(--ink); }
-.shows { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.6rem; }
-.shows span { font: 400 0.8125rem/1 var(--mono); color: var(--dim); margin-right: 0.25rem; }
-.chip {
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  padding: 0.5rem 0.85rem; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--rule));
-  color: var(--accent); text-decoration: none; font-size: 0.9375rem; font-weight: 500;
-  transition: background .2s, color .2s;
-}
+.cover { padding: clamp(0.5rem, 2vw, 1.5rem) 0 clamp(1rem, 3vw, 2rem); display: grid; gap: 1.5rem; }
+.client { display: flex; align-items: center; gap: 0.55rem; font: 500 0.8125rem/1 var(--mono); color: var(--dim); }
+.client i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--accent-strong); }
+.cover h1 { font-size: clamp(2.6rem, 6.5vw, 4.75rem); line-height: 0.98; letter-spacing: -0.045em; }
+.lede { font-size: clamp(1.25rem, 2.3vw, 1.55rem); line-height: 1.3; letter-spacing: -0.015em; color: var(--ink); max-width: 30ch; }
+.intro { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1.6fr) minmax(10rem, 1fr); align-items: start; }
+.facts { display: grid; gap: 0.75rem; margin: 0; font-size: 0.9375rem; }
+.facts div { display: grid; gap: 0.1rem; border-top: 1px solid var(--rule); padding-top: 0.55rem; }
+.facts dt { font: 400 0.75rem/1.2 var(--mono); color: var(--dim); }
+.facts dd { margin: 0; color: var(--ink); }
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.chips > span { font: 400 0.8125rem/1 var(--mono); color: var(--dim); margin-right: 0.25rem; }
+.chip { padding: 0.5rem 0.85rem; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--rule)); color: var(--accent); text-decoration: none; font-size: 0.9375rem; font-weight: 500; }
 .chip:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent); }
-.hero { margin: 0; display: grid; gap: 0.75rem; }
-.hero .frame { position: relative; aspect-ratio: 16 / 10; border-radius: 4px; overflow: hidden; background: var(--accent-2); }
-.hero img { width: 100%; height: 100%; object-fit: cover; }
-.hero .watch {
-  position: absolute; left: 1rem; bottom: 1rem; display: inline-flex; align-items: center; gap: 0.55rem;
-  padding: 0.65rem 1rem 0.65rem 0.75rem; border: 0; border-radius: 999px; cursor: pointer;
-  background: var(--accent-strong); color: var(--on-accent); font-weight: 600; font-size: 0.9375rem; text-decoration: none;
-}
-.tri { width: 0; height: 0; border-style: solid; border-width: 0.36rem 0 0.36rem 0.6rem; border-color: transparent transparent transparent currentColor; }
 
-/* ---------- the recording (black field) ---------- */
-.field {
-  margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  margin-inline: calc(-1 * clamp(1rem, 5vw, 4rem));
-  background: var(--accent-2); color: var(--field-ink);
-  padding: clamp(2.5rem, 6vw, 4.5rem) clamp(1rem, 5vw, 4rem);
-  border-block: 1px solid var(--field-rule);
-}
-.field-in { max-width: var(--wide); display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(2rem, 6vw, 5rem); align-items: center; }
-.field h2 { color: var(--field-ink); }
-.field p { color: var(--field-dim); max-width: 34ch; margin-top: 0.75rem; }
-.phone {
-  width: min(19rem, 72vw); aspect-ratio: 750 / 1624; border-radius: 2.6rem; padding: 0.55rem;
-  background: #1d1c1a; box-shadow: inset 0 0 0 1px #3a3835, 0 30px 60px -30px #000;
-  position: relative;
-}
-.phone video { width: 100%; height: 100%; object-fit: cover; border-radius: 2.1rem; background: #000; }
-.phone .tog {
-  position: absolute; right: -0.5rem; bottom: 2.25rem; width: 3.25rem; height: 3.25rem; border-radius: 50%; border: 0;
-  background: var(--field-accent); color: #111010; cursor: pointer; display: grid; place-items: center;
-  box-shadow: 0 8px 20px -8px #000;
-}
+/* ---------- the recording: a black sheet ---------- */
+.field { background: var(--accent-2); border-color: var(--field-rule); color: var(--field-ink); }
+.field-in { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(1.5rem, 5vw, 3.5rem); align-items: center; }
+.field h2 { color: var(--field-ink); font-size: clamp(1.6rem, 3.2vw, 2.2rem); letter-spacing: -0.03em; line-height: 1.1; }
+.field .sub { color: var(--field-dim); margin-top: 0.6rem; max-width: 34ch; }
+.phone { width: min(17.5rem, 70vw); border-radius: 2.5rem; padding: 0.5rem; background: #1d1c1a; box-shadow: inset 0 0 0 1px #3a3835, 0 30px 60px -30px #000; position: relative; }
+.phone video { width: 100%; border-radius: 2.05rem; background: #000; }
+.phone .tog { position: absolute; right: -0.6rem; bottom: 2rem; width: 3.25rem; height: 3.25rem; border-radius: 50%; border: 0; background: var(--field-accent); color: #111010; cursor: pointer; display: grid; place-items: center; box-shadow: 0 8px 20px -8px #000; }
 .phone .tog .bars { display: none; gap: 4px; }
 .phone .tog .bars i { width: 4px; height: 14px; background: currentColor; border-radius: 1px; display: block; }
 .phone.playing .tog .bars { display: flex; }
 .phone.playing .tog .tri { display: none; }
 .prog { height: 2px; background: var(--field-rule); margin-top: 1.25rem; border-radius: 2px; overflow: hidden; }
 .prog i { display: block; height: 100%; width: 0; background: var(--field-accent); }
-.chapters { margin-top: 2rem; display: grid; gap: 1.5rem; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.chapters section h3 { font: 500 0.75rem/1 var(--mono); color: var(--field-dim); letter-spacing: 0; margin-bottom: 0.6rem; }
-.chapters ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.15rem; }
-.chapters button {
-  width: 100%; text-align: left; background: none; border: 0; cursor: pointer;
-  display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); gap: 0.4rem; align-items: baseline;
-  padding: 0.5rem 0.5rem 0.5rem 0; color: var(--field-ink); border-top: 1px solid var(--field-rule);
-  font-size: 0.9375rem; line-height: 1.3;
-}
-.chapters button .t { font: 400 0.75rem/1 var(--mono); color: var(--field-dim); font-variant-numeric: tabular-nums; }
-.chapters button[aria-current="true"] { color: var(--field-accent); }
-.chapters button[aria-current="true"] .t { color: var(--field-accent); }
-.chapters button:hover { color: var(--field-accent); }
-.field .note { font: 400 0.75rem/1.5 var(--mono); color: var(--field-dim); margin-top: 1.5rem; }
+.chapters { margin-top: 1.5rem; display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); max-width: 24rem; }
+.chapters h3 { font: 500 0.75rem/1 var(--mono); color: var(--field-dim); letter-spacing: 0; margin-bottom: 0.5rem; }
+.chapters ol { list-style: none; margin: 0; padding: 0; }
+.chapters button { width: 100%; text-align: left; background: none; border: 0; cursor: pointer; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: 0.35rem; align-items: baseline; padding: 0.5rem 0.25rem 0.5rem 0; color: var(--field-ink); border-top: 1px solid var(--field-rule); font-size: 0.9rem; line-height: 1.3; }
+.chapters .t { font: 400 0.75rem/1 var(--mono); color: var(--field-dim); font-variant-numeric: tabular-nums; }
+.chapters button[aria-current="true"], .chapters button[aria-current="true"] .t, .chapters button:hover { color: var(--field-accent); }
+.field .note { font: 400 0.75rem/1.5 var(--mono); color: var(--field-dim); margin-top: 1.25rem; }
 .field :focus-visible { outline-color: var(--field-accent); }
 
-/* ---------- parts and cards ---------- */
-.part { padding-top: clamp(4rem, 9vw, 7rem); display: grid; gap: clamp(3.5rem, 8vw, 6rem); }
-.part-head { display: flex; align-items: baseline; gap: 1rem; border-top: 1px solid var(--ink); padding-top: 1rem; }
-.part-head .n { font: 500 0.875rem/1 var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; }
-.part-head h2 { font-size: clamp(1.75rem, 3.5vw, 2.4rem); }
-.card { display: grid; gap: 1.5rem; scroll-margin-top: 5rem; }
-.card .text { display: grid; gap: 0.85rem; max-width: var(--read); }
-.card .text p { max-width: 62ch; }
-.seek {
-  justify-self: start; display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem;
-  background: none; border: 0; padding: 0.25rem 0; cursor: pointer; color: var(--accent);
-  font: 500 0.8125rem/1 var(--mono);
-}
-.seek .tri { border-width: 0.3rem 0 0.3rem 0.5rem; }
-.card.pair { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: clamp(1.5rem, 5vw, 4rem); }
-.card.pair .text { align-self: center; }
-figure { margin: 0; display: grid; gap: 0.7rem; }
-.mount { background: var(--accent-2); border-radius: 4px; overflow: hidden; }
-.mount img { width: 100%; height: auto; }
-.mount.pad { padding: clamp(1rem, 3vw, 2rem); }
-.tint { background: var(--accent-tint); border-radius: 4px; padding: clamp(1rem, 3vw, 2rem); }
-.row { display: grid; gap: 0.75rem; grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr)); align-items: end; }
-.row figure figcaption { font-size: 0.75rem; }
-.small { border-radius: 3px; overflow: hidden; }
-.split { display: grid; gap: 0.75rem; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: end; }
-.comps { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
-.comps figure { width: auto; }
-.comps img { height: clamp(11rem, 26vw, 19rem); width: auto; max-width: 100%; }
-.comps figcaption { font-size: 0.6875rem; }
-.highlight { outline: 2px solid var(--accent); outline-offset: 10px; border-radius: 2px; }
-
-/* compare slider */
-.compare { position: relative; max-width: 26rem; justify-self: center; width: 100%; aspect-ratio: 900 / 1771; border-radius: 4px; overflow: hidden; background: var(--rule); touch-action: pan-y; }
-.compare img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.compare .top { clip-path: inset(0 calc(100% - var(--x, 50%)) 0 0); }
-.compare .handle { position: absolute; top: 0; bottom: 0; left: var(--x, 50%); width: 2px; background: var(--accent-strong); transform: translateX(-1px); pointer-events: none; }
-.compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--accent-strong); transform: translate(-50%, -50%); box-shadow: 0 4px 14px -4px rgba(0,0,0,.4); }
-.compare input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
-.compare .lab { position: absolute; top: 0.75rem; font: 500 0.75rem/1 var(--mono); padding: 0.35rem 0.5rem; border-radius: 3px; background: var(--page); color: var(--ink); pointer-events: none; }
-.compare .lab.l { left: 0.75rem; } .compare .lab.r { right: 0.75rem; }
-.compare:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
-
-/* segmented toggle */
-.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; padding: 3px; gap: 3px; justify-self: start; }
-.seg button { border: 0; background: none; border-radius: 999px; padding: 0.35rem 0.8rem; font: 500 0.8125rem/1 var(--mono); color: var(--dim); cursor: pointer; }
-.seg button[aria-pressed="true"] { background: var(--ink); color: var(--page); }
-.swap { position: relative; }
-.swap img { width: 100%; height: auto; transition: opacity .35s var(--ease); }
-.swap img + img { position: absolute; inset: 0; }
-.swap img[hidden] { display: block !important; opacity: 0; }
-
-/* lottie */
-.lottie { position: relative; aspect-ratio: 16 / 9; background: var(--accent-2); border-radius: 4px; overflow: hidden; }
-.lottie .stage { position: absolute; inset: 0; }
-.lottie .stage img { width: 100%; height: 100%; object-fit: contain; }
-.lottie .play {
-  position: absolute; left: 1rem; bottom: 1rem; border: 0; border-radius: 999px; cursor: pointer;
-  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.95rem 0.6rem 0.75rem;
-  background: var(--field-accent); color: #111010; font-weight: 600; font-size: 0.875rem;
-}
+/* ---------- parts ---------- */
+.parthead { display: flex; align-items: baseline; gap: 0.9rem; padding: clamp(2rem, 5vw, 3.5rem) 0 0.25rem; scroll-margin-top: 4.5rem; }
+.parthead .n { font: 500 0.875rem/1 var(--mono); color: var(--accent); }
+.parthead h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); letter-spacing: -0.035em; line-height: 1; }
 
 /* ---------- outcome ---------- */
-.outcome { padding-top: clamp(4rem, 9vw, 7rem); display: grid; gap: 2rem; }
-.big { font-size: clamp(2.4rem, 6.5vw, 4.5rem); line-height: 1; letter-spacing: -0.045em; color: var(--ink); max-width: 14ch; font-weight: 600; }
-.outcome .grid { display: grid; grid-template-columns: minmax(0, var(--read)) minmax(12rem, 1fr); gap: 2rem 3rem; }
-.outcome .role { display: grid; gap: 0.5rem; }
-.outcome .role h3 { font: 500 0.8125rem/1 var(--mono); color: var(--dim); letter-spacing: 0; }
-.ext { display: inline-flex; gap: 0.4rem; align-items: center; font-weight: 500; }
-.next {
-  margin-top: clamp(4rem, 9vw, 6rem); margin-inline: calc(-1 * clamp(1rem, 5vw, 4rem));
-  border-top: 1px solid var(--rule); padding: 1.75rem clamp(1rem, 5vw, 4rem) 2.5rem;
-  display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap;
-}
+.big { font-size: clamp(2.2rem, 5.5vw, 3.75rem); line-height: 1; letter-spacing: -0.045em; color: var(--ink); max-width: 14ch; font-weight: 600; }
+.ogrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem 2.5rem; }
+.ogrid h4 { margin: 0 0 0.4rem; font: 500 0.75rem/1 var(--mono); color: var(--dim); }
+.next { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding: 2rem 0 0; }
+.next span { font: 400 0.8125rem/1 var(--mono); color: var(--dim); }
 .next a { color: var(--ink); text-decoration: none; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 600; letter-spacing: -0.03em; }
 .next a:hover { color: var(--accent); }
-.foot { max-width: calc(var(--wide) + 2 * clamp(1rem, 5vw, 4rem)); margin: 0 auto; padding: 1.25rem clamp(1rem, 5vw, 4rem) 2.5rem; font: 400 0.75rem/1.4 var(--mono); color: var(--dim); }
 
-/* ---------- narrow ---------- */
-@media (max-width: 860px) {
-  .intro, .outcome .grid { grid-template-columns: minmax(0, 1fr); }
+/* ---------- narrow: contents become a strip under the bar ---------- */
+@media (max-width: 1000px) {
+  .frame { grid-template-columns: minmax(0, 1fr); }
+  .toc { position: sticky; top: 3.3rem; z-index: 20; margin-inline: calc(-1 * clamp(1rem, 4vw, 2.5rem)); padding: 0.5rem clamp(1rem, 4vw, 2.5rem); background: color-mix(in srgb, var(--studio) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); overflow-x: auto; }
+  .toc .proj, .toc .part ol, .toc .shows { display: none; }
+  .toc > ol { display: flex; gap: 1.25rem; white-space: nowrap; }
+  .toc .part > a { padding: 0.3rem 0; border-bottom: 2px solid transparent; }
+  .toc .part > a[aria-current="true"] { border-bottom-color: var(--accent-strong); }
+  .bar .who span { display: none; }
+}
+@media (max-width: 720px) {
+  .intro, .ogrid, .split { grid-template-columns: minmax(0, 1fr); }
   .field-in { grid-template-columns: minmax(0, 1fr); justify-items: center; }
   .field-in > div { width: 100%; }
-  .chapters { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
-  .card.pair { grid-template-columns: minmax(0, 1fr); }
-  .split { grid-template-columns: minmax(0, 1fr); }
-  .bar .who span { display: none; }
+  .chapters { grid-template-columns: minmax(0, 1fr); }
+  .sheet .meta { flex-direction: column; align-items: flex-start; }
 }
 </style>
 
@@ -307,265 +232,294 @@ figure { margin: 0; display: grid; gap: 0.7rem; }
   </nav>
 </header>
 
-<nav class="rail" aria-label="Parts of this case file">
-  <ol>
-    <li><a href="#read"><span>01</span>Read</a></li>
-    <li><a href="#shop"><span>02</span>Shop</a></li>
-    <li><a href="#return"><span>03</span>Return</a></li>
-    <li><a href="#outcome"><span>04</span>Outcome</a></li>
-  </ol>
-</nav>
+<div class="frame" id="top">
 
-<main class="sheet" id="top">
+  <nav class="toc" aria-label="Contents">
+    <a class="proj" href="#top">Nike Athletes Closet</a>
+    <ol>
+      <li class="part"><a href="#read"><span class="n">01</span>Read</a>
+        <ol>
+          <li><a href="#system">Creative system</a></li>
+          <li><a href="#style">Visual style and tone</a></li>
+          <li><a href="#views">Several views of one outfit</a></li>
+          <li><a href="#components">Reusable components</a></li>
+        </ol></li>
+      <li class="part"><a href="#shop"><span class="n">02</span>Shop</a>
+        <ol>
+          <li><a href="#tags">Product tags</a></li>
+          <li><a href="#product-card">Product cards</a></li>
+          <li><a href="#ranking">Star Ranking</a></li>
+        </ol></li>
+      <li class="part"><a href="#return"><span class="n">03</span>Return</a>
+        <ol>
+          <li><a href="#draw">Reward for a like</a></li>
+          <li><a href="#star-voice">Star Voice Q&amp;A</a></li>
+        </ol></li>
+      <li class="part"><a href="#outcome"><span class="n">04</span>Outcome</a>
+        <ol>
+          <li><a href="#result">One season became several</a></li>
+          <li><a href="#handoff">What I'd do now</a></li>
+        </ol></li>
+    </ol>
+  </nav>
 
-  <!-- cover -->
-  <section class="cover wide" aria-labelledby="title">
-    <p class="client"><i aria-hidden="true"></i>Nike App, China</p>
-    <h1 id="title">Nike Athletes Closet</h1>
-    <p class="lede">Influencer stories in Nike's app, designed to be read, shopped and returned to.</p>
-    <div class="intro">
-      <p>Athletes Closet is a members' feature in Nike's app in China. In each volume, a fashion influencer shares their style and recommends Nike products. From VOL.4, I designed the feature's creative system, every screen and its motion.</p>
-      <dl class="meta">
-        <div><dt>Role</dt><dd>UI Designer</dd></div>
-        <div><dt>Client</dt><dd>Nike</dd></div>
-        <div><dt>Platform</dt><dd>Nike App, China</dd></div>
-      </dl>
-    </div>
-    <div class="shows">
-      <span>What this shows</span>
-      <a class="chip" href="#system">Brand storytelling</a>
-      <a class="chip" href="#draw">Motion and microinteractions</a>
-      <a class="chip" href="#components">Design systems</a>
-    </div>
-  </section>
+  <main class="sheets">
 
-  <!-- the recording -->
-  <section class="field" id="recording" aria-labelledby="rec-title">
-    <div class="field-in">
-      <div class="phone" id="phone">
-        <video id="rec" src="assets/nike/recording.mp4" poster="assets/nike/recording-poster.jpg" muted playsinline preload="metadata" aria-label="Screen recording of Athletes Closet VOL.4 in Nike's app"></video>
-        <button class="tog" id="tog" type="button" aria-label="Play recording"><span class="tri" aria-hidden="true"></span><span class="bars" aria-hidden="true"><i></i><i></i></span></button>
+    <!-- cover -->
+    <header class="cover">
+      <p class="client"><i aria-hidden="true"></i>Nike App, China</p>
+      <h1>Nike Athletes Closet</h1>
+      <p class="lede">Influencer stories in Nike's app, designed to be read, shopped and returned to.</p>
+      <div class="intro">
+        <p>Athletes Closet is a members' feature in Nike's app in China. In each volume, a fashion influencer shares their style and recommends Nike products. From VOL.4, I designed the feature's creative system, every screen and its motion.</p>
+        <dl class="facts">
+          <div><dt>Role</dt><dd>UI Designer</dd></div>
+          <div><dt>Client</dt><dd>Nike</dd></div>
+          <div><dt>Platform</dt><dd>Nike App, China</dd></div>
+        </dl>
       </div>
-      <div>
-        <h2 id="rec-title">The feature in the app</h2>
-        <p>A screen recording of VOL.4 as it shipped. Jump to any moment.</p>
-        <div class="prog" aria-hidden="true"><i id="prog"></i></div>
-        <div class="chapters" id="chapters">
-          <section><h3>Read</h3><ol>
-            <li><button type="button" data-t="13"><span class="t">0:13</span>Logo lock-up</button></li>
-            <li><button type="button" data-t="19"><span class="t">0:19</span>Headline framing device</button></li>
-            <li><button type="button" data-t="22"><span class="t">0:22</span>Several views, swiped</button></li>
-          </ol></section>
-          <section><h3>Shop</h3><ol>
-            <li><button type="button" data-t="25"><span class="t">0:25</span>Product tag</button></li>
-            <li><button type="button" data-t="26"><span class="t">0:26</span>Product cards</button></li>
-            <li><button type="button" data-t="48"><span class="t">0:48</span>Star Ranking</button></li>
-          </ol></section>
-          <section><h3>Return</h3><ol>
-            <li><button type="button" data-t="28.4"><span class="t">0:28</span>Like</button></li>
-            <li><button type="button" data-t="42"><span class="t">0:42</span>Star Voice Q&amp;A</button></li>
-          </ol></section>
+      <div class="chips">
+        <span>What this shows</span>
+        <a class="chip" href="#system">Brand storytelling</a>
+        <a class="chip" href="#draw">Motion and microinteractions</a>
+        <a class="chip" href="#components">Design systems</a>
+      </div>
+    </header>
+
+    <!-- the recording -->
+    <section class="sheet field" id="recording" aria-labelledby="rec-h">
+      <div class="field-in">
+        <div class="phone" id="phone">
+          <video id="rec" src="assets/nike/recording.mp4" poster="assets/nike/recording-poster.jpg" width="750" height="1624" muted playsinline preload="metadata" aria-label="Screen recording of Athletes Closet VOL.4 in Nike's app"></video>
+          <button class="tog" id="tog" type="button" aria-label="Play recording"><span class="tri" aria-hidden="true"></span><span class="bars" aria-hidden="true"><i></i><i></i></span></button>
         </div>
-        <p class="note">The app is in Chinese. Captions below translate what matters.</p>
+        <div>
+          <h2 id="rec-h">The feature in the app</h2>
+          <p class="sub">A screen recording of VOL.4 as it shipped. Jump to any moment.</p>
+          <div class="prog" aria-hidden="true"><i id="prog"></i></div>
+          <div class="chapters" id="chapters">
+            <section><h3>Read</h3><ol>
+              <li><button type="button" data-t="13"><span class="t">0:13</span>Logo lock-up</button></li>
+              <li><button type="button" data-t="19"><span class="t">0:19</span>Headline framing device</button></li>
+              <li><button type="button" data-t="22"><span class="t">0:22</span>Several views, swiped</button></li>
+            </ol></section>
+            <section><h3>Shop</h3><ol>
+              <li><button type="button" data-t="25"><span class="t">0:25</span>Product tag</button></li>
+              <li><button type="button" data-t="26"><span class="t">0:26</span>Product cards</button></li>
+              <li><button type="button" data-t="48"><span class="t">0:48</span>Star Ranking</button></li>
+            </ol></section>
+            <section><h3>Return</h3><ol>
+              <li><button type="button" data-t="28.4"><span class="t">0:28</span>Like</button></li>
+              <li><button type="button" data-t="42"><span class="t">0:42</span>Star Voice Q&amp;A</button></li>
+            </ol></section>
+          </div>
+          <p class="note">The app is in Chinese. Captions translate what matters.</p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 01 read -->
-  <section class="part" id="read" aria-labelledby="read-h">
-    <div class="part-head wide"><span class="n">01</span><h2 id="read-h">Read</h2></div>
+    <!-- 01 read -->
+    <div class="parthead" id="read"><span class="n">01</span><h2>Read</h2></div>
 
-    <article class="card" id="system">
+    <article class="sheet" id="system">
+      <div class="meta"><span class="idx">01.1</span><ul class="tags"><li>Brand storytelling</li><li>Design systems</li></ul></div>
       <div class="text">
         <h3>Redesigning the creative system first</h3>
         <p>Three volumes had shipped by the time I took over at VOL.4, so I began by redesigning the creative system, from the logo lock-up and typography to colour, framing devices and motion. I set the layouts up as reusable page templates, so every later volume is built from the same parts. The framing device balances consistency with flexibility: it adds, removes or rearranges details to fit each headline, and colour is picked up from each influencer's photos or products.</p>
         <button class="seek" type="button" data-t="19"><span class="tri" aria-hidden="true"></span>See it at 0:19</button>
       </div>
-      <figure class="wide">
+      <figure class="ev">
         <div class="mount pad"><img src="assets/nike/system-text-frames.png" alt="Five configurations of the text framing device: logo lock-up, one-line header, rearranged key message, simplified text, and image with text." width="1000" height="870" loading="lazy"></div>
         <figcaption>One framing device, five configurations.</figcaption>
       </figure>
     </article>
 
-    <article class="card" id="style">
+    <article class="sheet" id="style">
+      <div class="meta"><span class="idx">01.2</span><ul class="tags"><li>Brand storytelling</li></ul></div>
       <div class="text">
         <h3>A unified visual style and tone</h3>
         <p>Each influencer gets a hero visual and a poster card in the same style, so readers know whose volume they're in. I retouched the key photos with tone correction, blemish removal and a flash-photography look, so every volume shares one tone.</p>
       </div>
-      <div class="wide split">
-        <figure>
-          <div class="mount"><img src="assets/nike/poster-cards.jpg" alt="Six poster cards, one per influencer, in the same layout: photo, name line, headline and QR code." width="1130" height="912" loading="lazy"></div>
-          <figcaption>One poster system, a different influencer each volume.</figcaption>
-        </figure>
-        <figure>
-          <div class="row" style="--n: 2; gap: 0.5rem;">
-            <img class="small" src="assets/nike/retouch-1-original.png" alt="Original photo of an influencer with a patterned skirt." width="334" height="500" loading="lazy">
-            <img class="small" src="assets/nike/retouch-1-after.png" alt="The same photo retouched with a flash-photography look." width="333" height="500" loading="lazy">
+      <figure class="ev">
+        <div class="mount pad"><img src="assets/nike/guest-posters.png" alt="Six poster cards, one per influencer, in the same layout: photo, name line, headline and QR code." width="1181" height="939" loading="lazy"></div>
+        <figcaption>One poster system, a different influencer each volume.</figcaption>
+      </figure>
+      <figure>
+        <div class="mount pad">
+          <div class="pairs" style="--h: 20rem;">
+            <figure><img src="assets/nike/retouch-1-original.png" alt="Original photo of an influencer holding out a patterned skirt." width="334" height="500" loading="lazy"><figcaption>Original</figcaption></figure>
+            <figure><img src="assets/nike/retouch-1-after.png" alt="The same photo retouched with a flash-photography look." width="333" height="500" loading="lazy"><figcaption>Retouched</figcaption></figure>
           </div>
-          <figcaption>Retouched for the flash look: original and final.</figcaption>
-        </figure>
-      </div>
+        </div>
+        <figcaption>Retouched for the flash look.</figcaption>
+      </figure>
     </article>
 
-    <article class="card" id="views">
+    <article class="sheet" id="views">
+      <div class="meta"><span class="idx">01.3</span><ul class="tags"><li>Motion and microinteractions</li></ul></div>
       <div class="text">
         <h3>Several views of one outfit, swiped sideways</h3>
         <p>Where a story shows the same outfit from several angles, I set the images as horizontal pages instead of one long vertical scroll. It saves space, and the next view shows at the edge, so readers can see there's more.</p>
         <button class="seek" type="button" data-t="22"><span class="tri" aria-hidden="true"></span>See it at 0:22</button>
       </div>
-      <figure class="wide">
+      <figure class="ev">
         <div class="mount"><img src="assets/nike/storytelling-feed.png" alt="Before: one long vertical scroll. After: an outfit's views set as horizontal pages, with the next view showing at the edge." width="1555" height="813" loading="lazy"></div>
         <figcaption>The next view at the edge is the cue to swipe.</figcaption>
       </figure>
     </article>
 
-    <article class="card" id="components">
+    <article class="sheet" id="components">
+      <div class="meta"><span class="idx">01.4</span><ul class="tags"><li>Design systems</li></ul></div>
       <div class="text">
         <h3>Reusable components, built for handover</h3>
         <p>The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma as reusable components with Auto Layout, documented for handover. It cut the back-and-forth between design and engineering.</p>
       </div>
-      <figure class="wide">
-        <div class="tint">
-          <div class="comps">
-            <figure><img class="small" src="assets/nike/gs-imagery-primary.png" alt="Imagery layout, primary." width="782" height="1246" loading="lazy"><figcaption>Layout/Imagery/Primary</figcaption></figure>
-            <figure><img class="small" src="assets/nike/gs-imagery-secondary.png" alt="Imagery layout, secondary." width="782" height="1246" loading="lazy"><figcaption>Layout/Imagery/Secondary</figcaption></figure>
-            <figure><img class="small" src="assets/nike/gs-imagery-tertiary.png" alt="Imagery layout, tertiary." width="782" height="1246" loading="lazy"><figcaption>Layout/Imagery/Tertiary</figcaption></figure>
-            <figure><img class="small" src="assets/nike/gs-poster-card.png" alt="Poster card layout." width="935" height="1246" loading="lazy"><figcaption>Layout/Poster-Card</figcaption></figure>
+      <figure class="ev">
+        <div class="mount pad">
+          <div class="pairs" style="--h: 15rem;">
+            <figure><img src="assets/nike/gs-imagery-primary.png" alt="Imagery layout, primary." width="782" height="1246" loading="lazy"><figcaption>Layout/Imagery/Primary</figcaption></figure>
+            <figure><img src="assets/nike/gs-imagery-secondary.png" alt="Imagery layout, secondary." width="782" height="1246" loading="lazy"><figcaption>Layout/Imagery/Secondary</figcaption></figure>
+            <figure><img src="assets/nike/gs-imagery-tertiary.png" alt="Imagery layout, tertiary." width="782" height="1246" loading="lazy"><figcaption>Layout/Imagery/Tertiary</figcaption></figure>
+            <figure><img src="assets/nike/gs-poster-card.png" alt="Poster card layout." width="935" height="1246" loading="lazy"><figcaption>Layout/Poster-Card</figcaption></figure>
           </div>
         </div>
         <figcaption>One set of sizes, spacing and names across the screens.</figcaption>
       </figure>
     </article>
-  </section>
 
-  <!-- 02 shop -->
-  <section class="part" id="shop" aria-labelledby="shop-h">
-    <div class="part-head wide"><span class="n">02</span><h2 id="shop-h">Shop</h2></div>
+    <!-- 02 shop -->
+    <div class="parthead" id="shop"><span class="n">02</span><h2>Shop</h2></div>
 
-    <article class="card" id="tags">
+    <article class="sheet" id="tags">
+      <div class="meta"><span class="idx">02.1</span><ul class="tags"><li>Brand storytelling</li></ul></div>
       <div class="text">
         <h3>Shop the look, straight from the photo</h3>
         <p>Readers engaged with the stories, but product click-through stayed low, because the stories didn't connect to the products. I added tappable product tags to the photos, so an outfit leads straight to what's in it.</p>
         <button class="seek" type="button" data-t="25"><span class="tri" aria-hidden="true"></span>See it at 0:25</button>
       </div>
-      <figure class="wide">
-        <div class="seg" role="group" aria-label="Show">
-          <button type="button" aria-pressed="false" data-show="0">Wireframe</button>
-          <button type="button" aria-pressed="true" data-show="1">Final</button>
-        </div>
-        <div class="swap" id="tagswap">
-          <img src="assets/nike/product-tags-1.jpg" alt="Wireframe: three story pages with a product tag placed on the photo." width="1600" height="835" loading="lazy" hidden>
-          <img src="assets/nike/product-tags-2.jpg" alt="Final: the same three pages, with product tags on the photos naming a T-shirt and a pair of trainers." width="1600" height="835" loading="lazy">
+      <figure class="ev">
+        <div class="mount pad">
+          <div class="stack">
+            <div class="seg" role="group" aria-label="Show">
+              <button type="button" aria-pressed="false" data-show="0">Wireframe</button>
+              <button type="button" aria-pressed="true" data-show="1">Final</button>
+            </div>
+            <div class="swap" id="tagswap">
+              <img src="assets/nike/product-tags-1.png" alt="Wireframe: three story pages with a product tag placed on the photo." width="2500" height="1306" loading="lazy" hidden>
+              <img src="assets/nike/product-tags-2.png" alt="Final: the same three pages, with product tags on the photos naming a T-shirt and a pair of trainers." width="2500" height="1306" loading="lazy">
+            </div>
+          </div>
         </div>
         <figcaption>A tag on the photo names the item and links to it: "同款T恤", the same T-shirt.</figcaption>
       </figure>
     </article>
 
-    <article class="card pair" id="product-card">
+    <article class="sheet" id="product-card">
+      <div class="meta"><span class="idx">02.2</span><ul class="tags"><li>Brand storytelling</li></ul></div>
       <div class="text">
         <h3>Larger product cards</h3>
         <p>The old product cards were small tiles. I enlarged the product image, so each item reads as part of the content.</p>
         <button class="seek" type="button" data-t="26"><span class="tri" aria-hidden="true"></span>See it at 0:26</button>
       </div>
-      <figure>
-        <div class="compare" id="compare" style="--x: 50%;">
-          <img src="assets/nike/product-card-after.jpg" alt="After VOL.4: larger product images under the story photo." width="900" height="1771" loading="lazy">
-          <img class="top" src="assets/nike/product-card-before.jpg" alt="Before VOL.4: products in small tiles." width="900" height="1771" loading="lazy">
-          <span class="lab l">Before</span><span class="lab r">After</span>
-          <span class="handle" aria-hidden="true"></span>
-          <input type="range" id="compare-range" min="0" max="100" value="50" aria-label="Compare before and after">
+      <figure class="ev">
+        <div class="mount pad">
+          <div class="compare" id="compare" style="--x: 50%;">
+            <img src="assets/nike/product-card-after.png" alt="After VOL.4: larger product images under the story photo." width="1821" height="3584" loading="lazy">
+            <img class="top" src="assets/nike/product-card-before.png" alt="Before VOL.4: products in small tiles." width="1821" height="3584" loading="lazy">
+            <span class="lab l">Before</span><span class="lab r">After</span>
+            <span class="handle" aria-hidden="true"></span>
+            <input type="range" id="compare-range" min="0" max="100" value="50" aria-label="Compare before and after">
+          </div>
         </div>
         <figcaption>Drag to compare the product card before and after VOL.4.</figcaption>
       </figure>
     </article>
 
-    <article class="card pair" id="ranking">
+    <article class="sheet" id="ranking">
+      <div class="meta"><span class="idx">02.3</span><ul class="tags"><li>Brand storytelling</li></ul></div>
       <div class="text">
         <h3>A ranking that leads to similar outfits</h3>
         <p>The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear hierarchy, and added two calls to action after a like, "See more" and "View similar outfits", so a ranking leads into more products.</p>
         <button class="seek" type="button" data-t="48"><span class="tri" aria-hidden="true"></span>See it at 0:48</button>
       </div>
-      <figure>
-        <div class="tint">
-          <div class="row" style="--n: 2;">
-            <figure><img class="small" src="assets/nike/ranking-before.png" alt="Before: three loose tiles." width="375" height="389" loading="lazy"><figcaption>Before</figcaption></figure>
-            <figure><img class="small" src="assets/nike/ranking-after.png" alt="After: a ranked top three with calls to action." width="375" height="420" loading="lazy"><figcaption>After</figcaption></figure>
+      <figure class="ev">
+        <div class="mount pad">
+          <div class="pairs" style="--h: 20rem;">
+            <figure><img src="assets/nike/ranking-before.png" alt="Before: three loose tiles." width="375" height="389" loading="lazy"><figcaption>Before</figcaption></figure>
+            <figure><img src="assets/nike/ranking-after.png" alt="After: a ranked top three with calls to action." width="375" height="420" loading="lazy"><figcaption>After</figcaption></figure>
           </div>
         </div>
         <figcaption>A loose list becomes a ranked board with a way onward.</figcaption>
       </figure>
     </article>
-  </section>
 
-  <!-- 03 return -->
-  <section class="part" id="return" aria-labelledby="return-h">
-    <div class="part-head wide"><span class="n">03</span><h2 id="return-h">Return</h2></div>
+    <!-- 03 return -->
+    <div class="parthead" id="return"><span class="n">03</span><h2>Return</h2></div>
 
-    <article class="card" id="draw">
+    <article class="sheet" id="draw">
+      <div class="meta"><span class="idx">03.1</span><ul class="tags"><li>Motion and microinteractions</li></ul></div>
       <div class="text">
         <h3>A reward for every like</h3>
         <p>The stories were static, so readers had little reason to act. I added a reward mechanism: a like enters a prize draw, which opens as a shoebox with a pair of trainers rising out. I designed the microinteraction and animated it.</p>
       </div>
-      <figure class="wide">
-        <div class="lottie" id="giftbox">
-          <div class="stage" id="giftstage" aria-label="Animation: a shoebox opens and a pair of trainers rises out" role="img"></div>
-          <button class="play" type="button" id="giftplay"><span class="tri" aria-hidden="true"></span>Play</button>
+      <figure class="ev">
+        <div class="mount">
+          <div class="lottie">
+            <div class="stage" id="giftstage" role="img" aria-label="Animation: a shoebox opens and a pair of trainers rises out"></div>
+            <button class="ctl" type="button" id="giftplay"><span class="tri" aria-hidden="true"></span>Play</button>
+          </div>
         </div>
         <figcaption>Play: a like enters the prize draw.</figcaption>
       </figure>
     </article>
 
-    <article class="card pair" id="star-voice">
+    <article class="sheet" id="star-voice">
+      <div class="meta"><span class="idx">03.2</span><ul class="tags"><li>Motion and microinteractions</li><li>Brand storytelling</li></ul></div>
       <div class="text">
         <h3>Star Voice Q&amp;A: ask now, answered live</h3>
         <p>I designed Star Voice Q&amp;A to hold attention between volumes. The next influencer records a short voice teaser, readers submit questions and vote on others', and the top questions are answered in Nike's livestream. It shipped, and was recommended for wider use in other campaigns.</p>
         <button class="seek" type="button" data-t="42"><span class="tri" aria-hidden="true"></span>See it at 0:42</button>
       </div>
-      <figure>
-        <div class="mount"><img src="assets/nike/star-voice-crop.jpg" alt="Star Voice Q&amp;A: a voice teaser from the next influencer, voted questions and a field to ask one." width="1200" height="1378" loading="lazy"></div>
-        <figcaption>Preview, ask, vote, answered live. The screen invites questions for the next influencer, answered in Nike's 618 livestream.</figcaption>
+      <figure class="ev">
+        <div class="mount pad"><img src="assets/nike/star-voice-crop.jpg" alt="Star Voice Q&amp;A: a voice teaser from the next influencer, voted questions and a field to ask one." width="2957" height="3396" loading="lazy" style="max-height: 34rem;"></div>
+        <figcaption>Preview, ask, vote, answered live: questions for the next influencer are answered in Nike's 618 livestream.</figcaption>
       </figure>
     </article>
-  </section>
 
-  <!-- outcome -->
-  <section class="outcome" id="outcome" aria-labelledby="out-h">
-    <div class="part-head wide"><span class="n">04</span><h2 id="out-h">Outcome</h2></div>
-    <p class="big">One season became several</p>
-    <div class="grid">
-      <p>The feature shipped in Nike's app. The contract covered one season; after VOL.4, Nike commissioned the following seasons.</p>
-      <div class="role">
-        <h3>Role</h3>
-        <p>UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.</p>
-        <a class="ext" href="https://www.youtube.com/shorts/4cFA1T_9m8w" target="_blank" rel="noopener">Full recording on YouTube<span aria-hidden="true">↗</span></a>
+    <!-- 04 outcome -->
+    <div class="parthead" id="outcome"><span class="n">04</span><h2>Outcome</h2></div>
+
+    <section class="sheet" id="result" aria-label="Outcome and role">
+      <p class="big">One season became several</p>
+      <div class="ogrid">
+        <div><h4>Outcome</h4><p>The feature shipped in Nike's app. The contract covered one season; after VOL.4, Nike commissioned the following seasons.</p></div>
+        <div><h4>Role</h4><p>UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.</p></div>
       </div>
-    </div>
+      <a href="https://www.youtube.com/shorts/4cFA1T_9m8w" target="_blank" rel="noopener">Full recording on YouTube ↗</a>
+    </section>
 
-    <article class="card" id="handoff" style="margin-top: clamp(3rem, 7vw, 5rem);">
+    <article class="sheet" id="handoff">
+      <div class="meta"><span class="idx">04.2</span><ul class="tags"><li>Motion and microinteractions</li></ul></div>
       <div class="text">
         <h3>What I'd do now: take motion from idea to production myself</h3>
         <p>I specified the like in four states: an outline heart, a pill inviting a like to win a gift, a black heart with the count, and hearts floating out. Handed over in Figma, it was built as a plain red heart. I now build motion in code myself and take responsibility for the quality of what ships.</p>
         <button class="seek" type="button" data-t="28.4"><span class="tri" aria-hidden="true"></span>See it at 0:28</button>
       </div>
-      <div class="wide split">
+      <div class="ev split">
         <figure>
-          <div class="mount"><img src="assets/nike/like-states.png" alt="The like specified in Figma: an outline heart, a pill reading 点赞赢好礼 (like to win a gift), then a black heart with the count, and hearts floating out." width="1474" height="962" loading="lazy"></div>
+          <div class="mount" style="height: 100%;"><img src="assets/nike/like-states.png" alt="The like specified in Figma: an outline heart, a pill reading 点赞赢好礼 (like to win a gift), then a black heart with the count, and hearts floating out." width="1474" height="962" loading="lazy"></div>
           <figcaption>Specified: four states, from "点赞赢好礼" (like to win a gift) to the count.</figcaption>
         </figure>
         <figure>
-          <div class="mount"><img src="assets/nike/like-shipped.jpg" alt="The shipped like: a plain red heart over the photo." width="600" height="750" loading="lazy"></div>
+          <div class="mount pad" style="height: 100%;"><img src="assets/nike/like-shipped.jpg" alt="The shipped like: a plain red heart over the photo." width="828" height="1034" loading="lazy" style="max-height: 18rem;"></div>
           <figcaption>Shipped: a plain red heart.</figcaption>
         </figure>
       </div>
     </article>
-  </section>
 
-  <nav class="next" aria-label="Next case file">
-    <span class="cap">Next case file</span>
-    <a href="#">This site</a>
-  </nav>
-</main>
-<p class="foot">Chongbo Ning, Design Engineer, London</p>
+    <nav class="next" aria-label="Next case file"><span>Next case file</span><a href="#">This site</a></nav>
+  </main>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 <script>
@@ -598,11 +552,8 @@ figure { margin: 0; display: grid; gap: 0.7rem; }
   const prog = document.getElementById('prog');
   const chapterBtns = [...document.querySelectorAll('#chapters button')];
   const times = chapterBtns.map(b => parseFloat(b.dataset.t)).sort((a, b) => a - b);
-  const setPlaying = on => {
-    phone.classList.toggle('playing', on);
-    tog.setAttribute('aria-label', on ? 'Pause recording' : 'Play recording');
-  };
-  tog.addEventListener('click', () => { video.paused ? video.play() : video.pause(); });
+  const setPlaying = on => { phone.classList.toggle('playing', on); tog.setAttribute('aria-label', on ? 'Pause recording' : 'Play recording'); };
+  tog.addEventListener('click', () => { video.paused ? video.play().catch(() => {}) : video.pause(); });
   video.addEventListener('play', () => setPlaying(true));
   video.addEventListener('pause', () => setPlaying(false));
   video.addEventListener('ended', () => setPlaying(false));
@@ -613,9 +564,9 @@ figure { margin: 0; display: grid; gap: 0.7rem; }
     for (const s of times) if (t >= s - 0.05) cur = s;
     chapterBtns.forEach(b => b.setAttribute('aria-current', String(parseFloat(b.dataset.t) === cur)));
   });
-  const seek = (t) => {
+  const seek = t => {
     const go = () => { video.currentTime = t; video.play().catch(() => {}); };
-    if (video.readyState >= 1) go(); else video.addEventListener('loadedmetadata', go, { once: true }), video.load();
+    if (video.readyState >= 1) go(); else { video.addEventListener('loadedmetadata', go, { once: true }); video.load(); }
   };
   chapterBtns.forEach(b => b.addEventListener('click', () => seek(parseFloat(b.dataset.t))));
   document.querySelectorAll('.seek').forEach(b => b.addEventListener('click', () => {
@@ -630,10 +581,11 @@ figure { margin: 0; display: grid; gap: 0.7rem; }
 
   /* wireframe / final */
   const swapImgs = document.querySelectorAll('#tagswap img');
-  document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+  const segBtns = document.querySelectorAll('.seg button');
+  segBtns.forEach(b => b.addEventListener('click', () => {
     const i = +b.dataset.show;
     swapImgs.forEach((img, k) => { img.hidden = k !== i; });
-    document.querySelectorAll('.seg button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    segBtns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
   }));
 
   /* gift box */
@@ -649,25 +601,34 @@ figure { margin: 0; display: grid; gap: 0.7rem; }
   });
   load().catch(() => {});
   playBtn.addEventListener('click', () => {
-    load().then(a => {
-      if (reduce) { a.goToAndStop(a.totalFrames - 1, true); return; }
-      a.goToAndPlay(0, true);
-    }).catch(() => {});
+    load().then(a => { reduce ? a.goToAndStop(a.totalFrames - 1, true) : a.goToAndPlay(0, true); }).catch(() => {});
   });
 
-  /* parts rail */
-  const railLinks = [...document.querySelectorAll('.rail a')];
-  const parts = railLinks.map(a => document.querySelector(a.getAttribute('href')));
+  /* contents: mark the part and card in view */
+  const tocLinks = [...document.querySelectorAll('.toc a[href^="#"]')].filter(a => a.getAttribute('href') !== '#top');
+  const targets = [...new Set(tocLinks.map(a => a.getAttribute('href')))].map(h => document.querySelector(h)).filter(Boolean);
   const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
-      railLinks.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + e.target.id)));
+      const id = '#' + e.target.id;
+      const partId = e.target.classList.contains('parthead') ? id : '#' + (e.target.dataset.part || '');
+      tocLinks.forEach(a => {
+        const h = a.getAttribute('href');
+        const isCard = h === id && !a.parentElement.classList.contains('part');
+        const isPart = a.parentElement.classList.contains('part') && h === partId;
+        a.setAttribute('aria-current', String(isCard || isPart));
+      });
     });
-  }, { rootMargin: '-45% 0px -50% 0px' });
-  parts.forEach(p => p && io.observe(p));
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  /* each card knows its part */
+  let part = '';
+  document.querySelectorAll('.parthead, .sheet[id]').forEach(el => {
+    if (el.classList.contains('parthead')) part = el.id; else el.dataset.part = part;
+  });
+  targets.forEach(t => io.observe(t));
 
-  /* "Printed for" highlight: #system etc. arriving from the printer */
-  const hit = location.hash && document.querySelector(location.hash + '.card');
-  if (hit) hit.classList.add('highlight');
+  /* arriving from the printer: highlight the printed card */
+  const hit = location.hash && document.querySelector('.sheet' + location.hash);
+  if (hit) hit.classList.add('printed');
 })();
 </script>

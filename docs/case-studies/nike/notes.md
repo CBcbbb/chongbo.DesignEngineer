@@ -65,3 +65,8 @@ None of these are used unless Chongbo confirms them as real. One detail to check
 - `recording.mp4` is a 750 px, muted, H.264 encode of the full 50 s recording (7 MB). Chapters: lock-up 0:13, headline 0:19, views 0:22, tag 0:25, cards 0:26, like 0:28, Star Voice 0:42, ranking 0:48.
 - Figma frames rendered at their natural size (1920×1080) and cropped: `system-text-frames.png`, `storytelling-feed.png` (slide titles masked), `poster-cards.jpg`. `like-states.png` is Chongbo's own export.
 - `hero.jpg` stays in the repo as the Open Graph image; its title graphic says "Athlete Closet" and duplicates the page title, so it's off the page.
+
+## Images (2026-10-10, v2)
+
+- `public/assets/nike/` holds the Wix originals: the scraper strips Wix's resize parameters and downloads each file as uploaded. So `retouch-*.png` (334×500) and `ranking-*.png` (375 wide) are the sizes uploaded to Wix; anything larger would come from Chongbo's source files.
+- The page now uses originals unresized: `product-card-*.png`, `guest-posters.png`, `product-tags-1/2.png` (the GIF's two frames, lossless), `star-voice-crop.jpg` (a crop of `star-voice-qa.png` at native resolution).
