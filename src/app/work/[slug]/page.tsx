@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProject, projects, SIGNALS } from "@content";
@@ -117,6 +118,7 @@ export default async function CaseFile({ params }: Props) {
                         #
                       </a>
                     </div>
+                    {s.eyebrow && <p className="case-eyebrow">{s.eyebrow}</p>}
                     <h2 id={`${s.id}-title`} className="case-h2">
                       {s.title}
                     </h2>
@@ -125,6 +127,18 @@ export default async function CaseFile({ params }: Props) {
                         <p key={para.slice(0, 32)}>{para}</p>
                       ))}
                     </div>
+                    {s.steps && s.steps.length > 0 && (
+                      <ol className="case-steps">
+                        {s.steps.map((step, n) => (
+                          <li key={step.text}>
+                            <span className="case-step-n" aria-hidden="true">
+                              {String(n + 1).padStart(2, "0")}
+                            </span>
+                            <span className="case-step-t">{step.text}</span>
+                          </li>
+                        ))}
+                      </ol>
+                    )}
                     {s.media && (
                       <div className="mt-6">
                         <MediaSlot media={s.media} />

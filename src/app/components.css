@@ -849,6 +849,37 @@ main:focus {
 .case-links a:hover {
   color: var(--stamp);
 }
+.case-eyebrow {
+  margin: 0 0 2px;
+  font: 600 11.5px/1.4 var(--mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stamp);
+}
+.case-steps {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  border-top: 1px dashed var(--paper-rule);
+}
+.case-steps > li {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px dashed var(--paper-rule);
+}
+.case-step-n {
+  font: 700 22px/1 var(--sans);
+  letter-spacing: -0.03em;
+  color: var(--stamp);
+}
+.case-step-t {
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--paper-body);
+}
 .case-h2 {
   margin: 6px 0 14px;
   font: 600 clamp(22px, 3vw, 27px) / 1.2 var(--sans);

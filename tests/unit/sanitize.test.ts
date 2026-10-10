@@ -9,14 +9,14 @@ describe("sanitizeSheets", () => {
       { project: "made-up", section: "problem", signal: "data", reason: "b" },
       { project: "component-store", section: "nope", signal: "data", reason: "c" },
       { project: "component-store", section: "contracts", signal: "design-eng-gap", reason: "d" },
-      { project: "nike-athletes-closet", section: "system", signal: "reusable-components", reason: "e" },
+      { project: "nike-athletes-closet", section: "graphic-system", signal: "reusable-components", reason: "e" },
       { project: "this-site", section: "idea", signal: "ai-tools", reason: "f" },
       { project: "wildecho", section: "prototype", signal: "prototyping", reason: "g" },
     ]);
     expect(sheets.map((s) => `${s.project}#${s.section}`)).toEqual([
       "hhcd-data-platform#dual-view",
       "component-store#contracts",
-      "nike-athletes-closet#system",
+      "nike-athletes-closet#graphic-system",
       "this-site#idea",
       "wildecho#prototype",
     ]);

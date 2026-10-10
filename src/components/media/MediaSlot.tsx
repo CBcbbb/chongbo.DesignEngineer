@@ -25,7 +25,7 @@ function Caption({ text }: { text?: string }) {
 }
 
 function Placeholder({ kind, asset, need, ratio, alt }: { kind: string; asset: string; need: string; ratio: string; alt: string }) {
-  const portrait = ratio === "9:16";
+  const portrait = ratio === "9:16" || ratio === "3:4";
   return (
     <div
       className={`slot-ph ${portrait ? "mx-auto max-w-[300px]" : ""}`}
@@ -53,6 +53,75 @@ function CompactPlaceholder({ label, alt }: { label: string; alt: string }) {
   );
 }
 
+/** One framed image with an optional label underneath, or a placeholder when the asset is missing. */
+function FramedImage({
+  asset,
+  alt,
+  need,
+  ratio,
+  label,
+  sizes,
+}: {
+  asset: string;
+  alt: string;
+  need: string;
+  ratio: string;
+  label?: string;
+  sizes: string;
+}) {
+  const exists = assetExists(asset);
+  return (
+    <figure className="m-0 flex flex-col">
+      {exists ? (
+        <div
+          className="relative overflow-hidden rounded-[4px] bg-[#f3f3ef] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.06)]"
+          style={{ aspectRatio: ratioCss(ratio) }}
+        >
+          <Image src={`/assets/${asset}`} alt={alt} fill sizes={sizes} className="object-contain" />
+        </div>
+      ) : (
+        <Placeholder kind="Image" asset={asset} need={need} ratio={ratio} alt={alt} />
+      )}
+      {label && <figcaption className="mt-2 font-mono text-[12px] leading-snug text-paper-dim">{label}</figcaption>}
+    </figure>
+  );
+}
+
+/** A set of images laid out together, mirroring the image blocks in the old case study. */
+function GroupSlot({ media }: { media: Extract<Media, { kind: "group" }> }) {
+  const columns = media.columns ?? 2;
+  const cellRatio = media.ratio ?? "4:3";
+
+  const className =
+    media.layout === "grid"
+      ? `grid grid-cols-1 gap-4 sm:gap-5 ${columns === 3 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`
+      : media.layout === "row"
+        ? "grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5"
+        : "flex flex-col gap-5";
+
+  const sizes =
+    media.layout === "grid" && columns === 3 ? "(min-width: 900px) 220px, 100vw" : "(min-width: 900px) 330px, 100vw";
+
+  return (
+    <figure className="m-0">
+      <div className={className}>
+        {media.items.map((item) => (
+          <FramedImage
+            key={item.asset}
+            asset={item.asset}
+            alt={item.alt}
+            need={item.need}
+            ratio={item.ratio ?? cellRatio}
+            label={item.label}
+            sizes={sizes}
+          />
+        ))}
+      </div>
+      <Caption text={media.caption} />
+    </figure>
+  );
+}
+
 /**
  * `compact` is for printed sheets (about 300px wide): diagrams render for real, images that exist render,
  * and missing images, videos and code samples become a small placeholder.
@@ -60,10 +129,13 @@ function CompactPlaceholder({ label, alt }: { label: string; alt: string }) {
 export function MediaSlot({ media, priority = false, compact = false }: { media: Media; priority?: boolean; compact?: boolean }) {
   if (compact) {
     if (media.kind === "code") return <CompactPlaceholder label="Code sample" alt={media.caption ?? `${media.language} code`} />;
+    if (media.kind === "group") return <CompactPlaceholder label="Images" alt={media.caption ?? "image group"} />;
     if ((media.kind === "image" || media.kind === "video") && !assetExists(media.asset))
       return <CompactPlaceholder label={media.kind === "image" ? "Image" : "Video"} alt={media.alt} />;
   }
   switch (media.kind) {
+    case "group":
+      return <GroupSlot media={media} />;
     case "diagram":
       return (
         <figure className="m-0">

@@ -61,8 +61,30 @@ export type Media =
       ratio: "16:10" | "9:16";
     }
   | { kind: "code"; language: "css" | "ts" | "tsx"; code: string; caption?: string }
-  | { kind: "diagram"; diagram: "data-contracts" | "token-layers"; caption?: string };
+  | { kind: "diagram"; diagram: "data-contracts" | "token-layers"; caption?: string }
+  | {
+      /** An ordered set of images shown together, mirroring the blocks in the old case study. */
+      kind: "group";
+      layout: "row" | "grid" | "stack";
+      items: GroupItem[];
+      caption?: string;
+      /** Column count for layout "grid". Defaults to 2. */
+      columns?: 2 | 3;
+      /** Cell aspect ratio for grid rows; defaults to "4:3". */
+      ratio?: "16:10" | "4:3" | "1:1" | "9:16" | "3:4";
+    };
 
+/** One image inside a group, with an optional short label shown under it. */
+export type GroupItem = {
+  asset: string;
+  alt: string;
+  label?: string;
+  need: string;
+  ratio?: "16:10" | "4:3" | "1:1" | "9:16" | "3:4";
+};
+
+/** A numbered solution step, mirroring the "SOLUTIONS 01/02/03" blocks. */
+export type Step = { text: string };
 export type Section = {
   id: string;
   kind: SectionKind;
@@ -71,6 +93,10 @@ export type Section = {
   body: string[];
   signals: Signal[];
   media?: Media;
+  /** Numbered solutions or contributions, rendered under the body. */
+  steps?: Step[];
+  /** Small label above the title, e.g. "Challenge 2" or "Feature focus". */
+  eyebrow?: string;
 };
 
 export type ProjectLink = { label: string; href: string };
@@ -105,3 +131,4 @@ export type Profile = {
   education: string[];
   contact: { email: string; linkedin: string; github: string; archive: string };
 };
+

@@ -52,7 +52,7 @@ describe("askModel", () => {
         sheet("component-store", "contrast-in-tokens", "accessibility"),
         sheet("component-store", "mapping", "data"),
         sheet("this-site", "foundations", "accessibility"),
-        sheet("nike-athletes-closet", "system", "reusable-components"),
+        sheet("nike-athletes-closet", "graphic-system", "reusable-components"),
         sheet("wildecho", "prototype", "prototyping"),
       ],
       line: "Five projects match your brief.",

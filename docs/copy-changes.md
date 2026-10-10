@@ -30,17 +30,17 @@ What the machine prints for each capability on its own (fallback, one sheet per 
 | Capability | Sheets (project#section) |
 |---|---|
 | End-to-end delivery (`end-to-end`) | hhcd-data-platform#origin, component-store#outcome, nike-athletes-closet#outcome, this-site#idea |
-| Design systems (`design-systems`) | component-store#token-layers, hhcd-data-platform#tokens-and-publishing, nike-athletes-closet#system |
+| Design systems (`design-systems`) | component-store#token-layers, hhcd-data-platform#tokens-and-publishing, nike-athletes-closet#graphic-system |
 | Consistency across platforms (`cross-platform`) | component-store#token-layers |
-| Closing design–engineering gaps (`design-eng-gap`) | component-store#contracts, nike-athletes-closet#system |
+| Closing design–engineering gaps (`design-eng-gap`) | component-store#contracts, nike-athletes-closet#graphic-system |
 | Accessibility (`accessibility`) | hhcd-data-platform#dual-view, component-store#contrast-in-tokens, this-site#foundations |
 | SEO and performance (`seo-performance`) | hhcd-data-platform#rebuild, this-site#foundations |
 | Publishing workflows (`publishing-workflow`) | this-site#content, hhcd-data-platform#data-model |
-| Reusable components (`reusable-components`) | nike-athletes-closet#system, component-store#contracts, this-site#content, hhcd-data-platform#origin |
+| Reusable components (`reusable-components`) | nike-athletes-closet#graphic-system, component-store#contracts, this-site#content, hhcd-data-platform#origin |
 | Brand and storytelling (`brand-storytelling`) | nike-athletes-closet#product-card |
 | Conversion (`conversion`) | nike-athletes-closet#product-card |
 | Motion and interaction (`motion-interaction`) | component-store#mapping, nike-athletes-closet#delight, this-site#idea |
-| Typography and layout (`typography`) | nike-athletes-closet#system, hhcd-data-platform#one-example-first |
+| Typography and layout (`typography`) | nike-athletes-closet#graphic-system, hhcd-data-platform#one-example-first |
 | Data and visualisation (`data`) | hhcd-data-platform#data-model, component-store#problem |
 | Prototyping new interactions (`prototyping`) | this-site#idea, component-store#mapping, wildecho#prototype |
 | Working with AI tools (`ai-tools`) | hhcd-data-platform#origin, this-site#idea, component-store#outcome |

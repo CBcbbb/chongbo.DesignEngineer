@@ -95,7 +95,7 @@ const PROJECT_HINTS: Record<string, string[]> = {
 export const DEFAULT_SHEETS: Sheet[] = [
   { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "Accessibility and data, designed and built end to end." },
   { project: "component-store", section: "contracts", signal: "design-eng-gap", reason: "Closing a gap between design and engineering with data contracts." },
-  { project: "nike-athletes-closet", section: "system", signal: "reusable-components", reason: "A reusable layout system that shipped in the Nike app." },
+  { project: "nike-athletes-closet", section: "graphic-system", signal: "reusable-components", reason: "A reusable layout system that shipped in the Nike app." },
 ];
 
 const STOPWORDS = new Set(
