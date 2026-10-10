@@ -1,4 +1,4 @@
-# Helen Hamlyn Centre Data Platform: copy, draft 2
+# Helen Hamlyn Centre Data Platform: copy, draft 3
 
 Playbook §8 step 4. Every fact traces to `inventory.md` → "Facts and their sources". `[brackets]` are gaps. Use "we" for VOICE team decisions and "I" for Chongbo's own work.
 
@@ -16,7 +16,7 @@ Playbook §8 step 4. Every fact traces to `inventory.md` → "Facts and their so
 
 ### `brief`: Accessibility as the starting point
 
-VOICE was an EU-funded arts research project with partners in several countries. Its platform was for artists, researchers, community groups and policy makers. With an audience that broad, I built accessibility into the design from the first prototype.
+VOICE was an EU-funded arts research project with partners in several countries. Its platform was for artists, researchers, community groups and policy makers. With an audience that broad, accessibility was a goal from the first prototype.
 
 *Image caption:* The VOICE platform at launch.
 
@@ -34,7 +34,7 @@ I coded the prototype ideas with sample data, so people could try them rather th
 
 ### `workshop`: A 75-minute workshop with 14 stakeholders
 
-I ran the workshop with members of the seven partner organisations. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view. Three walls collected their answers, with sticky notes and dot votes.
+We ran the workshop with members of the seven partner organisations, and I designed its process. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view. Three walls collected their answers, with sticky notes and dot votes.
 
 *Steps:*
 

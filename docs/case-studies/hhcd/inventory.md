@@ -49,7 +49,7 @@ Copy may only use these, or what Chongbo adds later.
 - VOICE had two views (graph and table), not three. The columns arrangement came with the HHCD rebuild.
 - The source data was one Excel sheet (VOICE) that started from people: each person's projects, the methods each project used, and the organisations that supported it.
 - He started the survey from each person's own work, so people would be willing to fill it in. After a first round of cleaning, he decided how the Excel rows became points, and what each point represents. He also decided to map by four linked types, because laying person-first data out as it is puts people at the centre.
-- He ran the workshop and analysed its data.
+- The team ran the workshop; he designed its process and analysed its data.
 - The one-liner calls it a research repository (a resource library).
 - Accessibility came first because the project was broad and international.
 - He made the design files, wrote the requirements document, built many of the early prototypes, and wrote all the code with AI coding tools. Those tools were weaker then, so it took a lot of work.
