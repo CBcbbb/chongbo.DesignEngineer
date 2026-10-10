@@ -35,7 +35,7 @@ Read all of them before asking me anything.
 - **The record I migrated from it** (a straight copy, kept for reference and to be replaced by the new design):
   - `src/components/case/nike/` (`NikeCase.tsx`, `nike.css`, `Slideshow.tsx`, `LottiePlayer.tsx`)
   - `content/projects/nike.ts`
-  - `public/assets/nike/`: 27 images and two Lottie files: before/after pairs, the graphic system, Star Voice Q&A, retouching, the gift-box and like-to-draw animations.
+  - `public/assets/nike/`: 25 images and 2 Lottie files: before/after pairs, the graphic system, Star Voice Q&A, retouching, the gift-box and like-to-draw animations.
   - `scripts/scrape-wix-nike.mjs`
   - The Wix-faithful version is preserved on the branch `archive/wix-case-files`, so you can replace it freely on your branch.
 
