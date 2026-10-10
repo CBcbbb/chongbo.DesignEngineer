@@ -42,3 +42,19 @@ Source of truth for the rewrite. Wix copy (https://ningchongbo.wixsite.com/homep
 - Who designed the "before" screens.
 - Interview questions in progress (playbook §8 step 2).
 - Slug `nike-athletes-closet` is referenced in shared files (`src/lib/ask/*`, `src/lib/site.ts`, tests). Title changes in `nike.ts`; any slug change goes through `SHARED-CHANGES.md`.
+
+## Round 3 (2026-10-10)
+
+- Volumes and seasons: don't state a count. Agency: not named. Say "Nike's app in China".
+- Gift-box draw: no capture exists beyond the Lottie.
+- **Keep originals.** Stills carry quality; the recording is lower quality and only carries interaction.
+- Figma file: https://www.figma.com/design/CwoAjqS2BOOVfueNRTaMlY/Nike-UX-portfolio. Pages: "Page 1" (UI screens, LIKE-0…3 states, presentation frames, retouching, Star Voice) and "Creative System" (dated 6 Feb 2023: logo lock-up, typography, colour, graphic systems, motion, application examples).
+- Designed like spec (Figma, LIKE-0…3): outline heart with an orange dot → pill extends to "点赞" → "点赞赢好礼" (like to win a gift) → tap: text changes to "256人已点赞", heart turns black, hearts float out.
+
+### Not sources: AI-drafted text in the Figma file
+
+Three text nodes (`12:3537`, `12:3538`, `14:3539`) are AI-written drafts (they end by offering Notion templates). They contradict confirmed facts and each other:
+- durations of 6 weeks and 8 weeks (Wix and Chongbo: two months);
+- "led", "main designer", "data-driven", "A/B testing";
+- numbers: click-through 4.2% → 12.6%, draw participation 18% → 47%, time on page 42 s → 58 s, 3,400+ questions per episode, 73% audio play rate, delivery 30% faster.
+None of these are used unless Chongbo confirms them as real. One detail to check: "answered in Nike's 618 livestream".
