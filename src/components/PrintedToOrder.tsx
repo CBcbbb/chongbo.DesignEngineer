@@ -365,7 +365,7 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
                 aria-pressed={picked.includes(t.id)}
                 onClick={() => toggle(t.id)}
               >
-                <small>{pad2(i + 1)}</small>
+                <small aria-hidden="true">{pad2(i + 1)}</small>
                 <b>{t.label}</b>
               </button>
             </li>

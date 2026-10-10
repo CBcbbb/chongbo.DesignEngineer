@@ -35,10 +35,9 @@ const TEXT = 4.5;
 const LARGE = 3; // large text and UI component boundaries / focus rings
 
 // Fixed surfaces that are not tokens (see components.css).
-const KEY_FACE = "#eceae4"; // bottom of the Print key gradient
 const INSET = "#f3f3ef"; // diagrams and media placeholders
 const CODE_BG = "#1f1f1d";
-const TAG_INK = "#3a3a36";
+const TAG_INK = "#3a3a36"; // case-file tags (components.css)
 
 function pairs(t: Record<string, string>, theme: string): Pair[] {
   const T = (k: string) => {
@@ -52,23 +51,24 @@ function pairs(t: Record<string, string>, theme: string): Pair[] {
     { fg: T("ink"), bg: T("studio-hi"), where: `${theme}: text on studio highlight / chips`, min: TEXT },
     { fg: T("ink-2"), bg: T("studio"), where: `${theme}: secondary text on studio`, min: TEXT },
     { fg: T("ink-2"), bg: T("studio-hi"), where: `${theme}: secondary text on studio highlight`, min: TEXT },
-    { fg: T("studio"), bg: T("ink"), where: `${theme}: tear button and skip link`, min: TEXT },
+    { fg: T("studio"), bg: T("ink"), where: `${theme}: New request button and skip link`, min: TEXT },
+    { fg: T("ink"), bg: T("studio"), where: `${theme}: deck arrows and counter`, min: TEXT },
     { fg: T("focus"), bg: T("studio"), where: `${theme}: focus ring on studio`, min: LARGE },
     // paper (same in both themes: it is an object)
     { fg: T("paper-ink"), bg: T("paper"), where: `${theme}: ticket text`, min: TEXT },
     { fg: T("paper-body"), bg: T("paper"), where: `${theme}: ticket body`, min: TEXT },
     { fg: T("paper-dim"), bg: T("paper"), where: `${theme}: ticket mono labels`, min: TEXT },
     { fg: T("stamp"), bg: T("paper"), where: `${theme}: Matched stamp and diagram accents`, min: TEXT },
-    { fg: TAG_INK, bg: T("paper"), where: `${theme}: signal chips`, min: TEXT },
+    { fg: TAG_INK, bg: T("paper"), where: `${theme}: case-file signal tags`, min: TEXT },
+    { fg: T("paper-tag"), bg: T("paper"), where: `${theme}: sheet signal tags`, min: TEXT },
+    { fg: T("paper-ghost"), bg: T("paper"), where: `${theme}: typed examples on the paper`, min: TEXT },
+    { fg: T("red"), bg: T("paper"), where: `${theme}: caret and selected-card dot on paper`, min: LARGE },
+    { fg: T("paper-ink"), bg: T("paper-current"), where: `${theme}: current part in the rail`, min: TEXT },
+    { fg: T("paper-dim"), bg: T("paper-current"), where: `${theme}: current part number in the rail`, min: TEXT },
     { fg: T("paper-ink"), bg: T("paper"), where: `${theme}: focus ring on paper`, min: LARGE },
     { fg: T("paper-dim"), bg: INSET, where: `${theme}: diagram labels / placeholder text`, min: TEXT },
     { fg: T("paper-body"), bg: INSET, where: `${theme}: diagram body`, min: TEXT },
     { fg: T("stamp"), bg: INSET, where: `${theme}: diagram contract labels`, min: TEXT },
-    // the machine: white text always sits on the darker field red
-    { fg: T("on-red"), bg: T("field"), where: `${theme}: input text and plate labels on field red`, min: TEXT },
-    { fg: T("field-placeholder"), bg: T("field"), where: `${theme}: input placeholder on field red`, min: TEXT },
-    { fg: T("on-red"), bg: T("red"), where: `${theme}: white focus ring on machine body`, min: LARGE },
-    { fg: "#1a1a18", bg: KEY_FACE, where: `${theme}: Print key label`, min: TEXT },
     // code
     { fg: "#ecece8", bg: CODE_BG, where: `${theme}: code text`, min: TEXT },
     { fg: "#a6a6a0", bg: CODE_BG, where: `${theme}: code comments`, min: TEXT },

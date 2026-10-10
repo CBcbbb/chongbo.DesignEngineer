@@ -141,3 +141,57 @@ export async function ticketImage({ head, right, big, small, title, line }: Tick
     { ...OG_SIZE, fonts: await fonts() },
   );
 }
+
+/** The home card: the Printed to order headline over the photographed printer, paper rising from its slot. */
+export async function printerImage({ eyebrow, title }: { eyebrow: string; title: string }) {
+  const png = await fs.readFile(path.join(process.cwd(), "src/lib/og-printer.png"));
+  const src = `data:image/png;base64,${png.toString("base64")}`;
+  const w = 760;
+  const h = Math.round((w * 494) / 1100);
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          background: "radial-gradient(90% 70% at 50% 30%, #F5F4F0 0%, #E9E7E2 70%)",
+          fontFamily: "Geist",
+          color: "#1C1B19",
+        }}
+      >
+        <div style={{ display: "flex", marginTop: 56, fontFamily: "Geist Mono", fontSize: 20, letterSpacing: 5, color: "#5B5853" }}>
+          {eyebrow.toUpperCase()}
+        </div>
+        <div style={{ display: "flex", marginTop: 10, fontSize: 64, fontWeight: 600, letterSpacing: -2.5 }}>{title}</div>
+        <div style={{ display: "flex", position: "relative", width: w, height: h, marginTop: 120 }}>
+          {/* paper rising from the slot: bottom at 7.7% of the image, 15.5% in, 69% wide */}
+          <div
+            style={{
+              position: "absolute",
+              left: w * 0.155,
+              width: w * 0.69,
+              bottom: h * (1 - 0.077),
+              height: 110,
+              display: "flex",
+              padding: "18px 22px",
+              background: "#FBFAF7",
+              borderRadius: "3px 3px 0 0",
+              fontFamily: "Geist Mono",
+              fontSize: 19,
+              lineHeight: 1.5,
+              color: "#75716A",
+            }}
+          >
+            A design engineer for our marketing website, strong in React and motion
+          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+          <img src={src} width={w} height={h} style={{ position: "absolute", left: 0, top: 0 }} />
+        </div>
+      </div>
+    ),
+    { ...OG_SIZE, fonts: await fonts() },
+  );
+}
