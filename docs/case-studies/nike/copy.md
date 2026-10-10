@@ -1,10 +1,10 @@
-# Nike Athletes Closet: copy, draft 6
+# Nike Athletes Closet: copy, draft 7
 
 Playbook §8 step 4. Every line traces to the Wix page or `notes.md`. The page shows the final result, written for the reader.
 
 **Story.** The cover sets one idea in three verbs: stories people read, shop and return to. The page then follows those verbs as three parts, in the order a reader meets the feature. Each part opens with the problem it solves; the closing gives the outcome, the role and what I'd do now. Every card still stands alone when printed.
 
-**JD language.** Mirrors the Granola JDs where it fits the facts: brand, story, typography, design system, reusable components and templates, calls to action, motion and microinteractions, idea to production.
+**JD language.** Checked against both Granola JDs (10 Oct 2026). Borrowed where it fits the facts: "from typography and color to motion and microinteractions", "reusable components, page templates", "balance consistency with flexibility", "calls to action", "hierarchy", "gaps between design and engineering", "from an initial idea into production", "take responsibility for the quality of what ships".
 
 **Heading rhythm.** Plain statements carry most of the page; a few headings use livelier language where the idea earns it (views, shop the look, Star Voice, outcome). Never two hooks in a row.
 
@@ -30,7 +30,7 @@ Role: UI Designer · Client: Nike · Platform: Nike App, China
 
 ### system · Redesigning the creative system first
 
-Three volumes had shipped by the time I took over at VOL.4, so I began by redesigning the creative system: logo lock-up, typography, colour, framing devices and motion. I set each part up as a reusable template, so every later volume is built from the same parts. The framing device adds, removes or rearranges details to fit each headline, and colour is picked up from each influencer's photos or products.
+Three volumes had shipped by the time I took over at VOL.4, so I began by redesigning the creative system, from the logo lock-up and typography to colour, framing devices and motion. I set the layouts up as reusable page templates, so every later volume is built from the same parts. The framing device balances consistency with flexibility: it adds, removes or rearranges details to fit each headline, and colour is picked up from each influencer's photos or products.
 
 *One framing device, five configurations.*
 
@@ -71,7 +71,7 @@ The old product cards were small tiles. I enlarged the product image, so each it
 
 ### ranking · A ranking that leads to similar outfits
 
-The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear order, and added two calls to action after a like, "See more" and "View similar outfits", so a ranking leads into more products.
+The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear hierarchy, and added two calls to action after a like, "See more" and "View similar outfits", so a ranking leads into more products.
 
 *A loose list becomes a ranked board with a way onward.*
 
@@ -103,7 +103,7 @@ The feature shipped in Nike's app. The contract covered one season; after VOL.4,
 
 ### handoff · What I'd do now: take motion from idea to production myself
 
-I specified the like in four states: an outline heart, a pill inviting a like to win a gift, a black heart with the count, and hearts floating out. Handed over in Figma, it was built as a plain red heart. I now build motion in code myself, so what ships matches the design.
+I specified the like in four states: an outline heart, a pill inviting a like to win a gift, a black heart with the count, and hearts floating out. Handed over in Figma, it was built as a plain red heart. I now build motion in code myself and take responsibility for the quality of what ships.
 
 *The specified states, beside the version that shipped.*
 
