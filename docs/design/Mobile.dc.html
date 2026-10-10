@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home on a phone</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#1F1B16}a:hover{color:#B23A2B}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #EFE9DD; color: #1F1B16; font-family: 'Newsreader', Georgia, serif; display: flex; flex-direction: column; overflow: hidden">
+  <header style="display: flex; justify-content: space-between; align-items: center; padding: 20px 20px 8px; font-family: 'IBM Plex Mono', monospace; font-size: 13px">
+    <span style="font-weight: 500">Chongbo Ning</span>
+    <a href="Browse.dc.html" style="text-decoration: none; min-height: 44px; display: flex; align-items: center">Work</a>
+  </header>
+  <main style="flex: 1; display: flex; flex-direction: column; gap: 20px; padding: 12px 20px 24px">
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5E564B">Design Engineer, London</span>
+      <h1 style="margin: 0; font-weight: 400; font-size: 48px; line-height: 1; letter-spacing: -0.02em">Ask Chongbo <span style="font-style: italic">anything.</span></h1>
+      <p style="margin: 0; font-size: 18px; line-height: 1.45; color: #4A433A">Tell me what matters to your team, and I'll pull the work that answers it.</p>
+    </div>
+
+    <div aria-hidden="true" style="position: relative; height: 92px; margin: 4px 6px 0">
+      <div style="position: absolute; left: 22px; top: 0; width: 70px; height: 22px; background: #56663A; border-radius: 3px 3px 0 0"></div>
+      <div style="position: absolute; left: 112px; top: 10px; width: 80px; height: 22px; background: #3E5566; border-radius: 3px 3px 0 0"></div>
+      <div style="position: absolute; left: 212px; top: 20px; width: 64px; height: 22px; background: #B23A2B; border-radius: 3px 3px 0 0"></div>
+      <div style="position: absolute; left: 0; right: 0; top: 22px; bottom: 0; background: #FBF8F1; border: 1px solid #CFC3AE; border-radius: 3px"></div>
+      <div style="position: absolute; left: -6px; right: -6px; top: 46px; bottom: -4px; background: #E3DAC8; border: 1px solid #BFB29A; border-radius: 4px"></div>
+    </div>
+
+    <form style="margin-top: -40px; position: relative; background: #FFFDF8; border: 1px solid #D9CFBD; border-radius: 3px; box-shadow: 0 20px 40px -26px rgba(31,27,22,0.5); padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 12px; transform: rotate(-0.8deg)">
+      <label for="ask-m" style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: #5E564B">Your question</label>
+      <input id="ask-m" type="text" placeholder="What matters to your team?" style="border: 0; border-bottom: 1px solid #C9786C; background: transparent; font-family: 'IBM Plex Mono', monospace; font-size: 17px; padding: 8px 0; outline: none; color: #1F1B16">
+      <button type="submit" style="align-self: flex-end; min-height: 44px; padding: 0 18px; border: 0; background: #1F1B16; color: #FBF8F1; border-radius: 999px; font-family: 'IBM Plex Mono', monospace; font-size: 13px">Ask ↵</button>
+    </form>
+
+    <div style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px">
+      <button type="button" style="flex: none; min-height: 40px; padding: 0 14px; border: 1px solid #CFC3AE; background: #F7F2E8; border-radius: 999px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #1F1B16">Accessibility</button>
+      <button type="button" style="flex: none; min-height: 40px; padding: 0 14px; border: 1px solid #CFC3AE; background: #F7F2E8; border-radius: 999px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #1F1B16">End-to-end work</button>
+      <button type="button" style="flex: none; min-height: 40px; padding: 0 14px; border: 1px solid #CFC3AE; background: #F7F2E8; border-radius: 999px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #1F1B16">Design systems</button>
+    </div>
+
+    <a href="Browse.dc.html" style="margin-top: auto; display: flex; justify-content: space-between; align-items: center; min-height: 52px; padding: 0 4px; border-top: 1px solid #D9CFBD; font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-decoration: none">Browse all four projects <span aria-hidden="true">→</span></a>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

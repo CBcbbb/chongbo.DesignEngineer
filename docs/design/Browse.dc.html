@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Browse the drawer</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EFE9DD}
+a{color:#1F1B16}a:hover{color:#B23A2B}
+</style>
+</helmet>
+<div style="min-height: 1180px; background: #EFE9DD; color: #1F1B16; font-family: 'Newsreader', Georgia, serif">
+
+  <header style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 56px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.02em">
+    <a href="Main.dc.html" style="text-decoration: none; display: flex; gap: 12px; align-items: baseline">
+      <span style="font-weight: 500">Chongbo Ning</span>
+      <span style="color: #5E564B">Design Engineer, London</span>
+    </a>
+    <nav aria-label="Main" style="display: flex; gap: 28px">
+      <a href="Browse.dc.html" aria-current="page" style="text-decoration: none; border-bottom: 1px solid currentColor">Work</a>
+      <a href="#" style="text-decoration: none">About</a>
+      <a href="#" style="text-decoration: none">Email</a>
+    </nav>
+  </header>
+
+  <main style="max-width: 1328px; margin: 0 auto; padding: 16px 56px 72px; box-sizing: border-box; display: flex; flex-direction: column; gap: 40px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <h1 style="margin: 0; font-weight: 400; font-size: 56px; line-height: 1; letter-spacing: -0.02em">The drawer</h1>
+        <p style="margin: 0; font-size: 20px; color: #4A433A">Four projects, each a short case file. About two minutes to read one.</p>
+      </div>
+      <a href="Main.dc.html" style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; text-decoration: none; border-bottom: 1px solid currentColor; padding-bottom: 2px">Ask a question instead →</a>
+    </div>
+
+    <ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 560px), 1fr)); gap: 48px 40px">
+      <sc-for list="{{cards}}" as="card" hint-placeholder-count="4">
+        <li style="{{card.tilt}}">
+          <a href="CaseFile.dc.html" style="display: block; position: relative; padding-top: 28px; text-decoration: none">
+            <span aria-hidden="true" style="{{card.tabStyle}}">{{card.tabLabel}}</span>
+            <span style="display: flex; flex-direction: column; gap: 18px; background: #FFFDF8; border: 1px solid #D9CFBD; border-radius: 3px; padding: 24px; box-shadow: 0 1px 2px rgba(31,27,22,0.06), 0 26px 50px -34px rgba(31,27,22,0.5)">
+              <span role="img" aria-label="{{card.alt}}" style="aspect-ratio: 16 / 9; background: #F3EEE3; border: 1px dashed #A8997E; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5E564B; text-align: center; padding: 12px">{{card.asset}}</span>
+              <span style="display: flex; flex-direction: column; gap: 8px">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.04em; color: #5E564B">{{card.meta}}</span>
+                <span style="font-size: 32px; line-height: 1.08; letter-spacing: -0.01em">{{card.title}}</span>
+                <span style="font-size: 18px; line-height: 1.45; color: #4A433A">{{card.oneLiner}}</span>
+              </span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5E564B; padding-top: 14px; border-top: 1px solid #E8E1D3">{{card.signals}}</span>
+            </span>
+          </a>
+        </li>
+      </sc-for>
+    </ul>
+
+    <section aria-labelledby="earlier" style="display: flex; flex-direction: column; gap: 16px; padding-top: 28px; border-top: 1px solid #D9CFBD">
+      <h2 id="earlier" style="margin: 0; font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: #5E564B">Earlier work</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: baseline">
+        <a href="#" style="font-size: 26px">WildEcho</a>
+        <span style="font-size: 18px; color: #4A433A">What if wildlife tourists listened instead of photographing? An RCA team project, prototyped and tested over three rounds.</span>
+      </div>
+      <a href="#" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #5E564B">Older service design work lives in the archive →</a>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tab = (left, bg, fg) => 'position: absolute; top: 0; left: ' + left + 'px; min-width: 120px; padding: 0 14px; height: 29px; box-sizing: border-box; background: ' + bg + '; color: ' + fg + '; border-radius: 3px 3px 0 0; font-family: "IBM Plex Mono", monospace; font-size: 11px; display: flex; align-items: center; justify-content: center';
+    return {
+      cards: [
+        { title: 'HHCD Data Platform', oneLiner: 'A research archive you can explore as a network or read as a table.', meta: 'Live · Helen Hamlyn Centre for Design, RCA', signals: 'Accessibility · End to end · Data · SEO', asset: '[ASSET hhcd/cover.png] Network map, 1440px', alt: 'Placeholder for the network map screenshot', tabLabel: 'HHCD', tabStyle: tab(28, '#56663A', '#F7F2E8'), tilt: 'transform: rotate(-0.5deg)' },
+        { title: 'Component Store', oneLiner: 'Letting every customer preview our components with their own live data.', meta: 'In use · Logistics infrastructure company', signals: 'Design systems · Cross-platform · Design–engineering', asset: 'Diagram, drawn in code: streams → fields → components', alt: 'Placeholder for the data contracts diagram', tabLabel: 'Component Store', tabStyle: tab(150, '#3E5566', '#F7F2E8'), tilt: 'transform: rotate(0.6deg)' },
+        { title: 'Nike Athletes Closet', oneLiner: 'A layout system that tied editorial stories to the products in them.', meta: 'Shipped in the Nike app · Agency internship', signals: 'Brand · Reusable layouts · Conversion · Motion', asset: '[ASSET nike/headline-frame.png] Adaptive headline frame', alt: 'Placeholder for the headline frame image', tabLabel: 'Nike', tabStyle: tab(270, '#B23A2B', '#FBF8F1'), tilt: 'transform: rotate(0.4deg)' },
+        { title: 'This site', oneLiner: 'A portfolio you can ask questions, built to be read without asking any.', meta: 'Live · Personal project', signals: 'AI interaction · Publishing workflow · Accessibility', asset: 'Generated from the finished site', alt: 'Placeholder for a screenshot of this site', tabLabel: 'This site', tabStyle: tab(90, '#1F1B16', '#FBF8F1'), tilt: 'transform: rotate(-0.4deg)' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

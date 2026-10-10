@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Case file: HHCD Data Platform</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EFE9DD}
+a{color:#1F1B16}a:hover{color:#B23A2B}
+</style>
+</helmet>
+<div style="min-height: 2200px; background: #EFE9DD; color: #1F1B16; font-family: 'Newsreader', Georgia, serif">
+
+  <header style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 56px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.02em">
+    <a href="Main.dc.html" style="text-decoration: none; display: flex; gap: 12px; align-items: baseline">
+      <span style="font-weight: 500">Chongbo Ning</span>
+      <span style="color: #5E564B">Design Engineer, London</span>
+    </a>
+    <nav aria-label="Main" style="display: flex; gap: 28px">
+      <a href="Browse.dc.html" style="text-decoration: none">Work</a>
+      <a href="#" style="text-decoration: none">About</a>
+      <a href="#" style="text-decoration: none">Email</a>
+    </nav>
+  </header>
+
+  <main style="max-width: 1328px; margin: 0 auto; padding: 8px 56px 96px; box-sizing: border-box; display: flex; flex-direction: column; gap: 40px">
+    <a href="Browse.dc.html" style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-decoration: none; color: #5E564B">← The drawer</a>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 56px; align-items: flex-start">
+
+      <aside aria-label="About this project" style="flex: 1 1 240px; max-width: 280px; display: flex; flex-direction: column; gap: 22px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; line-height: 1.5">
+        <div style="display: flex; align-items: center; gap: 10px"><span aria-hidden="true" style="width: 12px; height: 12px; background: #56663A"></span><span>Case file · HHCD</span></div>
+        <dl style="margin: 0; display: flex; flex-direction: column; gap: 16px">
+          <div><dt style="color: #5E564B">Role</dt><dd style="margin: 2px 0 0">Sole designer and developer, from data model to deployment</dd></div>
+          <div><dt style="color: #5E564B">For</dt><dd style="margin: 2px 0 0">Helen Hamlyn Centre for Design, Royal College of Art</dd></div>
+          <div><dt style="color: #5E564B">Status</dt><dd style="margin: 2px 0 0">Live</dd></div>
+          <div><dt style="color: #5E564B">Built with</dt><dd style="margin: 2px 0 0">Next.js, TypeScript, D3, Tailwind, Playwright, axe</dd></div>
+        </dl>
+        <a href="#" style="text-decoration: none; border-bottom: 1px solid currentColor; align-self: flex-start; padding-bottom: 2px">Visit the live platform ↗</a>
+        <nav aria-label="Sections" style="display: flex; flex-direction: column; gap: 8px; padding-top: 18px; border-top: 1px solid #D9CFBD">
+          <sc-for list="{{sections}}" as="s" hint-placeholder-count="7">
+            <a href="#{{s.id}}" style="text-decoration: none; color: #4A433A">{{s.label}}</a>
+          </sc-for>
+        </nav>
+      </aside>
+
+      <article style="flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 36px">
+        <div style="display: flex; flex-direction: column; gap: 16px">
+          <h1 style="margin: 0; font-weight: 400; font-size: 72px; line-height: 0.98; letter-spacing: -0.02em">HHCD Data Platform</h1>
+          <p style="margin: 0; font-size: 24px; line-height: 1.4; color: #4A433A; max-width: 34ch">A research archive you can explore as a network or read as a table.</p>
+        </div>
+        <figure style="margin: 0">
+          <div role="img" aria-label="Placeholder for the network map screenshot" style="aspect-ratio: 16 / 10; background: #F3EEE3; border: 1px dashed #A8997E; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #5E564B; text-align: center; padding: 16px">[ASSET hhcd/cover.png]<br>The rebuilt network map, 1440px</div>
+        </figure>
+
+        <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 24px">
+          <sc-for list="{{sections}}" as="s" hint-placeholder-count="7">
+            <li id="{{s.id}}" style="background: #FFFDF8; border: 1px solid #D9CFBD; border-radius: 3px; padding: 32px 36px; display: flex; flex-direction: column; gap: 16px">
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: #5E564B">{{s.label}}</span>
+              <h2 style="margin: 0; font-weight: 400; font-size: 34px; line-height: 1.1; letter-spacing: -0.01em">{{s.title}}</h2>
+              <div style="display: flex; flex-direction: column; gap: 12px; font-size: 19px; line-height: 1.55; max-width: 62ch">
+                <sc-for list="{{s.body}}" as="p" hint-placeholder-count="2">
+                  <p style="margin: 0">{{p}}</p>
+                </sc-for>
+              </div>
+              <sc-if value="{{s.hasMedia}}" hint-placeholder-val="{{ true }}">
+                <div role="img" aria-label="Placeholder for this section's image" style="aspect-ratio: 16 / 9; max-width: 720px; background: #F3EEE3; border: 1px dashed #A8997E; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5E564B; text-align: center; padding: 12px">{{s.media}}</div>
+              </sc-if>
+              <sc-if value="{{s.hasCode}}" hint-placeholder-val="{{ false }}">
+                <pre style="margin: 0; padding: 18px 20px; background: #1F1B16; color: #EFE9DD; border-radius: 3px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.6; overflow-x: auto; white-space: pre">{{s.code}}</pre>
+              </sc-if>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #5E564B; padding-top: 12px; border-top: 1px solid #E8E1D3">{{s.signals}}</span>
+            </li>
+          </sc-for>
+        </ol>
+
+        <a href="#" style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 0; border-top: 1px solid #1F1B16; text-decoration: none">
+          <span style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: #5E564B">Next case file</span>
+            <span style="font-size: 36px">Component Store</span>
+          </span>
+          <span aria-hidden="true" style="font-size: 36px">→</span>
+        </a>
+      </article>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      sections: [
+        { id: 'problem', label: 'The problem', title: 'Years of research, kept in one spreadsheet', body: ['The centre wanted its past projects to be explorable by the people who could learn from them: artists, researchers and students looking for methods to adapt.', 'The records had been collected person by person, in one long spreadsheet. Who worked on what, which methods they used and who funded it were all tangled into each person’s row.'], signals: 'Data · Research', hasMedia: false, hasCode: false },
+        { id: 'data-model', label: 'Decision 01', title: 'Re-modelling the data so nothing outranks anything else', body: ['Following the collection logic would have made people the centre of every view. Instead, I rebuilt the data as four equal kinds of profile, with the relationships between them as first-class data.', 'A conversion script turns the spreadsheets into structured data and writes a quality report, flagging duplicates, missing fields and links that point nowhere.'], signals: 'Data · Judgement · Publishing workflow', hasMedia: true, media: '[ASSET hhcd/data-model.png] Before and after the data model', hasCode: false },
+        { id: 'dual-view', label: 'Decision 02', title: 'Two views instead of a simpler graph', body: ['Rather than simplify the graph, I gave every entry a second home in an accessible table view, with the same search and filters.', 'Keyboard shortcuts, managed focus and announced result counts were designed in from the start.'], signals: 'Accessibility · Judgement · Data', hasMedia: true, media: '[ASSET hhcd/table-view.png] Table view, 1440px', hasCode: false },
+        { id: 'one-example-first', label: 'Decision 03', title: 'Overview first, turned around', body: ['Teaching with the platform, I watched students start from one real project, not the whole network. So the rebuilt homepage explains a single project, then steps outwards, and only then offers the full map.'], signals: 'Research · Judgement · Typography', hasMedia: true, media: '[ASSET hhcd/homepage.png] The rebuilt homepage', hasCode: false },
+        { id: 'tokens', label: 'Evidence', title: 'One source for colour, one source for content', body: ['Every colour lives once, as a token. Where a fixed brand colour failed contrast, a darker variant carries the text, and a script checks every pairing.'], signals: 'Design systems · Accessibility · Publishing workflow', hasMedia: false, hasCode: true, code: '--color-projects: #EB631A;      /* shape on white: 3.32:1 */\n--color-projects-text: #A8470F; /* text on white: 5.88:1 */' },
+        { id: 'rebuild', label: 'Outcome', title: 'Rebuilt to be found, linked and shared', body: ['The rebuild gives each of its 48 entries its own static page, with real HTML, metadata and preview images. Automated accessibility checks pass at desktop and mobile widths; screen reader and Safari testing are still to do.'], signals: 'SEO and performance · End to end · Accessibility', hasMedia: false, hasCode: false },
+        { id: 'origin', label: 'Where it came from', title: 'A method that outlived its first project', body: ['The approach began on an EU-funded project at Brunel University. Brunel withdrew before it finished, but the method carried over to the centre’s platform. I designed and built both alone, working with AI coding tools.'], signals: 'End to end · AI tools · Reusable foundations', hasMedia: false, hasCode: false }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
