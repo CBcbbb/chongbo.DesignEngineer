@@ -70,3 +70,9 @@ None of these are used unless Chongbo confirms them as real. One detail to check
 
 - `public/assets/nike/` holds the Wix originals: the scraper strips Wix's resize parameters and downloads each file as uploaded. So `retouch-*.png` (334×500) and `ranking-*.png` (375 wide) are the sizes uploaded to Wix; anything larger would come from Chongbo's source files.
 - The page now uses originals unresized: `product-card-*.png`, `guest-posters.png`, `product-tags-1/2.png` (the GIF's two frames, lossless), `star-voice-crop.jpg` (a crop of `star-voice-qa.png` at native resolution).
+
+## Prototype v3 (2026-10-10, overnight)
+
+- Orange cover, orange part openers (01 Read / 02 Shop / 03 Return / 04 Outcome) with huge numbers; black sheets for story and motion evidence and the outcome.
+- New interactions: framing-device switcher (five configurations from the original Figma crops, keyboard arrows work); retouch compare slider on the orange field; product card compare on orange; Star Voice loop (Preview, Ask, Vote, Answered live).
+- Checked: no image rendered off its native ratio or above its native size, at 1440 and 390, light and dark; no horizontal scroll.

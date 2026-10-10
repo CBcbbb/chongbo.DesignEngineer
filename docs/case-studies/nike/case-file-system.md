@@ -21,12 +21,25 @@ For the shared template (owned by the HHCD conversation). Shown in `docs/design/
 5. Evidence: on a mount in `--accent-2`, full sheet width.
 6. Caption: mono, says what the evidence proves.
 
-## Colour roles
+## Colour roles (v3)
 
-- **Paper, ink and type:** shared by every project.
-- **`--accent-2` (Nike: black):** evidence only. Every media mount and the recording sheet.
-- **`--accent` (Nike: orange):** action and position only. Contents marker, part numbers, card index, tags, links, play and compare controls.
-- A project changes only these tokens, its cover and its signature sheet.
+Three sheet surfaces set the page rhythm: paper → black → orange.
+
+- **Paper, ink and type:** shared by every project. Reading sheets.
+- **Project colour field (Nike: orange):** the cover sheet, each part opener (huge part number + name + card list), and the field behind every interactive compare. Also every control and the contents marker.
+- **Project dark (Nike: black):** evidence sheets where the work fills the card edge to edge (the recording, story images, motion), plus the outcome sheet.
+- A project changes only these two colours, its cover and its signature module.
+
+## Card types (same anatomy, different art direction)
+
+| Type | Surface | Evidence treatment |
+|---|---|---|
+| Design system | paper | grid-paper spec board with component names; interactive switcher where there are variants |
+| Before and after | paper | compare slider on the project colour field, labels on the image |
+| Story | black | evidence full-bleed to the sheet edges; caption bar under it |
+| Motion | black | playable stage, full-bleed, Play/Replay |
+| Process loop | paper | numbered steps in tinted pills, the last one in the project colour |
+| Reflection | paper | two black panels, "Specified" vs "Shipped" |
 
 ## Images
 

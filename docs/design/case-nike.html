@@ -1,226 +1,291 @@
 <title>Nike Athletes Closet</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: the case file is a stack of printed sheets on the studio ground. A sticky contents list on the left
-   (the same on every project); on the right, one sheet per evidence card, grouped into parts.
-   Colour roles: black = evidence (every media mount, the recording); orange = action and position
-   (where you are, what you can press, what a card proves). Paper and type are shared by every project. */
+/* Layout: a stack of printed sheets on the studio ground, with the contents fixed on the left.
+   Three surfaces carry the rhythm: paper (reading), black (evidence: the work itself), orange (Nike: the cover,
+   the part openers, the outcome, and anything you can press). Each card is art-directed by what it proves:
+   compare, spec sheet, story, motion, reflection. */
 :root {
-  /* shared surfaces (src/app/tokens.css), light */
   --studio: #e9e7e2;
   --page: #fbfaf7;
   --ink: #1c1b19;
   --body: #38352f;
   --dim: #5e5b55;
   --rule: #e2dfd8;
-  /* Nike palette */
-  --accent: #b8440f;          /* orange text, 5.2:1 on page */
-  --accent-strong: #f26522;   /* orange fills */
-  --on-accent: #111010;       /* 6.0:1 on accent-strong */
-  --accent-2: #0e0d0c;        /* black: evidence mounts and the recording */
-  --accent-tint: #fbefe6;
-  --field-ink: #f2f0ec;
-  --field-dim: #a8a49c;
-  --field-rule: #2b2926;
-  --field-accent: #ff7a35;
+  --grid: #ece9e2;
+  /* Nike */
+  --orange: #f26522;          /* field; ink on it 6.0:1, boundary on page 3.0:1 */
+  --on-orange: #111010;
+  --on-orange-2: #3e2114;     /* 4.65:1 on orange */
+  --accent: #b8440f;          /* orange text on paper, 5.2:1 */
+  --black: #0e0d0c;
+  --on-black: #f2f0ec;
+  --on-black-2: #a8a49c;
+  --black-rule: #2b2926;
+  --orange-on-black: #ff7a35; /* 7.0:1 */
+  --tint: #fde3d3;
 
   --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --toc: 13.5rem;
-  --main: 54rem;
-  --pad: clamp(1.25rem, 3.5vw, 2.5rem);
+  --toc: 13rem;
+  --main: 56rem;
+  --pad: clamp(1.25rem, 3.5vw, 2.75rem);
+  --r: 10px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --studio: #0f0e0d; --page: #171614; --ink: #ecebe7; --body: #c9c6bf; --dim: #9b978f; --rule: #2e2c29;
-    --accent: #ff8a4c; --accent-strong: #ff7a35; --on-accent: #111010; --accent-2: #000000; --accent-tint: #2a1d15;
+    --studio: #0f0e0d; --page: #191816; --ink: #ecebe7; --body: #c9c6bf; --dim: #9b978f; --rule: #2e2c29; --grid: #22211e;
+    --accent: #ff8a4c; --black: #050505; --black-rule: #2b2926; --tint: #3a2416;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --studio: #0f0e0d; --page: #171614; --ink: #ecebe7; --body: #c9c6bf; --dim: #9b978f; --rule: #2e2c29;
-  --accent: #ff8a4c; --accent-strong: #ff7a35; --on-accent: #111010; --accent-2: #000000; --accent-tint: #2a1d15;
+  --studio: #0f0e0d; --page: #191816; --ink: #ecebe7; --body: #c9c6bf; --dim: #9b978f; --rule: #2e2c29; --grid: #22211e;
+  --accent: #ff8a4c; --black: #050505; --black-rule: #2b2926; --tint: #3a2416;
   color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
 body { margin: 0; background: var(--studio); color: var(--body); font: 400 1.0625rem/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
-img, video { display: block; max-width: 100%; height: auto; }   /* never distort: every image keeps its own ratio */
+img, video { display: block; max-width: 100%; height: auto; }   /* every image keeps its own ratio */
 a { color: var(--accent); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
 button { font: inherit; color: inherit; }
 h1, h2, h3 { color: var(--ink); text-wrap: balance; margin: 0; font-weight: 600; }
 p { margin: 0; text-wrap: pretty; }
-figure { margin: 0; display: grid; gap: 0.7rem; }
+figure { margin: 0; display: grid; gap: 0.7rem; min-width: 0; }
 figcaption { font: 400 0.8125rem/1.5 var(--mono); color: var(--dim); }
 .tri { width: 0; height: 0; border-style: solid; border-width: 0.36rem 0 0.36rem 0.6rem; border-color: transparent transparent transparent currentColor; display: inline-block; }
 
 /* ---------- top bar ---------- */
-.bar {
-  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-  padding: 0.8rem clamp(1rem, 4vw, 2.5rem);
-  background: color-mix(in srgb, var(--studio) 90%, transparent); backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--rule); font-size: 0.9375rem;
-}
+.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.8rem clamp(1rem, 4vw, 2.5rem); background: color-mix(in srgb, var(--studio) 90%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); font-size: 0.9375rem; }
 .bar a { color: var(--ink); text-decoration: none; }
 .bar .who strong { font-weight: 600; }
 .bar .who span { color: var(--dim); margin-left: 0.5rem; }
 .bar nav { display: flex; align-items: center; gap: 1.25rem; }
 .theme { border: 1px solid var(--rule); background: var(--page); border-radius: 999px; padding: 0.3rem 0.7rem; font: 500 0.75rem/1 var(--mono); color: var(--dim); cursor: pointer; }
 
-/* ---------- frame: contents + sheets ---------- */
-.frame {
-  max-width: calc(var(--toc) + var(--main) + 4rem);
-  margin: 0 auto; padding-inline: clamp(1rem, 4vw, 2.5rem); padding-block: clamp(1.5rem, 4vw, 3rem) 4rem;
-  display: grid; grid-template-columns: var(--toc) minmax(0, var(--main)); gap: 0 4rem; align-items: start;
-}
-.toc { position: sticky; top: 5rem; font-size: 0.875rem; }
+/* ---------- frame ---------- */
+.frame { max-width: calc(var(--toc) + var(--main) + 4rem); margin: 0 auto; padding-inline: clamp(1rem, 4vw, 2.5rem); padding-block: clamp(1.25rem, 3vw, 2.25rem) 4rem; display: grid; grid-template-columns: var(--toc) minmax(0, var(--main)); gap: 0 3.5rem; align-items: start; }
+.toc { position: sticky; top: 5rem; font-size: 0.875rem; padding-top: 0.5rem; }
 .toc .proj { font-weight: 600; color: var(--ink); display: block; margin-bottom: 1.25rem; text-decoration: none; }
 .toc ol { list-style: none; margin: 0; padding: 0; }
 .toc > ol { display: grid; gap: 1.1rem; }
 .toc .part > a { display: flex; gap: 0.55rem; align-items: baseline; color: var(--ink); text-decoration: none; font-weight: 500; }
-.toc .part > a .n { font: 500 0.75rem/1 var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; }
+.toc .part > a .n { font: 500 0.75rem/1 var(--mono); color: var(--accent); }
 .toc .part ol { margin-top: 0.45rem; border-left: 1px solid var(--rule); }
-.toc .part ol a {
-  display: block; padding: 0.28rem 0 0.28rem 0.85rem; margin-left: -1px; border-left: 2px solid transparent;
-  color: var(--dim); text-decoration: none; line-height: 1.35;
-}
+.toc .part ol a { display: block; padding: 0.28rem 0 0.28rem 0.85rem; margin-left: -1px; border-left: 2px solid transparent; color: var(--dim); text-decoration: none; line-height: 1.35; }
 .toc .part ol a:hover { color: var(--ink); }
-.toc a[aria-current="true"] { color: var(--ink); border-left-color: var(--accent-strong); }
-.toc .shows { margin-top: 2rem; display: grid; gap: 0.4rem; }
-.toc .shows span { font: 400 0.75rem/1.3 var(--mono); color: var(--dim); }
+.toc a[aria-current="true"] { color: var(--ink); border-left-color: var(--orange); }
+.sheets { display: grid; gap: 1rem; min-width: 0; }
 
-.sheets { display: grid; gap: 1.25rem; min-width: 0; }
-
-/* ---------- sheet (shared by every project) ---------- */
-.sheet {
-  background: var(--page); border: 1px solid var(--rule); border-radius: 8px;
-  padding: var(--pad); display: grid; gap: 1.1rem; scroll-margin-top: 5rem; min-width: 0;
-}
-.sheet .meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; }
-.sheet .idx { font: 500 0.75rem/1 var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; }
+/* ---------- sheets: paper, black, orange ---------- */
+.sheet { background: var(--page); border: 1px solid var(--rule); border-radius: var(--r); padding: var(--pad); display: grid; gap: 1.1rem; scroll-margin-top: 5rem; min-width: 0; overflow: hidden; }
+.sheet.black { background: var(--black); border-color: var(--black-rule); color: var(--on-black); }
+.sheet.orange { background: var(--orange); border-color: var(--orange); color: var(--on-orange); }
+.sheet.black h2, .sheet.black h3 { color: var(--on-black); }
+.sheet.orange h1, .sheet.orange h2, .sheet.orange h3, .sheet.orange p { color: var(--on-orange); }
+.sheet.printed { box-shadow: 0 0 0 3px var(--orange); }
+.meta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; }
+.idx { font: 500 0.75rem/1 var(--mono); color: var(--accent); }
+.kind { font: 400 0.75rem/1 var(--mono); color: var(--dim); }
+.black .idx { color: var(--orange-on-black); } .black .kind { color: var(--on-black-2); }
 .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; list-style: none; margin: 0; padding: 0; }
 .tags li { font: 400 0.6875rem/1 var(--mono); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); border-radius: 999px; padding: 0.3rem 0.55rem; }
-.sheet h3 { font-size: clamp(1.35rem, 2.3vw, 1.7rem); line-height: 1.18; letter-spacing: -0.022em; max-width: 30ch; }
-.sheet .text p { max-width: 62ch; }
-.sheet .text { display: grid; gap: 0.8rem; }
+.black .tags li { color: var(--orange-on-black); border-color: color-mix(in srgb, var(--orange-on-black) 45%, transparent); }
+.left { display: flex; gap: 0.9rem; align-items: baseline; }
+.sheet h3 { font-size: clamp(1.4rem, 2.5vw, 1.85rem); line-height: 1.15; letter-spacing: -0.025em; max-width: 26ch; }
+.text { display: grid; gap: 0.8rem; }
+.text p { max-width: 60ch; }
+.black .text p { color: var(--on-black-2); }
 .seek { justify-self: start; display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 0; padding: 0.2rem 0; cursor: pointer; color: var(--accent); font: 500 0.8125rem/1 var(--mono); }
+.black .seek { color: var(--orange-on-black); }
 .seek .tri { border-width: 0.3rem 0 0.3rem 0.5rem; }
-.sheet .ev { margin-top: 0.4rem; }
-.sheet.printed { box-shadow: 0 0 0 2px var(--accent-strong); }
+.bleed { margin-inline: calc(-1 * var(--pad)); }
+.bleed-end { margin-bottom: calc(-1 * var(--pad)); }
+.bleed figcaption, .bleed .capline { padding-inline: var(--pad); }
+.capline { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: center; padding-block: 0.9rem; }
+.black figcaption { color: var(--on-black-2); }
+.orange figcaption { color: var(--on-orange-2); }
+.grid-paper { background-color: var(--page); background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 16px 16px; background-position: -1px -1px; border: 1px solid var(--rule); border-radius: 6px; }
+.btn { border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem 0.6rem 0.8rem; background: var(--orange); color: var(--on-orange); font-weight: 600; font-size: 0.875rem; }
+.black .btn { background: var(--orange-on-black); }
 
-/* evidence mounts */
-.mount { background: var(--accent-2); border-radius: 4px; overflow: hidden; display: grid; place-items: center; }
-.mount.pad { padding: clamp(0.75rem, 3vw, 2rem); }
-.mount > img { width: 100%; }
-.mount.pad > img { width: auto; max-width: 100%; max-height: 40rem; }
-.pairs { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; align-items: flex-end; }
-.pairs figure { flex: 0 1 auto; }
-.pairs img { max-height: var(--h, 22rem); width: auto; max-width: 100%; border-radius: 3px; }
-.pairs figcaption { color: var(--field-dim); font-size: 0.6875rem; }
-.split { display: grid; gap: 0.75rem; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); align-items: stretch; }
-
-/* compare slider: both images share one native ratio */
-.compare { position: relative; width: min(100%, 22rem); margin-inline: auto; border-radius: 4px; overflow: hidden; touch-action: pan-y; }
-.compare img { width: 100%; }
-.compare .top { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--x, 50%)) 0 0); }
-.compare .handle { position: absolute; top: 0; bottom: 0; left: var(--x, 50%); width: 2px; background: var(--accent-strong); transform: translateX(-1px); pointer-events: none; }
-.compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--accent-strong); transform: translate(-50%, -50%); box-shadow: 0 4px 14px -4px rgba(0, 0, 0, 0.45); }
-.compare input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
-.compare .lab { position: absolute; top: 0.6rem; font: 500 0.6875rem/1 var(--mono); padding: 0.3rem 0.45rem; border-radius: 3px; background: var(--accent-2); color: var(--field-ink); pointer-events: none; }
-.compare .lab.l { left: 0.6rem; } .compare .lab.r { right: 0.6rem; }
-.compare:has(input:focus-visible) { outline: 2px solid var(--field-accent); outline-offset: 3px; }
-
-/* wireframe / final */
-.seg { display: inline-flex; border: 1px solid var(--field-rule); border-radius: 999px; padding: 3px; gap: 3px; justify-self: start; }
-.seg button { border: 0; background: none; border-radius: 999px; padding: 0.35rem 0.8rem; font: 500 0.75rem/1 var(--mono); color: var(--field-dim); cursor: pointer; }
-.seg button[aria-pressed="true"] { background: var(--field-accent); color: #111010; }
-.swap { display: grid; }
-.swap > img { grid-area: 1 / 1; width: 100%; transition: opacity 0.35s var(--ease); }
-.swap > img[hidden] { display: block !important; opacity: 0; }
-.stack { display: grid; gap: 0.85rem; width: 100%; }
-
-/* lottie: the stage keeps the file's own 1920 × 1080 ratio */
-.lottie { position: relative; width: 100%; aspect-ratio: 1920 / 1080; }
-.lottie .stage { position: absolute; inset: 0; }
-.ctl { border: 0; border-radius: 999px; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.95rem 0.6rem 0.75rem; background: var(--field-accent); color: #111010; font-weight: 600; font-size: 0.875rem; }
-.lottie .ctl { position: absolute; left: 1rem; bottom: 1rem; }
-
-/* ---------- cover ---------- */
-.cover { padding: clamp(0.5rem, 2vw, 1.5rem) 0 clamp(1rem, 3vw, 2rem); display: grid; gap: 1.5rem; }
-.client { display: flex; align-items: center; gap: 0.55rem; font: 500 0.8125rem/1 var(--mono); color: var(--dim); }
-.client i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--accent-strong); }
-.cover h1 { font-size: clamp(2.6rem, 6.5vw, 4.75rem); line-height: 0.98; letter-spacing: -0.045em; }
-.lede { font-size: clamp(1.25rem, 2.3vw, 1.55rem); line-height: 1.3; letter-spacing: -0.015em; color: var(--ink); max-width: 30ch; }
-.intro { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1.6fr) minmax(10rem, 1fr); align-items: start; }
-.facts { display: grid; gap: 0.75rem; margin: 0; font-size: 0.9375rem; }
-.facts div { display: grid; gap: 0.1rem; border-top: 1px solid var(--rule); padding-top: 0.55rem; }
-.facts dt { font: 400 0.75rem/1.2 var(--mono); color: var(--dim); }
-.facts dd { margin: 0; color: var(--ink); }
+/* ---------- cover (orange) ---------- */
+.cover { padding-block: clamp(1.75rem, 5vw, 3.5rem); gap: clamp(1.5rem, 3vw, 2.25rem); }
+.cover .client { font: 500 0.8125rem/1 var(--mono); color: var(--on-orange-2); display: flex; gap: 0.6rem; align-items: center; }
+.cover .client i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--on-orange); }
+.cover h1 { font-size: clamp(3rem, 9.5vw, 7.25rem); line-height: 0.9; letter-spacing: -0.055em; font-weight: 700; max-width: 9ch; }
+.cover .lede { font-size: clamp(1.3rem, 2.6vw, 1.7rem); line-height: 1.25; letter-spacing: -0.02em; max-width: 26ch; font-weight: 500; }
+.cover .intro { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1.6fr) minmax(10rem, 1fr); align-items: end; border-top: 1.5px solid var(--on-orange); padding-top: 1.25rem; }
+.facts { display: grid; gap: 0.6rem; margin: 0; }
+.facts div { display: flex; justify-content: space-between; gap: 1rem; border-bottom: 1px solid color-mix(in srgb, var(--on-orange) 30%, transparent); padding-bottom: 0.45rem; }
+.facts dt { font: 400 0.75rem/1.5 var(--mono); color: var(--on-orange-2); }
+.facts dd { margin: 0; font-weight: 500; text-align: right; }
 .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
-.chips > span { font: 400 0.8125rem/1 var(--mono); color: var(--dim); margin-right: 0.25rem; }
-.chip { padding: 0.5rem 0.85rem; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--rule)); color: var(--accent); text-decoration: none; font-size: 0.9375rem; font-weight: 500; }
-.chip:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent); }
+.chips > span { font: 400 0.8125rem/1 var(--mono); color: var(--on-orange-2); margin-right: 0.25rem; }
+.chip { padding: 0.55rem 0.9rem; border-radius: 999px; background: var(--on-orange); color: var(--orange); text-decoration: none; font-size: 0.9375rem; font-weight: 500; transition: transform 0.2s var(--ease); }
+.chip:hover { transform: translateY(-2px); }
+.cover .chip { color: var(--orange); font-weight: 500; }
 
-/* ---------- the recording: a black sheet ---------- */
-.field { background: var(--accent-2); border-color: var(--field-rule); color: var(--field-ink); }
+/* ---------- the recording (black) ---------- */
 .field-in { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: clamp(1.5rem, 5vw, 3.5rem); align-items: center; }
-.field h2 { color: var(--field-ink); font-size: clamp(1.6rem, 3.2vw, 2.2rem); letter-spacing: -0.03em; line-height: 1.1; }
-.field .sub { color: var(--field-dim); margin-top: 0.6rem; max-width: 34ch; }
-.phone { width: min(17.5rem, 70vw); border-radius: 2.5rem; padding: 0.5rem; background: #1d1c1a; box-shadow: inset 0 0 0 1px #3a3835, 0 30px 60px -30px #000; position: relative; }
+.field-in h2 { font-size: clamp(1.7rem, 3.4vw, 2.4rem); letter-spacing: -0.035em; line-height: 1.05; }
+.field-in .sub { color: var(--on-black-2); margin-top: 0.6rem; max-width: 34ch; }
+.phone { width: min(17.5rem, 70vw); border-radius: 2.5rem; padding: 0.5rem; background: #1d1c1a; box-shadow: inset 0 0 0 1px #3a3835, 0 40px 80px -40px var(--orange); position: relative; }
 .phone video { width: 100%; border-radius: 2.05rem; background: #000; }
-.phone .tog { position: absolute; right: -0.6rem; bottom: 2rem; width: 3.25rem; height: 3.25rem; border-radius: 50%; border: 0; background: var(--field-accent); color: #111010; cursor: pointer; display: grid; place-items: center; box-shadow: 0 8px 20px -8px #000; }
+.phone .tog { position: absolute; right: -0.6rem; bottom: 2rem; width: 3.4rem; height: 3.4rem; border-radius: 50%; border: 0; background: var(--orange-on-black); color: var(--on-orange); cursor: pointer; display: grid; place-items: center; box-shadow: 0 8px 20px -8px #000; }
 .phone .tog .bars { display: none; gap: 4px; }
 .phone .tog .bars i { width: 4px; height: 14px; background: currentColor; border-radius: 1px; display: block; }
-.phone.playing .tog .bars { display: flex; }
-.phone.playing .tog .tri { display: none; }
-.prog { height: 2px; background: var(--field-rule); margin-top: 1.25rem; border-radius: 2px; overflow: hidden; }
-.prog i { display: block; height: 100%; width: 0; background: var(--field-accent); }
-.chapters { margin-top: 1.5rem; display: grid; gap: 1rem; grid-template-columns: minmax(0, 1fr); max-width: 24rem; }
-.chapters h3 { font: 500 0.75rem/1 var(--mono); color: var(--field-dim); letter-spacing: 0; margin-bottom: 0.5rem; }
+.phone.playing .tog .bars { display: flex; } .phone.playing .tog .tri { display: none; }
+.prog { height: 2px; background: var(--black-rule); margin-top: 1.25rem; border-radius: 2px; overflow: hidden; }
+.prog i { display: block; height: 100%; width: 0; background: var(--orange-on-black); }
+.chapters { margin-top: 1.25rem; display: grid; gap: 0.9rem; max-width: 24rem; }
+.chapters h3 { font: 500 0.75rem/1 var(--mono); color: var(--on-black-2); letter-spacing: 0; margin-bottom: 0.4rem; }
 .chapters ol { list-style: none; margin: 0; padding: 0; }
-.chapters button { width: 100%; text-align: left; background: none; border: 0; cursor: pointer; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: 0.35rem; align-items: baseline; padding: 0.5rem 0.25rem 0.5rem 0; color: var(--field-ink); border-top: 1px solid var(--field-rule); font-size: 0.9rem; line-height: 1.3; }
-.chapters .t { font: 400 0.75rem/1 var(--mono); color: var(--field-dim); font-variant-numeric: tabular-nums; }
-.chapters button[aria-current="true"], .chapters button[aria-current="true"] .t, .chapters button:hover { color: var(--field-accent); }
-.field .note { font: 400 0.75rem/1.5 var(--mono); color: var(--field-dim); margin-top: 1.25rem; }
-.field :focus-visible { outline-color: var(--field-accent); }
+.chapters button { width: 100%; text-align: left; background: none; border: 0; cursor: pointer; display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: 0.35rem; align-items: baseline; padding: 0.45rem 0.25rem 0.45rem 0; color: var(--on-black); border-top: 1px solid var(--black-rule); font-size: 0.9rem; line-height: 1.3; }
+.chapters .t { font: 400 0.75rem/1 var(--mono); color: var(--on-black-2); }
+.chapters button[aria-current="true"], .chapters button[aria-current="true"] .t, .chapters button:hover { color: var(--orange-on-black); }
+.field-in .note { font: 400 0.75rem/1.5 var(--mono); color: var(--on-black-2); margin-top: 1rem; }
+.black :focus-visible, .orange :focus-visible { outline-color: currentColor; }
 
-/* ---------- parts ---------- */
-.parthead { display: flex; align-items: baseline; gap: 0.9rem; padding: clamp(2rem, 5vw, 3.5rem) 0 0.25rem; scroll-margin-top: 4.5rem; }
-.parthead .n { font: 500 0.875rem/1 var(--mono); color: var(--accent); }
-.parthead h2 { font-size: clamp(1.9rem, 4vw, 2.6rem); letter-spacing: -0.035em; line-height: 1; }
+/* ---------- part openers (orange) ---------- */
+.opener { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: end; gap: 1rem 2rem; padding-block: clamp(1.25rem, 3vw, 2rem); margin-top: clamp(1.5rem, 4vw, 3rem); }
+.opener .num { font-size: clamp(4.5rem, 13vw, 9rem); line-height: 0.78; letter-spacing: -0.06em; font-weight: 700; font-variant-numeric: tabular-nums; }
+.opener h2 { font-size: clamp(2rem, 5vw, 3.4rem); letter-spacing: -0.045em; line-height: 0.95; font-weight: 700; }
+.opener .cards { font: 400 0.8125rem/1.5 var(--mono); color: var(--on-orange-2); margin-top: 0.6rem; }
 
-/* ---------- outcome ---------- */
-.big { font-size: clamp(2.2rem, 5.5vw, 3.75rem); line-height: 1; letter-spacing: -0.045em; color: var(--ink); max-width: 14ch; font-weight: 600; }
-.ogrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem 2.5rem; }
-.ogrid h4 { margin: 0 0 0.4rem; font: 500 0.75rem/1 var(--mono); color: var(--dim); }
+/* ---------- compare slider (shared) ---------- */
+.compare { position: relative; margin-inline: auto; overflow: hidden; touch-action: pan-y; border-radius: 6px; }
+.compare img { width: 100%; }
+.compare .top { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--x, 50%)) 0 0); }
+.compare .handle { position: absolute; top: 0; bottom: 0; left: var(--x, 50%); width: 2px; background: var(--on-orange); transform: translateX(-1px); pointer-events: none; }
+.compare .handle::after { content: ""; position: absolute; top: 50%; left: 50%; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--on-orange); transform: translate(-50%, -50%); box-shadow: 0 6px 18px -6px rgba(0,0,0,.5); }
+.compare .handle::before { content: "‹ ›"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -52%); z-index: 1; color: var(--orange); font: 600 0.95rem/1 var(--sans); letter-spacing: 0.1em; }
+.compare input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: ew-resize; margin: 0; }
+.compare .lab { position: absolute; bottom: 0.6rem; font: 500 0.6875rem/1 var(--mono); padding: 0.32rem 0.5rem; border-radius: 3px; background: var(--on-orange); color: var(--on-black); pointer-events: none; }
+.compare .lab.l { left: 0.6rem; } .compare .lab.r { right: 0.6rem; }
+.compare:has(input:focus-visible) { outline: 2px solid var(--on-orange); outline-offset: 4px; }
+
+/* compare on the orange field */
+.cmp-field { background: var(--orange); border-radius: 8px; padding: clamp(1.25rem, 4vw, 2.5rem); display: grid; place-items: center; gap: 1rem; color: var(--on-orange); }
+.cmp-field .hint { font: 500 0.75rem/1 var(--mono); color: var(--on-orange-2); }
+
+/* ---------- spec sheet: framing device switcher ---------- */
+.spec { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 0; overflow: hidden; }
+.spec .list { margin: 0; padding: 0.5rem; border-right: 1px solid var(--rule); background: var(--page); display: grid; align-content: start; gap: 0.15rem; }
+.spec .list button { width: 100%; text-align: left; border: 0; background: none; cursor: pointer; padding: 0.55rem 0.6rem; border-radius: 6px; display: grid; grid-template-columns: 1.4rem minmax(0, 1fr); gap: 0.3rem; font-size: 0.875rem; line-height: 1.3; color: var(--dim); }
+.spec .list button .n { font: 400 0.75rem/1.3 var(--mono); }
+.spec .list button[aria-selected="true"] { background: var(--orange); color: var(--on-orange); }
+.spec .view { min-height: 20rem; display: grid; place-items: center; padding: clamp(2.25rem, 5vw, 3.25rem) clamp(1rem, 4vw, 3rem); position: relative; }
+.spec .view img { box-shadow: 0 1px 0 var(--rule), 0 10px 30px -18px rgba(0,0,0,.35); background: #fff; }
+.spec .view img[hidden] { display: none !important; }
+.spec .tagline { position: absolute; left: 0.9rem; top: 0.8rem; font: 500 0.6875rem/1 var(--mono); color: var(--accent); }
+.corner { position: absolute; width: 12px; height: 12px; border-color: var(--accent); border-style: solid; }
+.corner.tl { left: 10px; bottom: 10px; border-width: 0 0 1.5px 1.5px; } .corner.br { right: 10px; bottom: 10px; border-width: 0 1.5px 1.5px 0; }
+
+/* components row on grid paper */
+.comps { display: flex; flex-wrap: wrap; gap: 1.25rem; justify-content: center; align-items: flex-end; padding: clamp(1.25rem, 4vw, 2.5rem); }
+.comps figure { gap: 0.5rem; }
+.comps img { max-height: 13rem; width: auto; border-radius: 3px; box-shadow: 0 10px 30px -18px rgba(0,0,0,.4); }
+.comps figcaption { font-size: 0.6875rem; color: var(--ink); }
+.comps figcaption span { color: var(--accent); }
+
+/* ---------- story media ---------- */
+.story-media { background: var(--black); }
+.seg { display: inline-flex; border: 1px solid var(--black-rule); border-radius: 999px; padding: 3px; gap: 3px; }
+.seg button { border: 0; background: none; border-radius: 999px; padding: 0.38rem 0.85rem; font: 500 0.75rem/1 var(--mono); color: var(--on-black-2); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--orange-on-black); color: var(--on-orange); }
+.swap { display: grid; }
+.swap > img { grid-area: 1 / 1; width: 100%; transition: opacity 0.4s var(--ease); }
+.swap > img[hidden] { display: block !important; opacity: 0; }
+.posters { padding: clamp(1rem, 3vw, 2rem); display: grid; place-items: center; }
+.posters img { width: 100%; max-width: 1181px; }
+.retouch { grid-template-columns: auto minmax(0, 1fr); gap: clamp(1.25rem, 4vw, 2.5rem); place-items: center start; }
+.retouch .compare { width: min(100%, 334px); margin: 0; }
+.retouch dl { margin: 0; display: grid; gap: 0.6rem; min-width: 12rem; }
+.retouch dl div { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: 0.4rem; border-top: 1px solid var(--on-orange); padding-top: 0.5rem; }
+.retouch dt { font: 500 0.75rem/1.5 var(--mono); }
+.retouch dd { margin: 0; font-weight: 500; }
+
+/* ---------- motion stage ---------- */
+.stage-wrap { position: relative; background: var(--black); }
+.lottie { position: relative; width: 100%; aspect-ratio: 1920 / 1080; }
+.lottie .stage { position: absolute; inset: 0; }
+.stage-ctl { position: absolute; left: var(--pad); bottom: 1.1rem; display: flex; gap: 0.6rem; align-items: center; }
+
+/* ---------- Star Voice loop ---------- */
+.sv { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr); gap: clamp(1.25rem, 4vw, 2.5rem); align-items: center; }
+.sv .screen { background: var(--black); border-radius: 8px; display: grid; place-items: center; padding: 0.75rem; }
+.sv .screen img { max-height: 30rem; width: auto; }
+.loop { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+.loop li { display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); align-items: center; gap: 0.75rem; padding: 0.85rem 1rem; border-radius: 8px; background: var(--tint); color: var(--ink); font-weight: 500; font-size: 1.125rem; }
+.loop li .n { width: 2.1rem; height: 2.1rem; border-radius: 50%; display: grid; place-items: center; background: var(--orange); color: var(--on-orange); font: 600 0.8125rem/1 var(--mono); }
+.loop li:last-child { background: var(--orange); color: var(--on-orange); }
+.loop li:last-child .n { background: var(--on-orange); color: var(--orange); }
+.loop + .back { font: 400 0.75rem/1.4 var(--mono); color: var(--dim); margin-top: 0.75rem; }
+
+/* ---------- ranking ---------- */
+.rank { display: flex; flex-wrap: wrap; gap: clamp(1rem, 4vw, 2.5rem); justify-content: center; align-items: center; padding: clamp(1.25rem, 4vw, 2.5rem); background: var(--tint); border-radius: 8px; }
+.rank figure { gap: 0.5rem; }
+.rank img { max-height: 16rem; width: auto; border-radius: 6px; box-shadow: 0 14px 30px -18px rgba(0,0,0,.45); }
+.rank figcaption { color: var(--ink); }
+.rank .arrow { font: 600 1.5rem/1 var(--sans); color: var(--accent); }
+
+/* ---------- outcome (orange) ---------- */
+.big { font-size: clamp(2.6rem, 7.5vw, 5.5rem); line-height: 0.92; letter-spacing: -0.055em; font-weight: 700; max-width: 12ch; }
+.ogrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 1.5rem 2.5rem; border-top: 1.5px solid var(--on-orange); padding-top: 1.1rem; }
+.ogrid h4 { margin: 0 0 0.35rem; font: 500 0.75rem/1 var(--mono); color: var(--on-orange-2); }
+.orange a { color: var(--on-orange); font-weight: 600; }
+.result .big { color: var(--orange-on-black); }
+.result .ogrid { border-top-color: var(--orange-on-black); }
+.result h4 { color: var(--on-black-2); }
+.result p { color: var(--on-black); }
+.result a { color: var(--orange-on-black); font-weight: 600; justify-self: start; }
+.orange .idx { color: var(--on-orange-2); }
+
+/* ---------- reflection: spec vs shipped ---------- */
+.vs { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr); gap: 0.75rem; align-items: stretch; }
+.vs figure { background: var(--black); border-radius: 8px; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; gap: 0; }
+.vs .lbl { font: 500 0.75rem/1 var(--mono); padding: 0.8rem 0.9rem; color: var(--on-black-2); display: flex; justify-content: space-between; }
+.vs .lbl b { color: var(--orange-on-black); font-weight: 500; }
+.vs figure > div { display: grid; place-items: center; }
+.vs figure:last-child > div img { max-height: 19rem; width: auto; }
+.vs figcaption { padding: 0.8rem 0.9rem; color: var(--on-black-2); }
+
 .next { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; padding: 2rem 0 0; }
 .next span { font: 400 0.8125rem/1 var(--mono); color: var(--dim); }
-.next a { color: var(--ink); text-decoration: none; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 600; letter-spacing: -0.03em; }
+.next a { color: var(--ink); text-decoration: none; font-size: clamp(1.5rem, 3.4vw, 2.3rem); font-weight: 600; letter-spacing: -0.035em; }
 .next a:hover { color: var(--accent); }
 
-/* ---------- narrow: contents become a strip under the bar ---------- */
+/* ---------- narrow ---------- */
 @media (max-width: 1000px) {
   .frame { grid-template-columns: minmax(0, 1fr); }
-  .toc { position: sticky; top: 3.3rem; z-index: 20; margin-inline: calc(-1 * clamp(1rem, 4vw, 2.5rem)); padding: 0.5rem clamp(1rem, 4vw, 2.5rem); background: color-mix(in srgb, var(--studio) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); overflow-x: auto; }
-  .toc .proj, .toc .part ol, .toc .shows { display: none; }
+  .toc { position: sticky; top: 3.3rem; z-index: 20; margin-inline: calc(-1 * clamp(1rem, 4vw, 2.5rem)); padding: 0.55rem clamp(1rem, 4vw, 2.5rem); background: color-mix(in srgb, var(--studio) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); overflow-x: auto; margin-bottom: 1rem; }
+  .toc .proj, .toc .part ol { display: none; }
   .toc > ol { display: flex; gap: 1.25rem; white-space: nowrap; }
   .toc .part > a { padding: 0.3rem 0; border-bottom: 2px solid transparent; }
-  .toc .part > a[aria-current="true"] { border-bottom-color: var(--accent-strong); }
+  .toc .part > a[aria-current="true"] { border-bottom-color: var(--orange); }
   .bar .who span { display: none; }
 }
 @media (max-width: 720px) {
-  .intro, .ogrid, .split { grid-template-columns: minmax(0, 1fr); }
+  .cover .intro, .ogrid, .vs, .sv, .retouch { grid-template-columns: minmax(0, 1fr); }
+  .retouch { place-items: center; }
   .field-in { grid-template-columns: minmax(0, 1fr); justify-items: center; }
   .field-in > div { width: 100%; }
-  .chapters { grid-template-columns: minmax(0, 1fr); }
-  .sheet .meta { flex-direction: column; align-items: flex-start; }
+  .spec { grid-template-columns: minmax(0, 1fr); }
+  .spec .list { border-right: 0; border-bottom: 1px solid var(--rule); display: flex; overflow-x: auto; }
+  .spec .list button { white-space: nowrap; grid-template-columns: auto auto; width: auto; }
+  .opener { grid-template-columns: minmax(0, 1fr); }
+  .meta { flex-direction: column; align-items: flex-start; }
+  .rank .arrow { transform: rotate(90deg); }
+  .comps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .comps img { max-height: none; width: 100%; }
 }
 </style>
 
@@ -265,8 +330,7 @@ figcaption { font: 400 0.8125rem/1.5 var(--mono); color: var(--dim); }
 
   <main class="sheets">
 
-    <!-- cover -->
-    <header class="cover">
+    <header class="sheet orange cover">
       <p class="client"><i aria-hidden="true"></i>Nike App, China</p>
       <h1>Nike Athletes Closet</h1>
       <p class="lede">Influencer stories in Nike's app, designed to be read, shopped and returned to.</p>
@@ -286,8 +350,7 @@ figcaption { font: 400 0.8125rem/1.5 var(--mono); color: var(--dim); }
       </div>
     </header>
 
-    <!-- the recording -->
-    <section class="sheet field" id="recording" aria-labelledby="rec-h">
+    <section class="sheet black" id="recording" aria-labelledby="rec-h">
       <div class="field-in">
         <div class="phone" id="phone">
           <video id="rec" src="assets/nike/recording.mp4" poster="assets/nike/recording-poster.jpg" width="750" height="1624" muted playsinline preload="metadata" aria-label="Screen recording of Athletes Closet VOL.4 in Nike's app"></video>
@@ -318,179 +381,221 @@ figcaption { font: 400 0.8125rem/1.5 var(--mono); color: var(--dim); }
       </div>
     </section>
 
-    <!-- 01 read -->
-    <div class="parthead" id="read"><span class="n">01</span><h2>Read</h2></div>
+    <div class="sheet orange opener" id="read">
+      <span class="num" aria-hidden="true">01</span>
+      <div><h2>Read</h2><p class="cards">Creative system · Visual style · Several views · Components</p></div>
+    </div>
 
     <article class="sheet" id="system">
-      <div class="meta"><span class="idx">01.1</span><ul class="tags"><li>Brand storytelling</li><li>Design systems</li></ul></div>
+      <div class="meta"><div class="left"><span class="idx">01.1</span><span class="kind">Design system</span></div><ul class="tags"><li>Brand storytelling</li><li>Design systems</li></ul></div>
       <div class="text">
         <h3>Redesigning the creative system first</h3>
         <p>Three volumes had shipped by the time I took over at VOL.4, so I began by redesigning the creative system, from the logo lock-up and typography to colour, framing devices and motion. I set the layouts up as reusable page templates, so every later volume is built from the same parts. The framing device balances consistency with flexibility: it adds, removes or rearranges details to fit each headline, and colour is picked up from each influencer's photos or products.</p>
         <button class="seek" type="button" data-t="19"><span class="tri" aria-hidden="true"></span>See it at 0:19</button>
       </div>
-      <figure class="ev">
-        <div class="mount pad"><img src="assets/nike/system-text-frames.png" alt="Five configurations of the text framing device: logo lock-up, one-line header, rearranged key message, simplified text, and image with text." width="1000" height="870" loading="lazy"></div>
-        <figcaption>One framing device, five configurations.</figcaption>
+      <figure>
+        <div class="grid-paper spec" id="spec">
+          <div class="list" role="tablist" aria-label="Framing device configurations">
+            <button type="button" role="tab" aria-selected="true" data-i="0"><span class="n">1</span>Logo lock-up</button>
+            <button type="button" role="tab" aria-selected="false" data-i="1"><span class="n">2</span>One-line header</button>
+            <button type="button" role="tab" aria-selected="false" data-i="2"><span class="n">3</span>Key message</button>
+            <button type="button" role="tab" aria-selected="false" data-i="3"><span class="n">4</span>Simplified text</button>
+            <button type="button" role="tab" aria-selected="false" data-i="4"><span class="n">5</span>Image and text</button>
+          </div>
+          <div class="view" role="tabpanel">
+            <span class="tagline" id="specname" aria-live="polite">Layout/Framing/Logo-Lockup</span>
+            <span class="corner tl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
+            <img src="assets/nike/gs-logo-lockup.png" alt="Logo lock-up framing device: the 星推官 Athletes Closet lock-up, VOL number and headline." width="506" height="109" data-name="Layout/Framing/Logo-Lockup">
+            <img src="assets/nike/gs-header-one-line.png" alt="One-line header framing device: subtitle, chapter number and headline." width="502" height="155" data-name="Layout/Header/One-Line" hidden>
+            <img src="assets/nike/gs-key-message.png" alt="Key message framing device: subtitle above a centred headline." width="502" height="154" data-name="Layout/Message/Key-Message" hidden>
+            <img src="assets/nike/gs-text-simplified.png" alt="Simplified text framing device: one line of text in a frame." width="502" height="70" data-name="Layout/Message/Text-Simplified" hidden>
+            <img src="assets/nike/gs-image-text-combo.png" alt="Image and text framing device: a full-height image with the lock-up and body text below." width="399" height="786" data-name="Layout/Content/ImageText-Combo" style="max-height: 26rem; width: auto;" hidden>
+          </div>
+        </div>
+        <figcaption>One framing device, five configurations. Choose one to see it.</figcaption>
       </figure>
     </article>
 
     <article class="sheet" id="style">
-      <div class="meta"><span class="idx">01.2</span><ul class="tags"><li>Brand storytelling</li></ul></div>
+      <div class="meta"><div class="left"><span class="idx">01.2</span><span class="kind">Visual style</span></div><ul class="tags"><li>Brand storytelling</li></ul></div>
       <div class="text">
         <h3>A unified visual style and tone</h3>
         <p>Each influencer gets a hero visual and a poster card in the same style, so readers know whose volume they're in. I retouched the key photos with tone correction, blemish removal and a flash-photography look, so every volume shares one tone.</p>
       </div>
-      <figure class="ev">
-        <div class="mount pad"><img src="assets/nike/guest-posters.png" alt="Six poster cards, one per influencer, in the same layout: photo, name line, headline and QR code." width="1181" height="939" loading="lazy"></div>
+      <figure class="bleed">
+        <div class="story-media posters"><img src="assets/nike/guest-posters.png" alt="Six poster cards, one per influencer, in the same layout: photo, name line, headline and QR code." width="1181" height="939" loading="lazy"></div>
         <figcaption>One poster system, a different influencer each volume.</figcaption>
       </figure>
       <figure>
-        <div class="mount pad">
-          <div class="pairs" style="--h: 20rem;">
-            <figure><img src="assets/nike/retouch-1-original.png" alt="Original photo of an influencer holding out a patterned skirt." width="334" height="500" loading="lazy"><figcaption>Original</figcaption></figure>
-            <figure><img src="assets/nike/retouch-1-after.png" alt="The same photo retouched with a flash-photography look." width="333" height="500" loading="lazy"><figcaption>Retouched</figcaption></figure>
+        <div class="cmp-field retouch">
+          <div class="compare" style="--x: 50%;">
+            <img src="assets/nike/retouch-1-after.png" alt="Retouched: the photo with a flash-photography look." width="333" height="500" loading="lazy">
+            <img class="top" src="assets/nike/retouch-1-original.png" alt="Original: the photo before retouching." width="334" height="500" loading="lazy">
+            <span class="lab l">Original</span><span class="lab r">Retouched</span>
+            <span class="handle" aria-hidden="true"></span>
+            <input type="range" min="0" max="100" value="50" aria-label="Compare the original and retouched photo">
+          </div>
+          <div>
+            <p class="hint">Drag across the photo</p>
+            <dl style="margin-top: 1rem;">
+              <div><dt>1</dt><dd>Tone correction</dd></div>
+              <div><dt>2</dt><dd>Blemish removal</dd></div>
+              <div><dt>3</dt><dd>A flash-photography look</dd></div>
+            </dl>
           </div>
         </div>
-        <figcaption>Retouched for the flash look.</figcaption>
+        <figcaption>Retouched for one tone across every volume.</figcaption>
       </figure>
     </article>
 
-    <article class="sheet" id="views">
-      <div class="meta"><span class="idx">01.3</span><ul class="tags"><li>Motion and microinteractions</li></ul></div>
+    <article class="sheet black" id="views">
+      <div class="meta"><div class="left"><span class="idx">01.3</span><span class="kind">Interaction</span></div><ul class="tags"><li>Motion and microinteractions</li></ul></div>
       <div class="text">
         <h3>Several views of one outfit, swiped sideways</h3>
         <p>Where a story shows the same outfit from several angles, I set the images as horizontal pages instead of one long vertical scroll. It saves space, and the next view shows at the edge, so readers can see there's more.</p>
         <button class="seek" type="button" data-t="22"><span class="tri" aria-hidden="true"></span>See it at 0:22</button>
       </div>
-      <figure class="ev">
-        <div class="mount"><img src="assets/nike/storytelling-feed.png" alt="Before: one long vertical scroll. After: an outfit's views set as horizontal pages, with the next view showing at the edge." width="1555" height="813" loading="lazy"></div>
-        <figcaption>The next view at the edge is the cue to swipe.</figcaption>
+      <figure class="bleed bleed-end">
+        <img src="assets/nike/storytelling-feed.png" alt="Before: one long vertical scroll. After: an outfit's views set as horizontal pages, with the next view showing at the edge." width="1555" height="813" loading="lazy">
+        <figcaption class="capline">The next view at the edge is the cue to swipe.</figcaption>
       </figure>
     </article>
 
     <article class="sheet" id="components">
-      <div class="meta"><span class="idx">01.4</span><ul class="tags"><li>Design systems</li></ul></div>
+      <div class="meta"><div class="left"><span class="idx">01.4</span><span class="kind">Design system</span></div><ul class="tags"><li>Design systems</li></ul></div>
       <div class="text">
         <h3>Reusable components, built for handover</h3>
         <p>The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma as reusable components with Auto Layout, documented for handover. It cut the back-and-forth between design and engineering.</p>
       </div>
-      <figure class="ev">
-        <div class="mount pad">
-          <div class="pairs" style="--h: 15rem;">
-            <figure><img src="assets/nike/gs-imagery-primary.png" alt="Imagery layout, primary." width="782" height="1246" loading="lazy"><figcaption>Layout/Imagery/Primary</figcaption></figure>
-            <figure><img src="assets/nike/gs-imagery-secondary.png" alt="Imagery layout, secondary." width="782" height="1246" loading="lazy"><figcaption>Layout/Imagery/Secondary</figcaption></figure>
-            <figure><img src="assets/nike/gs-imagery-tertiary.png" alt="Imagery layout, tertiary." width="782" height="1246" loading="lazy"><figcaption>Layout/Imagery/Tertiary</figcaption></figure>
-            <figure><img src="assets/nike/gs-poster-card.png" alt="Poster card layout." width="935" height="1246" loading="lazy"><figcaption>Layout/Poster-Card</figcaption></figure>
-          </div>
+      <figure>
+        <div class="grid-paper comps">
+          <figure><img src="assets/nike/gs-imagery-primary.png" alt="Imagery layout, primary." width="782" height="1246" loading="lazy"><figcaption><span>Layout/</span>Imagery/Primary</figcaption></figure>
+          <figure><img src="assets/nike/gs-imagery-secondary.png" alt="Imagery layout, secondary." width="782" height="1246" loading="lazy"><figcaption><span>Layout/</span>Imagery/Secondary</figcaption></figure>
+          <figure><img src="assets/nike/gs-imagery-tertiary.png" alt="Imagery layout, tertiary." width="782" height="1246" loading="lazy"><figcaption><span>Layout/</span>Imagery/Tertiary</figcaption></figure>
+          <figure><img src="assets/nike/gs-poster-card.png" alt="Poster card layout." width="935" height="1246" loading="lazy"><figcaption><span>Layout/</span>Poster-Card</figcaption></figure>
         </div>
         <figcaption>One set of sizes, spacing and names across the screens.</figcaption>
       </figure>
     </article>
 
-    <!-- 02 shop -->
-    <div class="parthead" id="shop"><span class="n">02</span><h2>Shop</h2></div>
+    <div class="sheet orange opener" id="shop">
+      <span class="num" aria-hidden="true">02</span>
+      <div><h2>Shop</h2><p class="cards">Product tags · Product cards · Star Ranking</p></div>
+    </div>
 
-    <article class="sheet" id="tags">
-      <div class="meta"><span class="idx">02.1</span><ul class="tags"><li>Brand storytelling</li></ul></div>
+    <article class="sheet black" id="tags">
+      <div class="meta"><div class="left"><span class="idx">02.1</span><span class="kind">Story</span></div><ul class="tags"><li>Brand storytelling</li></ul></div>
       <div class="text">
         <h3>Shop the look, straight from the photo</h3>
         <p>Readers engaged with the stories, but product click-through stayed low, because the stories didn't connect to the products. I added tappable product tags to the photos, so an outfit leads straight to what's in it.</p>
         <button class="seek" type="button" data-t="25"><span class="tri" aria-hidden="true"></span>See it at 0:25</button>
       </div>
-      <figure class="ev">
-        <div class="mount pad">
-          <div class="stack">
-            <div class="seg" role="group" aria-label="Show">
-              <button type="button" aria-pressed="false" data-show="0">Wireframe</button>
-              <button type="button" aria-pressed="true" data-show="1">Final</button>
-            </div>
-            <div class="swap" id="tagswap">
-              <img src="assets/nike/product-tags-1.png" alt="Wireframe: three story pages with a product tag placed on the photo." width="2500" height="1306" loading="lazy" hidden>
-              <img src="assets/nike/product-tags-2.png" alt="Final: the same three pages, with product tags on the photos naming a T-shirt and a pair of trainers." width="2500" height="1306" loading="lazy">
-            </div>
+      <figure class="bleed bleed-end">
+        <div class="swap" id="tagswap">
+          <img src="assets/nike/product-tags-1.png" alt="Wireframe: three story pages with a product tag placed on the photo." width="2500" height="1306" loading="lazy" hidden>
+          <img src="assets/nike/product-tags-2.png" alt="Final: the same three pages, with product tags on the photos naming a T-shirt and a pair of trainers." width="2500" height="1306" loading="lazy">
+        </div>
+        <div class="capline">
+          <figcaption>A tag on the photo names the item and links to it: "同款T恤", the same T-shirt.</figcaption>
+          <div class="seg" role="group" aria-label="Show">
+            <button type="button" aria-pressed="false" data-show="0">Wireframe</button>
+            <button type="button" aria-pressed="true" data-show="1">Final</button>
           </div>
         </div>
-        <figcaption>A tag on the photo names the item and links to it: "同款T恤", the same T-shirt.</figcaption>
       </figure>
     </article>
 
     <article class="sheet" id="product-card">
-      <div class="meta"><span class="idx">02.2</span><ul class="tags"><li>Brand storytelling</li></ul></div>
+      <div class="meta"><div class="left"><span class="idx">02.2</span><span class="kind">Before and after</span></div><ul class="tags"><li>Brand storytelling</li></ul></div>
       <div class="text">
         <h3>Larger product cards</h3>
         <p>The old product cards were small tiles. I enlarged the product image, so each item reads as part of the content.</p>
         <button class="seek" type="button" data-t="26"><span class="tri" aria-hidden="true"></span>See it at 0:26</button>
       </div>
-      <figure class="ev">
-        <div class="mount pad">
-          <div class="compare" id="compare" style="--x: 50%;">
+      <figure>
+        <div class="cmp-field">
+          <div class="compare" style="--x: 50%; width: min(100%, 21rem);">
             <img src="assets/nike/product-card-after.png" alt="After VOL.4: larger product images under the story photo." width="1821" height="3584" loading="lazy">
             <img class="top" src="assets/nike/product-card-before.png" alt="Before VOL.4: products in small tiles." width="1821" height="3584" loading="lazy">
             <span class="lab l">Before</span><span class="lab r">After</span>
             <span class="handle" aria-hidden="true"></span>
-            <input type="range" id="compare-range" min="0" max="100" value="50" aria-label="Compare before and after">
+            <input type="range" min="0" max="100" value="50" aria-label="Compare the product card before and after">
           </div>
+          <span class="hint">Drag to compare</span>
         </div>
-        <figcaption>Drag to compare the product card before and after VOL.4.</figcaption>
+        <figcaption>The product card before and after VOL.4.</figcaption>
       </figure>
     </article>
 
     <article class="sheet" id="ranking">
-      <div class="meta"><span class="idx">02.3</span><ul class="tags"><li>Brand storytelling</li></ul></div>
+      <div class="meta"><div class="left"><span class="idx">02.3</span><span class="kind">Before and after</span></div><ul class="tags"><li>Brand storytelling</li></ul></div>
       <div class="text">
         <h3>A ranking that leads to similar outfits</h3>
         <p>The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear hierarchy, and added two calls to action after a like, "See more" and "View similar outfits", so a ranking leads into more products.</p>
         <button class="seek" type="button" data-t="48"><span class="tri" aria-hidden="true"></span>See it at 0:48</button>
       </div>
-      <figure class="ev">
-        <div class="mount pad">
-          <div class="pairs" style="--h: 20rem;">
-            <figure><img src="assets/nike/ranking-before.png" alt="Before: three loose tiles." width="375" height="389" loading="lazy"><figcaption>Before</figcaption></figure>
-            <figure><img src="assets/nike/ranking-after.png" alt="After: a ranked top three with calls to action." width="375" height="420" loading="lazy"><figcaption>After</figcaption></figure>
-          </div>
+      <figure>
+        <div class="rank">
+          <figure><img src="assets/nike/ranking-before.png" alt="Before: three loose tiles." width="375" height="389" loading="lazy"><figcaption>Before</figcaption></figure>
+          <span class="arrow" aria-hidden="true">→</span>
+          <figure><img src="assets/nike/ranking-after.png" alt="After: a ranked top three with calls to action." width="375" height="420" loading="lazy"><figcaption>After</figcaption></figure>
         </div>
         <figcaption>A loose list becomes a ranked board with a way onward.</figcaption>
       </figure>
     </article>
 
-    <!-- 03 return -->
-    <div class="parthead" id="return"><span class="n">03</span><h2>Return</h2></div>
+    <div class="sheet orange opener" id="return">
+      <span class="num" aria-hidden="true">03</span>
+      <div><h2>Return</h2><p class="cards">Reward for a like · Star Voice Q&amp;A</p></div>
+    </div>
 
-    <article class="sheet" id="draw">
-      <div class="meta"><span class="idx">03.1</span><ul class="tags"><li>Motion and microinteractions</li></ul></div>
+    <article class="sheet black" id="draw">
+      <div class="meta"><div class="left"><span class="idx">03.1</span><span class="kind">Motion</span></div><ul class="tags"><li>Motion and microinteractions</li></ul></div>
       <div class="text">
         <h3>A reward for every like</h3>
         <p>The stories were static, so readers had little reason to act. I added a reward mechanism: a like enters a prize draw, which opens as a shoebox with a pair of trainers rising out. I designed the microinteraction and animated it.</p>
       </div>
-      <figure class="ev">
-        <div class="mount">
-          <div class="lottie">
-            <div class="stage" id="giftstage" role="img" aria-label="Animation: a shoebox opens and a pair of trainers rises out"></div>
-            <button class="ctl" type="button" id="giftplay"><span class="tri" aria-hidden="true"></span>Play</button>
-          </div>
+      <figure class="bleed bleed-end">
+        <div class="stage-wrap">
+          <div class="lottie"><div class="stage" id="giftstage" role="img" aria-label="Animation: a shoebox opens and a pair of trainers rises out"></div></div>
+          <div class="stage-ctl"><button class="btn" type="button" id="giftplay"><span class="tri" aria-hidden="true"></span><span id="giftlabel">Play</span></button></div>
         </div>
-        <figcaption>Play: a like enters the prize draw.</figcaption>
+        <figcaption class="capline">A like enters the prize draw.</figcaption>
       </figure>
     </article>
 
     <article class="sheet" id="star-voice">
-      <div class="meta"><span class="idx">03.2</span><ul class="tags"><li>Motion and microinteractions</li><li>Brand storytelling</li></ul></div>
+      <div class="meta"><div class="left"><span class="idx">03.2</span><span class="kind">Story</span></div><ul class="tags"><li>Motion and microinteractions</li><li>Brand storytelling</li></ul></div>
       <div class="text">
         <h3>Star Voice Q&amp;A: ask now, answered live</h3>
         <p>I designed Star Voice Q&amp;A to hold attention between volumes. The next influencer records a short voice teaser, readers submit questions and vote on others', and the top questions are answered in Nike's livestream. It shipped, and was recommended for wider use in other campaigns.</p>
         <button class="seek" type="button" data-t="42"><span class="tri" aria-hidden="true"></span>See it at 0:42</button>
       </div>
-      <figure class="ev">
-        <div class="mount pad"><img src="assets/nike/star-voice-crop.jpg" alt="Star Voice Q&amp;A: a voice teaser from the next influencer, voted questions and a field to ask one." width="2957" height="3396" loading="lazy" style="max-height: 34rem;"></div>
-        <figcaption>Preview, ask, vote, answered live: questions for the next influencer are answered in Nike's 618 livestream.</figcaption>
+      <figure>
+        <div class="sv">
+          <div class="screen"><img src="assets/nike/star-voice-crop.jpg" alt="Star Voice Q&amp;A: a voice teaser from the next influencer, voted questions and a field to ask one." width="2957" height="3396" loading="lazy"></div>
+          <div>
+            <ol class="loop" aria-label="The Star Voice loop">
+              <li><span class="n">1</span>Preview</li>
+              <li><span class="n">2</span>Ask</li>
+              <li><span class="n">3</span>Vote</li>
+              <li><span class="n">4</span>Answered live</li>
+            </ol>
+            <p class="back">Then the next influencer's teaser starts the loop again.</p>
+          </div>
+        </div>
+        <figcaption>Questions for the next influencer are answered in Nike's 618 livestream.</figcaption>
       </figure>
     </article>
 
-    <!-- 04 outcome -->
-    <div class="parthead" id="outcome"><span class="n">04</span><h2>Outcome</h2></div>
+    <div class="sheet orange opener" id="outcome">
+      <span class="num" aria-hidden="true">04</span>
+      <div><h2>Outcome</h2><p class="cards">One season became several · What I'd do now</p></div>
+    </div>
 
-    <section class="sheet" id="result" aria-label="Outcome and role">
-      <p class="big">One season became several</p>
+    <section class="sheet black result" id="result" aria-labelledby="out-h">
+      <div class="meta"><span class="idx">04.1</span></div>
+      <h2 class="big" id="out-h">One season became several</h2>
       <div class="ogrid">
         <div><h4>Outcome</h4><p>The feature shipped in Nike's app. The contract covered one season; after VOL.4, Nike commissioned the following seasons.</p></div>
         <div><h4>Role</h4><p>UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.</p></div>
@@ -499,20 +604,22 @@ figcaption { font: 400 0.8125rem/1.5 var(--mono); color: var(--dim); }
     </section>
 
     <article class="sheet" id="handoff">
-      <div class="meta"><span class="idx">04.2</span><ul class="tags"><li>Motion and microinteractions</li></ul></div>
+      <div class="meta"><div class="left"><span class="idx">04.2</span><span class="kind">Reflection</span></div><ul class="tags"><li>Motion and microinteractions</li></ul></div>
       <div class="text">
         <h3>What I'd do now: take motion from idea to production myself</h3>
         <p>I specified the like in four states: an outline heart, a pill inviting a like to win a gift, a black heart with the count, and hearts floating out. Handed over in Figma, it was built as a plain red heart. I now build motion in code myself and take responsibility for the quality of what ships.</p>
         <button class="seek" type="button" data-t="28.4"><span class="tri" aria-hidden="true"></span>See it at 0:28</button>
       </div>
-      <div class="ev split">
+      <div class="vs">
         <figure>
-          <div class="mount" style="height: 100%;"><img src="assets/nike/like-states.png" alt="The like specified in Figma: an outline heart, a pill reading 点赞赢好礼 (like to win a gift), then a black heart with the count, and hearts floating out." width="1474" height="962" loading="lazy"></div>
-          <figcaption>Specified: four states, from "点赞赢好礼" (like to win a gift) to the count.</figcaption>
+          <div class="lbl"><b>Specified</b><span>Figma</span></div>
+          <div><img src="assets/nike/like-states.png" alt="The like specified in Figma: an outline heart, a pill reading 点赞赢好礼 (like to win a gift), then a black heart with the count, and hearts floating out." width="1474" height="962" loading="lazy"></div>
+          <figcaption>Four states, from "点赞赢好礼" (like to win a gift) to the count.</figcaption>
         </figure>
         <figure>
-          <div class="mount pad" style="height: 100%;"><img src="assets/nike/like-shipped.jpg" alt="The shipped like: a plain red heart over the photo." width="828" height="1034" loading="lazy" style="max-height: 18rem;"></div>
-          <figcaption>Shipped: a plain red heart.</figcaption>
+          <div class="lbl"><b>Shipped</b><span>App</span></div>
+          <div><img src="assets/nike/like-shipped.jpg" alt="The shipped like: a plain red heart over the photo." width="828" height="1034" loading="lazy"></div>
+          <figcaption>A plain red heart.</figcaption>
         </figure>
       </div>
     </article>
@@ -527,29 +634,15 @@ figcaption { font: 400 0.8125rem/1.5 var(--mono); color: var(--dim); }
   const root = document.documentElement;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* theme: system → light → dark */
   const themeBtn = document.getElementById('theme');
-  const order = ['system', 'light', 'dark'];
-  const label = { system: 'Auto', light: 'Light', dark: 'Dark' };
+  const order = ['system', 'light', 'dark'], label = { system: 'Auto', light: 'Light', dark: 'Dark' };
   let theme = 'system';
   try { theme = localStorage.getItem('nike-theme') || 'system'; } catch (e) {}
-  const applyTheme = () => {
-    if (theme === 'system') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', theme);
-    themeBtn.textContent = label[theme];
-    themeBtn.setAttribute('aria-label', 'Colour theme: ' + theme);
-  };
+  const applyTheme = () => { theme === 'system' ? root.removeAttribute('data-theme') : root.setAttribute('data-theme', theme); themeBtn.textContent = label[theme]; themeBtn.setAttribute('aria-label', 'Colour theme: ' + theme); };
   applyTheme();
-  themeBtn.addEventListener('click', () => {
-    theme = order[(order.indexOf(theme) + 1) % order.length];
-    try { localStorage.setItem('nike-theme', theme); } catch (e) {}
-    applyTheme();
-  });
+  themeBtn.addEventListener('click', () => { theme = order[(order.indexOf(theme) + 1) % 3]; try { localStorage.setItem('nike-theme', theme); } catch (e) {} applyTheme(); });
 
-  /* the recording */
-  const video = document.getElementById('rec');
-  const phone = document.getElementById('phone');
-  const tog = document.getElementById('tog');
-  const prog = document.getElementById('prog');
+  const video = document.getElementById('rec'), phone = document.getElementById('phone'), tog = document.getElementById('tog'), prog = document.getElementById('prog');
   const chapterBtns = [...document.querySelectorAll('#chapters button')];
   const times = chapterBtns.map(b => parseFloat(b.dataset.t)).sort((a, b) => a - b);
   const setPlaying = on => { phone.classList.toggle('playing', on); tog.setAttribute('aria-label', on ? 'Pause recording' : 'Play recording'); };
@@ -560,74 +653,61 @@ figcaption { font: 400 0.8125rem/1.5 var(--mono); color: var(--dim); }
   video.addEventListener('timeupdate', () => {
     const t = video.currentTime;
     if (video.duration) prog.style.width = (t / video.duration * 100) + '%';
-    let cur = null;
-    for (const s of times) if (t >= s - 0.05) cur = s;
+    let cur = null; for (const s of times) if (t >= s - 0.05) cur = s;
     chapterBtns.forEach(b => b.setAttribute('aria-current', String(parseFloat(b.dataset.t) === cur)));
   });
-  const seek = t => {
-    const go = () => { video.currentTime = t; video.play().catch(() => {}); };
-    if (video.readyState >= 1) go(); else { video.addEventListener('loadedmetadata', go, { once: true }); video.load(); }
-  };
+  const seek = t => { const go = () => { video.currentTime = t; video.play().catch(() => {}); }; if (video.readyState >= 1) go(); else { video.addEventListener('loadedmetadata', go, { once: true }); video.load(); } };
   chapterBtns.forEach(b => b.addEventListener('click', () => seek(parseFloat(b.dataset.t))));
-  document.querySelectorAll('.seek').forEach(b => b.addEventListener('click', () => {
-    document.getElementById('recording').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
-    seek(parseFloat(b.dataset.t));
-  }));
+  document.querySelectorAll('.seek').forEach(b => b.addEventListener('click', () => { document.getElementById('recording').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' }); seek(parseFloat(b.dataset.t)); }));
 
-  /* compare slider */
-  const cmp = document.getElementById('compare');
-  const range = document.getElementById('compare-range');
-  range.addEventListener('input', () => cmp.style.setProperty('--x', range.value + '%'));
+  document.querySelectorAll('.compare').forEach(c => { const r = c.querySelector('input'); r.addEventListener('input', () => c.style.setProperty('--x', r.value + '%')); });
 
-  /* wireframe / final */
-  const swapImgs = document.querySelectorAll('#tagswap img');
-  const segBtns = document.querySelectorAll('.seg button');
-  segBtns.forEach(b => b.addEventListener('click', () => {
-    const i = +b.dataset.show;
-    swapImgs.forEach((img, k) => { img.hidden = k !== i; });
-    segBtns.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
-  }));
+  const spec = document.getElementById('spec');
+  const tabs = [...spec.querySelectorAll('[role="tab"]')], imgs = [...spec.querySelectorAll('.view img')], specname = document.getElementById('specname');
+  const pick = i => {
+    tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+    imgs.forEach((im, k) => { im.hidden = k !== i; });
+    specname.textContent = imgs[i].dataset.name;
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => pick(i));
+    t.addEventListener('keydown', e => {
+      const d = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? 1 : (e.key === 'ArrowUp' || e.key === 'ArrowLeft') ? -1 : 0;
+      if (d) { e.preventDefault(); const n = (i + d + tabs.length) % tabs.length; pick(n); tabs[n].focus(); }
+    });
+  });
+  pick(0);
 
-  /* gift box */
-  const stage = document.getElementById('giftstage');
-  const playBtn = document.getElementById('giftplay');
+  const swapImgs = document.querySelectorAll('#tagswap img'), segBtns = document.querySelectorAll('.seg button');
+  segBtns.forEach(b => b.addEventListener('click', () => { const i = +b.dataset.show; swapImgs.forEach((im, k) => { im.hidden = k !== i; }); segBtns.forEach(x => x.setAttribute('aria-pressed', String(x === b))); }));
+
+  const stage = document.getElementById('giftstage'), playBtn = document.getElementById('giftplay'), giftlabel = document.getElementById('giftlabel');
   let anim = null;
   const load = () => new Promise((res, rej) => {
     if (anim) return res(anim);
     if (!window.lottie) return rej();
     anim = lottie.loadAnimation({ container: stage, renderer: 'svg', loop: false, autoplay: false, path: 'assets/nike/gift-box.lottie.json' });
     anim.addEventListener('DOMLoaded', () => { anim.goToAndStop(reduce ? anim.totalFrames - 1 : 0, true); res(anim); });
+    anim.addEventListener('complete', () => { giftlabel.textContent = 'Replay'; });
     anim.addEventListener('data_failed', rej);
   });
   load().catch(() => {});
-  playBtn.addEventListener('click', () => {
-    load().then(a => { reduce ? a.goToAndStop(a.totalFrames - 1, true) : a.goToAndPlay(0, true); }).catch(() => {});
-  });
+  playBtn.addEventListener('click', () => { load().then(a => { reduce ? a.goToAndStop(a.totalFrames - 1, true) : a.goToAndPlay(0, true); }).catch(() => {}); });
 
-  /* contents: mark the part and card in view */
   const tocLinks = [...document.querySelectorAll('.toc a[href^="#"]')].filter(a => a.getAttribute('href') !== '#top');
-  const targets = [...new Set(tocLinks.map(a => a.getAttribute('href')))].map(h => document.querySelector(h)).filter(Boolean);
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      const id = '#' + e.target.id;
-      const partId = e.target.classList.contains('parthead') ? id : '#' + (e.target.dataset.part || '');
-      tocLinks.forEach(a => {
-        const h = a.getAttribute('href');
-        const isCard = h === id && !a.parentElement.classList.contains('part');
-        const isPart = a.parentElement.classList.contains('part') && h === partId;
-        a.setAttribute('aria-current', String(isCard || isPart));
-      });
-    });
-  }, { rootMargin: '-40% 0px -55% 0px' });
-  /* each card knows its part */
   let part = '';
-  document.querySelectorAll('.parthead, .sheet[id]').forEach(el => {
-    if (el.classList.contains('parthead')) part = el.id; else el.dataset.part = part;
-  });
+  document.querySelectorAll('.opener, .sheet[id]').forEach(el => { if (el.classList.contains('opener')) part = el.id; else el.dataset.part = part; });
+  const targets = [...new Set(tocLinks.map(a => a.getAttribute('href')))].map(h => document.querySelector(h)).filter(Boolean);
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    const id = '#' + e.target.id, partId = e.target.classList.contains('opener') ? id : '#' + (e.target.dataset.part || e.target.id);
+    tocLinks.forEach(a => {
+      const h = a.getAttribute('href'), isPartLink = a.parentElement.classList.contains('part');
+      a.setAttribute('aria-current', String(isPartLink ? h === partId : h === id));
+    });
+  }), { rootMargin: '-40% 0px -55% 0px' });
   targets.forEach(t => io.observe(t));
 
-  /* arriving from the printer: highlight the printed card */
   const hit = location.hash && document.querySelector('.sheet' + location.hash);
   if (hit) hit.classList.add('printed');
 })();
