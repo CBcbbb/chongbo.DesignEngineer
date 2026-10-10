@@ -112,6 +112,7 @@ Rules:
 
 - **Type:** Geist Sans for everything, Geist Mono for metadata, labels, numbers and captions. One type scale for all projects; no project-specific fonts. The Wix fonts (`src/components/case/fonts.ts`) are retired once a project is rebuilt.
 - **Surfaces:** existing tokens in `src/app/tokens.css`: `--studio`, `--paper`, `--ink`, `--paper-body`, `--rule`. Red (`--red`) stays reserved for actions, as on the printer.
+- **Light and dark are both first-class.** Every page is designed and reviewed in both modes. Default to the system setting, and keep the manual override (`data-theme`). Photographed objects on the home page (the printer, the sheets it prints) keep their colours in both modes; reading surfaces, including the whole case file, follow the theme. A long page on bright paper is glaring in dark mode.
 - **Grid:** a reading column of about 65 characters. Media can break out to a wide column or full bleed. Generous, consistent vertical rhythm.
 - **Page skeleton:** cover → "What this shows" (two or three capability chips that jump to their cards) → cards in canonical order → outcome and role → next project. The parts rail (01…n) stays.
 - **Block library:** every project is built from the same blocks:
@@ -129,11 +130,20 @@ Rules:
 
   A project may propose a new block. If accepted, it joins the library for everyone.
 
-**Per project (its own character):**
+**Per project (its own character):** each project has its own palette, defined once with a light and a dark value for every token:
 
-- `--accent`: chips, links, highlighted numbers, the parts rail marker.
-- `--accent-2`: media backgrounds, colour fields, the cover band.
-- Both are drawn from the project's own world, checked for contrast (`npm run contrast`), and defined in one place. Starting proposals, to be confirmed in prototypes:
+| Token | Use | Contrast rule (in its own mode) |
+|---|---|---|
+| `--accent` | links, chips, highlighted numbers, the parts rail marker | ≥ 4.5:1 on the paper surface |
+| `--accent-strong` / `--on-accent` | filled chips and buttons, and the text on them | ≥ 4.5:1 between the two |
+| `--accent-2` | colour fields, cover band, media mounts | ≥ 3:1 against the paper where it marks a boundary |
+| `--accent-tint` | quiet backgrounds: highlighted cards ("Printed for…"), quotes | body text still ≥ 4.5:1 on it |
+
+- **Dark is designed, not inverted.** Brand colours usually need a lighter, slightly desaturated value on dark surfaces; fields get deeper, not brighter. Keep the hue, so the project is recognisable in both modes.
+- **Fixed brand colours** (HHCD) stay as marks. Where one fails contrast, add a text-safe variant per mode (the rebuild already does this for light: `--color-projects` / `--color-projects-text`).
+- **Media in dark mode.** Bright screenshots get a mount on `--accent-2` so they don't punch a hole in the page. Use the product's own dark-mode screens where they exist. Never filter or invert screenshots; they're evidence.
+- **Checks.** Every pairing goes into the contrast script (`npm run contrast`) in both modes. Prototypes show both modes side by side.
+- **Starting proposals**, to be confirmed in prototypes:
   - HHCD: its fixed brand colours.
   - Nike: black + orange (from the original page).
   - Component Store: slate.
@@ -155,9 +165,9 @@ Work with me in conversation. Talk it through and confirm before building.
 2. **Interview.** Ask me 5 to 8 sharp questions, a few at a time, about what only I know: the hardest decision, what I'd defend, what failed, real numbers, what I'd change now, exactly what I did versus others.
 3. **Card inventory.** The table in §3, the canonical order, the image inventory (§6) and the gaps list. Wait for my approval.
 4. **Copy.** Write every card to the rules in §4 and §5. Show it to me as plain text and revise with me until every line is right.
-5. **Visual prototype.** A single-file HTML prototype of the case file in `docs/design/case-<slug>.html` (same approach as `docs/design/prototype.html`), using the real assets, at desktop and phone widths. Iterate with me. Publish it as an artifact so I can view it on any device.
+5. **Visual prototype.** A single-file HTML prototype of the case file in `docs/design/case-<slug>.html` (same approach as `docs/design/prototype.html`), using the real assets, at desktop and phone widths, in light and dark mode. Iterate with me. Publish it as an artifact so I can view it on any device.
 6. **Build.** Move the approved design into the site (see §9), with tests passing and a Vercel preview.
-7. **Review.** Heading test, read-aloud test for copy, contrast check, keyboard and screen-reader pass, phone check. Then I approve the merge.
+7. **Review.** Heading test, read-aloud test for copy, contrast check in both modes, keyboard and screen-reader pass, phone check. Then I approve the merge.
 
 ## 9. Working in parallel without collisions
 
