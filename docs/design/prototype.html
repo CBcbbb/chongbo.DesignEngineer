@@ -26,7 +26,7 @@ a{color:inherit}
 .who{display:flex;gap:10px;align-items:baseline;text-decoration:none}.who b{font-weight:600}.who span{color:var(--ink-2)}
 .bar nav{display:flex;gap:22px}.bar nav a{text-decoration:none;color:var(--ink-2)}.bar nav a:hover{color:var(--ink)}
 
-h1{margin:clamp(12px,4vh,40px) 0 0;text-align:center;font:600 clamp(30px,4.4vw,48px)/1.05 var(--sans);letter-spacing:-.035em}
+h1{margin:6px 0 0;text-align:center;font:600 clamp(30px,4.4vw,48px)/1.05 var(--sans);letter-spacing:-.035em}
 
 /* ---------- machine ---------- */
 .stage{position:relative;width:min(760px,100%);margin:200px auto 0}
@@ -76,7 +76,8 @@ h1{margin:clamp(12px,4vh,40px) 0 0;text-align:center;font:600 clamp(30px,4.4vw,4
 
 /* topic cards */
 .skills{max-width:1000px;margin:26px auto 0;display:flex;flex-direction:column;align-items:center;gap:10px}
-.skills-label{margin:0;font:500 11.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.eyebrow{margin:clamp(12px,4vh,40px) 0 0;text-align:center;font:500 12px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
+.skills-label{margin:0;font:500 15px var(--sans);color:var(--ink-2)}
 .topics{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;width:100%;margin:0;padding:12px 0 6px;list-style:none}
 .topic{position:relative;width:100%;min-height:84px;padding:10px 10px 12px;border:0;border-radius:6px;cursor:pointer;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:8px;
   background:var(--paper);color:var(--paper-ink);box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 0 0 1px rgba(60,50,40,.10),0 2px 0 #D6D2CA,0 10px 18px -10px rgba(40,30,20,.35);transition:transform .25s var(--ease),box-shadow .25s}
@@ -171,10 +172,11 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
   </header>
 
   <main>
+    <p class="eyebrow">Chongbo’s Lab</p>
     <h1 id="h1">Who are you hiring?</h1>
 
     <section class="skills" aria-labelledby="skills-title">
-      <h2 class="skills-label" id="skills-title">Skills</h2>
+      <h2 class="skills-label" id="skills-title">What skills are you looking for?</h2>
       <ul class="topics" id="topics"></ul>
     </section>
 
