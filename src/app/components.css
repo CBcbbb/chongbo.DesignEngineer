@@ -1228,6 +1228,7 @@
 .case-links a {
   display: inline-flex;
   align-items: center;
+  gap: 4px;
   min-height: 44px;
   margin-block: -10px;
   font-weight: 600;

@@ -1,0 +1,126 @@
+# Chongbo Ning — Design Engineer
+
+The portfolio of Chongbo Ning, a design engineer in London. A red ticket printer sits on the page: type what your team cares about, press **Print**, and it prints a ticket with the part of my work that answers it. Every project is also a short case file you can read without asking anything.
+
+- `/` — the machine and the tray of case files
+- `/ask?q=…` — the same answer, server-rendered (works without JavaScript; shareable; `noindex`)
+- `/work/<slug>` — a case file per project, every section deep-linkable (`/work/<slug>#<section-id>`)
+- `/about` — profile, education and contact
+
+## Stack
+
+Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS v4 · Zod · Anthropic TypeScript SDK · Geist and Geist Mono (self-hosted via the `geist` package) · Vitest · Playwright + axe-core.
+
+Motion is plain CSS (no animation library): the thermal-printer feed is a `steps()` height transition, so the client bundle stays small.
+
+## Run locally
+
+```bash
+npm install
+cp .env.example .env.local   # optional: add ANTHROPIC_API_KEY
+npm run dev                  # http://localhost:3000
+```
+
+Quality gates:
+
+```bash
+npm run lint
+npm run typecheck
+npm test            # unit tests (Vitest)
+npm run build
+npm run contrast    # WCAG AA check of every colour pairing in use
+npm run test:e2e    # Playwright + axe at 1440 and 390 (needs `npm run build` first)
+npm run screenshots # writes docs/screenshots/*.png
+```
+
+Playwright uses a system Chromium at `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` by default. Elsewhere, run `npx playwright install chromium` and set `PW_CHROMIUM` to that binary (or remove `executablePath` from `playwright.config.ts`).
+
+## Environment variables
+
+| Name | Where | Purpose |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | server only | Lets Claude choose the answer cards. Optional: without it the keyword fallback answers everything. |
+| `NEXT_PUBLIC_SITE_URL` | build + server | Public URL for canonical links, sitemap and Open Graph images, e.g. `https://chongbo.dev`. Defaults to `http://localhost:3000`. |
+| `ASK_RATE_LIMIT` | server, optional | Questions per IP per minute (default 12). |
+| `ASK_DAILY_CAP` | server, optional | Best-effort daily cap on model calls per server instance (default 1500). Past the cap, answers come from the fallback. |
+
+## How "ask" works
+
+All content lives in `content/` (typed by `content/schema.ts`). Each project is an ordered list of section cards, and each card carries **signals** (accessibility, design systems, …). The ask feature never writes the page; it only **chooses** cards.
+
+`POST /api/ask` with `{ "question": "…" }` (1–300 characters, validated with Zod) returns:
+
+```json
+{
+  "reply": "One first-person sentence, ≤160 chars",
+  "picks": [{ "project": "hhcd-data-platform", "section": "dual-view", "reason": "≤90 chars" }],
+  "matched": "accessibility",
+  "source": "model"
+}
+```
+
+The schema is shared by the API route, the `/ask` page and the client (`src/lib/ask/schema.ts`).
+
+1. **Rate limit** (`src/lib/ask/rate-limit.ts`): a per-IP sliding window. Over the limit → `429` and the machine prints a small "Paused" ticket. Question text is never logged.
+2. **Model path** (`src/lib/ask/model.ts`): if `ANTHROPIC_API_KEY` is set and the daily cap allows, `claude-haiku-5-5` is called through the official SDK with structured JSON output (`output_config.format` via `zodOutputFormat`). The system prompt is a compact catalogue built from `content/` (project and section ids, titles, kinds, signals, one-sentence excerpts). The visitor's question is wrapped and treated as data. A 6-second timeout applies; there are no retries.
+3. **Sanitising** (`src/lib/ask/sanitize.ts`): picks that don't exist are dropped, duplicates removed, at most three kept, reasons clipped; an invalid reply or `matched` key is repaired from the picks. If no valid pick remains, it falls back.
+4. **Fallback** (`src/lib/ask/fallback.ts`): a deterministic scorer over signal synonyms, project names and word overlap with titles and bodies, with a small penalty for repeating a project so answers show range. If nothing matches, it returns three strong defaults (HHCD dual view, Component Store contracts, Nike layout system). Used when there is no key, on error, timeout, refusal, or past the daily cap.
+
+On the page, the LED blinks and a lip of paper inches at the slot while waiting; the ticket prints when the answer arrives (at least ~400 ms so the motion reads, no other artificial delay). Focus then moves to the ticket and the reply is announced in a polite live region. With reduced motion, everything is instant.
+
+### Swapping the rate limiter for a hosted store
+
+The in-memory limiter is per server instance, so on Vercel each warm instance counts separately. To make it global, implement the `RateLimiter` interface with Upstash Redis (available through the Vercel Marketplace):
+
+```ts
+// src/lib/ask/rate-limit.ts
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+const upstash = new Ratelimit({ redis: Redis.fromEnv(), limiter: Ratelimit.slidingWindow(12, "1 m") });
+export const askLimiter: RateLimiter = {
+  async limit(key) {
+    const r = await upstash.limit(key);
+    return { ok: r.success, remaining: r.remaining, retryAfterSec: Math.max(1, Math.ceil((r.reset - Date.now()) / 1000)) };
+  },
+};
+```
+
+Then `npm i @upstash/ratelimit @upstash/redis` and set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`. Nothing else changes. The daily cap can move to the same store with `INCR` on a key like `ask:2026-10-10` with a 24-hour expiry.
+
+## Add a project
+
+1. Create `content/projects/<slug>.ts` exporting a `Project` (copy an existing file for the shape).
+2. Import it in `content/index.ts` and add it to `projects` (order = tray order). `tier: "main"` puts it in the tray; `"earlier"` puts it in the "Earlier work" line.
+3. Add a short place label in `TRAY_PLACE` in `src/lib/site.ts` (optional).
+
+The case file page, OG image, sitemap entry, AI catalogue and fallback scoring all pick it up automatically.
+
+## Assets
+
+Images and video referenced by content live in `public/assets/<path>`. Missing files show a labelled placeholder with the path and what to supply. The full checklist (with Chinese notes) is in [`docs/ASSETS.md`](docs/ASSETS.md).
+
+## Deploy to Vercel
+
+1. Push this repo to GitHub (already done: `CBcbbb/chongbo.DesignEngineer`).
+2. In [vercel.com](https://vercel.com) → **Add New… → Project** → import the repo. Framework preset: **Next.js**. Leave build and output settings as default.
+3. Under **Environment Variables** add:
+   - `NEXT_PUBLIC_SITE_URL` = the final URL (e.g. `https://chongbo-designengineer.vercel.app`, or your domain).
+   - `ANTHROPIC_API_KEY` = a key from the Claude Console (optional; see REPORT.md for setting a spend limit).
+4. Click **Deploy**. When it finishes, open the URL on desktop and phone and ask a question. The footer of each answer ticket doesn't say which path answered; check `source` in the browser's network tab (`model` or `fallback`).
+5. If you add a custom domain later, update `NEXT_PUBLIC_SITE_URL` and redeploy so canonical links and OG images use it.
+
+## Project layout
+
+```
+content/              typed content: the single source of truth
+src/app/              routes, metadata, OG images, sitemap, robots
+src/app/tokens.css    design tokens (light + dark)
+src/app/components.css component styles (Tailwind components layer)
+src/components/       Machine (client), Ticket, Tray, MediaSlot, diagrams
+src/lib/ask/          schema, catalogue, model, fallback, sanitise, rate limit
+scripts/contrast.ts   WCAG contrast check
+tests/unit/           Vitest
+tests/e2e/            Playwright + axe, screenshots
+docs/design/          the approved prototype and reference screens
+```
