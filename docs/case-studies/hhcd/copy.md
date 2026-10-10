@@ -113,4 +113,4 @@ The platform is live and in use at the Helen Hamlyn Centre. A paper on the acces
 
 ### `role`: Designed, specified and built alone
 
-I made the design files, wrote the specification and wrote all of the code, with AI coding tools that at the start needed close direction. [Screen-reader, Safari and Firefox testing: done, or still to do?]
+I made the design files, wrote the specification and wrote all of the code, with AI coding tools that at the start needed close direction. Tested in Chrome, Safari and Firefox; screen-reader testing is next. [Update after the VoiceOver test.]

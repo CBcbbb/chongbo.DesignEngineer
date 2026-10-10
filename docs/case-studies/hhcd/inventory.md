@@ -84,7 +84,8 @@ Copy may only use these, or what Chongbo adds later.
   - Mobile: details open as a sheet over the lower part of the map, which stays usable. Map controls have 40px touch targets, and nothing scrolls sideways at 320px.
   - Arrow keys move to the nearest entry in either arrangement. The guide works by keyboard alone.
   - Checks: 57 unit and component tests, 43 Playwright tests at 1440px and 390px (including axe on the guide, the path and the columns), and 27 contrast pairings.
-- Not yet tested with a screen reader, in Safari or in Firefox (REPORT.md). Live at https://helen-hamlyn-centre-for-design-data.vercel.app/ (48 entries, 104 connections). The Centre uses this version.
+- Tested by Chongbo in Chrome, Safari and Firefox. Not yet tested with a screen reader.
+- Chromium accessibility-tree check (10 Oct, local build): map entries announced as "name, type, n connections"; Enter moves focus to the details heading, Escape returns it; search results announced ("39 entries match 'design'."); the table has a caption, column and row headers. This is not a screen-reader test. Live at https://helen-hamlyn-centre-for-design-data.vercel.app/ (48 entries, 104 connections). The Centre uses this version.
 
 ## Image inventory
 
@@ -107,7 +108,7 @@ Copy may only use these, or what Chongbo adds later.
 
 ## Gaps
 
-1. Has it been tested with a screen reader (for example VoiceOver), in Safari or in Firefox?
+1. VoiceOver test, run in a separate conversation (`PROMPT-voiceover.md`). Browsers are done: Chrome, Safari and Firefox.
 
 ## Id changes (for `SHARED-CHANGES.md` at build)
 
