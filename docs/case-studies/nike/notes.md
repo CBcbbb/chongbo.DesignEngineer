@@ -58,3 +58,10 @@ Three text nodes (`12:3537`, `12:3538`, `14:3539`) are AI-written drafts (they e
 - "led", "main designer", "data-driven", "A/B testing";
 - numbers: click-through 4.2% → 12.6%, draw participation 18% → 47%, time on page 42 s → 58 s, 3,400+ questions per episode, 73% audio play rate, delivery 30% faster.
 None of these are used unless Chongbo confirms them as real. One detail to check: "answered in Nike's 618 livestream".
+
+## Prototype (step 5)
+
+- `docs/design/case-nike.html`, published as a private artifact. Assets are referenced as `assets/nike/…`; to view locally, symlink `docs/design/assets` → `../../public/assets` (not committed).
+- `recording.mp4` is a 750 px, muted, H.264 encode of the full 50 s recording (7 MB). Chapters: lock-up 0:13, headline 0:19, views 0:22, tag 0:25, cards 0:26, like 0:28, Star Voice 0:42, ranking 0:48.
+- Figma frames rendered at their natural size (1920×1080) and cropped: `system-text-frames.png`, `storytelling-feed.png` (slide titles masked), `poster-cards.jpg`. `like-states.png` is Chongbo's own export.
+- `hero.jpg` stays in the repo as the Open Graph image; its title graphic says "Athlete Closet" and duplicates the page title, so it's off the page.
