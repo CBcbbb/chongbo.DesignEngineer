@@ -11,15 +11,15 @@ Three parts follow the cover line: read, shop, return. Copy is in `copy.md`.
 | # | id | Heading (the claim) | Caps | ux | engineer | web | Evidence |
 |---|---|---|---|---|---|---|---|
 | — | cover | Influencer stories in Nike's app, designed to be read, shopped and returned to | A D | | | | `hero.jpg` still; the recording plays from it |
-| 01·1 | system | One creative system, a new palette every volume | A C | in | in | lead | Figma Graphic System frames |
-| 01·2 | posters | Every influencer gets a poster and the same photographic look | A | | | in | Poster Cards + one retouch pair |
+| 01·1 | system | Redesigning the creative system first | A C | in | in | lead | Figma Graphic System frames |
+| 01·2 | style | A unified visual style and tone | A | | | in | Poster Cards + one retouch pair |
 | 01·3 | views | Several views of one outfit, swiped sideways | D A | in | in | in | Figma Storytelling Feed + recording clip |
-| 01·4 | components | The same components on every screen kept the build consistent | C | in | in | | Figma component export |
-| 02·1 | tags | Tags on the photos lead from the outfit to the product | A D | lead | | in | Product-tags stills + recording clip |
-| 02·2 | product-card | Larger product cards give each item weight in the story | A | in | | in | Compare slider |
-| 02·3 | ranking | The ranking leads on to similar outfits | A | | | in | Ranking before/after |
-| 03·1 | draw | A like opens a shoebox | D | in | lead | in | `gift-box.lottie.json` |
-| 03·2 | star-voice | A voice preview builds interest in the next influencer | A D | in | in | in | `star-voice-qa.png` crop + `star-voice-qa-mobile.png` + clip |
+| 01·4 | components | Consistent components across every screen | C | in | in | | Figma component export |
+| 02·1 | tags | Shop the look, straight from the photo | A D | lead | | in | Product-tags stills + recording clip |
+| 02·2 | product-card | Larger product cards | A | in | | in | Compare slider |
+| 02·3 | ranking | A ranking that leads to similar outfits | A | | | in | Ranking before/after |
+| 03·1 | draw | A reward for every like | D | in | lead | in | `gift-box.lottie.json` |
+| 03·2 | star-voice | Star Voice Q&A: ask now, answered live | A D | in | in | in | `star-voice-qa.png` crop + `star-voice-qa-mobile.png` + clip |
 | — | outcome | One season became several | A | in | in | in | Role line; full recording link |
 | — | handoff | What I'd do now: build the motion myself | D B | in | in | | Figma LIKE-0…3 + recording ~26 s |
 
