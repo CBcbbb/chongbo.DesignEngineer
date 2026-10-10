@@ -14,14 +14,14 @@ Three parts follow the cover line: read, shop, return. Copy is in `copy.md`.
 | 01·1 | system | Redesigning the creative system first | A C | in | in | lead | Figma Graphic System frames |
 | 01·2 | style | A unified visual style and tone | A | | | in | Poster Cards + one retouch pair |
 | 01·3 | views | Several views of one outfit, swiped sideways | D A | in | in | in | Figma Storytelling Feed + recording clip |
-| 01·4 | components | Consistent components across every screen | C | in | in | | Figma component export |
+| 01·4 | components | Reusable components, built for handover | C | in | in | | Figma component export |
 | 02·1 | tags | Shop the look, straight from the photo | A D | lead | | in | Product-tags stills + recording clip |
 | 02·2 | product-card | Larger product cards | A | in | | in | Compare slider |
 | 02·3 | ranking | A ranking that leads to similar outfits | A | | | in | Ranking before/after |
 | 03·1 | draw | A reward for every like | D | in | lead | in | `gift-box.lottie.json` |
 | 03·2 | star-voice | Star Voice Q&A: ask now, answered live | A D | in | in | in | `star-voice-qa.png` crop + `star-voice-qa-mobile.png` + clip |
 | — | outcome | One season became several | A | in | in | in | Role line; full recording link |
-| — | handoff | What I'd do now: build the motion myself | D B | in | in | | Figma LIKE-0…3 + recording ~26 s |
+| — | handoff | What I'd do now: take motion from idea to production myself | D B | in | in | | Figma LIKE-0…3 + recording ~26 s |
 
 **Signature module (proposal):** the recording as a chaptered phone, with chapter marks that jump to the moment each card describes. Needs a new "chaptered video" block, to propose in `SHARED-CHANGES.md` at step 5.
 

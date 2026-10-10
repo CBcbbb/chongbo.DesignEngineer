@@ -1,12 +1,14 @@
-# Nike Athletes Closet: copy, draft 5
+# Nike Athletes Closet: copy, draft 6
 
 Playbook §8 step 4. Every line traces to the Wix page or `notes.md`. The page shows the final result, written for the reader.
 
 **Story.** The cover sets one idea in three verbs: stories people read, shop and return to. The page then follows those verbs as three parts, in the order a reader meets the feature. Each part opens with the problem it solves; the closing gives the outcome, the role and what I'd do now. Every card still stands alone when printed.
 
+**JD language.** Mirrors the Granola JDs where it fits the facts: brand, story, typography, design system, reusable components and templates, calls to action, motion and microinteractions, idea to production.
+
 **Heading rhythm.** Plain statements carry most of the page; a few headings use livelier language where the idea earns it (views, shop the look, Star Voice, outcome). Never two hooks in a row.
 
-**What this shows (chips):** Brand storytelling · Craft and motion · Design systems
+**What this shows (chips):** Brand storytelling · Motion and microinteractions · Design systems
 
 **Lens openers:** `web` → system · `ux` → tags · `engineer` → draw
 
@@ -28,7 +30,7 @@ Role: UI Designer · Client: Nike · Platform: Nike App, China
 
 ### system · Redesigning the creative system first
 
-Three volumes had shipped by the time I took over at VOL.4, so I began by redesigning the creative system: logo lock-up, type, colour, framing devices and motion. Every later volume is built from the same parts. The framing device adds, removes or rearranges details to fit each headline, and colour is picked up from each influencer's photos or products.
+Three volumes had shipped by the time I took over at VOL.4, so I began by redesigning the creative system: logo lock-up, typography, colour, framing devices and motion. I set each part up as a reusable template, so every later volume is built from the same parts. The framing device adds, removes or rearranges details to fit each headline, and colour is picked up from each influencer's photos or products.
 
 *One framing device, five configurations.*
 
@@ -45,9 +47,9 @@ Where a story shows the same outfit from several angles, I set the images as hor
 
 *The next view at the edge is the cue to swipe.*
 
-### components · Consistent components across every screen
+### components · Reusable components, built for handover
 
-The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, documented for handover. It cut the back-and-forth between design and build.
+The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma as reusable components with Auto Layout, documented for handover. It cut the back-and-forth between design and engineering.
 
 *One set of sizes, spacing and names across the screens.*
 
@@ -69,7 +71,7 @@ The old product cards were small tiles. I enlarged the product image, so each it
 
 ### ranking · A ranking that leads to similar outfits
 
-The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear order, and added "See more" and "View similar outfits" after a like, so a ranking leads into more products.
+The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear order, and added two calls to action after a like, "See more" and "View similar outfits", so a ranking leads into more products.
 
 *A loose list becomes a ranked board with a way onward.*
 
@@ -79,7 +81,7 @@ The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard w
 
 ### draw · A reward for every like
 
-The stories were static, so readers had little reason to act. I added a reward mechanism: a like enters a prize draw, which opens as a shoebox with a pair of trainers rising out. I designed and animated it.
+The stories were static, so readers had little reason to act. I added a reward mechanism: a like enters a prize draw, which opens as a shoebox with a pair of trainers rising out. I designed the microinteraction and animated it.
 
 *Play: a like enters the prize draw.*
 
@@ -99,9 +101,9 @@ The feature shipped in Nike's app. The contract covered one season; after VOL.4,
 
 **Role.** UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
 
-### handoff · What I'd do now: build the motion myself
+### handoff · What I'd do now: take motion from idea to production myself
 
-I specified the like in four states: an outline heart, a pill inviting a like to win a gift, a black heart with the count, and hearts floating out. Handed over in Figma, it was built as a plain red heart. I now build motion in code, so what ships matches the design.
+I specified the like in four states: an outline heart, a pill inviting a like to win a gift, a black heart with the count, and hearts floating out. Handed over in Figma, it was built as a plain red heart. I now build motion in code myself, so what ships matches the design.
 
 *The specified states, beside the version that shipped.*
 
