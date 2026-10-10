@@ -1,16 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Nunito_Sans, Open_Sans } from "next/font/google";
 import type { Project } from "@content";
 import { LottiePlayer } from "./LottiePlayer";
-import { SideNav } from "./SideNav";
+import { wixFonts } from "../fonts";
+import { SideNav, type SideNavItem } from "../SideNav";
 import { Slideshow } from "./Slideshow";
 import "./nike.css";
-
-/* Wix set headings in Avenir Heavy and body in Open Sans. Avenir is used where installed (Apple
-   devices); Nunito Sans is the closest open stand-in elsewhere. */
-const heading = Nunito_Sans({ subsets: ["latin"], weight: ["700", "800", "900"], variable: "--nk-nunito", display: "swap" });
-const body = Open_Sans({ subsets: ["latin"], weight: ["400", "600", "700"], variable: "--nk-open", display: "swap" });
 
 const A = (file: string) => `/assets/nike/${file}`;
 const DEMO_URL = "https://www.youtube.com/shorts/4cFA1T_9m8w";
@@ -32,6 +27,14 @@ function Labelled({ label, children }: { label: string; children: React.ReactNod
     </figure>
   );
 }
+
+const NAV: SideNavItem[] = [
+  { href: "#brief", label: "Brief & Contributions", parts: ["brief"] },
+  { href: "#challenges", label: "Key Challenges & Solutions", parts: ["challenges", "graphic-system", "imagery", "product-card", "delight", "star-voice"] },
+  { href: "#retouching", label: "Retouch & Mood", parts: ["retouching"] },
+  { href: "#outcome", label: "Results & Feedback", parts: ["outcome"] },
+  { href: "#summary", label: "Project Summary", parts: ["summary"] },
+];
 
 function Swoosh() {
   return <Image src={A("swoosh.png")} alt="" width={86} height={31} className="nk-swoosh" aria-hidden="true" />;
@@ -56,8 +59,8 @@ function BeforeAfter({ before, after }: { before: React.ReactNode; after: React.
  */
 export function NikeCase({ project, next }: { project: Project; next: Project }) {
   return (
-    <div className={`nk ${heading.variable} ${body.variable}`}>
-      <SideNav />
+    <div className={`nk ${wixFonts}`}>
+      <SideNav items={NAV} className="nk-side" />
 
       <header className="nk-hero">
         <Image

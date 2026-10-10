@@ -3,40 +3,39 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const NAV = [
-  { href: "#brief", label: "Brief & Contributions", parts: ["brief"] },
-  { href: "#challenges", label: "Key Challenges & Solutions", parts: ["challenges", "graphic-system", "imagery", "product-card", "delight", "star-voice"] },
-  { href: "#retouching", label: "Retouch & Mood", parts: ["retouching"] },
-  { href: "#outcome", label: "Results & Feedback", parts: ["outcome"] },
-  { href: "#summary", label: "Project Summary", parts: ["summary"] },
-];
+export type SideNavItem = {
+  href: string;
+  label: string;
+  /** Section ids that count as this entry, so a deep link to any of them marks it current. */
+  parts: string[];
+};
 
 /**
- * The floating section list from the Wix page. Like the parts rail on other case files, the entry
+ * The floating section list from the old Wix pages. Like the parts rail on other case files, the entry
  * holding the part named in the URL hash (where a printed sheet's "Full project" link lands) is current.
  */
-export function SideNav() {
+export function SideNav({ items, className }: { items: SideNavItem[]; className: string }) {
   const [current, setCurrent] = useState<string | null>(null);
 
   useEffect(() => {
     const read = () => {
       const id = decodeURIComponent(window.location.hash.slice(1));
-      setCurrent(NAV.find((n) => n.parts.includes(id))?.href ?? null);
+      setCurrent(items.find((n) => n.parts.includes(id))?.href ?? null);
     };
     read();
     window.addEventListener("hashchange", read);
     return () => window.removeEventListener("hashchange", read);
-  }, []);
+  }, [items]);
 
   return (
-    <nav className="nk-side" aria-label="On this page">
+    <nav className={className} aria-label="On this page">
       <ul>
         <li>
-          <Link href="/" className="nk-side-home">
+          <Link href="/" data-home>
             Back Home
           </Link>
         </li>
-        {NAV.map((n) => (
+        {items.map((n) => (
           <li key={n.href}>
             <a href={n.href} aria-current={n.href === current ? "step" : undefined}>
               {n.label}

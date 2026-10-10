@@ -11,8 +11,8 @@
   --nk-grad: linear-gradient(90deg, #d4440e 0%, #e2562a 32%, #f9c5b4 100%);
   --nk-card: #f8f7fa;
   --nk-grey: #595959;
-  --nk-head: "Avenir Next", "Avenir", var(--nk-nunito), ui-sans-serif, system-ui, sans-serif;
-  --nk-body: var(--nk-open), "Open Sans", ui-sans-serif, system-ui, sans-serif;
+  --nk-head: "Avenir Next", "Avenir", var(--wix-nunito), ui-sans-serif, system-ui, sans-serif;
+  --nk-body: var(--wix-open), "Open Sans", ui-sans-serif, system-ui, sans-serif;
   font-family: var(--nk-body);
   font-size: 14px;
   line-height: 1.6;
@@ -235,7 +235,7 @@
   }
   .nk-side a:hover,
   .nk-side a[aria-current],
-  .nk-side .nk-side-home {
+  .nk-side [data-home] {
     color: var(--nk-orange);
   }
 }

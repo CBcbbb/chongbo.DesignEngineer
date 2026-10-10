@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProject, projects, SIGNALS } from "@content";
 import { NikeCase } from "@/components/case/nike/NikeCase";
+import { WildEchoCase } from "@/components/case/wildecho/WildEchoCase";
 import { MediaSlot } from "@/components/media/MediaSlot";
 import { PartsRail } from "@/components/PartsRail";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -11,6 +12,12 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { kindLabel, projectNumber, SIGNAL_SHORT, trayMeta } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
+
+/** Case files rebuilt after their original Wix pages; the rest use the generic case-file layout. */
+const BESPOKE: Record<string, typeof NikeCase> = {
+  "nike-athletes-closet": NikeCase,
+  wildecho: WildEchoCase,
+};
 
 export const dynamicParams = false;
 
@@ -38,14 +45,15 @@ export default async function CaseFile({ params }: Props) {
 
   const index = projects.indexOf(project);
   const next = projects[(index + 1) % projects.length]!;
-  if (project.slug === "nike-athletes-closet") {
+  const Bespoke = BESPOKE[project.slug];
+  if (Bespoke) {
     return (
       <>
         <div className="wrap">
           <SiteHeader current="work" />
         </div>
         <main id="main" tabIndex={-1}>
-          <NikeCase project={project} next={next} />
+          <Bespoke project={project} next={next} />
         </main>
         <div className="wrap">
           <SiteFooter />
