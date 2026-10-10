@@ -29,7 +29,7 @@ a{color:inherit}
 h1{margin:clamp(12px,4vh,40px) 0 0;text-align:center;font:600 clamp(30px,4.4vw,48px)/1.05 var(--sans);letter-spacing:-.035em}
 
 /* ---------- machine ---------- */
-.stage{position:relative;width:min(760px,100%);margin:clamp(150px,20vw,190px) auto 0}
+.stage{position:relative;width:min(760px,100%);margin:200px auto 0}
 .machine{position:relative;aspect-ratio:1100/494;z-index:2}
 .machine img{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none;filter:drop-shadow(0 30px 34px rgba(30,26,20,.22))}
 .plate{position:absolute;left:14.1%;top:52.4%;width:14.5%;height:10%;display:flex;flex-direction:column;justify-content:center;padding-left:.9%;
@@ -46,7 +46,7 @@ h1{margin:clamp(12px,4vh,40px) 0 0;text-align:center;font:600 clamp(30px,4.4vw,4
 .pk:focus-visible{outline-offset:2px;border-radius:50%}
 
 /* paper rising from the top slot (in front of the strip behind the slot) */
-.paperbox{position:absolute;left:15.5%;width:69%;bottom:calc(100% - 7.7%);height:var(--ph,104px);z-index:3;transition:height .5s var(--ease)}
+.paperbox{position:absolute;left:15.5%;width:69%;bottom:calc(100% - 7.7%);height:var(--ph,140px);z-index:3;transition:height .5s var(--ease)}
 .paperbox::after{content:"";position:absolute;left:-1%;right:-1%;bottom:-3px;height:7px;border-radius:4px;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,0));pointer-events:none}
 .paper{position:absolute;inset:0;background:var(--paper);color:var(--paper-ink);border-radius:3px 3px 0 0;padding:18px 22px 14px;display:flex;flex-direction:column;gap:10px;overflow:hidden;
   box-shadow:0 -1px 0 rgba(0,0,0,.04),0 10px 30px -14px rgba(0,0,0,.25);background-image:linear-gradient(180deg,rgba(0,0,0,0) 70%,rgba(0,0,0,.05))}
@@ -75,11 +75,13 @@ h1{margin:clamp(12px,4vh,40px) 0 0;text-align:center;font:600 clamp(30px,4.4vw,4
 @keyframes feed{to{transform:translateY(-10%)}}
 
 /* topic cards */
-.topics{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;margin:34px auto 0;max-width:900px;padding:0;list-style:none}
-.topic{position:relative;width:100%;min-height:92px;padding:10px 10px 12px;border:0;border-radius:6px;cursor:pointer;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:8px;
+.skills{max-width:1000px;margin:26px auto 0;display:flex;flex-direction:column;align-items:center;gap:10px}
+.skills-label{margin:0;font:500 11.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.topics{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;width:100%;margin:0;padding:12px 0 6px;list-style:none}
+.topic{position:relative;width:100%;min-height:84px;padding:10px 10px 12px;border:0;border-radius:6px;cursor:pointer;text-align:left;display:flex;flex-direction:column;justify-content:space-between;gap:8px;
   background:var(--paper);color:var(--paper-ink);box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 0 0 1px rgba(60,50,40,.10),0 2px 0 #D6D2CA,0 10px 18px -10px rgba(40,30,20,.35);transition:transform .25s var(--ease),box-shadow .25s}
 .topic small{font:500 10.5px var(--mono);color:var(--paper-dim);letter-spacing:.06em}
-.topic b{font:600 14px/1.2 var(--sans);letter-spacing:-.01em}
+.topic b{font:600 14px/1.2 var(--sans);letter-spacing:-.01em;overflow-wrap:anywhere}
 .topic:hover{transform:translateY(-4px)}
 .topic[aria-pressed="true"]{transform:translateY(-10px);box-shadow:0 0 0 1.5px var(--paper-ink),0 18px 24px -12px rgba(40,30,20,.45)}
 .topic[aria-pressed="true"]::after{content:"";position:absolute;top:10px;right:10px;width:7px;height:7px;border-radius:50%;background:var(--red)}
@@ -141,14 +143,16 @@ dialog::backdrop{background:rgba(28,27,25,.45);backdrop-filter:blur(3px)}
 
 footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:14px;color:var(--ink-2)}
 
+@media (max-width:1000px){ .topics{grid-template-columns:repeat(4,minmax(0,1fr))} .skills{max-width:620px} }
 @media (max-width:700px){
   .who span{display:none}
-  .stage{margin-top:150px}
+  .stage{margin-top:166px}
   .paper{padding:14px 14px 10px}
   .field textarea,.ghost{font-size:15px}
-  .topics{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-  .topic{min-height:84px;padding:8px}
-  .topic b{font-size:12.5px}
+  .skills{margin-top:18px}
+  .topics{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:16px;gap:8px;margin:0 -16px;padding:12px 16px 10px;width:calc(100% + 32px);scrollbar-width:none}
+  .topics li{flex:none;scroll-snap-align:start}
+  .topic{width:112px;min-height:80px}
   .d-in{grid-template-columns:1fr}
   .rail{border-right:0;border-bottom:1px solid var(--paper-rule)}
   .body{padding:22px 20px}
@@ -168,6 +172,11 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
 
   <main>
     <h1 id="h1">Who are you hiring?</h1>
+
+    <section class="skills" aria-labelledby="skills-title">
+      <h2 class="skills-label" id="skills-title">Skills</h2>
+      <ul class="topics" id="topics"></ul>
+    </section>
 
     <div class="stage">
       <div class="machine" id="machine" data-state="idle">
@@ -190,7 +199,6 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
       </div>
     </div>
 
-    <ul class="topics" id="topics" aria-label="Topics"></ul>
     <div class="alt"><a href="#work">Or browse all work</a></div>
 
     <section class="results" id="results" hidden aria-labelledby="r-title">
@@ -220,9 +228,9 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
   const TOPICS = [
     {id:"a11y",label:"Accessibility",sig:["accessibility"]},
     {id:"systems",label:"Design systems",sig:["design-systems","cross-platform"]},
-    {id:"front",label:"Front-end",sig:["design-eng-gap","seo-performance","reusable-components"]},
-    {id:"motion",label:"Interaction and motion",sig:["motion-interaction","prototyping"]},
-    {id:"brand",label:"Brand and web",sig:["brand-storytelling","conversion","typography"]},
+    {id:"front",label:"Front\u2011end",sig:["design-eng-gap","seo-performance","reusable-components"]},
+    {id:"motion",label:"Motion",sig:["motion-interaction","prototyping"]},
+    {id:"brand",label:"Web and brand",sig:["brand-storytelling","conversion","typography"]},
     {id:"ai",label:"AI tools",sig:["ai-tools"]},
     {id:"research",label:"Research",sig:["research"]},
     {id:"data",label:"Data",sig:["data"]}
@@ -271,7 +279,7 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
     const has = brief.value.trim() || picked.size;
     machine.classList.toggle("ready", !!has && !busy);
     field.classList.toggle("on", !!brief.value || document.activeElement === brief);
-    box.style.setProperty("--ph", (brief.value.length > 120 || picked.size ? 168 : document.activeElement === brief || brief.value ? 140 : 104) + "px");
+    const small = innerWidth < 700; box.style.setProperty("--ph", (brief.value.length > 120 || picked.size ? (small ? 150 : 176) : document.activeElement === brief || brief.value ? (small ? 136 : 160) : (small ? 116 : 140)) + "px");
   }
 
   // typed examples on the paper
@@ -316,7 +324,7 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
     const what = topics.length === 1 && !text.trim() ? TOPICS.find(x => x.id === topics[0]).label : "your brief";
     const list = $("steps"); field.hidden = true; chips.hidden = true; list.hidden = false;
     list.innerHTML = `<li>Reading ${text.trim().length > 200 ? "the job description" : "your request"}</li><li>${topics.length ? topics.map(t => TOPICS.find(x => x.id === t).label).join(", ") : res.asked.length ? res.asked.slice(0,2).map(s => LABEL[s]).join(", ") : "Looking for a match"}</li><li>${nP ? NUM[nP] + (nP === 1 ? " project" : " projects") : "Choosing where to start"}</li><li>Printing</li>`;
-    box.style.setProperty("--ph","168px"); $("live").textContent = "Printing.";
+    box.style.setProperty("--ph", innerWidth < 700 ? "150px" : "176px"); $("live").textContent = "Printing.";
     for (let i = 0; i < 4; i++) await step(list, i);
     list.lastElementChild.classList.replace("now","done");
     $("outfeed").classList.remove("go"); void $("outfeed").offsetWidth; $("outfeed").classList.add("go");
@@ -346,7 +354,7 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
     }).join("");
     deckN = n; deckCur = 0;
     $("missing").textContent = res.missing.length ? `No work to show yet for ${res.missing.join(", ")}.` : "";
-    $("results").hidden = false; document.querySelector(".topics").hidden = true; document.querySelector(".alt").hidden = true;
+    $("results").hidden = false; document.querySelector(".alt").hidden = true;
     layoutDeck(0, true);
     $("live").textContent = $("r-title").textContent;
     $("r-title").focus({preventScroll:true});
@@ -419,7 +427,7 @@ footer{margin-top:80px;padding-block:24px 36px;border-top:1px solid var(--rule);
     if (e.target.id === "next" && cur.i < cur.p.sections.length - 1){ cur.i++; renderPart(); $("f-h").focus(); }
   });
   $("close").addEventListener("click", () => $("full").close());
-  $("again").addEventListener("click", () => { $("results").hidden = true; document.querySelector(".topics").hidden = false; document.querySelector(".alt").hidden = false; window.scrollTo({top:0,behavior: reduce ? "auto" : "smooth"}); brief.focus(); });
+  $("again").addEventListener("click", () => { $("results").hidden = true; document.querySelector(".alt").hidden = false; window.scrollTo({top:0,behavior: reduce ? "auto" : "smooth"}); brief.focus(); });
   box.addEventListener("submit", e => { e.preventDefault(); run(); });
   sync();
 })();
