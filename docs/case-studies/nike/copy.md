@@ -1,10 +1,10 @@
-# Nike Athletes Closet: copy, draft 2
+# Nike Athletes Closet: copy, draft 3
 
 Playbook §8 step 4. Every line traces to the Wix page or `notes.md`. The page shows the final result, written for the reader: no process from our discussions, no emotional or defensive wording. Headings are claims; captions say what the image proves.
 
 **Arc:** make the stories shoppable (1–4) → make every volume from one system (5–7) → give people a reason to act and come back (8–10) → what shipped differently (11) → outcome and role (12).
 
-**What this shows (chips):** Brand storytelling · Craft and motion · Systems
+**What this shows (chips):** Brand storytelling · Craft and motion · Design systems
 
 **Lens openers:** `ux` → problem · `web` → system · `engineer` → draw
 
@@ -23,7 +23,7 @@ Role: UI Designer · Client: Nike · Platform: Nike App, China · Status: Shippe
 
 ### People read the stories but rarely tapped through to the products
 
-Athletes Closet is a members' feature in Nike's app in China, where a guest shares their style and the Nike pieces they wear. Readers engaged with the stories, but nothing linked a photo to the product in it. From VOL.4, I redesigned the feature to close that gap.
+Athletes Closet is a members' feature in Nike's app in China, where fashion influencers share their style and recommend Nike products. From VOL.4, I redesigned the feature so the stories lead to the products.
 
 *Caption:* Before VOL.4: products sat in small tiles, apart from the story.
 
@@ -45,17 +45,17 @@ The old product cards were small tiles. I enlarged the product image so each ite
 
 ## 4 · feed
 
-### Horizontal pages, with the next one in view
+### Several views of one outfit, swiped sideways
 
-The earlier volumes were one long vertical scroll. I chose horizontal pages because they save space and give each block its own screen. The next page shows at the edge, so readers can see the story continues.
+The earlier volumes were one long vertical scroll. Where a story shows the same outfit from several angles, I set those images as horizontal pages, which saves space. The next view shows at the edge, so readers can see there's more.
 
-*Caption:* The next page shows at the edge: the cue to swipe.
+*Caption:* One outfit, one row: the next view at the edge is the cue to swipe.
 
 ## 5 · system
 
 ### One creative system, so every volume is built from the same parts
 
-I designed the feature's creative system: logo lock-up, type, colour, framing devices and motion. The framing device anchors each headline, and adds, removes or rearranges details to fit the content. Colour is picked up from each guest's photos or products, so the palette changes with every volume and the layout doesn't.
+I designed the feature's creative system: logo lock-up, type, colour, framing devices and motion. The framing device anchors each headline, and adds, removes or rearranges details to fit the content. Colour is picked up from each influencer's photos or products, so the palette changes with every volume and the layout doesn't.
 
 *Caption:* One framing device in five configurations, from logo lock-up to image and text.
 
@@ -67,13 +67,13 @@ Earlier screens used inconsistent sizes, which made extra work for the engineers
 
 *Caption:* Every element on one set of sizes, spacing and names.
 
-## 7 · guests
+## 7 · posters
 
-### Every guest gets a poster and the same photographic look
+### Every influencer gets a poster and the same photographic look
 
-I designed a hero visual and poster card for each guest, so readers know whose volume they're in. I retouched the key photos with tone correction, blemish removal and a flash-photography look, so every guest shares one visual tone.
+I designed a hero visual and poster card for each influencer, so readers know whose volume they're in. I retouched the key photos with tone correction, blemish removal and a flash-photography look, so every volume shares one visual tone.
 
-*Caption:* One poster system across six guests. / Original and retouched: the flash look.
+*Caption:* One poster system across six influencers. / Original and retouched: the flash look.
 
 ## 8 · draw
 
@@ -85,9 +85,9 @@ The stories were static, so readers had little reason to act. I tied the like to
 
 ## 9 · star-voice
 
-### A voice preview builds interest in the next guest
+### A voice preview builds interest in the next influencer
 
-To hold attention between volumes, I designed Star Voice Q&A. The next guest records a short voice teaser, readers submit questions and vote on others', and the top questions are answered in Nike's livestream. It shipped, and was recommended for wider use in other campaigns.
+To hold attention between volumes, I designed Star Voice Q&A. The next influencer records a short voice teaser, readers submit questions and vote on others', and the top questions are answered in Nike's livestream. It shipped, and was recommended for wider use in other campaigns.
 
 *Caption:* Preview, ask and vote, live answer: one loop between volumes.
 
@@ -113,6 +113,6 @@ I specified the like in four states: an outline heart, a pill inviting a like to
 
 The feature shipped in Nike's app and ran across several seasons. The contract covered one season. After VOL.4, the client commissioned the following seasons.
 
-**Role.** UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the guest posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
+**Role.** UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
 
 [Full recording ↗](https://www.youtube.com/shorts/4cFA1T_9m8w)
