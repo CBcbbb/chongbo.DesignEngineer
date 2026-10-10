@@ -11,7 +11,6 @@ import { SIGNALS, type Signal } from "@content/schema";
 /** Length of the home page's one-line input (legacy `question`). */
 export const QUESTION_MAX = 300;
 export const BRIEF_MAX = 4000;
-export const TOPICS_MAX = 6;
 export const ASKED_MAX = 6;
 export const MAX_SHEETS = 5;
 export const LINE_MAX = 90;
@@ -23,6 +22,8 @@ export const REPLY_MAX = 160;
 export const MAX_PICKS = MAX_SHEETS;
 
 export const SIGNAL_KEYS = Object.keys(SIGNALS) as [Signal, ...Signal[]];
+/** The home page's skills cards each stand for one to three signals, and all eight may be chosen. */
+export const TOPICS_MAX = SIGNAL_KEYS.length;
 
 export const MATCHED_KEYS = ["start-here", ...SIGNAL_KEYS] as [Signal | "start-here", ...(Signal | "start-here")[]];
 export type Matched = Signal | "start-here";

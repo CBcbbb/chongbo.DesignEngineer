@@ -14,13 +14,13 @@ export default function NotFound() {
               <span className="stamp">Not found</span>
             </div>
             <h1 className="t-num">404</h1>
-            <p className="t-reply">This ticket was never printed. The page may have moved.</p>
+            <p className="t-reply">This sheet was never printed. The page may have moved.</p>
             <div className="t-cta">
               <Link className="t-link" href="/">
                 Back to the machine
               </Link>
-              <Link className="t-link" href="/#tray">
-                Browse the tray
+              <Link className="t-link" href="/work">
+                Browse all work
               </Link>
             </div>
           </div>

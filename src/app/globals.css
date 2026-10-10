@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "./tokens.css";
 @import "./components.css" layer(components);
+@import "./printer.css" layer(components);
 
 /* Tokens exposed to Tailwind utilities (bg-studio, text-ink-2, font-mono, ...) */
 @theme inline {
@@ -15,7 +16,6 @@
   --color-paper-body: var(--paper-body);
   --color-paper-rule: var(--paper-rule);
   --color-red: var(--red);
-  --color-field: var(--field);
   --color-stamp: var(--stamp);
   --font-sans: var(--sans);
   --font-mono: var(--mono);
@@ -40,7 +40,7 @@
   body {
     margin: 0;
     background-color: var(--studio);
-    background-image: radial-gradient(120% 70% at 50% 18%, var(--studio-hi) 0%, var(--studio) 62%);
+    background-image: radial-gradient(90% 55% at 50% 30%, var(--studio-hi), var(--studio) 70%);
     background-repeat: no-repeat;
     background-attachment: fixed;
     color: var(--ink);

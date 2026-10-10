@@ -1,23 +1,18 @@
-import { profile, projects, suggestedQuestions } from "@content";
-import { Machine } from "@/components/Machine";
+import type { ReactNode } from "react";
+import { profile, projects } from "@content";
+import { MediaSlot } from "@/components/media/MediaSlot";
+import { PrintedToOrder } from "@/components/PrintedToOrder";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { WelcomeTicket } from "@/components/Ticket";
-import { Tray } from "@/components/Tray";
-import { buildCardIndex } from "@/lib/cards";
+import { buildCardIndex, cardKey } from "@/lib/cards";
 import { SITE_URL } from "@/lib/site";
 
-const TRIES = [
-  { label: "Accessibility", q: suggestedQuestions[0] ?? "What matters most to us is accessibility.", project: "HHCD" },
-  { label: "Design systems", q: suggestedQuestions[2] ?? "Have you built a design system?", project: "Component Store" },
-  { label: "Brand and motion", q: suggestedQuestions[3] ?? "Show me brand or marketing work.", project: "Nike" },
-];
-
-const CHIPS = [
-  { label: "End-to-end work", q: suggestedQuestions[1] ?? "Show me something you built end to end." },
-  { label: "Design and engineering", q: "How do you work between design and engineering?" },
-  { label: "AI tools", q: "How do you use AI in your work?" },
-];
+/** Each section's media, rendered on the server and handed to the deck. */
+function sheetMedia(): Record<string, ReactNode> {
+  const out: Record<string, ReactNode> = {};
+  for (const p of projects) for (const s of p.sections) if (s.media) out[cardKey(p.slug, s.id)] = <MediaSlot media={s.media} compact />;
+  return out;
+}
 
 export default function Home() {
   const jsonLd = {
@@ -39,13 +34,11 @@ export default function Home() {
     <div className="wrap">
       <SiteHeader />
       <main id="main" tabIndex={-1}>
-        <section className="stage" aria-labelledby="stage-title">
-          <h1 id="stage-title" className="sr-only">
-            Ask Chongbo Ning, design engineer, about his work
-          </h1>
-          <Machine cards={buildCardIndex()} welcome={<WelcomeTicket tries={TRIES} />} chips={CHIPS} />
-        </section>
-        <Tray />
+        <p className="eyebrow">Printed to order</p>
+        <h1 id="home-title" className="home-h1">
+          What skills are you looking for?
+        </h1>
+        <PrintedToOrder cards={buildCardIndex()} media={sheetMedia()} labelledBy="home-title" />
       </main>
       <SiteFooter />
       <script

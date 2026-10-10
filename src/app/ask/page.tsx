@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
+import { MediaSlot } from "@/components/media/MediaSlot";
+import { Sheet } from "@/components/Sheet";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { AnswerTicket, ErrorTicket } from "@/components/Ticket";
 import { answerAsk } from "@/lib/ask/answer";
 import { askLimiter, clientKey } from "@/lib/ask/rate-limit";
 import {
@@ -14,13 +15,13 @@ import {
   TOPICS_MAX,
   type AskResponse,
 } from "@/lib/ask/schema";
-import { SIGNALS, getProject, type Signal } from "@content";
-import { buildCardIndex } from "@/lib/cards";
-import { caseHref } from "@/lib/site";
+import { getProject, type Signal } from "@content";
+import { buildCardIndex, cardKey, type SheetCard } from "@/lib/cards";
+import { missingLine, quoteBrief, resultTitle, TOPICS } from "@/lib/printed";
 
 export const metadata: Metadata = {
   title: "Your answer",
-  description: "A printed answer from Chongbo Ning's portfolio.",
+  description: "Projects printed to order from Chongbo Ning's portfolio.",
   robots: { index: false, follow: true },
   alternates: { canonical: "/ask" },
 };
@@ -42,7 +43,6 @@ export default async function AskPage({ searchParams }: Props) {
   const brief = (first(params.brief) ?? first(params.q) ?? "").slice(0, BRIEF_MAX);
   const topics = parseTopics(params.topics);
   const parsed = AskRequestSchema.safeParse({ brief, topics });
-  const asked = parsed.success ? parsed.data.brief || parsed.data.topics.map((t) => SIGNALS[t]).join(", ") : "";
 
   let result: AskResponse | null = null;
   let error: string | null = null;
@@ -51,101 +51,66 @@ export default async function AskPage({ searchParams }: Props) {
     if (limit.ok) result = await answerAsk(parsed.data);
     else error = RATE_LIMIT_MESSAGE;
   }
-  const cards = buildCardIndex();
-  const time = new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" });
+
+  const index = buildCardIndex();
+  const sheets = (result?.sheets ?? [])
+    .map((s) => index[cardKey(s.project, s.section)])
+    .filter((c): c is SheetCard => Boolean(c));
+  // One skills card's worth of topics and no words reads "Three projects show accessibility."
+  const card = !brief.trim() ? TOPICS.find((t) => t.signals.join(",") === topics.join(",") || (topics.length === 1 && t.signals[0] === topics[0])) : undefined;
+  const title = result
+    ? resultTitle({ count: sheets.length, startHere: result.matched === "start-here", topicLabel: card?.label })
+    : (error ?? "What skills are you looking for?");
 
   return (
     <div className="wrap">
       <SiteHeader />
-      <main id="main" tabIndex={-1}>
-        <section className="stage" aria-labelledby="ask-title">
-          <h1 id="ask-title" className="sr-only">
-            {parsed.success ? `Printed for: ${asked}` : "Ask Chongbo for the work you need to see"}
-          </h1>
-          <div className="machine" data-state="idle">
-            <div className="machine-body">
-              <div className="plate">
-                <span className="plate-label">Ask Chongbo</span>
-                <span className="plate-label">
-                  <i className="led" aria-hidden="true" />
-                  <span>Ready</span>
-                </span>
+      <main id="main" tabIndex={-1} className="pb-10">
+        <p className="eyebrow">Printed to order</p>
+        {result ? (
+          <section className="results" aria-labelledby="r-title">
+            <div className="rhead">
+              <div>
+                <h1 id="r-title">{title}</h1>
+                {brief.trim() && <p>{quoteBrief(brief)}</p>}
               </div>
-              <form className="ask" action="/ask" method="get" role="search" aria-label="Ask about Chongbo's work">
-                <label htmlFor="brief" className="sr-only">
-                  What do you need to see? A capability, a few topics or a job description.
-                </label>
-                <input
-                  id="brief"
-                  name="brief"
-                  type="text"
-                  required
-                  maxLength={BRIEF_MAX}
-                  defaultValue={brief}
-                  placeholder="What matters most to your team?"
-                  autoComplete="off"
-                />
-                <button className="key" type="submit">
-                  <span className="key-text">Print</span>
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-                    <path d="M8 3v10M3.5 8.5 8 13l4.5-4.5" />
-                  </svg>
-                </button>
-              </form>
-              <div className="slot" aria-hidden="true" />
             </div>
-            <div className="feet" aria-hidden="true">
-              <i />
-              <i />
-            </div>
-          </div>
-          <div className="out" data-done="true">
-            <div className="feed">
-              {result ? (
-                // One printed sheet per project for now; the redesigned machine will replace this.
-                result.sheets.map((sheet, i) => (
-                  <AnswerTicket
-                    key={sheet.project}
-                    result={{ ...result, picks: [sheet], matched: sheet.signal, reply: i === 0 ? result.line : sheet.reason }}
-                    question={asked}
-                    cards={cards}
-                    number={i + 1}
-                    time={time}
-                    id={i === 0 ? "ticket" : `ticket-${i + 1}`}
-                    headingId={i === 0 ? "ans-title" : `ans-title-${i + 1}`}
-                  />
-                ))
-              ) : error ? (
-                <ErrorTicket message={error} />
-              ) : (
-                <ErrorTicket message="Type a question into the machine and press Print." />
-              )}
-            </div>
-          </div>
-          <div className="below">
-            {result && (
-              <p className="status">
-                {result.line} {result.sheets.length} {result.sheets.length === 1 ? "sheet" : "sheets"}.
-                {result.missing.length > 0 && <> Not shown in my work: {result.missing.join(", ")}.</>}
-              </p>
-            )}
-            {result && (
-              <ul className="status" aria-label="Printed sheets">
-                {result.sheets.map((s) => (
-                  <li key={s.project}>
-                    <Link href={caseHref(s.project, s.section)}>
-                      {getProject(s.project)?.title ?? s.project}
-                    </Link>
-                    : {s.reason}
+            <ol className="sheet-list" aria-label="Printed sheets">
+              {sheets.map((c, i) => {
+                const section = getProject(c.project)?.sections.find((s) => s.id === c.section);
+                return (
+                  <li key={c.project}>
+                    <article className="sheet" aria-labelledby={`sh-${i}`}>
+                      <Sheet
+                        card={c}
+                        index={i}
+                        total={sheets.length}
+                        headingId={`sh-${i}`}
+                        as="h2"
+                        media={section?.media ? <MediaSlot media={section.media} compact /> : undefined}
+                      />
+                    </article>
                   </li>
-                ))}
-              </ul>
-            )}
-            <Link className="tear" href="/">
-              Tear off and ask again
-            </Link>
-          </div>
-        </section>
+                );
+              })}
+            </ol>
+            {result.missing.length > 0 && <p className="missing">{missingLine(result.missing)}</p>}
+            <div className="again">
+              <Link href="/">New request</Link>
+            </div>
+          </section>
+        ) : (
+          <>
+            <h1 className="home-h1">{title}</h1>
+            <form className="ask-form" action="/ask" method="get">
+              <label htmlFor="brief" className="sr-only">
+                Describe the role or paste a job description.
+              </label>
+              <textarea id="brief" name="brief" maxLength={BRIEF_MAX} defaultValue={brief} required />
+              <button type="submit">Print</button>
+            </form>
+          </>
+        )}
       </main>
       <SiteFooter />
     </div>

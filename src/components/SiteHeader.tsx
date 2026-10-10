@@ -13,7 +13,7 @@ export function SiteHeader({ current }: { current?: "work" | "about" }) {
       <nav aria-label="Main">
         <ul>
           <li>
-            <Link href="/#tray" aria-current={current === "work" ? "page" : undefined}>
+            <Link href="/work" aria-current={current === "work" ? "page" : undefined}>
               Work
             </Link>
           </li>

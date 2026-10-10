@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProject, projects, SIGNALS } from "@content";
 import { MediaSlot } from "@/components/media/MediaSlot";
+import { PartsRail } from "@/components/PartsRail";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { kindLabel, projectNumber, SIGNAL_SHORT, trayMeta } from "@/lib/site";
@@ -47,26 +48,10 @@ export default async function CaseFile({ params }: Props) {
       <SiteHeader current="work" />
       <main id="main" tabIndex={-1} className="pb-20 pt-6 sm:pt-10">
         <div className="case-grid">
-          <aside className="case-aside" aria-label="On this page">
-            <nav aria-label="Sections">
-              <p className="meta mb-3 !text-ink-2">On this page</p>
-              <ol className="case-toc">
-                {project.sections.map((s) => (
-                  <li key={s.id}>
-                    <a href={`#${s.id}`}>
-                      <span className="meta">{kindLabel(project, s)}</span>
-                      <span>{s.title}</span>
-                    </a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-          </aside>
-
           <article className="case-main" aria-labelledby="case-title">
             <header>
-              <Link href="/#tray" className="back">
-                <span aria-hidden="true">←</span> The tray
+              <Link href="/work" className="back">
+                <span aria-hidden="true">←</span> All work
               </Link>
               <p className="meta mt-6 !text-ink-2">
                 Case file {projectNumber(project)} · {trayMeta(project)}
@@ -108,16 +93,26 @@ export default async function CaseFile({ params }: Props) {
               </div>
             </header>
 
+            <div className="rail-wrap">
+              <PartsRail parts={project.sections.map((s) => ({ id: s.id, title: s.title }))} />
+            </div>
+
+            <div className="case-content">
             <div className="card card-pad mt-8">
               <MediaSlot media={project.cover} priority />
             </div>
 
             <div className="mt-8 flex flex-col gap-8">
-              {project.sections.map((s) => (
-                <section key={s.id} id={s.id} aria-labelledby={`${s.id}-title`} className="scroll-mt-6">
+              {project.sections.map((s, i) => {
+                const prev = project.sections[i - 1];
+                const nextPart = project.sections[i + 1];
+                return (
+                <section key={s.id} id={s.id} aria-labelledby={`${s.id}-title`} className="case-part scroll-mt-6">
                   <div className="card card-pad">
                     <div className="flex items-center justify-between gap-4">
-                      <p className="meta m-0">{kindLabel(project, s)}</p>
+                      <p className="b-kind m-0">
+                        {kindLabel(project, s)} · {i + 1} of {project.sections.length}
+                      </p>
                       <a className="anchor" href={`#${s.id}`} aria-label={`Link to “${s.title}”`}>
                         #
                       </a>
@@ -142,9 +137,23 @@ export default async function CaseFile({ params }: Props) {
                         </li>
                       ))}
                     </ul>
+                    <div className="b-nav">
+                      {prev && (
+                        <a href={`#${prev.id}`}>
+                          <span aria-hidden="true">←&nbsp;</span>Previous<span className="sr-only"> part: {prev.title}</span>
+                        </a>
+                      )}
+                      {nextPart && (
+                        <a className="b-next" href={`#${nextPart.id}`}>
+                          Next<span className="sr-only"> part: {nextPart.title}</span>
+                          <span aria-hidden="true">&nbsp;→</span>
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </section>
-              ))}
+                );
+              })}
             </div>
 
             <nav aria-label="Next case file" className="paper-drop mt-14 max-w-[460px]">
@@ -162,6 +171,7 @@ export default async function CaseFile({ params }: Props) {
                 </span>
               </Link>
             </nav>
+            </div>
           </article>
         </div>
       </main>

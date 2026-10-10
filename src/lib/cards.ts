@@ -1,18 +1,20 @@
-import { projects } from "@content";
-import { projectNumber, SIGNAL_SHORT } from "./site";
+import { projects, SIGNALS } from "@content";
+import { caseHref } from "./site";
 
-/** The slice of a section a printed ticket needs. Passed to the client instead of the whole content tree. */
-export type TicketCard = {
+/** The slice of a section a printed sheet needs. Passed to the client instead of the whole content tree. */
+export type SheetCard = {
   project: string;
   projectTitle: string;
-  number: string;
   section: string;
   title: string;
-  body: string;
+  body: string[];
+  /** The section's first two signals, as plain labels. */
   tags: string[];
+  href: string;
+  hasMedia: boolean;
 };
 
-export type CardIndex = Record<string, TicketCard>;
+export type CardIndex = Record<string, SheetCard>;
 
 export const cardKey = (project: string, section: string) => `${project}#${section}`;
 
@@ -23,11 +25,12 @@ export function buildCardIndex(): CardIndex {
       index[cardKey(p.slug, s.id)] = {
         project: p.slug,
         projectTitle: p.title,
-        number: projectNumber(p),
         section: s.id,
         title: s.title,
-        body: s.body[0] ?? "",
-        tags: s.signals.map((sig) => SIGNAL_SHORT[sig]),
+        body: s.body,
+        tags: s.signals.slice(0, 2).map((sig) => SIGNALS[sig]),
+        href: caseHref(p.slug, s.id),
+        hasMedia: Boolean(s.media),
       };
     }
   }

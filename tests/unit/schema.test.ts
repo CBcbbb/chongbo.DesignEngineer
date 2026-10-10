@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { AskRequestSchema, AskResponseSchema, withLegacy } from "@/lib/ask/schema";
+import { AskRequestSchema, AskResponseSchema, SIGNAL_KEYS, withLegacy } from "@/lib/ask/schema";
 
 describe("AskRequestSchema", () => {
   it("accepts a brief, topics or both, trimming and de-duplicating", () => {
@@ -26,9 +26,11 @@ describe("AskRequestSchema", () => {
     expect(AskRequestSchema.safeParse({ topics: ["vibes"] }).success).toBe(false);
     expect(
       AskRequestSchema.safeParse({
-        topics: ["end-to-end", "design-systems", "cross-platform", "design-eng-gap", "accessibility", "data", "research"],
+        topics: [...SIGNAL_KEYS, "data"],
       }).success,
     ).toBe(false);
+    // Every signal at once is allowed (all eight skills cards chosen).
+    expect(AskRequestSchema.safeParse({ topics: [...SIGNAL_KEYS] }).success).toBe(true);
     expect(AskRequestSchema.safeParse({ brief: 42 }).success).toBe(false);
     expect(AskRequestSchema.safeParse({ question: 42 }).success).toBe(false);
     expect(AskRequestSchema.safeParse("accessibility").success).toBe(false);

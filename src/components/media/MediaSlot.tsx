@@ -44,7 +44,25 @@ function Placeholder({ kind, asset, need, ratio, alt }: { kind: string; asset: s
   );
 }
 
-export function MediaSlot({ media, priority = false }: { media: Media; priority?: boolean }) {
+/** A small labelled placeholder for printed sheets, where the full one would crowd the page. */
+function CompactPlaceholder({ label, alt }: { label: string; alt: string }) {
+  return (
+    <div className="slot-ph" role="img" aria-label={`Placeholder for ${label.toLowerCase()}: ${alt}`}>
+      <span aria-hidden="true">[{label.toLowerCase()} to come]</span>
+    </div>
+  );
+}
+
+/**
+ * `compact` is for printed sheets (about 300px wide): diagrams render for real, images that exist render,
+ * and missing images, videos and code samples become a small placeholder.
+ */
+export function MediaSlot({ media, priority = false, compact = false }: { media: Media; priority?: boolean; compact?: boolean }) {
+  if (compact) {
+    if (media.kind === "code") return <CompactPlaceholder label="Code sample" alt={media.caption ?? `${media.language} code`} />;
+    if ((media.kind === "image" || media.kind === "video") && !assetExists(media.asset))
+      return <CompactPlaceholder label={media.kind === "image" ? "Image" : "Video"} alt={media.alt} />;
+  }
   switch (media.kind) {
     case "diagram":
       return (
@@ -74,7 +92,7 @@ export function MediaSlot({ media, priority = false }: { media: Media; priority?
                 alt={media.alt}
                 fill
                 priority={priority}
-                sizes="(min-width: 900px) 720px, 100vw"
+                sizes={compact ? "340px" : "(min-width: 900px) 720px, 100vw"}
                 className="object-cover"
               />
             </div>
