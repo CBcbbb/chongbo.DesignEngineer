@@ -1,6 +1,6 @@
 # Report for Chongbo
 
-What was built, what passed, what's left, and what to do with the developer this afternoon.
+What was built, what passed, what's left, and the steps to go live this afternoon.
 
 ## What was built
 
