@@ -15,6 +15,9 @@ Source of truth for the rewrite. Wix copy (https://ningchongbo.wixsite.com/homep
 - **Outcome.** The contract originally covered the first season. After it performed well, the client commissioned the following seasons. Source: his manager. No quotable client feedback exists; none will be written.
 - **Motion handoff.** He handed the like animation over in Figma; unclear why it wasn't used.
 - **Headline typing animation** (recording ~24–28 s): his design.
+- **Before and after.** VOL.1–3 were designed by someone else; those are the "before" screens. He joined when VOL.4 was due and designed it and every later volume. All the redesign reasoning is already on Wix.
+- **Lottie files.** Made at the time (he believes).
+- **What he'd change now.** He'd deliver it himself (build it, using AI tools) rather than hand over a Figma file.
 - **Recording.** The YouTube Short (https://www.youtube.com/shorts/4cFA1T_9m8w) is the full recording. Original: `RPReplay_Final1684401719.MP4`, 100.9 MB, 50 s, 828×1792, 60 fps, H.264 + AAC (from "CB's Projects/Nike video" on his Mac).
 
 ## What the recording shows (approx. timestamps)
