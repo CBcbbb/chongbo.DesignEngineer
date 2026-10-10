@@ -1,6 +1,6 @@
-# Nike Athletes Closet: copy, draft 1
+# Nike Athletes Closet: copy, draft 2
 
-Playbook §8 step 4. Every line traces to the Wix page or `notes.md`. Headings are claims; captions say what the image proves.
+Playbook §8 step 4. Every line traces to the Wix page or `notes.md`. The page shows the final result, written for the reader: no process from our discussions, no emotional or defensive wording. Headings are claims; captions say what the image proves.
 
 **Arc:** make the stories shoppable (1–4) → make every volume from one system (5–7) → give people a reason to act and come back (8–10) → what shipped differently (11) → outcome and role (12).
 
@@ -15,7 +15,7 @@ Playbook §8 step 4. Every line traces to the Wix page or `notes.md`. Headings a
 **Nike Athletes Closet**
 Making the stories in Nike's app shoppable.
 
-Intern, advertising agency · Only UI designer · Nike's app in China · Shipped, ran across several seasons
+Role: UI Designer · Client: Nike · Platform: Nike App, China · Status: Shipped
 
 ---
 
@@ -23,7 +23,7 @@ Intern, advertising agency · Only UI designer · Nike's app in China · Shipped
 
 ### People read the stories but rarely tapped through to the products
 
-Athletes Closet is a members' feature in Nike's app in China, where a guest shares their style and the Nike pieces they wear. Readers engaged with the stories, but nothing linked a photo to the product in it. I joined at VOL.4 as the only UI designer, and closing that gap was the job.
+Athletes Closet is a members' feature in Nike's app in China, where a guest shares their style and the Nike pieces they wear. Readers engaged with the stories, but nothing linked a photo to the product in it. From VOL.4, I redesigned the feature to close that gap.
 
 *Caption:* Before VOL.4: products sat in small tiles, apart from the story.
 
@@ -37,7 +37,7 @@ I put tappable product tags on the story photos. The outfit in the picture now l
 
 ## 3 · product-card
 
-### I made the products big enough to be part of the story
+### Larger product images bring the products into the story
 
 The old product cards were small tiles. I enlarged the product image so each item carries weight in the content flow.
 
@@ -45,9 +45,9 @@ The old product cards were small tiles. I enlarged the product image so each ite
 
 ## 4 · feed
 
-### Sideways pages saved space, as long as people knew to swipe
+### Horizontal pages, with the next one in view
 
-The earlier volumes were one long vertical scroll. Horizontal pages saved space and let each block stand on its own, but people might never find the next page. I nearly dropped the idea; instead, the next page shows at the edge, so the story visibly carries on.
+The earlier volumes were one long vertical scroll. I chose horizontal pages because they save space and give each block its own screen. The next page shows at the edge, so readers can see the story continues.
 
 *Caption:* The next page shows at the edge: the cue to swipe.
 
@@ -55,7 +55,7 @@ The earlier volumes were one long vertical scroll. Horizontal pages saved space 
 
 ### One creative system, so every volume is built from the same parts
 
-I wrote the feature's creative system: logo lock-up, type, colour, framing devices and motion. The framing device anchors each headline, and adds, removes or rearranges details to fit the content. Colour is picked up from each guest's photos or products, so the palette changes with every volume and the layout doesn't.
+I designed the feature's creative system: logo lock-up, type, colour, framing devices and motion. The framing device anchors each headline, and adds, removes or rearranges details to fit the content. Colour is picked up from each guest's photos or products, so the palette changes with every volume and the layout doesn't.
 
 *Caption:* One framing device in five configurations, from logo lock-up to image and text.
 
@@ -85,7 +85,7 @@ The stories were static, so readers had little reason to act. I tied the like to
 
 ## 9 · star-voice
 
-### A voice teaser keeps people waiting for the next guest
+### A voice preview builds interest in the next guest
 
 To hold attention between volumes, I designed Star Voice Q&A. The next guest records a short voice teaser, readers submit questions and vote on others', and the top questions are answered in Nike's livestream. It shipped, and was recommended for wider use in other campaigns.
 
@@ -101,18 +101,18 @@ The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard w
 
 ## 11 · handoff
 
-### The heart shipped simplified. Today I'd build it myself
+### Motion handed over as a file lost detail in the build
 
-I specified the like in four states: an outline heart, a pill inviting a like to win a gift, a black heart with the count, and hearts floating out. I handed it over in Figma, and it shipped as a plain red heart. Now I'd build the motion myself and ship it, rather than hand over a file.
+I specified the like in four states: an outline heart, a pill inviting a like to win a gift, a black heart with the count, and hearts floating out. It was handed over in Figma and built as a plain red heart. I now build motion in code, so what ships matches the design.
 
-*Caption:* Left, the spec. Right, what shipped.
+*Caption:* The specified states, beside the version that shipped.
 
 ## 12 · outcome
 
 ### One season became several
 
-The feature shipped in Nike's app and ran across several seasons. The contract covered one season; after the first one I designed, the client commissioned the next ones.
+The feature shipped in Nike's app and ran across several seasons. The contract covered one season. After VOL.4, the client commissioned the following seasons.
 
-**Role.** Intern at an advertising agency, and the only UI designer. I designed the creative system, every screen from VOL.4 on, the motion and the guest posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
+**Role.** UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the guest posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
 
 [Full recording ↗](https://www.youtube.com/shorts/4cFA1T_9m8w)
