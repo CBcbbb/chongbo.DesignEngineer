@@ -10,7 +10,11 @@ Source of truth for the rewrite. Wix copy (https://ningchongbo.wixsite.com/homep
 - **Hardest decision: the horizontal feed.** The feature was originally vertical. He introduced horizontal page-flipping to save space, then had to solve the risk that people wouldn't know to swipe sideways: the layout visually suggests the story isn't finished, to pull people across. Nearly dropped it, kept it. Product tag placement caused no problems.
 - **Pushback.** None, apart from the client's own colour requirements: the client's colours had to be used.
 - **Star Voice Q&A.** Shipped in the app. Unknown whether it was his idea or in the brief, so copy must not claim either.
-- **Name.** Chongbo said the Wix homepage's "Athlete Closet" is right, but the shipped lock-up in the recording reads "NIKE ATHLETES CLOSET". Re-confirming.
+- **Name.** "Athletes Closet", as shipped in the app's lock-up ("NIKE ATHLETES CLOSET").
+- **Team.** Nike's marketing team set the brief and concept. Chongbo designed all the UI, the guest posters, and did the retouching (Photoshop). The team also had a copywriter and a photographer. The engineers were Nike's. Chongbo didn't deal with the client directly.
+- **Outcome.** The contract originally covered the first season. After it performed well, the client commissioned the following seasons. Source: his manager. No quotable client feedback exists; none will be written.
+- **Motion handoff.** He handed the like animation over in Figma; unclear why it wasn't used.
+- **Headline typing animation** (recording ~24–28 s): his design.
 - **Recording.** The YouTube Short (https://www.youtube.com/shorts/4cFA1T_9m8w) is the full recording. Original: `RPReplay_Final1684401719.MP4`, 100.9 MB, 50 s, 828×1792, 60 fps, H.264 + AAC (from "CB's Projects/Nike video" on his Mac).
 
 ## What the recording shows (approx. timestamps)
