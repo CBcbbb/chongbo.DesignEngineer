@@ -1,0 +1,65 @@
+/*
+ * Design tokens. The single source for colour, type and motion.
+ * Light and dark values match docs/design/prototype.html exactly.
+ * Paper and the red machine keep their colours in both themes: they are objects, not surfaces.
+ * Tailwind reads these through the @theme block in globals.css.
+ */
+:root {
+  /* studio: the background sweep the objects sit on */
+  --studio: #ecece8;
+  --studio-hi: #f7f7f4;
+  --ink: #1a1a18;
+  --ink-2: #5c5c57;
+  --rule: #d4d4ce;
+
+  /* paper: tickets and case-file cards */
+  --paper: #fbfbf8;
+  --paper-ink: #1a1a18;
+  --paper-dim: #5c5c57;
+  --paper-body: #33332f;
+  --paper-rule: #e3e3dd;
+  --paper-line: #9c9c95;
+
+  /* the machine */
+  --red: #d63a2a;
+  --red-hi: #ee5640;
+  --red-lo: #a92b1c;
+  --red-deep: #7e1f14;
+  --on-red: #ffffff;
+  /* darker red under every piece of white text on the machine (AA) */
+  --field: #b02e1e;
+  --field-placeholder: #ffe9e4;
+
+  --stamp: #c2311f;
+  --focus: #1a1a18;
+
+  --sans: var(--font-geist-sans), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: var(--font-geist-mono), "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --studio: #161617;
+    --studio-hi: #232325;
+    --ink: #ecece8;
+    --ink-2: #a6a6a0;
+    --rule: #38383a;
+    --focus: #ecece8;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --studio: #161617;
+  --studio-hi: #232325;
+  --ink: #ecece8;
+  --ink-2: #a6a6a0;
+  --rule: #38383a;
+  --focus: #ecece8;
+  color-scheme: dark;
+}
