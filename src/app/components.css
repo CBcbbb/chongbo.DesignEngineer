@@ -611,8 +611,17 @@
   filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.06)) drop-shadow(0 14px 14px rgba(0, 0, 0, 0.1));
   transition: transform 0.25s var(--ease);
 }
-.grid > li:hover {
+.grid > li:hover,
+.grid > li:focus-within {
   transform: translateY(-4px) rotate(-0.4deg);
+}
+.grid > li:active {
+  transform: translateY(-1px) rotate(-0.2deg);
+  transition-duration: 0.08s;
+}
+/* The skip link moves focus to <main>; it is a landmark, not a control, so no ring. */
+main:focus {
+  outline: none;
 }
 .mini {
   --focus: var(--paper-ink);
@@ -858,7 +867,9 @@
   .machine[data-state="thinking"] .led {
     animation: none;
   }
-  .grid > li:hover {
+  .grid > li:hover,
+  .grid > li:focus-within,
+  .grid > li:active {
     transform: none;
   }
 }
