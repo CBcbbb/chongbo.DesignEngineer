@@ -27,6 +27,13 @@ describe("fallback scorer", () => {
     expect(first("How does this site work?").project).toBe("this-site");
   });
 
+  it("uses project stacks and does not let 'built' outweigh the topic", () => {
+    expect(fallbackAnswer("Do you know Tailwind?").matched).not.toBe("start-here");
+    expect(first("Have you built a design system?").project).toBe("component-store");
+    expect(fallbackAnswer("Have you built a design system?").picks.every((p) => p.section !== "origin")).toBe(true);
+    expect(first("What did you use to build this?").project).toBe("this-site");
+  });
+
   it("matches AI as a whole word only", () => {
     expect(signalHits("How do you use AI?")["ai-tools"]).toBe(1);
     expect(signalHits("What is your aim?")["ai-tools"]).toBeUndefined();

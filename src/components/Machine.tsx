@@ -19,7 +19,7 @@ type Props = {
   chips: { label: string; q: string }[];
 };
 
-const LIP = 18; // px of blank paper showing while the machine thinks
+const LIP = 36; // px of feed height while thinking; ~14px of blank paper shows below the machine
 const MIN_WAIT = 400; // ms, so the motion reads even when the answer is instant
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));

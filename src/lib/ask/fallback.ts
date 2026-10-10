@@ -19,8 +19,8 @@ export const KEYS: Record<Signal, string[]> = {
   accessibility: ["access", "a11y", "wcag", "screen reader", "screenreader", "keyboard", "inclusiv", "contrast", "disab", "assistive", "aria!", "blind", "low vision", "colour blind", "color blind"],
   "design-systems": ["design system", "token", "component librar", "figma", "consisten", "style guide", "styleguide", "theming", "theme", "variables"],
   "cross-platform": ["platform", "multiple product", "product line", "several product", "many product", "scale", "scaling", "cross platform", "multi brand", "ios!", "android", "web and mobile"],
-  "design-eng-gap": ["engineer", "handoff", "hand off", "developer", "dev!", "devs!", "front end", "frontend", "code", "coding", "bridge", "gap", "react", "typescript", "implement", "between design"],
-  "end-to-end": ["end to end", "ship", "from scratch", "solo", "alone", "own!", "ownership", "deliver", "launch", "built", "build", "zero to one", "idea to", "whole thing", "full stack", "fullstack"],
+  "design-eng-gap": ["engineer", "handoff", "hand off", "developer", "dev!", "devs!", "front end", "frontend", "code", "coding", "bridge", "gap", "react", "typescript", "tailwind", "css!", "html!", "implement", "between design"],
+  "end-to-end": ["end to end", "ship", "from scratch", "solo", "alone", "own!", "ownership", "deliver", "launch", "zero to one", "idea to", "whole thing", "full stack", "fullstack"],
   "seo-performance": ["seo!", "performance", "fast", "search engine", "lighthouse", "speed", "web vitals", "metadata", "static", "discoverab"],
   "publishing-workflow": ["cms!", "publish", "content", "template", "workflow", "editor", "admin"],
   "reusable-components": ["reusab", "reuse", "component", "modular", "pattern librar", "building block"],
@@ -51,7 +51,7 @@ export const REPLY: Record<Matched, string> = {
   typography: "Hierarchy first, decoration never.",
   data: "My data work starts with the model, long before the chart.",
   prototyping: "I prototype in whatever is fastest: Figma, code or AI tools.",
-  "ai-tools": "I build with AI coding tools daily, and this site uses a model to choose its answers.",
+  "ai-tools": "I build with AI coding tools every day, from research platforms to this site, which uses a model to pick its answers.",
   research: "Here's a decision I changed after watching real people use the thing.",
   judgement: "Here's a trade-off I made, and why.",
   "start-here": "Good question. Here's where I'd start: three pieces that show how I work.",
@@ -99,6 +99,11 @@ const HINT_REGEX = Object.fromEntries(
   Object.entries(PROJECT_HINTS).map(([slug, terms]) => [slug, terms.map(termRegex)]),
 ) as Record<string, RegExp[]>;
 
+const STACK_REGEX: [string, RegExp[]][] = [...new Map(catalogue.map((e) => [e.project.slug, e.project])).values()].map((p) => [
+  p.slug,
+  p.stack.map((tool) => termRegex(`${tool}!`)),
+]);
+
 function count(text: string, patterns: RegExp[]): number {
   let n = 0;
   for (const re of patterns) {
@@ -133,6 +138,12 @@ export function scoreSections(question: string): Scored[] {
     const n = count(q, res);
     if (n) projectBoost[slug] = n;
   }
+  // Tools named in the question point at projects whose stack uses them (data-driven from content).
+  const stackBoost: Record<string, number> = {};
+  for (const [slug, res] of STACK_REGEX) {
+    const n = count(q, res);
+    if (n) stackBoost[slug] = n;
+  }
   const words = [...new Set(q.trim().split(" "))].filter((w) => w.length >= 4 && !STOPWORDS.has(w)).map(stem);
 
   return catalogue.map((entry, order) => {
@@ -143,6 +154,8 @@ export function scoreSections(question: string): Scored[] {
     });
     const boost = projectBoost[entry.project.slug];
     if (boost) score += 2.5 * boost + (entry.section.kind === "problem" || entry.section.kind === "decision" ? 0.5 : 0);
+    const stack = stackBoost[entry.project.slug];
+    if (stack) score += 1.5 * stack;
     for (const w of words) {
       if (w.length < 4) continue;
       if (entry.titleText.includes(w)) score += 1;
