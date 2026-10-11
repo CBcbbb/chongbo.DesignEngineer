@@ -11,7 +11,7 @@ export const hhcd: Project = {
   oneLiner: "A research repository that anyone can explore, with a mouse, a keyboard or on a phone.",
   context: "First built for VOICE, an EU-funded arts research project. Now used by the Helen Hamlyn Centre for Design, Royal College of Art.",
   role: "Data collection, analysis and modelling; design and build.",
-  outcome: "Live and in use. Paper accepted at DRS 2026.",
+  outcome: "Live and in use. Used to teach the Centre's summer interns. Paper accepted at DRS 2026.",
   status: "Live",
   stack: ["Next.js", "TypeScript", "D3", "Tailwind", "Playwright", "axe"],
   links: [
@@ -210,7 +210,7 @@ export const hhcd: Project = {
       kind: "decision",
       title: "A table view beside the network",
       body: [
-        "A network graph is hard to use without a mouse or without sight. So I added a table of the same data, with the same search and filters, and a shortcut to switch between them. The workshop also led to zoom buttons and a panel on accessibility and translation.",
+        "A network graph is hard to use without a mouse or without sight. So I added a table of the same data, with the same search and filters, and a shortcut to switch between them.",
       ],
       signals: ["accessibility", "data", "judgement"],
       capabilities: ["E"],

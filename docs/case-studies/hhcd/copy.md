@@ -8,7 +8,7 @@ Playbook §8 step 4. Every fact traces to `inventory.md` → "Facts and their so
 - **One line:** A research repository that anyone can explore, with a mouse, a keyboard or on a phone.
 - **Context:** First built for VOICE, an EU-funded arts research project. Now used by the Helen Hamlyn Centre for Design, Royal College of Art.
 - **Role:** Data collection, analysis and modelling; design and build.
-- **Outcome:** Live and in use. Paper accepted at DRS 2026.
+- **Outcome:** Live and in use. Used to teach the Centre's summer interns. Paper accepted at DRS 2026.
 - **Link:** https://helen-hamlyn-centre-for-design-data.vercel.app/
 - **What this shows:** Accessibility · Idea to production · Craft and interaction
 
@@ -58,7 +58,7 @@ To make the survey easy to fill in, I started it from each person's own work: th
 
 ### `dual-view`: A table view beside the network
 
-A network graph is hard to use without a mouse or without sight. So I added a table of the same data, with the same search and filters, and a shortcut to switch between them. The workshop also led to zoom buttons and a panel on accessibility and translation.
+A network graph is hard to use without a mouse or without sight. So I added a table of the same data, with the same search and filters, and a shortcut to switch between them.
 
 *Image caption:* The same entries as a table, for screen readers and keyboards.
 
