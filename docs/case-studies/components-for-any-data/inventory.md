@@ -1,6 +1,6 @@
 # Components for Any Data: card inventory
 
-Playbook §8 step 3. Draft 1, 11 October 2026. Waiting for Chongbo's approval. Body copy is step 4.
+Playbook §8 step 3. Draft 1, 11 October 2026. Approved by Chongbo, 11 October 2026 (decisions below). Copy is in `copy.md`.
 
 Title: **Components for Any Data** (was "Component Store", a product name, which §9 rules out). Proposed slug: `components-for-any-data` (see "Slug" below).
 
@@ -23,7 +23,7 @@ The employer, its product names (including "Component Store", "Flow Lab", "FarPo
 | Client | Logistics infrastructure company |
 | Title | Components for Any Data |
 | Line | `[step 4]` What it is: a component library that customers preview with their own data before building with it |
-| Role | `[job title]` |
+| Role | Design Engineer (UX design and front end) |
 | roleSplit | one person: data model, interface and front end on my own · one person: the stream-fit proposal for the backend team |
 | Outcome | `[step 4]` What the design achieves, not a status |
 | What this shows | Systems and reuse (C) · Idea to production (B) · Craft and interaction (D) |
@@ -41,9 +41,9 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 | `sample-data` | Sample data that follows the same rules as real data | C, B | in | in | · | One chart, Sample / My stream toggle (from the demo) | |
 | `three-kinds` | Which components connect, and which ask the user | C, D | in | in | · | Rebuilt store filter: connects to a stream · reads the page (filters, search) · user input (forms) · static; tags on the cards | |
 | | **Part 2 · The contract** | | | | | | |
-| `contract` | A component promises a shape, not field names | C, B | in | lead | · | Code: a short contract written for the site (roles, types, required, key) | Naming the chart library it follows: OK? |
+| `contract` | A component promises a shape, not field names | C, B | in | lead | · | Code: a short contract written for the site (roles, types, required, key) | |
 | `one-per-dataset` | One contract per dataset | C | in | in | · | One mapped dataset drawn as bar, pie and treemap; the mapping stays when you switch | |
-| `binding-only` | Data only through the binding | B, C | · | in | · | Diagram: producer → adapter → binding → contract → component, with sample and page draft feeding in | |
+| `binding-only` | Data comes through the binding, never through settings | B, C | · | in | · | Diagram: producer → adapter → binding → contract → component, with sample and page draft feeding in | |
 | `page-draft` | One draft shared by every slot on a dataset | B, D | · | in | · | Small demo: edit a row, the totals beside it change | Keep or cut (see below) |
 | | **Part 3 · Connecting your own data** | | | | | | |
 | `stream-fit` | Streams ranked by fit, not listed by size | D, B | lead | in | in | Before / after picker, rebuilt: one long list by row count → Fits · Partly fits ("3 of 5 fields") · Other, collapsed and searchable | |
@@ -65,7 +65,7 @@ A small, working re-creation of the store's preview panel, written from scratch 
 - Optional: drop a CSV, read in the browser and never uploaded.
 - Accessible: every control a native element, keyboard first; the chart has a table alternative; still with reduced motion.
 
-Domain: invented and generic. `[Chongbo to choose: generic deliveries (warehouses, cities, parcels), or a domain outside logistics]`. Never ports, vessels, charges or real company names.
+Domain: invented deliveries from three depots (places, counts, dates). Chosen 11 Oct. Never ports, vessels, charges or real company names.
 
 ## Facts and their sources
 
@@ -118,13 +118,18 @@ Copy may only use these, or what Chongbo adds later.
 | Missing | Side panel with Sample / My stream and the field dropdowns; the current stream picker | Reference for the rebuild, never published |
 | Missing | Dark-mode screens | Not needed: everything is rebuilt, so it's designed in both modes |
 
+## Decisions (11 Oct)
+
+- Role: Design Engineer; UX design and front end, defined from what Chongbo described.
+- Demo domain: invented deliveries.
+- ECharts may be named as the model the contract follows.
+- Slug becomes `components-for-any-data`.
+- Merge only with Chongbo's approval.
+
 ## Gaps
 
-1. Job title for the cover's Role.
-2. Reference screens: side panel, field dropdowns, stream picker.
-3. The demo's domain.
-4. Naming the chart library the contract follows: it's public, and it shows where the idea came from. OK?
-5. The closing card: "what I'd do now", or none (HHCD has none).
+1. Reference screens: side panel, field dropdowns, stream picker (Chongbo to send).
+2. The closing card: "what I'd do now", or none (HHCD has none).
 
 ## Slug
 
