@@ -456,11 +456,11 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
               </div>
               <div className="nk-ogrid">
                 <div>
-                  <p className="nk-olabel">Context</p>
+                  <p className="nk-olabel">Outcome</p>
                   <p>{outcome.body[0]}</p>
                 </div>
                 <div>
-                  <p className="nk-olabel">Team</p>
+                  <p className="nk-olabel">Role</p>
                   <p>{outcome.body[1]}</p>
                 </div>
               </div>

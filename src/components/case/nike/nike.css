@@ -502,31 +502,24 @@
   background: transparent;
   color: #fff;
 }
-/* Nike orange as a lit gradient, with a soft glow under it */
+/* flat Nike orange, as everywhere else on the page */
 .nk-bigplay {
   position: relative;
   display: grid;
   place-items: center;
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 4.25rem;
+  height: 4.25rem;
   border-radius: 50%;
-  background: radial-gradient(120% 120% at 30% 20%, #ffb07a 0%, #ff7a35 38%, #f26522 62%, #c2410c 100%);
-  color: #111010;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    0 14px 34px -10px rgba(242, 101, 34, 0.85),
-    0 0 0 6px rgba(255, 255, 255, 0.14);
+  background: var(--nk-orange);
+  color: var(--nk-on-orange);
   transition:
     opacity 0.35s var(--nk-ease),
     transform 0.35s var(--nk-ease),
-    box-shadow 0.35s var(--nk-ease);
+    background 0.2s;
 }
 .nk-screen:hover .nk-bigplay,
 .nk-screen:focus-visible .nk-bigplay {
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    0 18px 44px -10px rgba(242, 101, 34, 1),
-    0 0 0 9px rgba(255, 255, 255, 0.2);
+  background: var(--nk-orange-on-black);
 }
 .nk-bigplay .nk-morph {
   width: 1.15rem;
@@ -612,7 +605,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: linear-gradient(90deg, #ffb07a, #ff7a35 45%, #f26522);
+  background: var(--nk-orange-on-black);
   transform-origin: left;
   transform: scaleX(0);
   transition: transform 0.25s linear;
@@ -1162,10 +1155,24 @@
   position: absolute;
   inset: 0;
 }
-.nk-stage-ctl {
+/* the animation loops on its own; a pause button for keyboards appears only when focused */
+.nk-stage-pause {
   position: absolute;
-  left: var(--nk-pad);
   bottom: 1.1rem;
+  left: var(--nk-pad);
+  padding: 0.6rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--nk-orange-on-black);
+  color: var(--nk-on-orange);
+  font-size: 0.875rem;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+}
+.nk-stage-pause:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* ---------- Star Voice: the screen with its notes pinned beside it ---------- */
@@ -1198,7 +1205,7 @@
   transform: scaleX(0);
   transition: transform 0.25s linear;
 }
-/* the play button sits on the bubble's record dot: the same lit orange as the recording's */
+/* the play button sits on the bubble's record dot, in the same flat orange as the recording's */
 .nk-vt {
   position: absolute;
   top: 22.2%;
@@ -1211,22 +1218,17 @@
   border: 0;
   border-radius: 50%;
   cursor: pointer;
-  background: radial-gradient(120% 120% at 30% 20%, #ffb07a 0%, #ff7a35 38%, #f26522 62%, #c2410c 100%);
-  color: #111010 !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.45),
-    0 8px 20px -6px rgba(242, 101, 34, 0.9);
+  background: var(--nk-orange);
+  color: var(--nk-on-orange) !important;
   transform: translate(-50%, -50%);
   transition:
     transform 0.25s var(--nk-ease),
-    box-shadow 0.25s var(--nk-ease);
+    background 0.2s;
 }
 .nk-vt:hover,
 .nk-vt:focus-visible {
-  transform: translate(-50%, -50%) scale(1.08);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    0 10px 26px -6px rgba(242, 101, 34, 1);
+  background: var(--nk-orange-on-black);
+  transform: translate(-50%, -50%) scale(1.06);
 }
 .nk-vt .nk-morph {
   width: 0.62rem;
@@ -1234,31 +1236,6 @@
 }
 .nk-vt:not(.is-playing) .nk-morph {
   margin-left: 0.12rem;
-}
-/* the ring round the button fills as the clip plays */
-.nk-vt svg {
-  position: absolute;
-  inset: -5px;
-  width: calc(100% + 10px);
-  height: calc(100% + 10px);
-  transform: rotate(-90deg);
-  pointer-events: none;
-}
-.nk-vt-track,
-.nk-vt-ring {
-  fill: none;
-  stroke-width: 3;
-}
-.nk-vt-track {
-  stroke: rgba(255, 255, 255, 0.28);
-}
-.nk-vt-ring {
-  stroke: #fff;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.25s linear;
-}
-.nk-vt:not(.is-playing) .nk-vt-ring {
-  opacity: 0;
 }
 /* until the first listen, a hint above the button says what it is and how long */
 .nk-vt-hint {
@@ -1294,17 +1271,6 @@
   50% {
     margin-top: -3px;
   }
-}
-
-/* the shoebox's Replay icon */
-.nk-loop-ico {
-  width: 1.05rem;
-  height: 1.05rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 /* small icons on the capability labels */

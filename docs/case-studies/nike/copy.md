@@ -103,8 +103,8 @@ The paragraph is the original Wix text, cut where the notes take over (how the l
 
 ### 04.1 One season became several
 
-- **Context:** UI design internship at an advertising agency.
-- **Team:** Nike's marketing team set the brief. The agency team also had a copywriter and a photographer, and Nike's engineers built the feature.
+- **Outcome:** The feature shipped in Nike's app. The contract covered one season; after VOL.4, Nike commissioned the following seasons.
+- **Role:** UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
 
 ### 04.2 What I'd do now: take motion from idea to production myself
 

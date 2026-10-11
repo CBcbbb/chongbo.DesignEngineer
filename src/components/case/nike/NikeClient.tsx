@@ -329,8 +329,8 @@ export function Switcher({ options }: { options: { label: string; layer: string;
 
 /* ---------------------------------------------------------------------------------------------
  * Voice teaser, played like a voice message: a play button on the bubble's record dot, a hint
- * beside it until the first listen, a ring that fills as it plays, and the screenshot's own
- * waveform turning orange as it goes.
+ * above it until the first listen, and the screenshot's own waveform turning orange as it plays
+ * (that is the progress).
  * ------------------------------------------------------------------------------------------- */
 
 export function VoiceTeaser({ src, label, seconds }: { src: string; label: string; seconds: number }) {
@@ -338,7 +338,6 @@ export function VoiceTeaser({ src, label, seconds }: { src: string; label: strin
   const [playing, setPlaying] = useState(false);
   const [heard, setHeard] = useState(false);
   const [progress, setProgress] = useState(0);
-  const ring = 2 * Math.PI * 22;
   return (
     <>
       <span className="nk-vt-wave" aria-hidden="true">
@@ -362,10 +361,6 @@ export function VoiceTeaser({ src, label, seconds }: { src: string; label: strin
           } else a.pause();
         }}
       >
-        <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-          <circle cx="24" cy="24" r="22" className="nk-vt-track" />
-          <circle cx="24" cy="24" r="22" className="nk-vt-ring" strokeDasharray={ring} strokeDashoffset={ring * (1 - progress)} />
-        </svg>
         <PlayMorph playing={playing} />
       </button>
       <audio
@@ -434,8 +429,11 @@ export function GiftBox({ src, label }: { src: string; label: string }) {
   const box = useRef<HTMLDivElement>(null);
   const anim = useRef<import("lottie-web").AnimationItem | null>(null);
   const loading = useRef<Promise<import("lottie-web").AnimationItem> | null>(null);
-  const [played, setPlayed] = useState(false);
+  const visible = useRef(false);
+  const held = useRef(false);
+  const hold = useRef(0);
   const [ready, setReady] = useState(false);
+  const [paused, setPaused] = useState(false);
 
   const load = useCallback(() => {
     if (loading.current) return loading.current;
@@ -452,7 +450,13 @@ export function GiftBox({ src, label }: { src: string; label: string }) {
         animationData: data,
         rendererSettings: { preserveAspectRatio: "xMidYMid meet" },
       });
-      a.addEventListener("complete", () => setPlayed(true));
+      // Rest on the open box for a moment, then play again, for as long as it's in view.
+      a.addEventListener("complete", () => {
+        window.clearTimeout(hold.current);
+        hold.current = window.setTimeout(() => {
+          if (visible.current && !held.current) a.goToAndPlay(0, true);
+        }, 1400);
+      });
       await new Promise<void>((res) => a.addEventListener("DOMLoaded", () => res()));
       anim.current = a;
       setReady(true);
@@ -461,65 +465,55 @@ export function GiftBox({ src, label }: { src: string; label: string }) {
     return loading.current;
   }, [src]);
 
-  /* Loads just before it scrolls into view and plays once when most of it is visible.
-     With reduced motion it rests on the last frame until someone presses Play. */
+  /* Plays on a loop while it's in view and stops when it scrolls away. With reduced motion it
+     rests on the last frame. Clicking it, or the pause button keyboards reach, holds it still. */
   useEffect(() => {
     const el = box.current;
     if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let started = false;
-    const preload = new IntersectionObserver(
+    if (reduce) held.current = true;
+    const io = new IntersectionObserver(
       ([entry]) => {
-        if (!entry?.isIntersecting) return;
-        preload.disconnect();
+        visible.current = !!entry?.isIntersecting;
         void load().then((a) => {
-          if (!started) a.goToAndStop(reduce ? a.totalFrames - 1 : 0, true);
+          if (reduce) a.goToAndStop(a.totalFrames - 1, true);
+          else if (visible.current && !held.current) a.play();
+          else a.pause();
         });
       },
-      { rootMargin: "300px" },
+      { threshold: 0.4 },
     );
-    const autoplay = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting || reduce) return;
-        autoplay.disconnect();
-        started = true;
-        void load().then((a) => a.goToAndPlay(0, true));
-      },
-      { threshold: 0.6 },
-    );
-    preload.observe(el);
-    autoplay.observe(el);
+    io.observe(el);
     return () => {
-      preload.disconnect();
-      autoplay.disconnect();
+      io.disconnect();
+      window.clearTimeout(hold.current);
       anim.current?.destroy();
       anim.current = null;
       loading.current = null;
     };
   }, [load]);
 
+  const toggle = () => {
+    held.current = !held.current;
+    setPaused(held.current);
+    void load().then((a) => (held.current ? a.pause() : a.play()));
+  };
+
   return (
-    <div className="nk-stage nk-box">
+    <div className="nk-stage nk-box" onClick={toggle}>
       <div className={`nk-lottie${ready ? " is-ready" : ""}`}>
         <div ref={box} className="nk-lottie-box" role="img" aria-label={label} />
       </div>
-      <div className="nk-stage-ctl">
-        <button
-          type="button"
-          className="nk-btn"
-          onClick={() => void load().then((a) => a.goToAndPlay(0, true))}
-        >
-          {played ? (
-            <svg className="nk-loop-ico" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-              <path d="M15.5 10a5.5 5.5 0 1 1-1.8-4.1" />
-              <path d="M14.2 2.8l-.4 3.4 3.4.3" />
-            </svg>
-          ) : (
-            <span className="nk-tri" aria-hidden="true" />
-          )}
-          {played ? "Replay" : "Play"}
-        </button>
-      </div>
+      <button
+        type="button"
+        className="nk-stage-pause"
+        onClick={(e) => {
+          e.stopPropagation();
+          toggle();
+        }}
+      >
+        {paused ? "Play the animation" : "Pause the animation"}
+      </button>
     </div>
   );
 }

@@ -190,8 +190,8 @@ export const nike: Project = {
       kind: "outcome",
       title: "One season became several",
       body: [
-        "UI design internship at an advertising agency.",
-        "Nike's marketing team set the brief. The agency team also had a copywriter and a photographer, and Nike's engineers built the feature.",
+        "The feature shipped in Nike's app. The contract covered one season; after VOL.4, Nike commissioned the following seasons.",
+        "UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.",
       ],
       signals: ["end-to-end", "brand-storytelling"],
     },
