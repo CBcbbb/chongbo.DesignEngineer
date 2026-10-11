@@ -64,7 +64,7 @@ export const hhcd: Project = {
       signals: ["judgement", "accessibility", "research"],
       capabilities: ["E"],
       lenses: { ux: "lead", engineer: "in" },
-      layout: "stack",
+      layout: "top",
       media: {
         kind: "image",
         asset: "hhcd/voice-graph.png",
@@ -85,7 +85,7 @@ export const hhcd: Project = {
       signals: ["judgement", "data", "research"],
       capabilities: ["D"],
       lenses: { ux: "in" },
-      layout: "stack",
+      layout: "pair",
       media: {
         kind: "group",
         layout: "row",
@@ -139,7 +139,7 @@ export const hhcd: Project = {
       signals: ["research", "accessibility"],
       capabilities: ["E"],
       lenses: { ux: "in" },
-      layout: "stack",
+      layout: "pair",
       media: {
         kind: "image",
         asset: "hhcd/workshop-cards.png",
@@ -180,7 +180,7 @@ export const hhcd: Project = {
       signals: ["data", "judgement"],
       capabilities: ["B", "C"],
       lenses: { ux: "in", engineer: "in" },
-      layout: "stack",
+      layout: "wide",
       media: {
         kind: "stepper",
         diagram: "data-pipeline",
@@ -205,14 +205,21 @@ export const hhcd: Project = {
       signals: ["accessibility", "data", "judgement"],
       capabilities: ["E"],
       lenses: { ux: "in", engineer: "in" },
-      layout: "stack",
-      keys: ["Ctrl", "+", "E"],
+      layout: "top",
       media: {
-        kind: "image",
-        asset: "hhcd/voice-simple-view.png",
-        alt: "VOICE's Simple View: people, institutions, projects and methods in four columns of readable entries, with a Map View button.",
-        need: "Paper figure: Simple View.",
-        ratio: "16:10",
+        kind: "toggle",
+        keys: ["Ctrl", "E"],
+        a: {
+          asset: "hhcd/voice-simple-view.png",
+          alt: "VOICE's Simple View: people, institutions, projects and methods in four columns of readable entries, with a Map View button.",
+          label: "Table",
+        },
+        b: {
+          asset: "hhcd/voice-graph.png",
+          alt: "The same entries in VOICE's network view, with filters by type and a Simple View button.",
+          label: "Network",
+        },
+        need: "Paper figures: Simple View and the graph view.",
       },
     },
     {
@@ -227,7 +234,7 @@ export const hhcd: Project = {
       signals: ["end-to-end", "reusable-components"],
       capabilities: ["B", "C"],
       lenses: { ux: "in", engineer: "in", web: "in" },
-      layout: "stack",
+      layout: "pair",
       media: {
         kind: "metrics",
         items: [
@@ -282,7 +289,7 @@ export const hhcd: Project = {
       signals: ["motion-interaction", "prototyping", "accessibility"],
       capabilities: ["D", "E"],
       lenses: { ux: "in", engineer: "in", web: "in" },
-      layout: "stack",
+      layout: "top",
       media: {
         kind: "video",
         asset: "hhcd/guide.mp4",
@@ -328,7 +335,7 @@ export const hhcd: Project = {
       signals: ["accessibility", "typography"],
       capabilities: ["E", "D"],
       lenses: { ux: "in", engineer: "in", web: "lead" },
-      layout: "stack",
+      layout: "pair",
       media: {
         kind: "group",
         layout: "row",
@@ -359,7 +366,7 @@ export const hhcd: Project = {
       signals: ["design-systems", "accessibility"],
       capabilities: ["E", "C"],
       lenses: { engineer: "in", web: "in" },
-      layout: "stack",
+      layout: "pair",
       media: {
         kind: "specimens",
         items: [
@@ -382,7 +389,7 @@ export const hhcd: Project = {
       signals: ["accessibility", "research"],
       capabilities: ["E"],
       lenses: { engineer: "in", web: "in" },
-      layout: "stack",
+      layout: "pair",
       media: {
         kind: "metrics",
         items: [

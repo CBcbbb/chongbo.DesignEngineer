@@ -4,7 +4,8 @@ import type { Media, Metric, Section, Specimen, Step } from "@content";
 import { assetExists, imageSize } from "@/lib/assets";
 import { CodeBlock } from "@/components/media/CodeBlock";
 import { ComparePlate } from "./ComparePlate";
-import { DataStepper } from "./DataStepper";
+import { DataFlow } from "./DataFlow";
+import { ViewToggle } from "./ViewToggle";
 import { VideoPlate } from "./VideoPlate";
 import { Zoom } from "./Zoom";
 
@@ -227,14 +228,49 @@ function Row({ items }: { items: { asset: string; alt: string; need?: string; la
  * Renders one card's evidence with the case-file blocks. `index` keeps form controls unique, e.g. "02.2";
  * `url` is the product's address, shown in browser frames.
  */
-export function CaseMedia({ media, index, url, priority = false }: { media: Media; index: string; url: string; priority?: boolean }) {
+export function CaseMedia({
+  media,
+  index,
+  url,
+  priority = false,
+  bleed = false,
+}: {
+  media: Media;
+  index: string;
+  url: string;
+  priority?: boolean;
+  /** A screenshot that runs the full width of the card at its foot, on the product's white. */
+  bleed?: boolean;
+}) {
   switch (media.kind) {
-    case "image":
+    case "image": {
+      if (bleed) {
+        const dim = imageSize(media.asset);
+        if (!dim || !assetExists(media.asset)) return <Missing asset={media.asset} need={media.need} />;
+        return (
+          <figure className="cf-figure cf-bleed">
+            <Image src={src(media.asset)} alt={media.alt} width={dim.width} height={dim.height} sizes="(min-width: 1100px) 860px, 100vw" priority={priority} quality={Q} />
+          </figure>
+        );
+      }
       return (
         <figure className="cf-figure">
           <Shot asset={media.asset} alt={media.alt} need={media.need} priority={priority} />
         </figure>
       );
+    }
+    case "toggle": {
+      const da = imageSize(media.a.asset);
+      const db = imageSize(media.b.asset);
+      if (!da || !db) return <Missing asset={media.a.asset} need={media.need} />;
+      return (
+        <ViewToggle
+          keys={media.keys}
+          a={{ src: src(media.a.asset), width: da.width, height: da.height, alt: media.a.alt, label: media.a.label }}
+          b={{ src: src(media.b.asset), width: db.width, height: db.height, alt: media.b.alt, label: media.b.label }}
+        />
+      );
+    }
     case "video": {
       const webm = media.asset.replace(/\.mp4$/, ".webm");
       const poster = media.poster && assetExists(media.poster) ? media.poster : undefined;
@@ -296,7 +332,7 @@ export function CaseMedia({ media, index, url, priority = false }: { media: Medi
       );
     }
     case "stepper":
-      return <DataStepper steps={media.steps} />;
+      return <DataFlow steps={media.steps} />;
     case "specimens":
       return (
         <figure className="cf-figure">

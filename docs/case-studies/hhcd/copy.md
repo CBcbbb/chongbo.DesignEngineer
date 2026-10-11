@@ -59,7 +59,7 @@ I led the workshop with members of all seven organisations, and designed its pro
 
 To make the survey easy to fill in, I started it from each person's own work: their projects, the methods they used and who supported them. Collecting was easy, but every row of the spreadsheet had a person at its centre. So I gave the map four linked types of equal weight, and decided what each entry stands for.
 
-*Evidence:* the stepper diagram (sample labels).
+*Evidence:* one diagram (sample labels): a survey row centred on Person A → four linked types; the steps under it, numbered on the diagram. *Labels:* One survey row per person · Four types, linked
 
 1. Decide what the platform needs to know.
 2. Survey each person about their own work.
@@ -71,7 +71,7 @@ To make the survey easy to fill in, I started it from each person's own work: th
 
 A network graph is hard to use without a mouse or without sight. The table holds the same data, with the same search and filters, and a shortcut switches between the two.
 
-*Keys:* Ctrl + E. *Evidence:* VOICE's table view.
+*Evidence:* VOICE's table view, full width; a button with the keycaps Ctrl + E switches to the network view. *Labels:* Show the network / Show the table · Table view / Network view
 
 ## Part 2 · Helen Hamlyn Centre
 

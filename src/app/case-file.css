@@ -334,6 +334,309 @@
   pointer-events: none;
 }
 
+/* top layout: the evidence opens the card and the text follows it. A screenshot runs to the card's top and side
+   edges; a window stays inside the margins. */
+.cf-sheet.is-card[data-layout="top"] .cf-evidence {
+  order: -1;
+  margin: 0 0 clamp(0.5rem, 2vw, 1.25rem);
+}
+.cf-sheet.is-card[data-layout="top"] .cf-evidence:has(.cf-bleed) {
+  margin: calc(-1 * var(--cf-pad-y)) calc(-1 * var(--cf-pad)) clamp(0.75rem, 2.4vw, 1.5rem);
+}
+.cf .cf-sheet[data-layout="top"] .cf-bleed {
+  margin: 0;
+  border-top: 0;
+  border-bottom: 1px solid var(--cf-hair);
+}
+.cf-sheet[data-layout="top"] .cf-toggle {
+  gap: 0;
+}
+.cf-sheet[data-layout="top"] .cf-toggle .cf-bleed {
+  order: 1;
+}
+.cf-sheet[data-layout="top"] .cf-toggle-bar {
+  order: 2;
+  padding: clamp(1rem, 2.4vw, 1.5rem) var(--cf-pad) 0;
+}
+
+/* wide layout: the claim runs across the card, the reasoning under it in two columns, then the evidence */
+.cf-sheet[data-layout="wide"] .cf-head {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+.cf-sheet[data-layout="wide"] .cf-h3 {
+  max-width: 24ch;
+  font-size: clamp(1.6rem, 3.1vw, 2.35rem);
+}
+.cf-sheet[data-layout="wide"] .cf-body {
+  padding-top: clamp(1rem, 2.4vw, 1.5rem);
+}
+@media (min-width: 761px) {
+  .cf-sheet[data-layout="wide"] .cf-body p {
+    max-width: none;
+    column-count: 2;
+    column-gap: clamp(1.75rem, 3.4vw, 3rem);
+  }
+}
+
+/* a card without evidence (the closing card): the claim, then the body set large as a statement, then the facts */
+.is-text .cf-head {
+  grid-template-columns: minmax(0, 1fr);
+}
+.is-text .cf-body {
+  padding: clamp(2.25rem, 6vw, 4.5rem) 0 clamp(1.25rem, 3vw, 2.25rem);
+}
+.is-text .cf-body p {
+  max-width: 26ch;
+  font-size: clamp(1.5rem, 2.9vw, 2.35rem);
+  line-height: 1.22;
+  letter-spacing: -0.025em;
+  color: var(--case-ink);
+}
+
+/* a screenshot that runs the card's full width at its foot, on the product's own white: as large as the card allows */
+.cf .cf-bleed {
+  display: grid;
+  place-items: center;
+  margin: 0 calc(-1 * var(--cf-pad)) calc(-1 * var(--cf-pad-y));
+  background: #ffffff;
+  border-top: 1px solid var(--cf-hair);
+}
+.cf-bleed img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* two views of one screen, switched by a button that shows the product's shortcut */
+.cf-toggle {
+  display: grid;
+  gap: clamp(1rem, 2.4vw, 1.5rem);
+}
+.cf-toggle-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  align-items: center;
+}
+.cf-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 0 18px 0 7px;
+  border: 1px solid var(--case-line);
+  border-radius: 999px;
+  background: var(--case-bg);
+  color: var(--case-ink);
+  font: 500 15px/1 var(--sans);
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+.cf-toggle-btn:hover,
+.cf-toggle-btn:focus-visible {
+  border-color: var(--case-ink);
+}
+.cf-toggle-btn:active kbd {
+  transform: translateY(1px);
+  border-bottom-width: 1px;
+}
+.cf-toggle-keys {
+  display: inline-flex;
+  align-items: center;
+}
+.cf-toggle-key-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-right: 4px;
+}
+.cf-toggle-keys kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--case-line);
+  border-bottom-width: 2px;
+  border-radius: 8px;
+  background: var(--case-inset);
+  font: 400 12.5px/1 var(--mono);
+  color: var(--case-ink);
+}
+.cf-toggle-keys .plus {
+  font: 400 12px/1 var(--mono);
+  color: var(--case-dim);
+}
+.cf-toggle-state {
+  font: 400 11.5px/1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--case-dim);
+}
+.cf-toggle-stack {
+  position: relative;
+  display: grid;
+  width: 100%;
+}
+.cf-toggle-stack > .cf-layer {
+  grid-area: 1 / 1;
+  min-height: 0;
+  transition: opacity 0.35s var(--ease);
+}
+.cf-toggle-stack > .cf-layer[data-hidden="true"] {
+  opacity: 0;
+}
+.cf-toggle-stack img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* the data pipeline as one diagram: a survey row centred on a person → four linked types; the steps under it */
+.cf-flow {
+  display: grid;
+  gap: clamp(1.1rem, 2.6vw, 1.75rem);
+  container-type: inline-size;
+}
+.cf-flow-diagram {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) auto minmax(0, 1.15fr);
+  grid-template-rows: auto auto;
+  gap: 0 clamp(10px, 2.4vw, 28px);
+}
+.cf-flow-title {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin: 0 0 12px !important;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--case-ink);
+}
+.cf-flow-n {
+  flex: none;
+  font: 500 11.5px/1.3 var(--mono);
+  letter-spacing: 0.02em;
+  color: var(--case-dim);
+}
+.cf-flow-graph {
+  position: relative;
+  height: clamp(190px, 30cqi, 236px);
+}
+.cf-flow-graph svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.cf-flow-graph line {
+  stroke: var(--case-line);
+  stroke-width: 1.25;
+}
+.cf-flow-node {
+  position: absolute;
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  padding: 5px 11px 5px 9px;
+  border-radius: 999px;
+  background: var(--case-bg);
+  box-shadow: 0 0 0 1px var(--case-line);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--case-ink);
+  transform: translate(-50%, -50%);
+}
+.cf-flow-node.is-centre {
+  padding: 8px 15px 8px 12px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0 0 0 1.5px var(--case-ink);
+}
+.cf-flow-arrow {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  align-self: center;
+  color: var(--case-dim);
+}
+.cf-flow-arrow svg {
+  width: clamp(34px, 6cqi, 64px);
+  height: auto;
+}
+.cf-flow-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px clamp(12px, 2vw, 20px);
+  margin: 0;
+  padding: 14px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--case-rule);
+}
+.cf-flow-steps li {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--case-body);
+}
+.cf-flow-note {
+  justify-self: end;
+  margin-top: -0.5rem !important;
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--case-dim);
+}
+/* narrow: the survey row above the map, the arrow pointing down, the steps as a list */
+@container (max-width: 40rem) {
+  .cf-flow-diagram {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+  }
+  .cf-flow-diagram > :nth-child(1) {
+    order: 1;
+  }
+  .cf-flow-diagram > :nth-child(4) {
+    order: 2;
+  }
+  .cf-flow-diagram > :nth-child(5) {
+    order: 3;
+    margin-block: 14px;
+  }
+  .cf-flow-diagram > :nth-child(3) {
+    order: 4;
+  }
+  .cf-flow-diagram > :nth-child(6) {
+    order: 5;
+  }
+  .cf-flow-diagram > :nth-child(2) {
+    display: none;
+  }
+  .cf-flow-arrow svg {
+    width: 40px;
+    transform: rotate(90deg);
+  }
+  .cf-flow-node {
+    font-size: 12.5px;
+    padding: 4px 9px 4px 8px;
+  }
+  .cf-flow-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cf-flow-steps li {
+    grid-template-columns: 2.2rem minmax(0, 1fr);
+  }
+}
+
 /* ---------- cover: one design for every project (playbook §7) ----------
  * Three groups, held apart by space rather than more rules: who and what (client, title), the one line with the
  * live link at its right, then the facts (Role and Outcome under one rule, the labels under them). The title
@@ -1578,182 +1881,6 @@
   text-decoration-color: #b9b6c4;
 }
 
-/* ---------- stepper: a diagram the reader moves through ---------- */
-.cf-stepper {
-  display: grid;
-  gap: clamp(12px, 2vw, 20px);
-}
-.cf-stepper-list {
-  order: 2;
-}
-@media (min-width: 900px) {
-  .cf-stepper-list {
-    order: 0;
-  }
-}
-.cf-stepper-list {
-  display: grid;
-  gap: 2px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-@media (min-width: 900px) {
-  .cf-stepper-list {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 6px;
-  }
-  .cf-stepper .cf-stepper-list button {
-    height: 100%;
-    grid-template-columns: 1fr;
-    align-content: start;
-    padding: 12px 12px 4px 0;
-    font-size: 13.5px;
-  }
-}
-.cf-stepper-list button {
-  display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: 6px;
-  width: 100%;
-  min-height: 44px;
-  padding: 10px 0 8px;
-  border: 0;
-  border-top: 1px solid var(--case-rule);
-  border-radius: 0;
-  background: transparent;
-  color: var(--case-dim);
-  font: 500 14px/1.4 var(--sans);
-  text-align: left;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-}
-.cf-stepper-list button span {
-  font-family: var(--mono);
-  font-size: 11.5px;
-  padding-top: 2px;
-}
-.cf-stepper-list button:hover {
-  color: var(--case-ink);
-}
-.cf-stepper-list button[aria-current="step"] {
-  color: var(--case-ink);
-  box-shadow: inset 0 2px 0 var(--case-ink);
-}
-.cf-stepper-list button[aria-current="step"] span {
-  color: var(--accent);
-}
-.cf-stepper-stage {
-  position: relative;
-  width: 100%;
-  overflow: hidden;
-  border-radius: 10px;
-  background: var(--case-bg);
-  box-shadow: 0 0 0 1px var(--cf-hair);
-  aspect-ratio: 16 / 10;
-}
-.cf-stepper-stage > svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-.cf-stepper-nav {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  display: flex;
-  gap: 6px;
-}
-.cf-stepper-nav button {
-  display: inline-grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--case-line);
-  background: var(--case-bg);
-  color: var(--case-ink);
-  cursor: pointer;
-}
-.cf-stepper-nav button:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-.cf-stepper-nav svg {
-  width: 16px;
-  height: 16px;
-}
-.cf-stepper-note {
-  position: absolute;
-  left: 14px;
-  bottom: 18px;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--case-dim);
-}
-
-/* diagram internals (SVG) */
-.dp text {
-  font-family: var(--sans);
-  fill: var(--case-ink);
-}
-.dp .t-dim {
-  fill: var(--case-dim);
-}
-.dp .t-mono {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  fill: var(--case-dim);
-}
-.dp .box {
-  fill: var(--case-bg);
-  stroke: var(--case-line);
-}
-.dp .box-dash {
-  fill: none;
-  stroke: var(--case-line);
-  stroke-dasharray: 4 4;
-}
-.dp .rule {
-  stroke: var(--case-rule);
-}
-.dp .link {
-  stroke: var(--case-dim);
-  stroke-width: 1.2;
-  opacity: 0.55;
-}
-.dp .strike {
-  stroke: var(--case-red);
-  stroke-width: 1.5;
-}
-.dp .fix {
-  fill: var(--accent-tint);
-}
-.dp .g {
-  opacity: 0;
-  transition: opacity 0.5s var(--ease);
-}
-.dp .rec {
-  transition: transform 0.9s var(--ease-out), opacity 0.5s var(--ease);
-}
-.dp .m-people {
-  fill: var(--mark-people);
-}
-.dp .m-partners {
-  fill: var(--mark-partners);
-}
-.dp .m-projects {
-  fill: var(--mark-projects);
-}
-.dp .m-methods {
-  fill: var(--mark-methods);
-}
-
 /* ---------- next ---------- */
 .cf-next {
   display: grid;
@@ -1807,25 +1934,32 @@
     grid-template-rows: auto minmax(0, 1fr);
     align-content: stretch;
   }
-  /* text-only cards: the claim at the top; the body set large as a statement at the foot, then the facts */
-  .cf-sheet.is-card.is-text {
+  /* cards as tall as their content (data-size="auto"): never padded out to the screen */
+  .cf-sheet.is-card[data-size="screen"][data-layout="top"] {
     grid-template-rows: minmax(0, 1fr) auto;
-    align-content: stretch;
   }
-  .is-text .cf-head {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto minmax(0, 1fr);
+  .cf-sheet.is-card[data-size="auto"] {
+    height: auto;
+    grid-template-rows: auto;
+    align-content: start;
   }
-  .is-text .cf-body {
-    align-self: end;
-    padding: 0 0 clamp(1.5rem, 3vw, 2.5rem);
+  .cf-sheet.is-card[data-size="auto"] .cf-evidence {
+    height: auto;
+    grid-template-rows: auto;
+    padding-top: 0;
+    margin-top: clamp(0.75rem, 2.4vw, 1.75rem);
   }
-  .is-text .cf-body p {
-    max-width: 26ch;
-    font-size: clamp(1.5rem, 2.9vw, 2.35rem);
-    line-height: 1.22;
-    letter-spacing: -0.025em;
-    color: var(--case-ink);
+  .cf-sheet[data-size="auto"] .cf-evidence .cf-cq {
+    container-type: inline-size;
+    height: auto;
+  }
+  .cf-sheet[data-size="auto"] .cf-evidence .cf-row {
+    width: 100%;
+  }
+  /* a screenshot at the card's foot is never taller than the screen leaves room for */
+  .cf-bleed img,
+  .cf-toggle-stack {
+    max-height: calc(var(--cf-card-h) - 15rem);
   }
   .cf-evidence {
     height: 100%;
@@ -1891,7 +2025,7 @@
     object-fit: contain;
   }
 
-  /* framed pieces (recordings, the compare, the stepper's stage) are sized from their space */
+  /* framed pieces (recordings, the compare) are sized from their space */
   .cf-evidence .cf-cq {
     container-type: size;
     height: 100%;
@@ -1913,29 +2047,6 @@
     place-items: stretch;
   }
 
-  /* the stepper: the steps across the top, the diagram scaled under them */
-  .cf-evidence[data-fit="fill"] > .cf-stepper,
-  .cf-evidence .cf-stepper {
-    height: 100%;
-    min-height: 0;
-    grid-template-rows: auto minmax(0, 1fr);
-  }
-  .cf-evidence .cf-stepper-list {
-    order: 0;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 6px;
-  }
-  .cf-evidence .cf-stepper .cf-stepper-list button {
-    height: 100%;
-    grid-template-columns: 1fr;
-    align-content: start;
-    padding: 10px 10px 4px 0;
-    font-size: 13px;
-  }
-  .cf-evidence .cf-stepper-stage {
-    width: min(100cqw, calc(100cqh * 1.6));
-    height: auto;
-  }
 
 }
 @media (min-width: 761px) and (max-width: 1000px) and (min-height: 620px) {
@@ -1943,12 +2054,14 @@
     --cf-card-h: min(calc(100svh - 7rem), 58rem);
   }
 }
-/* side layout: the text on the left, the evidence beside it, where neither is cramped */
+/* side layout (`pair`): a column of text on the left, the evidence beside it. For a text-heavy card whose evidence
+   is tall or narrow (maps, phones, the walls, figures, the table); below 1180px it stacks. */
 @media (min-width: 1180px) and (min-height: 680px) {
   .cf-sheet.is-card.is-side {
-    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
-    grid-template-rows: minmax(0, 1fr);
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    grid-template-columns: minmax(0, 0.4fr) minmax(0, 0.6fr);
+    grid-template-rows: auto;
+    gap: 0 clamp(1.75rem, 3.4vw, 3rem);
+    align-items: start;
   }
   .is-side .cf-head {
     grid-template-columns: minmax(0, 1fr);
@@ -1958,20 +2071,116 @@
   .is-side .cf-body {
     padding-top: 1.1rem;
   }
-  .is-side .cf-evidence {
+  .cf-sheet.is-card.is-side .cf-evidence {
+    height: auto;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  /* the workshop: the stakeholder cards under the text, the walls down the right */
+  .cf-sheet.is-card.is-side .cf-evidence[data-split] {
+    display: contents;
+  }
+  .is-side .cf-evidence[data-split] > .cf-figure {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: clamp(1.25rem, 2.6vw, 2rem);
+  }
+  .is-side .cf-evidence[data-split] > .cf-steps {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  /* two images stacked down the right, each as large as the column and the screen allow */
+  .is-side .cf-evidence .cf-row {
+    display: grid;
+    gap: clamp(14px, 2vw, 20px);
+  }
+  .is-side .cf-row .cf-plate-shot img {
+    width: auto;
+    max-width: 100%;
+    max-height: calc((var(--cf-card-h) - 8rem) / 2);
+  }
+  .is-side .cf-row .cf-plate,
+  .is-side .cf-row .cf-plate-shot {
+    justify-items: start;
+  }
+  /* phones: side by side, as wide as the column allows */
+  .is-side .cf-evidence .cf-phones {
+    height: auto;
+    grid-template-rows: auto;
+    justify-items: stretch;
+    padding-inline: 0;
+    gap: clamp(16px, 2.4vw, 28px);
+  }
+  .is-side .cf-evidence .cf-phone {
+    width: 100%;
+    height: auto;
+    grid-template-rows: auto;
+  }
+  .is-side .cf-evidence .cf-phone .cf-zoom {
+    width: 100%;
+    height: auto;
+    max-height: calc(var(--cf-card-h) - 5rem);
+  }
+  /* figures: one per row, the number large on the left, its label beside it */
+  .is-side .cf-metrics:not(.is-parts) {
+    grid-template-columns: minmax(0, 1fr);
+    border-top: 0;
+  }
+  .is-side .cf-metrics:not(.is-parts) li,
+  .is-side .cf-metrics:not(.is-parts) li + li {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-rows: auto auto;
+    column-gap: 1.25rem;
+    padding: 16px 0 14px;
+    border-left: 0;
+    border-top: 1px solid var(--case-rule);
+  }
+  .is-side .cf-metrics:not(.is-parts) li:first-child {
+    border-top-color: var(--case-ink);
+  }
+  .is-side .cf-metrics:not(.is-parts) .cf-metric-value {
+    grid-row: 1 / span 2;
+    font-size: clamp(3.5rem, 7.4vw, 6.5rem);
+  }
+  .is-side .cf-metrics:not(.is-parts) .cf-metric-label {
+    align-self: end;
     margin-top: 0;
   }
-  /* the stepper's steps run down the side of its diagram */
-  .is-side .cf-stepper {
-    grid-template-rows: auto minmax(0, 1fr);
+  .is-side .cf-metrics:not(.is-parts) .cf-metric-note {
+    align-self: start;
   }
-  .is-side .cf-evidence .cf-stepper-list {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2px;
+  /* shares of a whole: the four parts across the column, the total under them */
+  .is-side .cf-metrics.is-parts .cf-metric-value {
+    font-size: clamp(2.25rem, 3.6vw, 3.4rem);
   }
-  .is-side .cf-evidence .cf-stepper .cf-stepper-list button {
-    grid-template-columns: 26px 1fr;
-    padding: 7px 0;
+  .is-side .cf-metrics.is-parts li.is-total {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    margin: clamp(1rem, 2.4vw, 1.75rem) 0 0;
+    padding-top: 16px;
+  }
+  .is-side .cf-metrics.is-parts li.is-total .cf-metric-label {
+    margin-top: 0;
+  }
+  /* the table: the type's mark only, so the two columns of names have room */
+  .is-side .cf-spec-head,
+  .is-side .cf-spec-row {
+    grid-template-columns: 14px minmax(0, 1.25fr) minmax(0, 1fr);
+    gap: 14px;
+    padding-inline: clamp(14px, 2vw, 22px);
+  }
+  .is-side .cf-spec-type {
+    font-size: 0;
+  }
+  /* still "large text" (14pt bold or more), which is what the specimen shows */
+  .is-side .cf-spec-name {
+    font-size: 19px;
+  }
+  .is-side .cf-spec-head span:first-child {
+    visibility: hidden;
   }
 }
 /* short windows: tighter text, so the evidence keeps its space */
@@ -1997,6 +2206,36 @@
   .cf-steps p:not(.cf-step-label) {
     font-size: 14px;
     line-height: 1.45;
+  }
+  /* cards as tall as their content stay inside the screen */
+  .cf-bleed img,
+  .cf-toggle-stack {
+    max-height: calc(var(--cf-card-h) - 17.5rem);
+  }
+  .cf-flow-graph {
+    height: 164px;
+  }
+  .cf-sheet[data-layout="wide"] .cf-h3 {
+    font-size: clamp(1.35rem, 2.3vw, 1.8rem);
+  }
+  .cf-flow-title {
+    margin-bottom: 8px !important;
+  }
+  .cf-flow-steps li {
+    font-size: 13px;
+  }
+  .cf-spec-head {
+    padding-block: 12px 10px;
+  }
+  .cf-spec-row {
+    padding-block: 12px;
+  }
+  .cf-evidence[data-split] > .cf-steps {
+    row-gap: 0.6rem;
+  }
+  .cf-evidence[data-split] .cf-steps p:not(.cf-step-label) {
+    font-size: 13.5px;
+    line-height: 1.4;
   }
 }
 
@@ -2066,30 +2305,6 @@
   }
 }
 @media (max-width: 599px) {
-  /* the diagram keeps a readable size and scrolls inside its frame */
-  .cf-stepper-stage {
-    aspect-ratio: auto;
-    height: 380px;
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-  }
-  .cf-stepper-stage > svg {
-    position: relative;
-    inset: auto;
-    width: 608px;
-    height: 380px;
-  }
-  .cf-stepper-note {
-    position: sticky;
-    left: 14px;
-    display: inline-block;
-    margin-top: -36px;
-    transform: translateY(-4px);
-  }
-  /* the step list does the navigating here */
-  .cf-stepper-nav {
-    display: none;
-  }
   .cf-browser {
     --bar: 28px;
   }

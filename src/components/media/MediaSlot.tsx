@@ -191,6 +191,7 @@ export function MediaSlot({ media, priority = false, compact = false }: { media:
     }
     // Case-file blocks. On a printed sheet they reduce to their first image, or to a small label.
     case "compare":
+    case "toggle":
       return (
         <MediaSlot
           media={{ kind: "image", asset: media.a.asset, alt: media.a.alt, need: media.need, ratio: "16:10", caption: media.caption }}

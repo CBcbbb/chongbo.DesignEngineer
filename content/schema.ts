@@ -94,10 +94,25 @@ export type Media =
       need: string;
     }
   | {
-      /** A step-by-step diagram the reader moves through. */
+      /**
+       * A process drawn as one diagram, readable at a glance, with its numbered steps under it. `data-pipeline`: a
+       * survey row centred on a person, split by type, linked as a map of four equal types.
+       */
       kind: "stepper";
       diagram: "data-pipeline";
       steps: string[];
+      caption?: string;
+    }
+  | {
+      /**
+       * Two views of one screen, switched by a button that shows the product's shortcut as keycaps (the button
+       * switches the picture; it never takes over the shortcut itself). `a` is shown first.
+       */
+      kind: "toggle";
+      keys: string[];
+      a: CompareSide;
+      b: CompareSide;
+      need: string;
       caption?: string;
     }
   | {
@@ -180,10 +195,13 @@ export type Section = {
   /** Lens roles for this card (playbook §3). */
   lenses?: Partial<Record<Lens, LensRole>>;
   /**
-   * Case-file template: text above the evidence (`stack`), or beside it (`pair`, evidence on the right) on screens
-   * wide and tall enough that neither is cramped. Use `pair` for long copy or tall evidence.
+   * Case-file template: each card's composition, chosen for its content (playbook §7).
+   * `stack`: the claim and reasoning, then the evidence across the card. `pair`: a column of text on the left, the
+   * evidence beside it (tall or narrow evidence: maps, phones, figures, a table; stacks below 1180px). `top`: the
+   * evidence opens the card, the text follows. `wide`: the claim across the card, the reasoning in two columns, then
+   * the evidence.
    */
-  layout?: "stack" | "pair";
+  layout?: "stack" | "pair" | "top" | "wide";
   /** Keys shown as keycaps under the body, e.g. ["Tab", "←", "→"]. */
   keys?: string[];
   /** Case-file template: show the body as a numbered list of short points (e.g. results), set large. */

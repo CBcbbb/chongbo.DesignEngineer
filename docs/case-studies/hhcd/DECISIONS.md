@@ -90,3 +90,16 @@ You said some images had too many frames, the purple canvas made no sense, and i
 - **The map today:** the same flat window on the canvas.
 - Written into the playbook (§6–7) and SHARED-CHANGES.md.
 
+## Each card on its own terms (11 Oct, late)
+
+You said the project is text-heavy, so the Nike anatomy (claim on the left, body on the right, picture underneath) shouldn't be on every card; the first picture was too small, the data diagram wasn't readable, and 02.1 had too much empty space. Now:
+
+- **Cards are as tall as their content.** No card is padded out to the screen; only the stacked windows and recordings (02.2, 02.3, 02.4) are a screen tall, because the product needs the room. Nothing is taller than the screen at 1280 × 720.
+- **Four compositions, chosen per card:**
+    - **Picture first** (`top`): 01.1 VOICE (the screen runs the card's full width, to its top and side edges), 01.6 table view, 02.3 guide.
+    - **Text column beside the evidence** (`pair`): 01.2 the two maps stacked on the right; 01.4 text and stakeholder cards on the left, the walls down the right; 02.1 numbers; 02.5 phones; 02.6 table; 02.7 99 · 0 · 0 as a column of large figures.
+    - **Claim across the card** (`wide`): 01.5, the reasoning in two columns over the diagram.
+    - **Text, then evidence** (`stack`): 01.3 (its screen runs full width to the card's foot), 02.2 the switch, 02.4 keyboard.
+- **01.5 redrawn as one diagram:** left, a survey row with Person A at its centre; right, the same kinds of entry as four types of equal weight, linked through the projects. The five steps sit under it, and their numbers sit on the diagram where each happens (01–03 the survey, 04 the split, 05 the map). Real text sizes, no stepping. Sample labels, as before.
+- **01.6:** "Ctrl + E" is now a button that switches the picture between VOICE's table and its network, as the shortcut did in the product. It shows the network screenshot that 01.1 also shows; the table is shown first.
+

@@ -12,19 +12,31 @@ import { BrowserFrame } from "./Frame";
 import { CapabilityIcon, OutArrow, WhoIcon } from "./icons";
 
 /**
- * The canvas (a dot field that is the card itself, not a box) sits under product screens, prototypes and diagrams;
- * photos, tables and numbers sit on plain paper.
+ * The canvas (a dot field that is the card itself, not a box) sits under the live product's windows and phone
+ * screens; everything else sits on plain paper or runs to the card's edges.
  */
 function canvasOf(section: Section): "" | undefined {
   const m = section.media;
-  if (!m || section.steps?.length) return undefined;
-  return m.kind === "image" || m.kind === "group" || m.kind === "compare" || m.kind === "video" || m.kind === "stepper" ? "" : undefined;
+  if (!m || section.steps?.length || (section.layout && section.layout !== "stack")) return undefined;
+  return m.kind === "compare" || m.kind === "video" || (m.kind === "group" && m.ratio === "9:16") ? "" : undefined;
 }
 
 /**
- * How the evidence sits in a card of fixed height (playbook §7, "one card, one screen"): pictures, recordings and
- * diagrams `fill` the space under the text and scale to it; tables, figures and steps keep their own height and sit
- * at the foot.
+ * How tall a card is (playbook §7). `screen`: the evidence needs the whole screen (the product's windows, recordings,
+ * phones), so the card is one screen tall and the evidence scales into it. `auto`: the card is as tall as its
+ * content, never padded out, so a short card stays short.
+ */
+function sizeOf(section: Section): "screen" | "auto" {
+  const m = section.media;
+  if (!m || section.steps?.length || section.layout === "pair") return "auto";
+  if (m.kind === "video" || m.kind === "compare") return "screen";
+  if (m.kind === "group" && m.ratio === "9:16") return "screen";
+  return "auto";
+}
+
+/**
+ * How the evidence sits in a card one screen tall: pictures, recordings and diagrams `fill` the space under the text
+ * and scale to it; tables, figures and steps keep their own height and sit at the foot.
  */
 function fitOf(section: Section): "fill" | "foot" {
   const k = section.media?.kind;
@@ -43,7 +55,7 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
   const hasEvidence = !!section.media || !!section.steps?.length;
   const cls = ["cf-sheet", "is-card", dark && "is-dark", side && "is-side", !hasEvidence && "is-text"].filter(Boolean).join(" ");
   return (
-    <section id={section.id} className={cls} data-canvas={canvasOf(section)} aria-labelledby={`${section.id}-title`}>
+    <section id={section.id} className={cls} data-canvas={canvasOf(section)} data-size={sizeOf(section)} data-layout={section.layout ?? "stack"} aria-labelledby={`${section.id}-title`}>
       <div className="cf-head">
         <div>
           <p className="cf-meta">
@@ -76,7 +88,7 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
       {section.facts && <Facts items={section.facts} />}
       {hasEvidence && (
         <div className="cf-evidence" data-fit={fitOf(section)} data-split={section.media && section.steps?.length ? "" : undefined}>
-          {section.media && <CaseMedia media={section.media} index={idx} url={url} />}
+          {section.media && <CaseMedia media={section.media} index={idx} url={url} bleed={!section.steps?.length} />}
           {section.steps && section.steps.length > 0 && <StepsRow steps={section.steps} />}
         </div>
       )}
