@@ -97,6 +97,7 @@ The panel suggests a field for each role, using aliases and industry terms ("ccy
 ### 04.1 From the data model to the interface
 
 - **Role:** I designed the contract model, the store's interface and the preview, and built them, front end and server, with AI coding tools.
+- **Design system:** Every component and the store's interface follow the design system I built.
 - **Context:** Logistics infrastructure company. I'm its sole designer.
 
 ---
