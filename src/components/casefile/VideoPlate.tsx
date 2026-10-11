@@ -1,36 +1,35 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { BrowserFrame } from "./Frame";
 
-const Play = () => (
-  <svg viewBox="0 0 20 20" aria-hidden="true">
-    <path d="M6 4.5v11l9-5.5-9-5.5Z" fill="currentColor" />
-  </svg>
-);
-const Replay = () => (
-  <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
-    <path d="M2.5 8a5.5 5.5 0 1 0 1.7-4" />
-    <path d="M2.5 2.5v3h3" />
-  </svg>
-);
-const Pause = () => (
-  <svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor">
-    <rect x="3.5" y="3" width="3" height="10" rx="1" />
-    <rect x="9.5" y="3" width="3" height="10" rx="1" />
-  </svg>
-);
+/** Pauses every other video and audio element on the page, so only one thing plays at a time. */
+export function pauseOthers(self: HTMLMediaElement) {
+  document.querySelectorAll<HTMLMediaElement>("video, audio").forEach((m) => {
+    if (m !== self && !m.paused) m.pause();
+  });
+}
+
+const clock = (t: number) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+
+/** Play and pause as one shape: the two halves of the triangle slide apart into two bars. */
+function PlayMorph({ playing }: { playing: boolean }) {
+  return <span className={`cf-morph${playing ? " is-pause" : ""}`} aria-hidden="true" />;
+}
 
 /**
- * A recording on its plate. It never plays by itself: the poster frame shows until the reader presses play,
- * which also respects reduced motion (playbook §6).
+ * A recording of the product, whole, in a browser window (playbook §6). It plays once when it comes into view;
+ * with reduced motion it rests on its first frame until the reader presses play. Controls are serious and complete
+ * (playbook §7): the whole screen plays and pauses, and the window's toolbar holds a scrubber and the time, so
+ * nothing adds height. The recordings have no sound, so there is no sound control.
  */
 export function VideoPlate({
   src,
   webm,
   poster,
   label,
-  caption,
-  index,
+  url,
+  ratio,
   seconds,
 }: {
   src: string;
@@ -38,65 +37,123 @@ export function VideoPlate({
   webm?: string;
   poster?: string;
   label: string;
-  caption?: string;
-  index: string;
+  url: string;
+  ratio: number;
+  /** Length, shown before the recording has loaded. */
   seconds?: number;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
-  const [state, setState] = useState<"idle" | "playing" | "paused" | "ended">("idle");
+  const [playing, setPlaying] = useState(false);
+  const [time, setTime] = useState(0);
+  const [duration, setDuration] = useState(seconds ?? 0);
+  const total = duration || 1;
 
-  const play = () => {
+  // The metadata may load before hydration, so read the length directly as well as on the event.
+  useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    if (state === "ended") v.currentTime = 0;
-    void v.play();
+    const read = () => {
+      if (Number.isFinite(v.duration) && v.duration > 0) setDuration(v.duration);
+    };
+    read();
+    v.addEventListener("durationchange", read);
+    return () => v.removeEventListener("durationchange", read);
+  }, []);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v || window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (!e?.isIntersecting) return;
+        io.disconnect();
+        if (v.paused && v.currentTime === 0) {
+          v.preload = "auto";
+          void v.play().catch(() => {});
+        }
+      },
+      { threshold: 0.6 },
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, []);
+
+  const toggle = () => {
+    const v = ref.current;
+    if (!v) return;
+    if (v.paused) {
+      if (v.ended) v.currentTime = 0;
+      void v.play().catch(() => {});
+    } else v.pause();
   };
-  const pause = () => ref.current?.pause();
+
+  const seek = (t: number) => {
+    const v = ref.current;
+    setTime(t);
+    if (!v) return;
+    if (v.readyState >= 1) v.currentTime = t;
+    else {
+      v.addEventListener("loadedmetadata", () => (v.currentTime = t), { once: true });
+      v.preload = "auto";
+      v.load();
+    }
+  };
 
   return (
-    <figure className="cf-figure">
-      <div className="cf-plate">
-        <div className="cf-video cf-plate-shot">
-          <video
-            ref={ref}
-            poster={poster}
-            muted
-            playsInline
-            preload="none"
-            aria-label={label}
-            onPlay={() => setState("playing")}
-            onPause={(e) => setState(e.currentTarget.ended ? "ended" : "paused")}
-            onEnded={() => setState("ended")}
-          >
-            {webm && <source src={webm} type="video/webm" />}
-            <source src={src} type="video/mp4" />
-          </video>
-          {state !== "playing" && (
-            <button type="button" className="cf-play" onClick={play}>
-              <span>
-                {state === "ended" ? <Replay /> : <Play />}
-                {state === "ended" ? "Play again" : state === "paused" ? "Resume" : "Play"}
-                {seconds && state === "idle" ? <small>{seconds}s</small> : null}
+    <figure className={`cf-figure cf-rec${playing ? " is-playing" : ""}`}>
+      <BrowserFrame
+        url={url}
+        ratio={ratio}
+        bar={
+          <span className="cf-rec-bar">
+            <span className="cf-track">
+              <span className="cf-track-bar" aria-hidden="true">
+                <i style={{ transform: `scaleX(${Math.min(1, time / total)})` }} />
               </span>
-            </button>
-          )}
-        </div>
-      </div>
-      <div className="cf-video-bar">
-        {caption ? (
-          <figcaption className="cf-caption">
-            <b>{index}</b>
-            {caption}
-          </figcaption>
-        ) : (
-          <span />
-        )}
-        {state === "playing" && (
-          <button type="button" className="cf-ghost-btn" onClick={pause}>
-            <Pause /> Pause
-          </button>
-        )}
-      </div>
+              <input
+                type="range"
+                min={0}
+                max={total}
+                step={0.1}
+                value={Math.min(time, total)}
+                aria-label="Position in the recording"
+                aria-valuetext={`${clock(time)} of ${clock(total)}`}
+                onChange={(e) => seek(Number(e.currentTarget.value))}
+              />
+            </span>
+            <span className="cf-clock">
+              {clock(time)}
+              <i> / {clock(duration)}</i>
+            </span>
+          </span>
+        }
+      >
+        <video
+          ref={ref}
+          poster={poster}
+          muted
+          playsInline
+          preload="metadata"
+          tabIndex={-1}
+          aria-label={label}
+          onPlay={(e) => {
+            pauseOthers(e.currentTarget);
+            setPlaying(true);
+          }}
+          onPause={() => setPlaying(false)}
+          onEnded={() => setPlaying(false)}
+          onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
+        >
+          {webm && <source src={webm} type="video/webm" />}
+          <source src={src} type="video/mp4" />
+        </video>
+        {/* The one play control: the whole screen, with the button at its centre. */}
+        <button type="button" className="cf-screen" aria-label={playing ? "Pause the recording" : "Play the recording"} onClick={toggle}>
+          <span className="cf-bigplay">
+            <PlayMorph playing={playing} />
+          </span>
+        </button>
+      </BrowserFrame>
     </figure>
   );
 }

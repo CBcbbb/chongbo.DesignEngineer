@@ -11,7 +11,7 @@ export const nike: Project = {
   oneLiner: "Style stories from fashion influencers, designed to be read, shopped and returned to.",
   context: "Nike App, China · UI design internship at an advertising agency",
   role: "UI Designer",
-  outcome: "Launched nationwide as a home-screen section of the official Nike App. Nike renewed the contract for the following seasons.",
+  outcome: "Launched across China as a section of the Nike App's home screen. On the strength of the first season, Nike renewed the agency's contract for the seasons that followed.",
   client: "Nike China",
   status: "Shipped",
   stack: ["Figma", "Lottie"],
@@ -96,7 +96,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Reusable components, built for handover",
       body: [
-        "The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them. It cut the back-and-forth between design and engineering.",
+        "The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them.",
       ],
       signals: ["reusable-components", "design-systems", "design-eng-gap"],
       media: {
@@ -172,9 +172,9 @@ export const nike: Project = {
     {
       id: "star-voice",
       kind: "decision",
-      title: "Star Voice Q&A: ask now, answered live",
+      title: "Star Voice Q&A",
       body: [
-        "I designed it to hold attention between volumes: the next influencer records a short voice teaser, and readers vote on each other's questions. It shipped, and was recommended for wider use in other campaigns.",
+        "To maintain audience interest between volumes and build anticipation for the next influencer, I designed a new feature.",
       ],
       signals: ["brand-storytelling", "motion-interaction", "prototyping"],
       media: {
@@ -185,32 +185,29 @@ export const nike: Project = {
         ratio: "1:1",
       },
     },
-    // Printed sheets and the AI. On the page, the outcome is the cover's Outcome line, which carries this id.
     {
       id: "outcome",
       kind: "outcome",
-      title: "Nike renewed for the following seasons",
+      title: "Design that helped win Nike's next seasons",
       body: [
-        "The feature launched nationwide as a home-screen section of the official Nike App, on a contract that covered one season.",
-        "UI design internship at an advertising agency. Nike's marketing team set the brief; Nike's engineers built it.",
+        "As the agency's sole UI designer, I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.",
       ],
-      signals: ["end-to-end", "brand-storytelling"],
-    },
-    {
-      id: "handoff",
-      kind: "retrospective",
-      title: "What I'd do now: take motion from idea to production myself",
-      body: [
-        "I specified the like in four states and handed it over in Figma. It shipped as a plain red heart.",
+      // The results of the three parts, in the business's terms (from the original case study).
+      steps: [
+        {
+          title: "Delivery",
+          text: "One component system made each volume faster to deliver, with less back-and-forth between design and Nike's engineers.",
+        },
+        {
+          title: "Conversion",
+          text: "Product tags and larger product cards made the products easier to find in the stories and gave readers a clearer path from story to product. Nike's feedback was positive.",
+        },
+        {
+          title: "Engagement",
+          text: "Likes, the prize draw and Star Voice Q&A lifted engagement beyond what Nike expected, and Star Voice was recommended for other campaigns.",
+        },
       ],
-      signals: ["design-eng-gap", "motion-interaction", "judgement"],
-      media: {
-        kind: "image",
-        asset: "nike/print/handoff.jpg",
-        alt: "The like as specified in four states, beside the plain red heart that shipped.",
-        need: "The like as specified and as shipped.",
-        ratio: "16:10",
-      },
+      signals: ["end-to-end", "conversion", "brand-storytelling"],
     },
   ],
   prompts: ["Show me some brand or marketing work.", "Have you shipped something consumer-facing?", "How do you use motion?"],

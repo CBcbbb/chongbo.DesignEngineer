@@ -157,7 +157,7 @@ function palettePairs(): Pair[] {
   return out;
 }
 
-/** HHCD's cover in dark mode (case-palettes.css: the cover turns ink; the network sits in a white screen). */
+/** HHCD's cover and work sheet in dark mode (case-palettes.css: they turn ink; the product keeps its white screen). */
 const hhcdDarkCover: Pair[] = [
   { fg: "#f2f1f4", bg: "#1c1b21", where: "dark hhcd: cover title and text", min: TEXT },
   { fg: "#aeacb8", bg: "#1c1b21", where: "dark hhcd: cover labels", min: TEXT },
@@ -165,10 +165,28 @@ const hhcdDarkCover: Pair[] = [
   { fg: "#8d89d6", bg: "#1c1b21", where: "dark hhcd: people mark on the cover", min: LARGE },
   { fg: "#dc2680", bg: "#1c1b21", where: "dark hhcd: partners mark on the cover", min: LARGE },
   { fg: "#148d66", bg: "#1c1b21", where: "dark hhcd: methods mark on the cover", min: LARGE },
+  { fg: "#aeacb8", bg: "#2a2930", where: "dark hhcd: recording length in the toolbar", min: TEXT },
+  { fg: "#f2f1f4", bg: "#2a2930", where: "dark hhcd: recording time in the toolbar", min: TEXT },
+  { fg: "#f2f1f4", bg: "#2a2930", where: "dark hhcd: scrubber thumb on the toolbar", min: 3 },
+  { fg: "#f2f1f4", bg: "#1c1b21", where: "dark hhcd: capability label text", min: TEXT },
+  { fg: "#aeacb8", bg: "#1c1b21", where: "dark hhcd: address in the browser frame", min: TEXT },
+];
+
+/** The browser frame round the product (case-file.css), the same in every project in light mode. */
+const browserFrame: Pair[] = [
+  { fg: "#5b5966", bg: "#ffffff", where: "browser frame: address", min: TEXT },
+  { fg: "#5b5966", bg: "#f1f0f3", where: "browser frame: toolbar", min: TEXT },
+  { fg: "#22212a", bg: "#f1f0f3", where: "browser frame: recording time", min: TEXT },
+  { fg: "#22212a", bg: "#f1f0f3", where: "browser frame: scrubber thumb", min: 3 },
+  { fg: "#ffffff", bg: "#22212a", where: "recording: play button glyph", min: LARGE },
+  { fg: "#ffffff", bg: "#3a3946", where: "recording: play button glyph, hovered", min: LARGE },
+  { fg: "#22212a", bg: "#ffffff", where: "light hhcd: capability label text", min: TEXT },
+  { fg: "#22212a", bg: "#ffffff", where: "recording: focus ring on the screen", min: 3 },
 ];
 
 const all = [
   ...hhcdDarkCover,
+  ...browserFrame,
   ...pairs(light, "light"),
   ...pairs(dark, "dark"),
   ...casePairs(light, "light"),

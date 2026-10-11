@@ -2,7 +2,7 @@
 
 Title: **Helen Hamlyn Centre Data Platform**. Slug stays `hhcd-data-platform`.
 
-Playbook §8 step 3. Approved headings, 10 October 2026. Body copy is step 4.
+Playbook §8 step 3. Approved headings, 10 October 2026. Body copy is step 4. Brought up to the playbook of 11 October 2026 (see "Draft 4 changes" below).
 
 ## Framing
 
@@ -23,7 +23,7 @@ Capabilities follow playbook §2. Lens roles: `lead` (opens here), `in` (printed
 | `brief` | Accessibility as the starting point | E | lead | in | · | VOICE graph view (paper fig. 15) | |
 | `no-borders` | A network instead of a geographical map | D, research | in | · | · | Geographic prototypes (paper figs 1, 4) | |
 | `sample-data` | Working prototypes on sample data | B, D | in | in | · | Prototype with sample labels (paper fig. 5) | |
-| `workshop` | A 75-minute workshop with 14 stakeholders | research, E | in | · | · | Steps block: the three walls (paper figs 10–12), stakeholder cards (fig. 9) | [higher-resolution wall photos] |
+| `workshop` | A 75-minute workshop with 14 stakeholders | research, E | in | · | · | Steps block: the three walls, whole photos from Chongbo's originals | |
 | `four-types` | Why the data is collected by person but mapped by type | B, C | in | in | · | Animated stepper: from what data is needed to linked records | |
 | `dual-view` | A table view beside the network | E | in | in | · | VOICE table view (paper fig. 16) | |
 | | **Part 2 · Helen Hamlyn Centre** | | | | | | |
@@ -33,8 +33,8 @@ Capabilities follow playbook §2. Lens roles: `lead` (opens here), `in` (printed
 | `keyboard` | Accessibility – keyboard navigation | E, D | · | in | · | Recording of arrow-key navigation in both arrangements | |
 | `narrow-screens` | Responsive design | E, D | in | in | lead | `path-390.png`: details as a sheet over the map | |
 | `contrast` | Accessibility – colour contrast | E, C | · | in | in | Code: brand colour and text variant | |
-| `results` | Results | B | in | in | in | Metric strip: Lighthouse 99 · WAVE 0 errors · axe 0 violations · 27/27 contrast pairs | |
-| `role` | Designed, specified and built alone | B, F | in | in | in | None needed | [screen-reader / Safari / Firefox testing] |
+| `testing` | Accessibility – testing | E | · | in | in | Metric strip: Lighthouse 99 · WAVE 0 errors (VOICE) · axe 0 violations (Centre's version) | |
+| `role` | Designed, specified and built alone | B | in | in | in | Facts: Context, Team (the closing card) | [what I'd do now: see DECISIONS.md] |
 
 Dropped: `homepage-removed` (the turn isn't needed) and `own-page` (adds nothing). `web` now opens on `narrow-screens`.
 
@@ -58,6 +58,10 @@ Copy may only use these, or what Chongbo adds later.
 - The Centre uses the platform now. No launch date in the copy.
 - No teaching line, and no "what failed / what I'd change" in the copy.
 - In the final design, the map is the homepage, because it's a tool, not a marketing site. The map is free by default, with an option to sort it into four columns.
+
+**From Chongbo, in earlier conversations (his memory notes):**
+
+- He was a research assistant at Brunel University on VOICE. (Used on the closing card's Context line; see DECISIONS.md.)
 
 **From the DRS 2026 paper (Chongbo's own unpublished record, VOICE):**
 
@@ -84,7 +88,8 @@ Copy may only use these, or what Chongbo adds later.
   - Mobile: details open as a sheet over the lower part of the map, which stays usable. Map controls have 40px touch targets, and nothing scrolls sideways at 320px.
   - Arrow keys move to the nearest entry in either arrangement. The guide works by keyboard alone.
   - Checks: 57 unit and component tests, 43 Playwright tests at 1440px and 390px (including axe on the guide, the path and the columns), and 27 contrast pairings.
-- Tested by Chongbo in Chrome, Safari and Firefox. Not yet tested with a screen reader.
+- Tested by Chongbo in Chrome, Safari and Firefox.
+- VoiceOver + Safari (11 Oct, live site): Chongbo tested it himself and states it works. A short assisted session recorded: the skip link is announced first; the details panel is a `complementary` landmark with an `h2`. One minor issue: the entry name is read twice in the panel's announcement (fix belongs in the rebuild repo).
 - Chromium accessibility-tree check (10 Oct, local build): map entries announced as "name, type, n connections"; Enter moves focus to the details heading, Escape returns it; search results announced ("39 entries match 'design'."); the table has a caption, column and row headers. This is not a screen-reader test. Live at https://helen-hamlyn-centre-for-design-data.vercel.app/ (48 entries, 104 connections). The Centre uses this version.
 
 ## Image inventory
@@ -93,7 +98,8 @@ Copy may only use these, or what Chongbo adds later.
 |---|---|---|
 | Keep | Paper figs 1, 4 (geographic prototypes) | Shows what came before the network |
 | Keep | Paper figs 15, 16 (VOICE graph and table views) | Proof that VOICE was built and launched |
-| Keep | Paper figs 9–12 (stakeholder cards, the three walls) | The workshop steps block |
+| Keep | The three walls (Chongbo's originals IMG_0941–0943, whole) | The workshop steps block |
+| Cut | Paper fig. 9 (stakeholder cards) | Process artefact that carries no decision (playbook §6); the body names the cards. File kept in `public/assets/hhcd/workshop-cards.png` |
 | Keep | Paper fig. 5 (prototype with sample labels) | Proof that the prototypes ran on sample data |
 | Keep | Paper fig. 22 (WAVE result, cropped to the summary) | `results` |
 | Keep | Rebuild `columns-1440`, `path-390` | Columns arrangement, phone sheet |
@@ -102,13 +108,14 @@ Copy may only use these, or what Chongbo adds later.
 | Cut | Paper figs 2, 3, 17–21 | Duplicates, or too much text to read |
 | Cut | Paper fig. 23; rebuild `home-390`, `columns-390`, `path-1440`, `table-390`, `project-390` | Process material that carries no decision, or duplicates |
 | Redraw | Paper figs 13, 14 (knowledge structure) | Becomes the `four-types` before / after, in the site's style |
-| Capture | Constellation with no guide card, 1440px | Cover. Test capture works locally |
+| Capture | Constellation with no guide card, 1440px | The work sheet after the cover, whole, in a browser frame (`cover.png`). `cover-network.png` (a crop) is no longer used |
 | Capture | Keyboard recording in both arrangements; the switch as video | Captured locally from the rebuild without changing it |
 | Missing | Dark-mode screens | The product has none. Use a mount on `--accent-2` |
 
 ## Gaps
 
-1. VoiceOver test, run in a separate conversation (`PROMPT-voiceover.md`). Browsers are done: Chrome, Safari and Firefox.
+1. Larger originals of `voice-graph.png` (1386px) and `voice-simple-view.png` (1138px): under twice their display size (playbook §6). Listed in `docs/ASSETS.md`.
+2. "What I'd do now" for the closing card (playbook §4). Chongbo said earlier: no "what failed / what I'd change". Open in DECISIONS.md.
 
 ## Id changes
 
@@ -116,4 +123,33 @@ Recorded in `SHARED-CHANGES.md` (2026-10-11). The fallback default is now `hhcd-
 
 ## Built
 
-`content/projects/hhcd.ts` follows `copy.md` draft 3 word for word. Card order in the build: Part 1 · VOICE (`brief`, `no-borders`, `sample-data`, `workshop`, `four-types`, `dual-view`), Part 2 · Helen Hamlyn Centre (`taken-up`, `arrangements`, `guide`, `keyboard`, `narrow-screens`, `contrast`, `results`, `role`).
+`content/projects/hhcd.ts` follows `copy.md` draft 4 word for word. Card order in the build: Part 1 · VOICE (`brief`, `no-borders`, `sample-data`, `workshop`, `four-types`, `dual-view`), Part 2 · Helen Hamlyn Centre (`taken-up`, `arrangements`, `guide`, `keyboard`, `narrow-screens`, `contrast`, `testing`, `role`). `results` is cut: the cover's Outcome says it.
+
+## Draft 4 changes (playbook of 11 October 2026)
+
+- Cover: client, title with the live link beside it, one line, Role and Outcome in a row, capability labels. The intro paragraph and the "Live" status are gone (they repeated the client and the Outcome).
+- The work: a sheet straight after the cover with the live map, whole, in a browser window.
+- Cards: index above the heading; no kind labels, capability tags or captions; one card, one screen on tablets and computers.
+- Recordings: whole, in a browser window; they play once when they come into view; the screen plays and pauses; a scrubber and the time sit in the window's toolbar; one plays at a time.
+- "What this shows" is three capability labels, not links. No playful micro-interactions in the case file.
+
+## Workshop photos (11 October 2026)
+
+Originals from Chongbo's folder "Pictures prepared for paper" (not in the repo). Chosen and cropped:
+- `workshop-wall-content.jpg` from `IMG_0941.jpeg`.
+- `workshop-wall-scope.jpg` from `IMG_0942.jpeg`.
+- `workshop-wall-functionality.jpg` from `IMG_0943.jpeg`.
+
+Left out: every photo with people in it, including from behind (Chongbo's call), and `IMG_2848.HEIC`, a whiteboard unrelated to this project. Originals now live outside the repo, in `~/Documents/GitHub/HHCD paper photos`.
+
+## Browser accessibility check (10–11 October 2026, run by Chongbo in a separate session)
+
+Source: the report Chongbo pasted on 11 October. It used the desktop app's built-in Chromium browser, the accessibility tree and keyboard input. It was not a VoiceOver or Safari test.
+- VOICE (https://voice-knowledge-platform.vercel.app/, still online):
+  - map entries can't be focused by keyboard;
+  - filters are `div`s, not checkboxes;
+  - project and method labels fail AA at about 10px;
+  - the feedback button isn't keyboard-accessible.
+- HHCD rebuild:
+  - map, filters, details, live announcements, dialogs and the table all pass.
+  - Four smaller issues were passed to the rebuild's conversation: "Fit" hides labels, the path highlight persists, mobile Filters ignores Escape, and "By type" headings are about 8px.

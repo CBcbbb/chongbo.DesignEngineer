@@ -33,27 +33,42 @@ The case file is built into the site from the approved v3 prototype, with your t
 ## Changes after your review (11 Oct, late morning): one thing said once
 
 18. **Cover.** The intro paragraph is gone; the line under the title says what the feature is, and two facts follow (after HHCD's cover): Role "UI Designer"; Outcome "Launched nationwide as a home-screen section of the official Nike App. Nike renewed the contract for the following seasons." The kicker is "Nike China". Team is off the cover (your call, 11:23); the brief and build credits stay on the printed outcome sheet. Full text in `copy.md` (draft 8).
-19. **"Launched"** is past tense because the feature ran over several seasons; if it's still running today, "Live nationwide" is the HHCD-style alternative.
-20. **The closing outcome card is gone**, because the cover now says the same thing. Part 04 is "Reflection", with one card (What I'd do now). The printer's outcome sheet links to the cover's Outcome line.
+19. **"Launched"** stays: the section is no longer in the app (you confirmed).
+20. ~~The closing outcome card is gone~~: back, see 29.
 21. **Card labels:** index only. The kind labels and capability pills repeated the evidence ("Before and after"), the heading ("Visual style") or each other ("Design system" + "Design systems"). The cover chips still map the three capabilities.
 22. **Copy:** every body sentence that restated its heading is cut or rewritten (full list in `copy.md`). One heading changed: 02.2 is now "Products as part of the story" (was "Larger product cards", which the body then repeated). Star Voice's four-step loop (Preview, Ask, Vote, Answered live) is gone: the heading and body already say it.
 23. **Recording:** heading "Screen recording"; the YouTube link sits under it (it was on the outcome card).
 24. **Layout:** 01.1 is back to text on top and the tabs down the left of the canvas. The label-to-heading gap is fixed (a reset was zeroing it). The wireframe inset is pinned to the canvas's top-right corner and overhangs it. 02.2's phone screens are larger (tighter field, no width cap): about 274 × 538 px at 1440 × 900, the most a card one screen tall allows for two full phones side by side.
 
-## Images: originals needed
+## Changes after your review (11 Oct, midday)
 
-Measured at 1440 × 900 on a 2× screen: a file needs to be twice its display width to look sharp.
+26. **Originals in.** From your "high-quality photos" folder: the five framing devices (3–4×), the three imagery templates and the poster card (3×), both rankings (3×), the four retouching photos (1332 × 2000, saved as quality-92 JPEG) and the Star Voice screen. Every image on the page is now at least twice its display size. The original retouching photos were 4 px wider than the retouched ones; I trimmed 2 px from each side so the slider lines up.
+27. **Image quality 90.** `next.config.ts` now allows quality 90 (you approved it); every Nike image uses it.
+28. **Star Voice.** The notes from your original image are back, set as text beside the screen so they stay sharp and readable. Heading "Star Voice Q&A"; the body is your original paragraph up to where the notes take over, plus the result. "Episodes" and "guest" read "volumes" and "influencer", to match the rest of the page.
+29. **Openers** list their cards again. **The closing card** is back as 04.1; it adds the context and the team (the cover already gives the outcome). **The shoebox** plays once when it comes into view (not with reduced motion), and Replay plays it again.
+30. **"Image and text"** in 01.1 is larger (the canvas has less padding); the retouching sliders are larger too.
+31. **Sound.** The recording now has its sound (from your original file). It plays only when someone presses Play, a chapter or the screen; nothing plays on its own.
+32. **Recording controls.** One play control: the screen itself, with a lit orange gradient button at its centre; pressed, the triangle morphs into pause and the button fades (it comes back on hover). In the phone's bezel: a progress bar you can drag (gradient fill, a dot per chapter, a thumb on hover), the time (0:19 / 0:50) and the sound. The section is no taller than before. The chapter now playing draws its progress line.
+33. **Voice teaser.** A gradient play button on the bubble's record dot; a hint above it, "Tap to listen · 0:05", until the first play; while it plays, a ring round the button fills and the screenshot's own waveform turns orange. Starting it pauses the recording, and the other way round.
+34. **No playful micro-interactions in the case file** (your call, 13:20): the reference you sent is for the portfolio's own shell. Removed: wobbling letters, scrambling times, the hand-drawn loop, the flying arrow, the looping Replay, sound rings. The playbook now says so (§7, Interaction and motion).
+35. **What this shows** is one line of labels with small icons, not links: a capability spans several cards, so a jump to one misled. The playbook's cover rule now says the same, so HHCD's chips change too.
 
-| Card | File (in `public/assets/nike/`) | Now | Shown at | Please export |
-|---|---|---|---|---|
-| 01.3 Retouching | `retouch-1-original.png`, `retouch-1-after.png`, `retouch-2-original.png`, `retouch-2-after.png` | 334 × 500 (from Wix) | 313 × 470 | The four photos from your Photoshop files or the Figma "Retouching" frame, at least 1000 px wide. Same crop for each original/retouched pair. |
-| 02.3 Star Ranking | `ranking-before.png`, `ranking-after.png` | 375 px wide | 188 px | The old list and RANK LIST OP2 from Figma at 3×. |
-| 01.1 Framing device | `gs-logo-lockup.png`, `gs-header-one-line.png`, `gs-key-message.png`, `gs-text-simplified.png`, `gs-image-text-combo.png` | about 500 px wide (sharp, but they can only be shown small) | 253 px | The five configurations from the "Creative System" page at 4×, so they can fill the canvas. |
+36. **04.1 is back to its first version** (your call, 13:33): "One season became several", with Outcome and Role. The YouTube link stays with the recording.
+37. **Play buttons** are flat Nike orange, like the rest of the page (no 3D gradient or glow). The voice button has no progress ring: the waveform shows the progress. The "Tap to listen · 0:05" hint stays. The shoebox loops while it's in view (no Replay button); clicking it pauses it, and keyboards get a pause button when they reach it.
 
-Drop them in under the same names and I'll update the sizes. Until then these eleven are served as they are (no recompression), which is the best the current files can look. Everything else on the page is at least twice its display size.
+38. **Cover outcome reworded** (13:41): "Launched across China as a section of the Nike App's home screen. On the strength of the first season, Nike renewed the agency's contract for the seasons that followed." "Across China" in place of "nationwide" (an app isn't rolled out region by region); "official" dropped (the Nike App is Nike's own); "the agency's contract" says whose contract; "On the strength of the first season" carries your point that the renewal followed the work.
 
-25. **Recompression.** The site's image optimiser saves at quality 75, which can soften text in screenshots. Raising it needs a one-line change to `next.config.ts` (shared, proposed in `SHARED-CHANGES.md`).
+39. **The recording, re-timed from the footage.** Every moment now has a start and an end measured frame by frame (Opening video 0:04–0:10, Lock-up on the cover 0:13–0:16, Headline framing device 0:21–0:22, Several views 0:23–0:24, Product tag 0:24–0:26, Product cards 0:26, Headline typed in 0:26–0:28, Like 0:28–0:30, Poster card 0:40–0:42, Star Voice Q&A 0:42–0:48, Star Ranking 0:48–0:50). The list is in the order things happen, each marked Read, Shop or Return, and lights up only while that moment is on screen. The progress bar has no chapter dots.
+40. **"See it at" opens a clip beside the card** instead of scrolling to the top: a small player plays that moment once (Play again at the end); Escape, the close button or a click outside closes it. 01.2 (Visual style) gained one, for the poster card at 0:40.
+41. **01.4 leads with the wireframes again** (your call, 13:51), redrawn from the original slide: before, one long column with an arrow down; after, the views as pages with an arrow across and the next page at the edge. The app screens are the inset; pressing it swaps them, as in 02.1.
 
-## Process
+42. **04.1 is now the results card** (13:57), in our three parts' business terms, from your original case study's results: Delivery (Read), Conversion (Shop), Engagement (Return), then the role. Heading: "Design that helped win Nike's next seasons". The two result lines that sat in 01.5 and 03.2 moved here, so each result is said once. No numbers: the original page has none, and the figures in the Figma drafts aren't confirmed.
+43. **"Sole designer", not "only designer"**: the same fact without the defensive tone you didn't want earlier.
+
+44. **Round of 14:44:** the moments are grouped by Read / Shop / Return again (times stay as measured); in 01.4 the inset keeps the same place and size whichever image is large; "sole UI designer"; every clip plays at 0.75× speed; **04.2 (What I'd do now) is off the page for now.** Its text, kept for later: "What I'd do now: take motion from idea to production myself. I specified the like in four states and handed it over in Figma. It shipped as a plain red heart." (assets `like-states.png`, `like-shipped.jpg` stay in the repo).
+
+45. **Cover at the shared scale** (15:33): the title, line under it and spacing now match the case-file template HHCD uses, so the covers look like one system. The whole cover fits in the first screen at 1280 × 720 and up (486 px tall at 1440 × 900).
+
+## Process## Process
 
 12. **Going live.** You said it can go live once done, so after the tests passed I rebased onto `main` and merged. To undo: revert the merge commit on `main`.

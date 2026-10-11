@@ -91,3 +91,7 @@ None of these are used unless Chongbo confirms them as real. One detail to check
 - **No repetition.** He wants each thing said once: no lede and intro saying the same, no heading restated in the body, no outcome on the cover and again at the end.
 - Layout: 01.1 with tabs down the left of the canvas (not text beside the evidence); wireframe inset at the canvas's top-right, overhanging it.
 - **Placement:** a section on the home screen of the official Nike App, launched nationwide (his words, 11:23). Role on the cover: "UI Designer"; no team line on the cover.
+- The home-screen section is no longer in the app (Nike's app changes often); a place on the home screen was itself an achievement. Keep "Launched".
+- Star Voice: keep the original Wix paragraph and the notes on the original image (Voice teaser, Livestream reveal, Vote with likes, Ask a question). He judged the rewrite as drifting from the meaning.
+- High-quality originals: his repo folder `public/assets/nike/high-quality photos` (not committed); copied into the asset names the page uses.
+- Audio in the recording: 0:04–0:10 (the story page's own sound) and 0:43–0:48 (the Star Voice voice teaser). `recording.mp4` carries it (AAC 96k); `star-voice-teaser.mp3` is the 0:43.1–0:47.9 cut.

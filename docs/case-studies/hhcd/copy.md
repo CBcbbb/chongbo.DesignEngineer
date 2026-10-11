@@ -1,124 +1,130 @@
-# Helen Hamlyn Centre Data Platform: copy, draft 3
+# Helen Hamlyn Centre Data Platform: copy, draft 4
 
-Playbook §8 step 4. Every fact traces to `inventory.md` → "Facts and their sources". `[brackets]` are gaps. Use "we" for VOICE team decisions and "I" for Chongbo's own work.
+Playbook §8 step 4, brought up to the playbook of 11 October 2026 (the Nike review's standards). Every fact traces to `inventory.md` → "Facts and their sources". Use "we" for VOICE team work and "I" for Chongbo's own work.
+
+One term per thing: **entries** (never points or records); the four types are **people, projects, methods and partners**; VOICE's consortium is **seven organisations**; the rebuild is **the Centre's version**.
+
+No captions under evidence. Labels inside the evidence are listed with each card.
 
 ## Cover
 
+- **Client:** Helen Hamlyn Centre for Design, Royal College of Art
 - **Title:** Helen Hamlyn Centre Data Platform
+- **Button (beside the title):** Open the live platform
 - **One line:** A research repository that anyone can explore, with a mouse, a keyboard or on a phone.
-- **Context:** First built for VOICE, an EU-funded arts research project. Now used by the Helen Hamlyn Centre for Design, Royal College of Art.
 - **Role:** Data collection, analysis and modelling; design and build.
-- **Outcome:** Live and in use. Used to teach the Centre's summer interns. Paper accepted at DRS 2026.
-- **Link:** https://helen-hamlyn-centre-for-design-data.vercel.app/
-- **What this shows:** Accessibility · Idea to production · Craft and interaction
+- **Outcome:** Live and in use. Used to teach the Centre's summer interns. Paper on its accessibility approach accepted at DRS 2026.
+- **What this shows** (labels, not links): Accessibility · Idea to production · Craft and interaction
+
+## The work
+
+**The map today**
+
+*Evidence:* the live map in a browser window (helen-hamlyn-centre-for-design-data.vercel.app). *Key:* Projects · Methods · People · Partners
 
 ## Part 1 · VOICE
 
-### `brief`: Accessibility as the starting point
+### 01.1 `brief`: Accessibility as the starting point
 
-VOICE was an EU-funded arts research project with partners in several countries. Its platform was for artists, researchers, community groups and policy makers. With an audience that broad, accessibility was a goal from the first prototype.
+VOICE was an EU-funded arts research project, run by seven organisations in several countries. Its audience was broad: artists, researchers, community groups and policy makers.
 
-*Image caption:* The VOICE platform at launch.
+*Evidence:* the VOICE platform.
 
-### `no-borders`: A network instead of a geographical map
+### 01.2 `no-borders`: A network instead of a geographical map
 
-To show all the work together, we first placed communities and projects on a map of Europe, grouped by country. The work was diverse, and we didn't want geography to divide it. So we moved to a network, where people, projects, organisations and methods connect directly.
+To show all the work together, we first placed communities and projects on a map of Europe, grouped by country. The work was diverse, and we didn't want geography to divide it. In the network, people, projects, partners and methods connect directly, whatever their country.
 
-*Image caption:* Grouped by country, the work looked divided by place.
+*Evidence:* two geographical prototypes. *Labels:* Prototype A · Prototype B
 
-### `sample-data`: Working prototypes on sample data
+### 01.3 `sample-data`: Working prototypes on sample data
 
-I coded the prototype ideas with sample data, so people could try them rather than imagine them. That gave us a first round of testing before any real data existed. The workshop started from these prototypes.
+I coded each prototype idea, so people could try it rather than imagine it. That gave us a first round of testing before any real data existed. The workshop started from these prototypes.
 
-*Image caption:* An early prototype, running on sample entries.
+*Evidence:* an early prototype with sample entries.
 
-### `workshop`: A 75-minute workshop with 14 stakeholders
+### 01.4 `workshop`: A 75-minute workshop with 14 stakeholders
 
-We ran the workshop with members of the seven partner organisations, and I designed its process. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view. Three walls collected their answers, with sticky notes and dot votes.
+We ran the workshop with members of all seven organisations, and I designed its process. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view.
 
-*Steps:*
+*Evidence:* the three walls, each photo whole.
 
-1. **Content.** What each entry should contain. Every type got a consistent structure, and methods were linked to the projects and people that used them.
-2. **Scope.** What the platform should include. Entries should touch at least two of three themes: technology, community and environment. The scope went beyond Europe.
-3. **Functionality.** Which features mattered most. Filters, search and visible connections ranked highest. Translation scored low, but participants argued it was essential for inclusion, so we kept it.
+1. **Wall 1 · Content.** Every type got a consistent structure, and methods were linked to the projects and people that used them.
+2. **Wall 2 · Scope.** Entries should touch at least two of three themes: technology, community and environment. The scope went beyond Europe.
+3. **Wall 3 · Functionality.** Filters, search and visible connections ranked highest. Translation scored low, but participants argued it was essential for inclusion, so we kept it.
 
-*Image caption:* Wall Three, where the features were ranked.
+### 01.5 `four-types`: Why the data is collected by person but mapped by type
 
-### `four-types`: Why the data is collected by person but mapped by type
+To make the survey easy to fill in, I started it from each person's own work: their projects, the methods they used and who supported them. Collecting was easy, but every row of the spreadsheet had a person at its centre. So I gave the map four linked types of equal weight, and decided what each entry stands for.
 
-To make the survey easy to fill in, I started it from each person's own work: their projects, the methods they used and who supported them. Collecting was easy, but every row of the spreadsheet had a person at its centre. After a first round of cleaning, I split it into four linked types of equal weight and decided what each point on the map stands for.
-
-*Stepper (animated):*
+*Evidence:* the stepper diagram (sample labels).
 
 1. Decide what the platform needs to know.
 2. Survey each person about their own work.
 3. Clean the first round of answers.
-4. Split each row into people, projects, organisations and methods.
-5. Link the records and load them into the prototype.
+4. Split each row into people, projects, methods and partners.
+5. Link the entries and load them into the prototype.
 
-### `dual-view`: A table view beside the network
+### 01.6 `dual-view`: A table view beside the network
 
-A network graph is hard to use without a mouse or without sight. So I added a table of the same data, with the same search and filters, and a shortcut to switch between them.
+A network graph is hard to use without a mouse or without sight. The table holds the same data, with the same search and filters, and a shortcut switches between the two.
 
-*Image caption:* The same entries as a table, for screen readers and keyboards.
+*Keys:* Ctrl + E. *Evidence:* VOICE's table view.
 
 ## Part 2 · Helen Hamlyn Centre
 
-### `taken-up`: Taken up by the Helen Hamlyn Centre
+### 02.1 `taken-up`: Taken up by the Helen Hamlyn Centre
 
-VOICE soft-launched in September 2025. The Helen Hamlyn Centre then took up the platform for its own research: 48 entries and 104 connections, in its fixed brand colours. I rebuilt it for the Centre in Next.js and TypeScript.
+VOICE soft-launched in September 2025. The Centre brought its own research data and fixed brand colours, and I rebuilt the platform for it in Next.js and TypeScript.
 
-*Image caption:* The Centre's research as one map.
+*Metric strip:* 17 Projects · 12 Methods · 10 People · 9 Partners · 104 Connections
 
-### `arrangements`: Two arrangements of the same map
+### 02.2 `arrangements`: Two arrangements of the same map
 
 The map opens as a free network, with every entry the same size. One switch moves the same entries into four columns by type, which are easier to scan and to follow by keyboard. Both layouts are calculated in advance, so the switch is a single animated move.
 
-*Module caption:* Try the switch: the same 48 entries, rearranged.
+*Signature module:* the switch, in a browser window. *Labels:* Free network · By type
 
-### `guide`: A guide inside the map
+### 02.3 `guide`: A guide inside the map
 
 On a first visit, one project pulses, and four short cards follow what you do: open it, follow a connection, step back, switch arrangement. Each card waits for the action it describes, never takes focus and can be skipped. The whole guide works by keyboard alone.
 
-*Video caption:* Each step waits for the visitor to act.
+*Evidence:* the recording, in a browser window.
 
-### `keyboard`: Accessibility – keyboard navigation
+### 02.4 `keyboard`: Accessibility – keyboard navigation
 
-The map is a single stop in the tab order. Arrow keys move to the nearest entry in that direction, in either arrangement, and the view pans to keep it in sight. Each entry is announced with its name, type and number of connections.
+The map is a single stop in the tab order. Arrow keys move to the nearest entry in that direction, in either arrangement, and the view pans to keep it in sight. Each entry is announced with its name, type and number of connections, shown on screen in this recording.
 
-*Video caption:* "Chris McGinley, person, 10 connections."
+*Keys:* Tab ← ↑ → ↓ Enter Esc. *Evidence:* the recording, in a browser window.
 
-### `narrow-screens`: Responsive design
+### 02.5 `narrow-screens`: Responsive design
 
 On a phone, details open as a sheet over the lower part of the map, and the selected entry pans into view above it. The map opens at a readable zoom, and its controls have 40px touch targets. Nothing scrolls sideways, down to 320px.
 
-*Image caption:* The map stays usable while details are open.
+*Evidence:* two phone screens, side by side.
 
-### `contrast`: Accessibility – colour contrast
+### 02.6 `contrast`: Accessibility – colour contrast
 
 The Centre's brand colours are fixed, and two of them fail contrast as small text. Map names keep the original colours, set bold and large enough to pass; zoomed out, they switch to darker variants. A script reads the real CSS and checks all 27 colour pairings, and each type also has its own shape.
 
-*Code caption:* Orange passes as large text; small text uses the darker variant.
+*Evidence:* the four colours as specimens. *Labels:* Type · Map name: bold, large · Small text
 
-```css
---color-projects: #EB631A;      /* large text on white: 3.32:1 */
---color-projects-text: #A8470F; /* small text on white: 5.88:1 */
-```
+### 02.7 `testing`: Accessibility – testing
 
-### `testing`: Accessibility – testing
+Automated checks gave VOICE a near-perfect score, but missed that its map entries and filters couldn't be reached by keyboard. In the Centre's version both work by keyboard, and axe found no issues on any main page at desktop and phone widths. It passed testing in Chrome, Safari and Firefox, and with the VoiceOver screen reader.
 
-Both versions were checked automatically: VOICE with Lighthouse and WAVE, the rebuild with axe on every main page at desktop and phone widths. Tested in Chrome, Safari and Firefox; screen-reader testing is next. [Update after the VoiceOver test.]
+*Metric strip:* 99 Lighthouse accessibility score (VOICE) · 0 WAVE errors (VOICE) · 0 axe violations at 1440 and 390px (Centre's version)
 
-*Metric strip:* Lighthouse accessibility score 99 (VOICE) · WAVE 0 errors (VOICE) · axe 0 violations at 1440 and 390px (rebuild)
-
-### `results`: Results
-
-A numbered list, set large:
-
-1. Live and in use at the Helen Hamlyn Centre.
-2. Used to teach data visualisation to the Centre's summer interns.
-3. A paper on the accessibility approach, accepted at DRS 2026.
-
-### `role`: Designed, specified and built alone
+### 02.8 `role`: Designed, specified and built alone
 
 I made the design files, wrote the specification and built the platform. Doing both, I could turn each design straight into working code, which made the work faster.
+
+- **Context:** Research assistant at Brunel University, on VOICE.
+- **Team:** VOICE's team ran the workshop and chose the network together.
+
+## Cut in draft 4
+
+- `results`: the cover's Outcome already says it (playbook §4: the cover and the ending don't repeat each other). "On its accessibility approach" moved to the cover.
+- Every caption under evidence (§6).
+- The stakeholder-card image in `workshop`: a process artefact that carries no decision; the body names the cards.
+- "Three walls collected their answers, with sticky notes and dot votes": the photos show it.
+- The walls' first sentences ("What each entry should contain." and so on): they restated the wall titles.

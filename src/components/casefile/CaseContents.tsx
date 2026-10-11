@@ -6,7 +6,8 @@ export type ContentsPart = { id: string; n: string; label: string; cards: { id: 
 
 /**
  * Contents, the same on every case file: the project, then each part with its cards.
- * Marks the card in view (aria-current="step") and its part. Below 1000px it becomes a strip of parts.
+ * Marks the card in view (aria-current="step"; the project itself above the first part) and its part, with one
+ * marker at a time. Below 1000px it becomes a strip of parts.
  * The card named in the URL hash (where a printed sheet's "Full project" link lands) is ringed on the page.
  */
 export function CaseContents({ title, parts }: { title: string; parts: ContentsPart[] }) {
@@ -54,7 +55,8 @@ export function CaseContents({ title, parts }: { title: string; parts: ContentsP
 
   return (
     <nav className="cf-toc" aria-label="Contents">
-      <a className="cf-toc-proj" href="#top">
+      {/* Above the first part (the cover and the work), the project itself is where you are. */}
+      <a className="cf-toc-proj" href="#top" aria-current={card === null ? "step" : undefined}>
         {title}
       </a>
       <ol>

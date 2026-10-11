@@ -58,16 +58,16 @@
     "height": 487
   },
   "hhcd/workshop-wall-content.jpg": {
-    "height": 486,
-    "width": 648
+    "height": 1200,
+    "width": 1600
   },
   "hhcd/workshop-wall-functionality.jpg": {
-    "height": 486,
-    "width": 648
+    "height": 1200,
+    "width": 1600
   },
   "hhcd/workshop-wall-scope.jpg": {
-    "height": 486,
-    "width": 648
+    "height": 1200,
+    "width": 1600
   },
   "nike/gift-box-end.png": {
     "width": 1920,
@@ -75,40 +75,40 @@
   },
   "nike/gift-box.lottie.json": null,
   "nike/gs-header-one-line.png": {
-    "width": 502,
-    "height": 155
+    "width": 1506,
+    "height": 465
   },
   "nike/gs-image-text-combo.png": {
-    "width": 399,
-    "height": 786
+    "width": 1197,
+    "height": 2358
   },
   "nike/gs-imagery-primary.png": {
-    "width": 782,
-    "height": 1246
+    "width": 1125,
+    "height": 1794
   },
   "nike/gs-imagery-secondary.png": {
-    "width": 782,
-    "height": 1246
+    "width": 1125,
+    "height": 1794
   },
   "nike/gs-imagery-tertiary.png": {
-    "width": 782,
-    "height": 1246
+    "width": 1125,
+    "height": 1794
   },
   "nike/gs-key-message.png": {
-    "width": 502,
-    "height": 154
+    "width": 1506,
+    "height": 462
   },
   "nike/gs-logo-lockup.png": {
-    "width": 506,
-    "height": 109
+    "width": 2024,
+    "height": 436
   },
   "nike/gs-poster-card.png": {
-    "width": 935,
-    "height": 1246
+    "width": 1125,
+    "height": 1500
   },
   "nike/gs-text-simplified.png": {
-    "width": 502,
-    "height": 70
+    "width": 1506,
+    "height": 210
   },
   "nike/guest-posters.png": {
     "width": 1181,
@@ -187,38 +187,39 @@
     "height": 1306
   },
   "nike/ranking-after.png": {
-    "width": 375,
-    "height": 420
+    "width": 1125,
+    "height": 1260
   },
   "nike/ranking-before.png": {
-    "width": 375,
-    "height": 389
+    "width": 1125,
+    "height": 1167
   },
   "nike/recording-poster.jpg": {
     "height": 1624,
     "width": 750
   },
   "nike/recording.mp4": null,
-  "nike/retouch-1-after.png": {
-    "width": 333,
-    "height": 500
+  "nike/retouch-1-after.jpg": {
+    "height": 2000,
+    "width": 1332
   },
-  "nike/retouch-1-original.png": {
-    "width": 334,
-    "height": 500
+  "nike/retouch-1-original.jpg": {
+    "height": 2000,
+    "width": 1332
   },
-  "nike/retouch-2-after.png": {
-    "width": 334,
-    "height": 500
+  "nike/retouch-2-after.jpg": {
+    "height": 2000,
+    "width": 1332
   },
-  "nike/retouch-2-original.png": {
-    "width": 334,
-    "height": 500
+  "nike/retouch-2-original.jpg": {
+    "height": 2000,
+    "width": 1332
   },
-  "nike/star-voice-crop.jpg": {
-    "height": 3396,
-    "width": 2957
+  "nike/star-voice-screen.jpg": {
+    "height": 1833,
+    "width": 1125
   },
+  "nike/star-voice-teaser.mp3": null,
   "nike/storytelling-feed.png": {
     "width": 1555,
     "height": 813

@@ -7,7 +7,7 @@ The shared standard for rewriting and redesigning every project on the site. Eac
 - **Readers.** Recruiters and hiring managers for Design Engineer roles first (Granola's [Design Engineer (Web & Brand)](https://www.granola.ai/jobs/design-engineer-web-brand) and [Design Engineer](https://www.granola.ai/jobs/design-engineer) are the reference JDs), then senior UX / product design roles.
 - **How they read.** A few seconds on the cover. Then they scan headings and images. They read body text only if the headings have earned it. Design the page for those three depths:
   - **10 seconds:** cover. What it is, my role, the outcome, one strong image.
-  - **1 minute:** headings, images and captions alone tell the whole story.
+  - **1 minute:** headings and evidence alone tell the whole story.
   - **5 minutes:** body text adds the reasoning, the trade-offs and the evidence.
 - **What they're judging.** Judgement (good decisions, or at least sound reasoning), craft (visual and interaction detail), and whether I can ship. Hiring-manager advice converges on: show decisions, not process; make individual contribution unmistakable; show designs large enough to judge; cut anything you can't defend in an interview. Sources: [Leslie Yang, What a hiring manager looks for](https://leslieyang.substack.com/p/what-a-hiring-manager-looks-for-in), [Fountain Institute, What gets senior product designers hired in 2026](https://www.thefountaininstitute.com/blog/senior-product-designers-hired).
 
@@ -62,7 +62,10 @@ Expect 8 to 12 cards per main project and 4 to 6 for earlier work.
 
 > One line of context → the tension (what was wrong, for whom, why it mattered) → two to four decisions, each "I chose X over Y because Z", each with proof → the outcome → my role, and what I'd change.
 
-- **The heading test.** Read only the headings and captions, top to bottom. The story must still make sense.
+- **Know what each card is for.** Before writing a card, say in one line what it proves on its own (which decision, which capability). If it proves nothing new, merge it or cut it.
+- **Parts follow the reader, not the process.** Nike: Read → Shop → Return → Outcome. Each part has an opener; each card is one decision or one piece of evidence.
+- **Lead with the product.** The work in use (a recording, the live site) comes straight after the cover.
+- **The heading test.** Read only the headings and the evidence, top to bottom. The story must still make sense.
 - **How headings work.**
   - A heading tells the reader what the section is about and which way the decision went, but doesn't sum it all up. The reason and the how stay in the body, so there's something to read on for.
   - Most headings are plain and calm: a short phrase or a direct label. "A network instead of a geographical map", "Responsive design", "Accessibility – keyboard navigation".
@@ -70,7 +73,9 @@ Expect 8 to 12 cards per main project and 4 to 6 for earlier work.
   - No "I" in headings; "I" belongs in the body. No slogans: no wordplay, parallel phrasing, rhetorical contrasts or punchlines.
 - **One decision, traced honestly.** Show what I tried first, what didn't work, what I traded away. The strongest cases have a turn in them.
 - **Contribution is unmistakable.** Say what I did with "I". Use "we" only for genuine team work, and then say which part was mine.
-- **Outcomes are concrete.** A number, a shipped thing, a live link, a real consequence. If there's no number, say what happened. Never invent one.
+- **Outcomes are concrete.** A number, a shipped thing, a live link, a real consequence. If there's no number, say what happened, in professional terms: "Launched across China as a section of the Nike App's home screen. On the strength of the first season, Nike renewed the agency's contract for the seasons that followed." Past tense if it's no longer live. Never invent a number.
+- **The cover and the ending don't repeat each other.** The cover gives the role and the outcome; the closing card adds what the cover doesn't (context, team), then what I'd do now.
+- **Role:** on the cover, the job title ("UI Designer"); team and context at the end. Say "designed", never "led", unless I led.
 - **Cut** anything that doesn't support a decision: generic process photos, tool lists, "my contributions" bullet lists (fold them into the role line), and anything I couldn't defend in an interview.
 - **Shipped beats concept.** Link to live work wherever it exists.
 
@@ -78,7 +83,12 @@ Expect 8 to 12 cards per main project and 4 to 6 for earlier work.
 
 Professional, plain and exact, in British English. Every sentence earns its place.
 
-- **Say each thing once.** No restating a point in different words, no summary of what was just said, no heading repeated in the first sentence below it.
+- **Final, reader-facing text.** Nothing from our working discussions (what I nearly dropped, what I'd have liked, how we decided), no process narration.
+- **No emotional or defensive words:** only, just, simply, unfortunately, "looks awful". Honest limits are stated as facts.
+- **Say each thing once.** The heading makes the claim; the body adds what the heading doesn't say (the problem, the method, the result) and never restates it; the evidence shows it, so the body doesn't describe it. Labels don't repeat the heading, the evidence or each other. No lede and intro saying the same thing, no summary of what was just said.
+- **Keep my wording when it's good.** When editing my original text, cut and harmonise; don't rewrite it into something that drifts from what I meant.
+- **One term per thing across the page** (Nike: "volume" and "influencer" everywhere, never "episode" or "guest" in one card).
+- **Don't over-stress one detail.** A date or label that matters appears once, where it explains something.
 - **Paragraphs:** at most three sentences. **Sentences:** usually under 20 words.
 - **Verbs** concrete: built, chose, cut, rebuilt, shipped, tested, dropped.
 - **Banned words:** leverage, seamless, empower, robust, holistic, enhance, elevate, delightful, cutting-edge, "in today's world", "it's worth noting".
@@ -92,7 +102,7 @@ Professional, plain and exact, in British English. Every sentence earns its plac
 Example (Nike):
 
 > Before: "This module bridges branded storytelling, user experience and commercial performance."
-> After: "People read the stories but rarely tapped through to the products. I was the only UI designer, and closing that gap was the job."
+> After: "Readers engaged with the stories, but product click-through stayed low, because the stories didn't connect to the products. I added tappable product tags."
 
 ## 6. Images and evidence
 
@@ -104,10 +114,13 @@ In order of value:
 
 Rules:
 
-- **Every image has a caption that says what it proves**, not what it shows ("Product tags turn the photo into the shop", not "Product tags").
-- **One point per image.** Large enough to judge without zooming; never thumbnails of whole flows.
-- **Motion is video or Lottie, not GIF.** Respect reduced motion: show a poster frame and a play control.
-- **Ratios:** 16:10 (desktop and wide), 4:5 (phone screens and portrait), 1:1 (details). Re-crop and re-export to these.
+- **No captions under evidence.** What an image proves goes in the card's heading or body. Labels inside the evidence stay (Before / After, Original / Retouched, Figma layer names, Specified / Shipped).
+- **Annotations on an original are content.** If a screenshot's notes explain it, keep them, as live text beside it if that reads better.
+- **One point per image.** Large enough to judge without zooming; never thumbnails of whole flows. Evidence takes as much of the card as it can, with tight padding. Two phone screens of different layouts sit side by side; a before/after slider only when both images share a frame (retouching).
+- **Motion is video or Lottie, not GIF.** Animations play once when they come into view, can be replayed, and sit at about 85% of their stage. With reduced motion: a still frame and a play control.
+- **Recordings are never cropped:** shown whole in a device frame, with their sound and a sound toggle. One play control only, and controls never add height. Sound that tells the story gets its own control (Nike: the voice teaser, played from the screenshot like a voice message). Only one thing plays at a time.
+- **Never change an image's ratio, stretch it or crop an original.** Where a frame needs a different ratio, pad the original on a mount.
+- **Originals, sharp:** at least twice their display size, screenshots served at quality 90. If a file is too small, list it and ask me for the original; never upscale.
 - **Each main project gets one signature interactive module**, something a reader can touch: an embedded live piece of the product, a before/after slider, an interactive diagram.
 - **An inventory for every project:** keep / cut / redraw / missing, with the reason. Images I need to supply go into `docs/ASSETS.md`.
 
@@ -122,13 +135,15 @@ Rules:
 - **Light and dark are both first-class.** Every page is designed and reviewed in both modes. Default to the system setting, and keep the manual override (`data-theme`). Photographed objects on the home page (the printer, the sheets it prints) keep their colours in both modes; reading surfaces, including the whole case file, follow the theme. A long page on bright paper is glaring in dark mode.
 - **Grid:** a reading column of about 65 characters. Media can break out to a wide column or full bleed. Generous, consistent vertical rhythm.
 - **Page skeleton (every project, same system as Nike):**
-  - Contents on the left: the project, then each part with its cards. Below 1000px it becomes a strip of parts.
+  - Contents on the left on every project: the project, then each part with its cards; the card being read is marked (one marker, text centred in its highlight). Below 1000px it becomes a strip of parts.
   - On the right, a stack of sheets on the studio:
-    - cover (title, lede, intro and facts, "What this shows" chips that jump to their cards);
+    - cover: the client, the title, one line saying what it is, then Role and Outcome, and "What this shows": two or three capability labels on one line. Labels, not links: a capability usually spans several cards, so a jump to one of them misleads. Compact: the whole cover fits in the first screen, and every project uses the shared cover type scale (title `clamp(2.5rem, 6vw, 4.75rem)`, line under it `clamp(1.15rem, 2vw, 1.45rem)`), so covers match across projects;
     - the work (the product itself);
     - then, for each part, an opener (big number, name, its cards) and one sheet per card;
     - then next project.
-  - Card anatomy: index (`01.2`) and kind; the claim on the left; body and tags on the right; evidence at full sheet width; caption.
+  - Card anatomy: the index (`01.2`) above the heading, with a clear gap; the claim on the left, the body on the right; evidence underneath at full sheet width. No kind label, no capability tags (the cover chips carry them), no caption. Text beside the evidence only where neither is cramped.
+  - **One card, one screen** on tablets and computers: every card the same height, `min(100svh − 3rem, 58rem)` (`100svh − 7rem` at 761–1000px), so it is seen whole without scrolling. Evidence scales into the space under the text and keeps its ratio. Phones scroll as normal.
+  - Each card is designed for its content, but sizes stay consistent: a switcher's canvas keeps one size whichever tab is open.
   - Three surfaces set the rhythm: paper for reading, the project's colour field for the cover, openers and interactive evidence, and the project's dark for the work in motion and results.
   - The skeleton is shared; the art direction is not. Each project decides, from what it has to say:
     - its surfaces: a colour field (`--field`), or none;
@@ -138,6 +153,7 @@ Rules:
     - its evidence mounts;
     - its signature module.
   - Nike: orange field, black, full-bleed imagery. HHCD: no brand field; its identity is four equal colours on white, so colour lives only in the work and the four marks, with evidence on dot-grid paper.
+  - The project's colour is prominent where it has one; the quality bar is Granola's graphic design (textured backdrops, strong type, sure contrast).
 - **Block library:** every project is built from the same blocks:
   - text (heading + body)
   - media (image / video / Lottie, with caption)
@@ -154,6 +170,13 @@ Rules:
   A project may propose a new block. If accepted, it joins the library for everyone.
 
   Built in `src/components/casefile/` (template `CaseFile.tsx`, blocks in `blocks.tsx`), styled by `src/app/case-file.css`, with per-project palettes in `src/app/case-palettes.css`. A project opts in with `template: "case-file"` in its content file.
+
+**Interaction and motion:**
+
+- **Playful micro-interactions belong to the site, not the case files.** Buttons that do more than change colour (letters knocked about, icons that act, a little randomness each time) are for the portfolio's own shell: the home page, navigation, the printer. Inside a case file they compete with the work.
+- **In a case file, controls are serious and well made:** they work fully (a recording can be scrubbed, paused, muted; one thing plays at a time), look finished (Nike: a lit orange gradient on the play buttons, a gradient progress fill, a ring that fills as a clip plays), and guide where needed (a small hint, "Tap to listen · 0:05", until the first play).
+- **Obvious affordances:** what can be pressed looks pressable (Nike's wireframe inset sits on the canvas's top-right corner and overhangs it).
+- **Restraint and access:** transitions short (0.35s or less for controls); focus behaves like hover; everything stands still with reduced motion.
 
 **Per project (its own character):** each project has its own palette, defined once with a light and a dark value for every token:
 
@@ -187,12 +210,12 @@ Rules:
 Work with me in conversation. Talk it through and confirm before building.
 
 1. **Sources.** Read everything listed in the project prompt. Summarise what exists in 10 lines at most, and flag contradictions.
-2. **Interview.** Ask me 5 to 8 sharp questions, a few at a time, about what only I know: the hardest decision, what I'd defend, what failed, real numbers, what I'd change now, exactly what I did versus others.
+2. **Interview.** Ask me 5 to 8 sharp questions, a few at a time, about what only I know: the hardest decision, what I'd defend, what failed, real numbers, what I'd change now, exactly what I did versus others. Don't ask for small details (exact dates, volume numbers); think about the story, the capability each card shows, the layout and the effect.
 3. **Card inventory.** The table in §3, the canonical order, the image inventory (§6) and the gaps list. Wait for my approval.
-4. **Copy.** Write every card to the rules in §4 and §5. Show it to me as plain text and revise with me until every line is right.
+4. **Copy.** Write every card to the rules in §4 and §5. Show it to me as plain text, always the full text rather than a list of changes, and revise with me until every line is right.
 5. **Visual prototype.** A single-file HTML prototype of the case file in `docs/design/case-<slug>.html` (same approach as `docs/design/prototype.html`), using the real assets, at desktop and phone widths, in light and dark mode. Iterate with me. Publish it as an artifact so I can view it on any device.
 6. **Build.** Move the approved design into the site (see §9), with tests passing and a Vercel preview.
-7. **Review.** Heading test, read-aloud test for copy, contrast check in both modes, keyboard and screen-reader pass, phone check. Then I approve the merge.
+7. **Review.** Heading test, read-aloud test for copy, contrast check in both modes, keyboard and screen-reader pass, phone check, and every card at 1440 × 900, 1280 × 720, 1366 × 768, 1024 × 1366 and 768 × 1024 (no overflow, nothing distorted). Once I've said it can go live, merge when it's done and list anything uncertain in `docs/case-studies/<slug>/DECISIONS.md` for me to decide.
 
 ## 9. Working in parallel without collisions
 

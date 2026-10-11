@@ -5,7 +5,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Assets are served from the CDN; server code reads src/generated/asset-manifest.json instead, so keep them out of functions.
   outputFileTracingExcludes: { "/*": ["public/**"] },
-  images: { formats: ["image/avif", "image/webp"] },
+  // 90 is for screenshots with fine text (case files ask for it per image).
+  images: { formats: ["image/avif", "image/webp"], qualities: [75, 90] },
   async headers() {
     return [
       {

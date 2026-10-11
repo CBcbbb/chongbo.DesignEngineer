@@ -360,9 +360,10 @@
 }
 
 /* ---------- cover ---------- */
+/* the same type scale and spacing as the shared case-file cover, so every project's cover matches */
 .nk-cover {
-  gap: clamp(1.5rem, 3vw, 2.25rem);
-  padding-block: clamp(1.75rem, 5vw, 3.25rem);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  padding-block: clamp(1.5rem, 3.4vw, 2.5rem);
 }
 .nk-client {
   display: flex;
@@ -378,18 +379,18 @@
   background: var(--nk-on-orange);
 }
 .nk-cover h1 {
-  max-width: 9ch;
-  font-size: clamp(3rem, 9.4vw, 7.25rem);
+  max-width: 10em;
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
   font-weight: 600;
-  line-height: 0.9;
-  letter-spacing: -0.06em;
+  line-height: 0.94;
+  letter-spacing: -0.05em;
 }
 .nk-lede {
-  max-width: 26ch;
-  font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+  max-width: 44ch;
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
   font-weight: 500;
-  line-height: 1.22;
-  letter-spacing: -0.02em;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
 }
 /* role and outcome in one row under a rule */
 .nk-facts {
@@ -414,29 +415,33 @@
   font-weight: 500;
   line-height: 1.4;
 }
+/* what this shows: one quiet line of labels */
 .nk-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.5rem 0.9rem;
   align-items: center;
 }
-.nk-chips > span {
-  margin-right: 0.25rem;
-  font: 400 0.8125rem/1 var(--mono);
+.nk-chips p {
+  font: 400 0.75rem/1 var(--mono);
   color: var(--nk-on-orange-2);
 }
-.nk-chip {
-  padding: 0.55rem 0.95rem;
+.nk-chips ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.nk-chips li {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0.38rem 0.7rem 0.38rem 0.55rem;
   border-radius: 999px;
   background: var(--nk-on-orange);
-  color: var(--nk-orange) !important;
-  font-size: 0.9375rem;
+  color: var(--nk-orange);
+  font-size: 0.8125rem;
   font-weight: 500;
-  text-decoration: none;
-  transition: transform 0.2s var(--nk-ease);
-}
-.nk-chip:hover {
-  transform: translateY(-2px);
+  line-height: 1.2;
 }
 
 /* ---------- the recording ---------- */
@@ -483,48 +488,245 @@
   background: #000;
   box-shadow: 0 0 0 1px #2b2926;
 }
-.nk-tog {
+.nk-phone {
+  isolation: isolate;
+}
+/* the one play control: the whole screen is the button, its glyph drawn at the centre */
+.nk-screen {
   position: absolute;
-  right: -0.6rem;
-  bottom: 3.4rem;
+  inset: 2.4rem 0.6rem 2.6rem;
   display: grid;
   place-items: center;
-  width: 3.4rem;
-  height: 3.4rem;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+  color: #fff;
+}
+/* flat Nike orange, as everywhere else on the page */
+.nk-bigplay {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 50%;
+  background: var(--nk-orange);
+  color: var(--nk-on-orange);
+  transition:
+    opacity 0.35s var(--nk-ease),
+    transform 0.35s var(--nk-ease),
+    background 0.2s;
+}
+.nk-screen:hover .nk-bigplay,
+.nk-screen:focus-visible .nk-bigplay {
+  background: var(--nk-orange-on-black);
+}
+.nk-bigplay .nk-morph {
+  width: 1.15rem;
+  height: 1.3rem;
+}
+.nk-phone:not(.is-playing) .nk-bigplay .nk-morph {
+  margin-left: 0.25rem;
+}
+.nk-screen:hover .nk-bigplay {
+  transform: scale(1.06);
+}
+.nk-screen:active .nk-bigplay {
+  transform: scale(0.92);
+}
+/* playing: the glyph has already morphed into pause; it fades away, and comes back on hover */
+.nk-phone.is-playing .nk-bigplay {
+  opacity: 0;
+  transform: scale(1.35);
+}
+.nk-phone.is-playing .nk-screen:hover .nk-bigplay,
+.nk-phone.is-playing .nk-screen:focus-visible .nk-bigplay {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* play ↔ pause: two halves of the triangle that slide apart into bars */
+.nk-morph {
+  position: relative;
+  display: block;
+  width: 0.95rem;
+  height: 1.05rem;
+}
+.nk-morph::before,
+.nk-morph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  transition: clip-path 0.3s var(--nk-ease);
+}
+.nk-morph::before {
+  clip-path: polygon(0 0, 51% 25.5%, 51% 74.5%, 0 100%);
+}
+.nk-morph::after {
+  clip-path: polygon(50% 25%, 100% 50%, 100% 50%, 50% 75%);
+}
+.nk-morph.is-pause::before {
+  clip-path: polygon(4% 0, 36% 0, 36% 100%, 4% 100%);
+}
+.nk-morph.is-pause::after {
+  clip-path: polygon(64% 0, 96% 0, 96% 100%, 64% 100%);
+}
+
+/* slim controls in the bezel: progress with a dot per chapter, the time, the sound */
+.nk-bezel {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.45rem;
+  left: 1.1rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  height: 1.75rem;
+}
+.nk-track {
+  position: relative;
+  flex: 1;
+  display: grid;
+  align-items: center;
+  height: 1.75rem;
+}
+.nk-track-bar {
+  position: relative;
+  height: 4px;
+  border-radius: 4px;
+  background: #3a3835;
+  transition: height 0.2s var(--nk-ease);
+}
+.nk-track:hover .nk-track-bar {
+  height: 6px;
+}
+.nk-track i {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--nk-orange-on-black);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.25s linear;
+}
+/* the slider itself is invisible over the bar; only its thumb shows, on hover and focus */
+.nk-track input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.nk-track input::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+.nk-track input::-moz-range-track {
+  background: transparent;
+}
+.nk-track input::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  margin-top: calc((1.75rem - 14px) / 2);
+  border: 0;
+  border-radius: 50%;
+  appearance: none;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.55);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.nk-track input::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.55);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.nk-track:hover input::-webkit-slider-thumb,
+.nk-track input:focus-visible::-webkit-slider-thumb {
+  opacity: 1;
+}
+.nk-track:hover input::-moz-range-thumb,
+.nk-track input:focus-visible::-moz-range-thumb {
+  opacity: 1;
+}
+.nk-track input:focus-visible {
+  outline: 2px solid var(--nk-orange-on-black);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.nk-clock i {
+  font-style: normal;
+  color: #6b6760;
+}
+.nk-clock {
+  min-width: 4.6rem;
+  font: 500 0.6875rem/1 var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--nk-on-black-2);
+}
+.nk-snd {
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
   border: 0;
   border-radius: 50%;
   cursor: pointer;
-  background: var(--nk-orange-on-black);
-  color: var(--nk-on-orange) !important;
-  box-shadow: 0 8px 20px -8px #000;
+  background: transparent;
+  color: var(--nk-on-black) !important;
 }
-.nk-bars {
-  display: flex;
-  gap: 4px;
+.nk-snd:hover {
+  background: #2b2926;
 }
-.nk-bars i {
-  display: block;
-  width: 4px;
-  height: 14px;
-  border-radius: 1px;
-  background: currentColor;
+.nk-snd[aria-pressed="false"] {
+  color: var(--nk-on-black-2) !important;
 }
-.nk-prog {
-  height: 2px;
-  margin-top: 1.25rem;
-  overflow: hidden;
-  border-radius: 2px;
-  background: var(--nk-black-rule);
+.nk-snd .nk-spk {
+  width: 17px;
+  height: 17px;
 }
-.nk-prog i {
-  display: block;
-  height: 100%;
-  background: var(--nk-orange-on-black);
+/* while sound plays, the speaker's two waves pulse in turn; on hover they wiggle */
+.nk-snd.is-live .nk-w1 {
+  animation: nk-wave 1.1s ease-in-out infinite;
+}
+.nk-snd.is-live .nk-w2 {
+  animation: nk-wave 1.1s ease-in-out 0.25s infinite;
+}
+.nk-spk path {
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: transform 0.3s var(--nk-ease);
+}
+.nk-snd:hover .nk-w1 {
+  transform: translateX(1px) scaleY(1.15);
+}
+.nk-snd:hover .nk-w2 {
+  transform: translateX(2px) scaleY(1.2);
+}
+@keyframes nk-wave {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
 }
 .nk-chapters {
   display: grid;
   gap: 0.9rem;
-  max-width: 24rem;
+  max-width: 26rem;
   margin-top: 1.25rem;
 }
 .nk-chapters h3 {
@@ -558,6 +760,22 @@
 .nk-chapters button:hover {
   color: var(--nk-orange-on-black);
 }
+/* the chapter now playing draws its own progress line along its bottom edge */
+.nk-chapters button {
+  position: relative;
+}
+.nk-chapters button[aria-current="true"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--nk-orange-on-black);
+  transform-origin: left;
+  transform: scaleX(var(--cp, 0));
+  transition: transform 0.25s linear;
+}
 
 /* ---------- part openers ---------- */
 .nk-opener {
@@ -578,6 +796,11 @@
   font-size: clamp(2rem, 5vw, 3.4rem);
   line-height: 0.95;
   letter-spacing: -0.05em;
+}
+.nk-opener .nk-cards {
+  margin-top: 0.6rem;
+  font: 400 0.8125rem/1.5 var(--mono);
+  color: var(--nk-on-orange-2);
 }
 
 /* ---------- framing device switcher ---------- */
@@ -854,12 +1077,57 @@
   width: 100%;
   padding: 1.25rem 1.25rem 0 0;
 }
+/* the canvas keeps the main image's shape and the inset keeps its own, so a swap moves nothing */
 .nk-pip-canvas {
   position: relative;
+  display: grid;
+  place-items: center;
   width: 100%;
+  aspect-ratio: var(--ar);
 }
-.nk-pip-canvas > img {
+/* 01.4's wireframes, on the orange field */
+.nk-wire {
+  display: block;
   width: 100%;
+  height: auto;
+  border-radius: 10px;
+  background: var(--nk-orange);
+}
+.nk-wire-paper rect {
+  fill: #fff;
+  stroke: #c2410c;
+  stroke-width: 2;
+}
+.nk-wire-line rect,
+.nk-wire-line path {
+  fill: none;
+  stroke: #e0571b;
+  stroke-width: 1.6;
+}
+.nk-wire-dot circle {
+  fill: #e0571b;
+}
+.nk-wire-arrow path {
+  fill: none;
+  stroke: #e0571b;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.nk-wire-label {
+  fill: #111010;
+  font-size: 22px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+.nk-pip-thumb .nk-wire {
+  border-radius: 0;
+}
+.nk-pip-canvas > img,
+.nk-pip-canvas > .nk-wire {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   border-radius: 10px;
 }
 .nk-pip-inset {
@@ -879,8 +1147,17 @@
 .nk-pip-inset:hover {
   transform: translate(2px, -2px);
 }
-.nk-pip-thumb img {
+.nk-pip-thumb {
+  display: grid;
+  place-items: center;
+  aspect-ratio: var(--iar);
+  background: var(--nk-orange);
+}
+.nk-pip-thumb img,
+.nk-pip-thumb .nk-wire {
   width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 .nk-pip-lbl {
   position: absolute;
@@ -917,23 +1194,335 @@
   position: absolute;
   inset: 0;
 }
-.nk-stage-ctl {
+/* the animation loops on its own; a pause button for keyboards appears only when focused */
+.nk-stage-pause {
   position: absolute;
-  left: var(--nk-pad);
   bottom: 1.1rem;
+  left: var(--nk-pad);
+  padding: 0.6rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--nk-orange-on-black);
+  color: var(--nk-on-orange);
+  font-size: 0.875rem;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+}
+.nk-stage-pause:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-/* ---------- Star Voice ---------- */
+/* ---------- Star Voice: the screen with its notes pinned beside it ---------- */
 .nk-sv {
   display: grid;
-  place-items: center;
-  padding: clamp(1rem, 3vw, 1.75rem);
-  border-radius: var(--nk-r-in);
+  gap: 1.25rem;
+  justify-items: center;
 }
-.nk-sv img {
+.nk-sv-phone {
+  position: relative;
+  width: min(100%, 20rem);
+}
+/* ---------- a moment of the recording, opened beside the card ---------- */
+.nk-clip {
+  position: fixed;
+  z-index: 50;
+  width: min(15rem, 72vw);
+  padding: 0.5rem;
+  border-radius: 1.1rem;
+  background: var(--nk-black);
+  color: var(--nk-on-black);
+  box-shadow:
+    0 0 0 1px #2b2926,
+    0 30px 60px -20px rgba(0, 0, 0, 0.6);
+  animation: nk-clip-in 0.22s var(--nk-ease);
+}
+@keyframes nk-clip-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+.nk-clip-head {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.15rem 0.15rem 0.5rem 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--nk-on-black-2);
+}
+.nk-clip-title {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.nk-clip-head b {
+  overflow: hidden;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--nk-on-black);
+}
+.nk-clip-head i {
+  font: 400 0.6875rem/1 var(--mono);
+  font-style: normal;
+  color: var(--nk-on-black-2);
+}
+.nk-clip-x {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background: #2b2926;
+  color: var(--nk-on-black) !important;
+}
+.nk-clip-x:hover {
+  background: #3a3835;
+}
+.nk-clip-x svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.nk-clip-screen {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.7rem;
+  background: #000;
+}
+.nk-clip-screen video {
+  display: block;
   width: 100%;
-  max-width: 24rem;
+  height: auto;
+  aspect-ratio: 750 / 1624;
+}
+.nk-clip-again {
+  position: absolute;
+  inset: auto 0 1rem;
+  justify-self: center;
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+  width: max-content;
+  margin: 0 auto;
+  padding: 0.55rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  background: var(--nk-orange);
+  color: var(--nk-on-orange) !important;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.nk-clip-bar {
+  display: block;
+  height: 3px;
+  margin: 0.5rem 0.2rem 0.15rem;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #3a3835;
+}
+.nk-clip-bar i {
+  display: block;
+  height: 100%;
+  background: var(--nk-orange-on-black);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nk-clip {
+    animation: none;
+  }
+}
+
+/* the voice teaser, played like a voice message */
+/* the screenshot's own waveform bars turn orange as the clip plays (darken leaves the dark bubble as it is) */
+.nk-vt-wave {
+  position: absolute;
+  left: 28.6%;
+  top: 19.3%;
+  width: 48.4%;
+  height: 5.8%;
+  overflow: hidden;
+  mix-blend-mode: darken;
+  pointer-events: none;
+}
+.nk-vt-wave i {
+  display: block;
+  height: 100%;
+  background: #ff6a1f;
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.25s linear;
+}
+/* the play button sits on the bubble's record dot, in the same flat orange as the recording's */
+.nk-vt {
+  position: absolute;
+  top: 22.2%;
+  left: 86%;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background: var(--nk-orange);
+  color: var(--nk-on-orange) !important;
+  transform: translate(-50%, -50%);
+  transition:
+    transform 0.25s var(--nk-ease),
+    background 0.2s;
+}
+.nk-vt:hover,
+.nk-vt:focus-visible {
+  background: var(--nk-orange-on-black);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+.nk-vt .nk-morph {
+  width: 0.62rem;
+  height: 0.72rem;
+}
+.nk-vt:not(.is-playing) .nk-morph {
+  margin-left: 0.12rem;
+}
+/* until the first listen, a hint above the button says what it is and how long */
+.nk-vt-hint {
+  position: absolute;
+  top: calc(22.2% - 2.55rem);
+  left: 86%;
+  padding: 0.38rem 0.6rem;
   border-radius: 6px;
+  background: rgba(14, 13, 12, 0.88);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translate(-72%, -50%);
+  pointer-events: none;
+  animation: nk-hint 2.4s ease-in-out infinite;
+}
+.nk-vt-hint::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 72%;
+  border: 5px solid transparent;
+  border-top-color: rgba(14, 13, 12, 0.88);
+  transform: translateX(-50%);
+}
+@keyframes nk-hint {
+  0%,
+  100% {
+    margin-top: 0;
+  }
+  50% {
+    margin-top: -3px;
+  }
+}
+
+/* small icons on the capability labels */
+.nk-ico {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.nk-ico-swoosh path {
+  stroke-width: 2.6;
+}
+.nk-ico-heart .nk-h,
+.nk-ico-grid rect {
+  fill: currentColor;
+  stroke: none;
+}
+.nk-ico-grid .g1 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nk-snd.is-live .nk-w1,
+  .nk-snd.is-live .nk-w2,
+  .nk-vt-hint {
+    animation: none !important;
+  }
+}
+.nk-sv-phone img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 24px 40px -24px rgba(0, 0, 0, 0.55);
+}
+.nk-sv-notes {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+}
+.nk-sv-notes li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+.nk-sv-notes b {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+  color: var(--nk-ink);
+}
+.nk-sv-notes span {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--nk-body);
+}
+/* the pointer: a short rule with an arrowhead at the screen's end */
+.nk-sv-notes i {
+  position: relative;
+  flex: 0 0 2.25rem;
+  height: 1px;
+  background: var(--nk-ink);
+}
+.nk-sv-notes i::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border: solid var(--nk-ink);
+}
+.nk-sv-notes .is-r i::after {
+  left: 0;
+  border-width: 0 0 1px 1px;
+  transform: rotate(45deg);
+}
+.nk-sv-notes .is-l i::after {
+  right: 0;
+  border-width: 1px 1px 0 0;
+  transform: rotate(45deg);
+}
+@media (max-width: 760px) {
+  .nk-sv-notes i {
+    display: none;
+  }
 }
 
 /* ---------- ranking ---------- */
@@ -962,6 +1551,55 @@
 .nk-arrow {
   font: 600 1.5rem/1 var(--sans);
   color: var(--nk-accent);
+}
+
+/* ---------- outcome ---------- */
+.nk-noise {
+  background: var(--nk-grain), var(--nk-black);
+}
+.nk-big {
+  max-width: 15ch;
+  font-size: clamp(2.4rem, 6vw, 4.6rem) !important;
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+  color: var(--nk-orange-on-black) !important;
+}
+/* the results: delivery, conversion, engagement; then the role */
+.nk-ofoot {
+  display: grid;
+  gap: 1.25rem;
+}
+.nk-ogrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem 2rem;
+  border-top: 1.5px solid var(--nk-orange-on-black);
+}
+/* on the items: the list reset would win over padding on the list itself */
+.nk-ogrid li {
+  padding-top: 1.1rem;
+}
+.nk-orole {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--nk-black-rule);
+  color: var(--nk-on-black-2);
+}
+.nk-orole .nk-olabel {
+  margin: 0.2rem 0 0;
+}
+.nk-olabel {
+  margin-bottom: 0.4rem;
+  font: 500 0.75rem/1 var(--mono);
+  letter-spacing: 0;
+  color: var(--nk-on-black-2);
+}
+.nk-ogrid p {
+  max-width: 42ch;
+  color: var(--nk-on-black);
 }
 
 /* ---------- links on black ---------- */
@@ -1059,6 +1697,10 @@
     height: var(--nk-card-h);
     grid-template-rows: auto minmax(0, 1fr);
   }
+  .nk-outcome.is-card {
+    grid-template-rows: auto auto;
+    align-content: space-between;
+  }
   .nk-ev {
     height: 100%;
     min-height: 0;
@@ -1094,6 +1736,7 @@
   .nk-spec-view {
     height: 100%;
     min-height: 0;
+    padding: 2.1rem 1.25rem 1rem;
   }
   .nk-spec-img {
     display: grid;
@@ -1185,6 +1828,8 @@
   .nk-retouch {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 1.25rem;
   }
   .nk-cq {
     container-type: size;
@@ -1206,8 +1851,9 @@
     place-items: center;
     grid-template-rows: minmax(0, 1fr);
   }
+  /* 85% of the stage, so the shoebox has room around it */
   .nk-lottie {
-    width: min(100cqw, calc(100cqh * 16 / 9));
+    width: min(85cqw, calc(85cqh * 16 / 9));
     height: auto;
   }
 
@@ -1232,14 +1878,44 @@
     align-self: end;
   }
 
-  /* Star Voice */
+  /* Star Voice: the screen as tall as the space allows (and no wider than 36% of it); notes pinned beside it */
   .nk-sv {
-    grid-template-rows: minmax(0, 1fr);
+    container-type: size;
+    position: relative;
+    display: block;
   }
-  .nk-sv img {
-    width: auto;
-    max-width: 100%;
-    max-height: 100%;
+  .nk-sv-phone,
+  .nk-sv-notes li {
+    --pw: min(calc(100cqh * 1125 / 1833), 36cqw);
+    --ph: calc(var(--pw) * 1833 / 1125);
+    --top: calc((100cqh - var(--ph)) / 2);
+  }
+  .nk-sv-phone {
+    position: absolute;
+    top: var(--top);
+    left: calc(50cqw - var(--pw) / 2);
+    width: var(--pw);
+  }
+  .nk-sv-notes {
+    display: block;
+  }
+  .nk-sv-notes li {
+    position: absolute;
+    top: calc(var(--top) + var(--ph) * var(--y));
+    transform: translateY(-50%);
+  }
+  .nk-sv-notes .is-r {
+    left: calc(50cqw + var(--pw) / 2 + 0.4rem);
+    right: 0;
+  }
+  .nk-sv-notes .is-l {
+    right: calc(50cqw + var(--pw) / 2 + 0.4rem);
+    left: 0;
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+  .nk-sv-notes span {
+    max-width: 17rem;
   }
 
   /* specified vs shipped */
@@ -1321,13 +1997,8 @@
 .nk-seek,
 .nk-chapters button,
 .nk-spec-list button,
-.nk-chip,
 .nk-btn {
   min-height: 44px;
-}
-.nk-chip {
-  display: inline-flex;
-  align-items: center;
 }
 .nk-toc-part > ol a {
   display: flex;
@@ -1385,6 +2056,8 @@
 @media (max-width: 760px) {
   .nk-head,
   .nk-facts,
+  .nk-ogrid,
+  .nk-orole,
   .nk-vs,
   .nk-retouch {
     grid-template-columns: minmax(0, 1fr);
