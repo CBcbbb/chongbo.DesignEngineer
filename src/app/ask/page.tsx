@@ -17,7 +17,7 @@ import {
 } from "@/lib/ask/schema";
 import { getProject, type Signal } from "@content";
 import { buildCardIndex, cardKey, type SheetCard } from "@/lib/cards";
-import { missingLine, provenanceLine, quoteBrief, resultTitle } from "@/lib/printed";
+import { missingLine, provenanceLine, quoteBrief, resultTitle, topicsToLabels } from "@/lib/printed";
 
 export const metadata: Metadata = {
   title: "Your answer",
@@ -56,7 +56,8 @@ export default async function AskPage({ searchParams }: Props) {
   const sheets = (result?.sheets ?? [])
     .map((s) => index[cardKey(s.project, s.section)])
     .filter((c): c is SheetCard => Boolean(c));
-  const title = result ? resultTitle({ asked: result.asked, startHere: result.matched === "start-here" }) : (error ?? "What skills are you looking for?");
+  const picked = !brief.trim() ? topicsToLabels(topics) : [];
+  const title = result ? resultTitle({ asked: result.asked, startHere: result.matched === "start-here", picked }) : (error ?? "What skills are you looking for?");
 
   return (
     <div className="wrap">

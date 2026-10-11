@@ -188,7 +188,8 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
 
     const r: Result = outcome.ok
       ? {
-          title: resultTitle({ asked: outcome.data.asked, startHere }),
+          // Cards picked without words: the title is what was picked. Words typed: what the machine understood.
+          title: resultTitle({ asked: outcome.data.asked, startHere, picked: labels }),
           asked: quoteBrief(text),
           cards: sheets,
           missing: missingLine(outcome.data.missing),
