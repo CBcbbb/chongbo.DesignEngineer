@@ -42,7 +42,10 @@ function Speaker({ off = false }: { off?: boolean }) {
       {off ? (
         <path d="M13.5 7.5l4 5m0-5l-4 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" />
       ) : (
-        <path d="M13.5 7a4 4 0 0 1 0 6m2-8.5a7 7 0 0 1 0 11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+        <>
+          <path className="nk-w1" d="M13.5 7a4 4 0 0 1 0 6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+          <path className="nk-w2" d="M15.5 4.5a7 7 0 0 1 0 11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+        </>
       )}
     </svg>
   );
@@ -55,14 +58,26 @@ function pauseOthers(self: HTMLMediaElement) {
   });
 }
 
+const clock = (t: number) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+
+/** Play and pause as one shape: the two halves of the triangle slide apart into two bars. */
+function PlayMorph({ playing }: { playing: boolean }) {
+  return <span className={`nk-morph${playing ? " is-pause" : ""}`} aria-hidden="true" />;
+}
+
 export function RecordingPlayer({ chapters, full }: { chapters: { part: string; items: Chapter[] }[]; full: string }) {
   const { register, seek } = useContext(RecordingCtx);
   const ref = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [current, setCurrent] = useState<number | null>(null);
+  const [time, setTime] = useState(0);
+  const [duration, setDuration] = useState(0);
   const [muted, setMuted] = useState(false);
   const times = chapters.flatMap((c) => c.items.map((i) => i.t)).sort((a, b) => a - b);
+  let current: number | null = null;
+  for (const s of times) if (time >= s - 0.05) current = s;
+  const next = current === null ? null : (times.find((s) => s > current!) ?? duration);
+  const within = current !== null && next ? Math.min(1, Math.max(0, (time - current) / (next - current))) : 0;
+  const ring = 2 * Math.PI * 21;
 
   useEffect(() => {
     register(ref.current);
@@ -72,64 +87,75 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
     if (ref.current) ref.current.muted = muted;
   }, [muted]);
 
+  const toggle = () => {
+    const v = ref.current;
+    if (!v) return;
+    if (v.paused) void v.play().catch(() => {});
+    else v.pause();
+  };
+
   return (
     <div className="nk-rec">
-      <div className={`nk-phone${playing ? " is-playing" : ""}`}>
-        <video
-          ref={ref}
-          src="/assets/nike/recording.mp4"
-          poster="/assets/nike/recording-poster.jpg"
-          width={750}
-          height={1624}
-          playsInline
-          preload="metadata"
-          aria-label="Screen recording of Athletes Closet in Nike's app"
-          onPlay={(e) => {
-            pauseOthers(e.currentTarget);
-            setPlaying(true);
-          }}
-          onPause={() => setPlaying(false)}
-          onEnded={() => setPlaying(false)}
-          onTimeUpdate={(e) => {
-            const v = e.currentTarget;
-            if (v.duration) setProgress(v.currentTime / v.duration);
-            let cur: number | null = null;
-            for (const s of times) if (v.currentTime >= s - 0.05) cur = s;
-            setCurrent(cur);
-          }}
-        />
-        <button
-          type="button"
-          className="nk-tog"
-          aria-label={playing ? "Pause recording" : "Play recording"}
-          onClick={() => {
-            const v = ref.current;
-            if (!v) return;
-            if (v.paused) void v.play().catch(() => {});
-            else v.pause();
-          }}
-        >
-          {playing ? (
-            <span className="nk-bars" aria-hidden="true">
-              <i />
-              <i />
-            </span>
-          ) : (
-            <span className="nk-tri" aria-hidden="true" />
-          )}
-        </button>
-        <button type="button" className="nk-snd" aria-label="Sound" aria-pressed={!muted} onClick={() => setMuted((m) => !m)}>
-          <Speaker off={muted} />
-        </button>
+      <div className="nk-device">
+        {/* Clicking the screen plays or pauses, as in a stories app; the play button below does the same for keyboards. */}
+        <div className={`nk-phone${playing ? " is-playing" : ""}`} onClick={toggle}>
+          <video
+            ref={ref}
+            src="/assets/nike/recording.mp4"
+            poster="/assets/nike/recording-poster.jpg"
+            width={750}
+            height={1624}
+            playsInline
+            preload="metadata"
+            aria-label="Screen recording of Athletes Closet in Nike's app"
+            onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+            onPlay={(e) => {
+              pauseOthers(e.currentTarget);
+              setPlaying(true);
+            }}
+            onPause={() => setPlaying(false)}
+            onEnded={() => setPlaying(false)}
+            onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
+          />
+          <span className="nk-bigplay" aria-hidden="true">
+            <PlayMorph playing={false} />
+          </span>
+        </div>
+        <div className="nk-dock">
+          <button type="button" className="nk-dock-play" aria-label={playing ? "Pause recording" : "Play recording"} onClick={toggle}>
+            <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+              <circle className="nk-ring-track" cx="24" cy="24" r="21" />
+              <circle
+                className="nk-ring"
+                cx="24"
+                cy="24"
+                r="21"
+                strokeDasharray={ring}
+                strokeDashoffset={duration ? ring * (1 - time / duration) : ring}
+              />
+            </svg>
+            <PlayMorph playing={playing} />
+          </button>
+          <span className="nk-clock">
+            {clock(time)}
+            <i> / {clock(duration || 50)}</i>
+          </span>
+          <button
+            type="button"
+            className={`nk-dock-snd${playing && !muted ? " is-live" : ""}`}
+            aria-label="Sound"
+            aria-pressed={!muted}
+            onClick={() => setMuted((m) => !m)}
+          >
+            <Speaker off={muted} />
+          </button>
+        </div>
       </div>
       <div className="nk-rec-side">
         <h2 id="rec-h">Screen recording</h2>
         <a className="nk-outlink" href={full} target="_blank" rel="noopener">
           Full quality on YouTube<span className="sr-only"> (opens in a new tab)</span> <span aria-hidden="true">↗</span>
         </a>
-        <div className="nk-prog" aria-hidden="true">
-          <i style={{ width: `${progress * 100}%` }} />
-        </div>
         <div className="nk-chapters">
           {chapters.map((c) => (
             <section key={c.part} aria-label={`${c.part} chapters`}>
@@ -137,8 +163,13 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
               <ol>
                 {c.items.map((i) => (
                   <li key={i.t}>
-                    <button type="button" aria-current={current === i.t ? "true" : undefined} onClick={() => seek(i.t)}>
-                      <span className="nk-t">{`0:${String(Math.floor(i.t)).padStart(2, "0")}`}</span>
+                    <button
+                      type="button"
+                      aria-current={current === i.t ? "true" : undefined}
+                      style={current === i.t ? { ["--cp" as string]: String(within) } : undefined}
+                      onClick={() => seek(i.t)}
+                    >
+                      <span className="nk-t">{clock(i.t)}</span>
                       {i.label}
                     </button>
                   </li>
@@ -257,34 +288,89 @@ export function Switcher({ options }: { options: { label: string; layer: string;
 }
 
 /* ---------------------------------------------------------------------------------------------
- * Voice teaser: a Listen button pinned to the waveform on the Star Voice screen. It plays the
- * influencer's teaser (cut from the recording) and sweeps the waveform as it plays.
+ * Voice teaser, played like a voice message: a round play button on the bubble's record dot, its
+ * length beside it (5″), the screenshot's own waveform turning orange as it plays, and three bars
+ * in the button that move with the voice (Web Audio; plain bars with reduced motion).
  * ------------------------------------------------------------------------------------------- */
 
-export function VoiceTeaser({ src, label }: { src: string; label: string }) {
+type Meter = { ctx: AudioContext; an: AnalyserNode; data: Uint8Array<ArrayBuffer> };
+
+export function VoiceTeaser({ src, label, seconds }: { src: string; label: string; seconds: number }) {
   const audio = useRef<HTMLAudioElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
+  const meter = useRef<Meter | null>(null);
+  const frame = useRef(0);
   const [playing, setPlaying] = useState(false);
+  const [heard, setHeard] = useState(false);
   const [progress, setProgress] = useState(0);
+
+  const listen = (a: HTMLAudioElement) => {
+    if (meter.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AC) return;
+    const ctx = new AC();
+    const an = ctx.createAnalyser();
+    an.fftSize = 64;
+    ctx.createMediaElementSource(a).connect(an);
+    an.connect(ctx.destination);
+    meter.current = { ctx, an, data: new Uint8Array(an.frequencyBinCount) };
+  };
+
+  const tick = () => {
+    const m = meter.current;
+    const b = button.current;
+    if (m && b) {
+      m.an.getByteFrequencyData(m.data);
+      // Three voice bands: low, mid and high, each scaled to 0..1.
+      const band = (from: number, to: number) => {
+        let sum = 0;
+        for (let i = from; i < to; i++) sum += m.data[i] ?? 0;
+        return Math.min(1, Math.max(0, (sum / (to - from) - 40) / 170));
+      };
+      b.style.setProperty("--b1", band(1, 4).toFixed(2));
+      b.style.setProperty("--b2", band(4, 9).toFixed(2));
+      b.style.setProperty("--b3", band(9, 16).toFixed(2));
+    }
+    frame.current = requestAnimationFrame(tick);
+  };
+
+  useEffect(() => () => cancelAnimationFrame(frame.current), []);
+
   return (
     <>
-      <span className={`nk-vt-wave${playing ? " is-playing" : ""}`} aria-hidden="true">
+      <span className="nk-vt-wave" aria-hidden="true">
         <i style={{ transform: `scaleX(${progress})` }} />
       </span>
+      <span className="nk-vt-len" aria-hidden="true">
+        {seconds}″
+      </span>
       <button
+        ref={button}
         type="button"
-        className={`nk-vt${playing ? " is-playing" : ""}`}
+        className={`nk-vt${playing ? " is-playing" : ""}${heard ? " is-heard" : ""}`}
         aria-label={playing ? `Pause ${label}` : `Play ${label}`}
         onClick={() => {
           const a = audio.current;
           if (!a) return;
           if (a.paused) {
+            listen(a);
+            void meter.current?.ctx.resume();
             if (a.ended) a.currentTime = 0;
             void a.play().catch(() => {});
           } else a.pause();
         }}
       >
-        <Speaker />
-        <span aria-hidden="true">{playing ? "Playing" : "Listen"}</span>
+        <span className="nk-vt-ico" aria-hidden="true">
+          {playing ? (
+            <span className="nk-eq">
+              <i />
+              <i />
+              <i />
+            </span>
+          ) : (
+            <span className="nk-tri" />
+          )}
+        </span>
       </button>
       <audio
         ref={audio}
@@ -293,11 +379,18 @@ export function VoiceTeaser({ src, label }: { src: string; label: string }) {
         onPlay={(e) => {
           pauseOthers(e.currentTarget);
           setPlaying(true);
+          setHeard(true);
+          cancelAnimationFrame(frame.current);
+          frame.current = requestAnimationFrame(tick);
         }}
-        onPause={() => setPlaying(false)}
+        onPause={() => {
+          setPlaying(false);
+          cancelAnimationFrame(frame.current);
+        }}
         onEnded={() => {
           setPlaying(false);
           setProgress(0);
+          cancelAnimationFrame(frame.current);
         }}
         onTimeUpdate={(e) => {
           const a = e.currentTarget;

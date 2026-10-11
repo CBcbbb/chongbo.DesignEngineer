@@ -419,7 +419,7 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
                       height={1833}
                       sizes="(min-width: 761px) 340px, 70vw"
                     />
-                    <VoiceTeaser src={A("star-voice-teaser.mp3")} label="the voice teaser (5 seconds)" />
+                    <VoiceTeaser src={A("star-voice-teaser.mp3")} label="the voice teaser" seconds={5} />
                   </div>
                   <ul className="nk-sv-notes">
                     {SV_NOTES.map((n) => (

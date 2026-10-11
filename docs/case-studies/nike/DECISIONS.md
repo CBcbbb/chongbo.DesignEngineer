@@ -47,8 +47,9 @@ The case file is built into the site from the approved v3 prototype, with your t
 28. **Star Voice.** The notes from your original image are back, set as text beside the screen so they stay sharp and readable. Heading "Star Voice Q&A"; the body is your original paragraph up to where the notes take over, plus the result. "Episodes" and "guest" read "volumes" and "influencer", to match the rest of the page.
 29. **Openers** list their cards again. **The closing card** is back as 04.1; it adds the context and the team (the cover already gives the outcome). **The shoebox** plays once when it comes into view (not with reduced motion), and Replay plays it again.
 30. **"Image and text"** in 01.1 is larger (the canvas has less padding); the retouching sliders are larger too.
-31. **Sound.** The recording now has its sound (from your original file), with a Sound button above Play. It plays only when someone presses Play or a chapter; nothing plays on its own.
-32. **Voice teaser.** The Star Voice screen has a Listen button on the waveform. It plays the teaser from the recording (0:43–0:48, 5 seconds, levelled) and sweeps the waveform in orange as it plays; a slow ring invites the first tap (none with reduced motion). Starting it pauses the recording, and the other way round.
+31. **Sound.** The recording now has its sound (from your original file). It plays only when someone presses Play, a chapter or the screen; nothing plays on its own.
+32. **Recording controls (redesigned).** A dock under the phone: the play button morphs into pause (the triangle's halves slide apart into bars) and carries the progress as a ring; the time reads 0:19 / 0:50; the speaker's waves pulse while sound plays. Clicking the screen plays or pauses, with a large glyph that grows and fades as it starts. In the chapter list, the chapter now playing draws its own progress line.
+33. **Voice teaser (redesigned).** Played like a voice message: a round play button on the bubble's record dot (a soft ring calls for the first tap), its length (5″) under it, the screenshot's own waveform bars turning orange as it plays, and three bars in the button that move with the voice (Web Audio). Starting it pauses the recording, and the other way round. The shoebox is 85% of its stage.
 
 ## Process## Process
 
