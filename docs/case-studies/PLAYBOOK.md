@@ -137,6 +137,8 @@ Rules:
 
   A project may propose a new block. If accepted, it joins the library for everyone.
 
+  Built in `src/components/casefile/` (template `CaseFile.tsx`, blocks in `blocks.tsx`), styled by `src/app/case-file.css`, with per-project palettes in `src/app/case-palettes.css`. A project opts in with `template: "case-file"` in its content file.
+
 **Per project (its own character):** each project has its own palette, defined once with a light and a dark value for every token:
 
 | Token | Use | Contrast rule (in its own mode) |
