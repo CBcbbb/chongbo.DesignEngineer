@@ -13,8 +13,8 @@ export const hhcd: Project = {
   context: "First built for VOICE, an EU-funded arts research project. Now used by the Helen Hamlyn Centre for Design, Royal College of Art.",
   role: "Research Assistant",
   roleSplit: [
-    { with: "team", what: "Data collection", note: "with the VOICE team" },
-    { with: "solo", what: "Analysis, modelling, design and build", note: "on my own" },
+    { with: "team", what: "Data collection and analysis", note: "with the VOICE team" },
+    { with: "solo", what: "Data modelling, design and build", note: "on my own" },
   ],
   outcome: "Live and in use. Used to teach the Centre's summer interns. Paper on its accessibility approach accepted at DRS 2026.",
   status: "Live",
@@ -27,6 +27,7 @@ export const hhcd: Project = {
   template: "case-file",
   client: "Helen Hamlyn Centre for Design, Royal College of Art",
   work: { title: "The map today", url: "helen-hamlyn-centre-for-design-data.vercel.app" },
+  coverArt: "network",
   openers: "ground",
   legend: [
     { type: "projects", label: "Projects" },

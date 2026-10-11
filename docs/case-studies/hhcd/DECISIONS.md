@@ -55,3 +55,8 @@ The case file now follows the playbook of 11 October (the Nike review's standard
 - 7 `brief`: approved as written.
 - 8 Wall photos: cropped, as you asked, to one 2:1 ratio (1600 × 800) that keeps each whole sheet and drops the ceiling and the floor. The playbook says never crop an original; this is your call, noted here.
 - Role, after your note at 16:05: "Research Assistant", then two lines with small icons: Data collection *with the VOICE team* (two people) and Analysis, modelling, design and build *on my own* (one person). Written into the playbook (§4) for every project; Nike is asked to follow if it fits.
+
+## Cover art and role (11 Oct, evening)
+
+- **Role corrected:** teamwork was data collection and analysis; from data modelling on, it was yours. The lines now read "Data collection and analysis *with the VOICE team*" and "Data modelling, design and build *on my own*".
+- **Cover art, "network":** the map's four marks spill from the cover's top-right corner, run off the sheet and fade before the text. A short ink trail (like the platform's path of opened entries) runs down into "Open the live platform", so the button reads as the way into the map. It is illustrative: 48 marks in the platform's proportions (17 projects, 12 methods, 10 people, 9 partners), not a chart of the real links. The cover's height doesn't change, so it still fits the first screen. Hidden on phones, where it would crowd the title. Built as a template option (`coverArt: "network"`), so other projects can have their own cover art.

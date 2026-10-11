@@ -324,10 +324,14 @@
   gap: 0;
   padding-block: clamp(1.75rem, 4.2vw, 3rem);
 }
-.cf-cover > .cf-title-row {
+.cf-cover-top {
+  position: relative;
+  display: grid;
+}
+.cf-cover-top > .cf-title-row {
   margin-top: clamp(1rem, 2.2vw, 1.5rem);
 }
-.cf-cover > .cf-lede {
+.cf-cover-top > .cf-lede {
   margin-top: clamp(0.75rem, 1.6vw, 1.1rem);
 }
 .cf-cover > .cf-facts {
@@ -415,6 +419,71 @@
   line-height: 1.45;
   color: var(--on-field);
 }
+/* cover art "network": the map's marks spill from the top-right corner and fade towards the text;
+   the live link sits inside the network like an entry point */
+.cf-cover-top > :not(.cf-cover-net) {
+  position: relative;
+  z-index: 1;
+}
+/* the art runs off the sheet's top and right edges and stops above Role and Outcome */
+.cf-cover-net {
+  position: absolute;
+  top: calc(-1 * clamp(1.75rem, 4.2vw, 3rem) - 1.75rem);
+  right: calc(-1 * var(--cf-pad) - 2.25rem);
+  bottom: -0.75rem;
+  width: min(calc((100% + 2 * var(--cf-pad)) * 0.7), 660px);
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent);
+  mask-image: linear-gradient(to bottom, #000 72%, transparent);
+}
+.cf-cover-net-art {
+  aspect-ratio: 640 / 460;
+  -webkit-mask-image: radial-gradient(ellipse 62% 105% at 100% 0%, #000 52%, rgb(0 0 0 / 0.45) 78%, transparent 100%);
+  mask-image: radial-gradient(ellipse 62% 105% at 100% 0%, #000 52%, rgb(0 0 0 / 0.45) 78%, transparent 100%);
+  animation: cf-net-in 0.6s var(--ease) both;
+}
+@media (max-width: 600px) {
+  .cf-cover-net {
+    display: none;
+  }
+}
+@keyframes cf-net-in {
+  from {
+    opacity: 0;
+  }
+}
+.cf-cover-net svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.cf-cover-net .nl line {
+  stroke: #d6d4dc;
+  stroke-width: 1;
+}
+.cf-cover-net .np line {
+  stroke: var(--on-field);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.cf-cover-net .nm-people {
+  fill: var(--mark-people);
+}
+.cf-cover-net .nm-partners {
+  fill: var(--mark-partners);
+}
+.cf-cover-net .nm-projects {
+  fill: var(--mark-projects);
+}
+.cf-cover-net .nm-methods {
+  fill: var(--mark-methods);
+}
+/* the live link, a node in the network: a ring of the sheet's colour keeps lines off it */
+.has-art-network .cf-title-row .cf-btn {
+  box-shadow: 0 0 0 6px var(--field);
+}
+
 /* the role: the job title, then what was done and with whom, each line with a small icon */
 .cf-facts.has-split {
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);

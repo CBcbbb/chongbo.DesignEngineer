@@ -109,6 +109,9 @@
     --case-rule: #312f38;
     border-color: #312f38;
   }
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-cover-net .nl line {
+    stroke: #3a3942;
+  }
   :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-shows li {
     box-shadow: inset 0 0 0 1px #4a4853;
   }
@@ -153,6 +156,9 @@
   --on-field-2: #aeacb8;
   --case-rule: #312f38;
   border-color: #312f38;
+}
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-cover-net .nl line {
+  stroke: #3a3942;
 }
 :root[data-theme="dark"] [data-palette="hhcd"] .cf-shows li {
   box-shadow: inset 0 0 0 1px #4a4853;

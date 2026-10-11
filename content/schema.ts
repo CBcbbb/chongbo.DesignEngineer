@@ -238,6 +238,11 @@ export type Project = {
    * the product"): `Project.cover` in a browser frame, with this heading and the address shown in the frame.
    */
   work?: { title: string; url: string };
+  /**
+   * Case-file template: the project's own art on the cover (playbook §7: the skeleton is shared, the art direction
+   * is not). `network`: the map's four marks spilling from the cover's top-right corner, fading towards the text.
+   */
+  coverArt?: "network";
   /** Case-file template: part openers on the project's colour field (`field`, default) or on the studio (`ground`). */
   openers?: "field" | "ground";
   /** Case-file template: the key to the cover image, e.g. a map's entity types. */

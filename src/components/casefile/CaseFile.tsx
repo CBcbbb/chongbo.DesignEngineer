@@ -7,6 +7,7 @@ import { projectNumber } from "@/lib/site";
 import { imageSize } from "@/lib/assets";
 import { CaseMedia, CardTitle, Facts, Keys, StepsRow } from "./blocks";
 import { CaseContents, type ContentsPart } from "./CaseContents";
+import { CoverNetwork } from "./CoverNetwork";
 import { BrowserFrame } from "./Frame";
 import { CapabilityIcon, OutArrow, WhoIcon } from "./icons";
 
@@ -109,7 +110,9 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
         <CaseContents title={project.title} parts={contents} />
 
         <article className="cf-sheets" aria-labelledby="case-title">
-          <header id="top" className="cf-sheet is-field cf-cover">
+          <header id="top" className={`cf-sheet is-field cf-cover${project.coverArt ? ` has-art-${project.coverArt}` : ""}`}>
+            <div className="cf-cover-top">
+            {project.coverArt === "network" && <CoverNetwork />}
             <p className="cf-client">
               {project.legend && (
                 <span className="cf-marks" aria-hidden="true">
@@ -133,6 +136,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
               )}
             </div>
             <p className="cf-lede">{project.oneLiner}</p>
+            </div>
             <dl className={`cf-facts${project.roleSplit ? " has-split" : ""}`}>
               <div>
                 <dt>Role</dt>
