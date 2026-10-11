@@ -84,3 +84,9 @@ None of these are used unless Chongbo confirms them as real. One detail to check
 - Changes from prototype v3: card heads split claim left / reasoning right (Granola); headings at weight 500; larger radii; grain backdrops; product card as a side-by-side pair (Chongbo's review); retouching keeps the slider; controls at least 44px, contents links 32px.
 - Checks: lint, typecheck, 59 unit tests, build, 60 Playwright tests including axe on every route at 1440 and 390, no image off its native ratio, all Nike colour pairs ≥ 4.5:1 in both modes.
 - Local builds need Google Fonts for WildEcho's `fonts.ts`, which this sandbox can't reach; I stubbed it locally for testing and restored it before committing.
+
+## Round 4 (2026-10-11)
+
+- **Outcome, in his words:** it went fully live in Nike's app across China, and because it went well, Nike renewed the contract with the agency. Shown on the cover after HHCD's pattern: "Launched nationwide. Nike renewed the contract for the following seasons."
+- **No repetition.** He wants each thing said once: no lede and intro saying the same, no heading restated in the body, no outcome on the cover and again at the end.
+- Layout: 01.1 with tabs down the left of the canvas (not text beside the evidence); wireframe inset at the canvas's top-right, overhanging it.

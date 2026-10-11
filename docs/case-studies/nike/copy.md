@@ -1,110 +1,109 @@
-# Nike Athletes Closet: copy, draft 7
+# Nike Athletes Closet: copy, draft 8
 
-Playbook §8 step 4. Every line traces to the Wix page or `notes.md`. The page shows the final result, written for the reader.
+Playbook §8 step 4. Every line traces to the Wix page or `notes.md`. The page shows the final result, written for the reader. The words live in `content/projects/nike.ts`; this file is the readable copy of them.
 
-**Story.** The cover sets one idea in three verbs: stories people read, shop and return to. The page then follows those verbs as three parts, in the order a reader meets the feature. Each part opens with the problem it solves; the closing gives the outcome, the role and what I'd do now. Every card still stands alone when printed.
+**Story.** The cover sets one idea in three verbs: stories people read, shop and return to. The page follows those verbs as three parts, then closes with what I'd do now. Every card still stands alone when printed.
 
-**JD language.** Checked against both Granola JDs (10 Oct 2026). Borrowed where it fits the facts: "from typography and color to motion and microinteractions", "reusable components, page templates", "balance consistency with flexibility", "calls to action", "hierarchy", "gaps between design and engineering", "from an initial idea into production", "take responsibility for the quality of what ships".
+**No repetition (draft 8).** Each thing is said once. The heading makes the claim; the body adds what the heading doesn't say (the problem, the method, the result) and never restates it; the evidence shows it, so the body doesn't describe it. The cover holds the role, team and outcome, so the page doesn't end on a second copy of them. Card labels are the index only: the old kind labels ("Before and after", "Design system") and capability pills repeated the evidence, the heading or each other.
 
-**Heading rhythm.** Plain statements carry most of the page; a few headings use livelier language where the idea earns it (views, shop the look, Star Voice, outcome). Never two hooks in a row.
+**JD language.** Checked against both Granola JDs (10 Oct 2026): "from typography and color to motion", "reusable components", "balance consistency with flexibility", "calls to action", "hierarchy", "gaps between design and engineering", "from an initial idea into production".
 
 **What this shows (chips):** Brand storytelling · Motion and microinteractions · Design systems
-
-**Lens openers:** `web` → system · `ux` → tags · `engineer` → draw
 
 ---
 
 ## Cover
 
+Nike App, China
+
 # Nike Athletes Closet
 
-Influencer stories in Nike's app, designed to be read, shopped and returned to.
+Style stories from fashion influencers, designed to be read, shopped and returned to.
 
-Athletes Closet is a members' feature in Nike's app in China. In each volume, a fashion influencer shares their style and recommends Nike products. From VOL.4, I designed the feature's creative system, every screen and its motion.
+- **Role:** Creative system, screens and motion, as a UI design intern at an advertising agency.
+- **Team:** Brief from Nike's marketing team; built by Nike's engineers.
+- **Outcome:** Launched nationwide. Nike renewed the contract for the following seasons.
 
-Role: UI Designer · Client: Nike · Platform: Nike App, China
+## Screen recording
 
----
-
-## Part 01 · Read
-
-### system · Redesigning the creative system first
-
-Three volumes had shipped by the time I took over at VOL.4, so I began by redesigning the creative system, from the logo lock-up and typography to colour, framing devices and motion. I set the layouts up as reusable page templates, so every later volume is built from the same parts. The framing device balances consistency with flexibility: it adds, removes or rearranges details to fit each headline, and colour is picked up from each influencer's photos or products.
-
-*One framing device, five configurations.*
-
-### style · A unified visual style and tone
-
-Each influencer gets a hero visual and a poster card in the same style, so readers know whose volume they're in. I retouched the key photos with tone correction, blemish removal and a flash-photography look, so every volume shares one tone.
-
-*One poster system, a different influencer each volume.*
-*Retouched for the flash look: original and final.*
-
-### views · Several views of one outfit, swiped sideways
-
-Where a story shows the same outfit from several angles, I set the images as horizontal pages instead of one long vertical scroll. It saves space, and the next view shows at the edge, so readers can see there's more.
-
-*The next view at the edge is the cue to swipe.*
-
-### components · Reusable components, built for handover
-
-The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma as reusable components with Auto Layout, documented for handover. It cut the back-and-forth between design and engineering.
-
-*One set of sizes, spacing and names across the screens.*
+Full quality on YouTube ↗ · chapters: Read (logo lock-up, headline framing device, several views) · Shop (product tag, product cards, Star Ranking) · Return (like, Star Voice Q&A)
 
 ---
 
-## Part 02 · Shop
+## 01 Read
 
-### tags · Shop the look, straight from the photo
+### 01.1 Redesigning the creative system first
 
-Readers engaged with the stories, but product click-through stayed low, because the stories didn't connect to the products. I added tappable product tags to the photos, so an outfit leads straight to what's in it.
+Three volumes had shipped when I took over at VOL.4. The redesign covered the logo lock-up, typography, colour, framing devices and motion.
 
-*A tag on the photo names the shoe and links to it.*
+The framing device balances consistency with flexibility: it adds, removes or rearranges details to fit each headline, and takes its colour from each influencer's photos or products.
 
-### product-card · Larger product cards
+*Evidence: the five framing-device configurations, with their Figma layer names.*
 
-The old product cards were small tiles. I enlarged the product image, so each item reads as part of the content.
+### 01.2 A unified visual style
 
-*Drag to compare the product card before and after VOL.4.*
+Each influencer gets a hero visual and a poster card, so readers know whose volume they're in.
 
-### ranking · A ranking that leads to similar outfits
+*Evidence: the six poster cards.*
 
-The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear hierarchy, and added two calls to action after a like, "See more" and "View similar outfits", so a ranking leads into more products.
+### 01.3 Retouched to one tone
 
-*A loose list becomes a ranked board with a way onward.*
+I gave every key photo tone correction, blemish removal and a flash-photography look.
 
----
+*Evidence: two original / retouched sliders.*
 
-## Part 03 · Return
+### 01.4 Several views of one outfit, swiped sideways
 
-### draw · A reward for every like
+Before, every angle stacked into one long scroll. As pages, the views take less space, and the next one showing at the edge tells readers there's more.
 
-The stories were static, so readers had little reason to act. I added a reward mechanism: a like enters a prize draw, which opens as a shoebox with a pair of trainers rising out. I designed the microinteraction and animated it.
+### 01.5 Reusable components, built for handover
 
-*Play: a like enters the prize draw.*
-
-### star-voice · Star Voice Q&A: ask now, answered live
-
-I designed Star Voice Q&A to hold attention between volumes. The next influencer records a short voice teaser, readers submit questions and vote on others', and the top questions are answered in Nike's livestream. It shipped, and was recommended for wider use in other campaigns.
-
-*Preview, ask, vote, answered live.*
+The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them. It cut the back-and-forth between design and engineering.
 
 ---
 
-## Closing
+## 02 Shop
 
-### outcome · One season became several
+### 02.1 Shop the look, straight from the photo
 
-The feature shipped in Nike's app. The contract covered one season; after VOL.4, Nike commissioned the following seasons.
+Readers engaged with the stories, but product click-through stayed low, because the stories didn't connect to the products. I added tappable product tags.
 
-**Role.** UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
+*Evidence: the final screens, with the wireframe pinned to the top-right corner; pressing it swaps them.*
 
-### handoff · What I'd do now: take motion from idea to production myself
+### 02.2 Products as part of the story
 
-I specified the like in four states: an outline heart, a pill inviting a like to win a gift, a black heart with the count, and hearts floating out. Handed over in Figma, it was built as a plain red heart. I now build motion in code myself and take responsibility for the quality of what ships.
+The old product cards were small tiles under the photo. I enlarged the product image.
 
-*The specified states, beside the version that shipped.*
+### 02.3 A ranking that leads to similar outfits
 
-[Full recording ↗](https://www.youtube.com/shorts/4cFA1T_9m8w)
+The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear hierarchy, and added two calls to action after a like.
+
+---
+
+## 03 Return
+
+### 03.1 A reward for every like
+
+The stories were static, so readers had little reason to act. I made each like an entry in a prize draw, then designed and animated the microinteraction.
+
+### 03.2 Star Voice Q&A: ask now, answered live
+
+I designed it to hold attention between volumes: the next influencer records a short voice teaser, and readers vote on each other's questions. It shipped, and was recommended for wider use in other campaigns.
+
+---
+
+## 04 Reflection
+
+### 04.1 What I'd do now: take motion from idea to production myself
+
+I specified the like in four states and handed it over in Figma. It shipped as a plain red heart.
+
+*Evidence: Specified / Shipped.*
+
+---
+
+## Printed sheet only: outcome
+
+Not a card on the page (the cover says it); the printer and the AI still use it, and its link lands on the cover's Outcome line.
+
+**Nike renewed for the following seasons.** The feature went live in Nike's app across China, on a contract that covered one season. UI design internship at an advertising agency. Nike's marketing team set the brief; Nike's engineers built it.

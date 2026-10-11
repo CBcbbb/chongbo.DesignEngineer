@@ -8,9 +8,11 @@ import type { Project } from "../schema";
 export const nike: Project = {
   slug: "nike-athletes-closet",
   title: "Nike Athletes Closet",
-  oneLiner: "Influencer stories in Nike's app, designed to be read, shopped and returned to.",
+  oneLiner: "Style stories from fashion influencers, designed to be read, shopped and returned to.",
   context: "Nike App, China · UI design internship at an advertising agency",
-  role: "UI Designer",
+  role: "Creative system, screens and motion, as a UI design intern at an advertising agency.",
+  outcome: "Launched nationwide. Nike renewed the contract for the following seasons.",
+  client: "Nike App, China",
   status: "Shipped",
   stack: ["Figma", "Lottie"],
   links: [{ label: "Screen recording of the feature", href: "https://www.youtube.com/shorts/4cFA1T_9m8w" }],
@@ -29,8 +31,8 @@ export const nike: Project = {
       kind: "decision",
       title: "Redesigning the creative system first",
       body: [
-        "Three volumes had shipped by the time I took over at VOL.4, so I began by redesigning the creative system, from the logo lock-up and typography to colour, framing devices and motion. I set the layouts up as reusable page templates, so every later volume is built from the same parts.",
-        "The framing device balances consistency with flexibility: it adds, removes or rearranges details to fit each headline, and colour is picked up from each influencer's photos or products.",
+        "Three volumes had shipped when I took over at VOL.4. The redesign covered the logo lock-up, typography, colour, framing devices and motion.",
+        "The framing device balances consistency with flexibility: it adds, removes or rearranges details to fit each headline, and takes its colour from each influencer's photos or products.",
       ],
       signals: ["brand-storytelling", "design-systems", "reusable-components", "typography"],
       media: {
@@ -46,7 +48,7 @@ export const nike: Project = {
       kind: "evidence",
       title: "A unified visual style",
       body: [
-        "Each influencer gets a hero visual and a poster card in the same style, so readers know whose volume they're in.",
+        "Each influencer gets a hero visual and a poster card, so readers know whose volume they're in.",
       ],
       signals: ["brand-storytelling", "typography"],
       media: {
@@ -62,7 +64,7 @@ export const nike: Project = {
       kind: "evidence",
       title: "Retouched to one tone",
       body: [
-        "I retouched the key photos with tone correction, blemish removal and a flash-photography look, so every volume shares one tone.",
+        "I gave every key photo tone correction, blemish removal and a flash-photography look.",
       ],
       signals: ["brand-storytelling"],
       media: {
@@ -78,7 +80,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Several views of one outfit, swiped sideways",
       body: [
-        "Where a story shows the same outfit from several angles, I set the images as horizontal pages instead of one long vertical scroll. It saves space, and the next view shows at the edge, so readers can see there's more.",
+        "Before, every angle stacked into one long scroll. As pages, the views take less space, and the next one showing at the edge tells readers there's more.",
       ],
       signals: ["motion-interaction", "brand-storytelling"],
       media: {
@@ -94,7 +96,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Reusable components, built for handover",
       body: [
-        "The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma as reusable components with Auto Layout, documented for handover. It cut the back-and-forth between design and engineering.",
+        "The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them. It cut the back-and-forth between design and engineering.",
       ],
       signals: ["reusable-components", "design-systems", "design-eng-gap"],
       media: {
@@ -110,7 +112,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Shop the look, straight from the photo",
       body: [
-        "Readers engaged with the stories, but product click-through stayed low, because the stories didn't connect to the products. I added tappable product tags to the photos, so an outfit leads straight to what's in it.",
+        "Readers engaged with the stories, but product click-through stayed low, because the stories didn't connect to the products. I added tappable product tags.",
       ],
       signals: ["conversion", "brand-storytelling"],
       media: {
@@ -124,8 +126,8 @@ export const nike: Project = {
     {
       id: "product-card",
       kind: "decision",
-      title: "Larger product cards",
-      body: ["The old product cards were small tiles. I enlarged the product image, so each item reads as part of the content."],
+      title: "Products as part of the story",
+      body: ["The old product cards were small tiles under the photo. I enlarged the product image."],
       signals: ["conversion", "brand-storytelling"],
       media: {
         kind: "image",
@@ -140,7 +142,7 @@ export const nike: Project = {
       kind: "decision",
       title: "A ranking that leads to similar outfits",
       body: [
-        "The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear hierarchy, and added two calls to action after a like, \"See more\" and \"View similar outfits\", so a ranking leads into more products.",
+        "The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear hierarchy, and added two calls to action after a like.",
       ],
       signals: ["conversion", "brand-storytelling"],
       media: {
@@ -156,7 +158,7 @@ export const nike: Project = {
       kind: "decision",
       title: "A reward for every like",
       body: [
-        "The stories were static, so readers had little reason to act. I added a reward mechanism: a like enters a prize draw, which opens as a shoebox with a pair of trainers rising out. I designed the microinteraction and animated it.",
+        "The stories were static, so readers had little reason to act. I made each like an entry in a prize draw, then designed and animated the microinteraction.",
       ],
       signals: ["motion-interaction", "brand-storytelling", "prototyping"],
       media: {
@@ -172,7 +174,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Star Voice Q&A: ask now, answered live",
       body: [
-        "I designed Star Voice Q&A to hold attention between volumes. The next influencer records a short voice teaser, readers submit questions and vote on others', and the top questions are answered in Nike's livestream. It shipped, and was recommended for wider use in other campaigns.",
+        "I designed it to hold attention between volumes: the next influencer records a short voice teaser, and readers vote on each other's questions. It shipped, and was recommended for wider use in other campaigns.",
       ],
       signals: ["brand-storytelling", "motion-interaction", "prototyping"],
       media: {
@@ -183,13 +185,14 @@ export const nike: Project = {
         ratio: "1:1",
       },
     },
+    // Printed sheets and the AI. On the page, the outcome is the cover's Outcome line, which carries this id.
     {
       id: "outcome",
       kind: "outcome",
-      title: "One season became several",
+      title: "Nike renewed for the following seasons",
       body: [
-        "The feature shipped in Nike's app. The contract covered one season; after VOL.4, Nike commissioned the following seasons.",
-        "UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.",
+        "The feature went live in Nike's app across China, on a contract that covered one season.",
+        "UI design internship at an advertising agency. Nike's marketing team set the brief; Nike's engineers built it.",
       ],
       signals: ["end-to-end", "brand-storytelling"],
     },
@@ -198,7 +201,7 @@ export const nike: Project = {
       kind: "retrospective",
       title: "What I'd do now: take motion from idea to production myself",
       body: [
-        "I specified the like in four states: an outline heart, a pill inviting a like to win a gift, a black heart with the count, and hearts floating out. Handed over in Figma, it was built as a plain red heart. I now build motion in code myself and take responsibility for the quality of what ships.",
+        "I specified the like in four states and handed it over in Figma. It shipped as a plain red heart.",
       ],
       signals: ["design-eng-gap", "motion-interaction", "judgement"],
       media: {

@@ -34,7 +34,7 @@ export function RecordingProvider({ children }: { children: ReactNode }) {
 
 export type Chapter = { t: number; label: string };
 
-export function RecordingPlayer({ chapters }: { chapters: { part: string; items: Chapter[] }[] }) {
+export function RecordingPlayer({ chapters, full }: { chapters: { part: string; items: Chapter[] }[]; full: string }) {
   const { register, seek } = useContext(RecordingCtx);
   const ref = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -93,8 +93,10 @@ export function RecordingPlayer({ chapters }: { chapters: { part: string; items:
         </button>
       </div>
       <div className="nk-rec-side">
-        <h2 id="rec-h">The feature in the app</h2>
-        <p className="nk-sub">A screen recording of the feature as it shipped. Jump to any moment.</p>
+        <h2 id="rec-h">Screen recording</h2>
+        <a className="nk-outlink" href={full} target="_blank" rel="noopener">
+          Full quality on YouTube<span className="sr-only"> (opens in a new tab)</span> <span aria-hidden="true">↗</span>
+        </a>
         <div className="nk-prog" aria-hidden="true">
           <i style={{ width: `${progress * 100}%` }} />
         </div>
@@ -225,32 +227,36 @@ export function Switcher({ options }: { options: { label: string; layer: string;
 }
 
 /* ---------------------------------------------------------------------------------------------
- * Picture in picture: the shipped screen large, the wireframe as a labelled inset. Both are always
- * visible; pressing the inset swaps which one is large.
+ * Picture in picture: the shipped screens large, the wireframe as a labelled inset pinned to the
+ * canvas's top-right corner and overhanging it. Pressing the inset swaps which one is large.
  * ------------------------------------------------------------------------------------------- */
 
 type PipState = { label: string; image: ReactNode };
 
-export function Pip({ main, inset }: { main: PipState; inset: PipState }) {
+export function Pip({ main, inset, ratio }: { main: PipState; inset: PipState; /** width / height of both images */ ratio: number }) {
   const [swapped, setSwapped] = useState(false);
   const big = swapped ? inset : main;
   const small = swapped ? main : inset;
   return (
     <div className="nk-pip nk-box">
-      <div className="nk-pip-main">{big.image}</div>
-      <button
-        type="button"
-        className="nk-pip-inset"
-        aria-label={`Show the ${small.label.toLowerCase()} large`}
-        onClick={() => setSwapped((v) => !v)}
-      >
-        <span className="nk-pip-thumb" aria-hidden="true">
-          {small.image}
-        </span>
-        <span className="nk-pip-lbl" aria-hidden="true">
-          {small.label} <span className="nk-pip-ico">⤢</span>
-        </span>
-      </button>
+      <div className="nk-pip-main">
+        <div className="nk-pip-canvas" style={{ ["--ar" as string]: String(ratio) }}>
+          {big.image}
+          <button
+            type="button"
+            className="nk-pip-inset"
+            aria-label={`Show the ${small.label.toLowerCase()} large`}
+            onClick={() => setSwapped((v) => !v)}
+          >
+            <span className="nk-pip-thumb" aria-hidden="true">
+              {small.image}
+            </span>
+            <span className="nk-pip-lbl" aria-hidden="true">
+              {small.label} <span className="nk-pip-ico">⤢</span>
+            </span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -350,7 +356,7 @@ export function Contents({ title, parts }: { title: string; parts: ContentsPart[
   useEffect(() => {
     const ids = parts.flatMap((p) => [p.id, ...p.cards.map((c) => c.id)]);
     let frame = 0;
-    /* The current card is the last one whose top has passed 40% of the viewport; none above the first part. */
+    /* The current card is the last one whose top has passed 40% of the viewport; above the first part, none. */
     const update = () => {
       frame = 0;
       const line = window.innerHeight * 0.4;
@@ -381,7 +387,8 @@ export function Contents({ title, parts }: { title: string; parts: ContentsPart[
 
   return (
     <nav className="nk-toc" aria-label="Contents">
-      <a className="nk-toc-proj" href="#top">
+      {/* Above the first part (the cover and the recording), the project itself is where you are. */}
+      <a className="nk-toc-proj" href="#top" aria-current={card === null ? "step" : undefined}>
         {title}
       </a>
       <ol>
