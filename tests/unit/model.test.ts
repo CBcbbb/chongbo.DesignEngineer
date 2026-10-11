@@ -38,7 +38,7 @@ describe("askModel", () => {
     const [params, options] = parse.mock.calls[0] as unknown as [Record<string, unknown>, Record<string, unknown>];
     expect(params.model).toBe(MODEL);
     expect(params.output_config).toBeDefined();
-    expect(options.timeout).toBe(6000);
+    expect(options.timeout).toBe(10000);
     expect(JSON.stringify(params.messages)).toContain("<brief>");
   });
 
