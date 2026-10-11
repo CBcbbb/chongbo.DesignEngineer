@@ -360,9 +360,10 @@
 }
 
 /* ---------- cover ---------- */
+/* the same type scale and spacing as the shared case-file cover, so every project's cover matches */
 .nk-cover {
-  gap: clamp(1.5rem, 3vw, 2.25rem);
-  padding-block: clamp(1.75rem, 5vw, 3.25rem);
+  gap: clamp(1rem, 2vw, 1.5rem);
+  padding-block: clamp(1.5rem, 3.4vw, 2.5rem);
 }
 .nk-client {
   display: flex;
@@ -378,18 +379,18 @@
   background: var(--nk-on-orange);
 }
 .nk-cover h1 {
-  max-width: 9ch;
-  font-size: clamp(3rem, 9.4vw, 7.25rem);
+  max-width: 10em;
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
   font-weight: 600;
-  line-height: 0.9;
-  letter-spacing: -0.06em;
+  line-height: 0.94;
+  letter-spacing: -0.05em;
 }
 .nk-lede {
-  max-width: 26ch;
-  font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+  max-width: 44ch;
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
   font-weight: 500;
-  line-height: 1.22;
-  letter-spacing: -0.02em;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
 }
 /* role and outcome in one row under a rule */
 .nk-facts {

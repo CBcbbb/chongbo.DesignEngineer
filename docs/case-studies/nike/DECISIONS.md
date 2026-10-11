@@ -67,6 +67,8 @@ The case file is built into the site from the approved v3 prototype, with your t
 
 44. **Round of 14:44:** the moments are grouped by Read / Shop / Return again (times stay as measured); in 01.4 the inset keeps the same place and size whichever image is large; "sole UI designer"; every clip plays at 0.75× speed; **04.2 (What I'd do now) is off the page for now.** Its text, kept for later: "What I'd do now: take motion from idea to production myself. I specified the like in four states and handed it over in Figma. It shipped as a plain red heart." (assets `like-states.png`, `like-shipped.jpg` stay in the repo).
 
+45. **Cover at the shared scale** (15:33): the title, line under it and spacing now match the case-file template HHCD uses, so the covers look like one system. The whole cover fits in the first screen at 1280 × 720 and up (486 px tall at 1440 × 900).
+
 ## Process## Process
 
 12. **Going live.** You said it can go live once done, so after the tests passed I rebased onto `main` and merged. To undo: revert the merge commit on `main`.

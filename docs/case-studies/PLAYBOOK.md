@@ -137,7 +137,7 @@ Rules:
 - **Page skeleton (every project, same system as Nike):**
   - Contents on the left on every project: the project, then each part with its cards; the card being read is marked (one marker, text centred in its highlight). Below 1000px it becomes a strip of parts.
   - On the right, a stack of sheets on the studio:
-    - cover: the client, the title, one line saying what it is, then Role and Outcome, and "What this shows": two or three capability labels on one line. Labels, not links: a capability usually spans several cards, so a jump to one of them misleads. Compact: the cover mustn't fill the first screen;
+    - cover: the client, the title, one line saying what it is, then Role and Outcome, and "What this shows": two or three capability labels on one line. Labels, not links: a capability usually spans several cards, so a jump to one of them misleads. Compact: the whole cover fits in the first screen, and every project uses the shared cover type scale (title `clamp(2.5rem, 6vw, 4.75rem)`, line under it `clamp(1.15rem, 2vw, 1.45rem)`), so covers match across projects;
     - the work (the product itself);
     - then, for each part, an opener (big number, name, its cards) and one sheet per card;
     - then next project.
