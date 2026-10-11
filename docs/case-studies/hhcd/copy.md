@@ -107,10 +107,10 @@ The Centre's brand colours are fixed, and two of them fail contrast as small tex
 
 ### `results`: Results
 
-The platform is live and in use at the Helen Hamlyn Centre. A paper on the accessibility approach was accepted at DRS 2026.
+The platform is live and in use at the Helen Hamlyn Centre. A paper on the accessibility approach was accepted at DRS 2026. Tested in Chrome, Safari and Firefox; screen-reader testing is next. [Update after the VoiceOver test.]
 
 *Metric strip:* Lighthouse accessibility 99 (VOICE) · WAVE 0 errors (VOICE) · axe 0 violations at 1440 and 390px (rebuild) · 27 of 27 contrast pairings pass
 
 ### `role`: Designed, specified and built alone
 
-I made the design files, wrote the specification and wrote all of the code, with AI coding tools that at the start needed close direction. Tested in Chrome, Safari and Firefox; screen-reader testing is next. [Update after the VoiceOver test.]
+I made the design files, wrote the specification and built the platform. Doing both, I could turn each design straight into working code, which made the work faster.

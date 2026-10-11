@@ -403,7 +403,7 @@ export const hhcd: Project = {
       kind: "outcome",
       title: "Results",
       body: [
-        "The platform is live and in use at the Helen Hamlyn Centre. A paper on the accessibility approach was accepted at DRS 2026.",
+        "The platform is live and in use at the Helen Hamlyn Centre. A paper on the accessibility approach was accepted at DRS 2026. Tested in Chrome, Safari and Firefox; screen-reader testing is next.",
       ],
       signals: ["end-to-end", "research"],
       capabilities: ["B", "E"],
@@ -427,7 +427,7 @@ export const hhcd: Project = {
       kind: "role",
       title: "Designed, specified and built alone",
       body: [
-        "I made the design files, wrote the specification and wrote all of the code, with AI coding tools that at the start needed close direction. Tested in Chrome, Safari and Firefox; screen-reader testing is next.",
+        "I made the design files, wrote the specification and built the platform. Doing both, I could turn each design straight into working code, which made the work faster.",
       ],
       signals: ["end-to-end", "ai-tools"],
       capabilities: ["B", "F"],
