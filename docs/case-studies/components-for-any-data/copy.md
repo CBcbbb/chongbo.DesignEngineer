@@ -81,7 +81,7 @@ A page often shows the same data twice: a table of orders and the totals beside 
 
 ### 03.1 Streams ranked by fit, not listed by size
 
-The first answer was to list every stream in the organisation by row count. A test organisation already had 74, most didn't fit, and users found out only after reading a stream's rows.
+The first answer was to list every stream in the organisation by row count. A test organisation already had 74, most didn't fit, and users found out after reading a stream's rows.
 
 I grouped streams by fit instead: every field the component needs first, then "Partly fits · 3 of 5 fields", then the rest, collapsed and searchable. A stream with no data yet reads "Unknown", never "Doesn't fit".
 
