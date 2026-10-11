@@ -57,7 +57,7 @@ Before, every angle stacked into one long scroll. As pages, the views take less 
 
 ### 01.5 Reusable components, built for handover
 
-The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them. It cut the back-and-forth between design and engineering.
+The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them.
 
 ---
 
@@ -87,7 +87,7 @@ The stories were static, so readers had little reason to act. I made each like a
 
 ### 03.2 Star Voice Q&A
 
-To maintain audience interest between volumes and build anticipation for the next influencer, I designed a new feature. It shipped, and was recommended for wider use in other campaigns.
+To maintain audience interest between volumes and build anticipation for the next influencer, I designed a new feature.
 
 *Evidence: the screen with the original presentation's notes pinned beside it:*
 - **Voice teaser:** Each influencer introduces the next volume through a short voice clip, with an animated waveform to catch attention and add realism.
@@ -101,10 +101,12 @@ The paragraph is the original Wix text, cut where the notes take over (how the l
 
 ## 04 Outcome
 
-### 04.1 One season became several
+### 04.1 Design that helped win Nike's next seasons
 
-- **Outcome:** The feature shipped in Nike's app. The contract covered one season; after VOL.4, Nike commissioned the following seasons.
-- **Role:** UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
+- **Delivery:** One component system made each volume faster to deliver, with less back-and-forth between design and Nike's engineers.
+- **Conversion:** Product tags and larger product cards made the products easier to find in the stories and gave readers a clearer path from story to product. Nike's feedback was positive.
+- **Engagement:** Likes, the prize draw and Star Voice Q&A lifted engagement beyond what Nike expected, and Star Voice was recommended for other campaigns.
+- **Role:** As the agency's sole designer, I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
 
 ### 04.2 What I'd do now: take motion from idea to production myself
 

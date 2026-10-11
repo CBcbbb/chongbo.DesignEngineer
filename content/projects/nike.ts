@@ -96,7 +96,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Reusable components, built for handover",
       body: [
-        "The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them. It cut the back-and-forth between design and engineering.",
+        "The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them.",
       ],
       signals: ["reusable-components", "design-systems", "design-eng-gap"],
       media: {
@@ -174,7 +174,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Star Voice Q&A",
       body: [
-        "To maintain audience interest between volumes and build anticipation for the next influencer, I designed a new feature. It shipped, and was recommended for wider use in other campaigns.",
+        "To maintain audience interest between volumes and build anticipation for the next influencer, I designed a new feature.",
       ],
       signals: ["brand-storytelling", "motion-interaction", "prototyping"],
       media: {
@@ -188,12 +188,26 @@ export const nike: Project = {
     {
       id: "outcome",
       kind: "outcome",
-      title: "One season became several",
+      title: "Design that helped win Nike's next seasons",
       body: [
-        "The feature shipped in Nike's app. The contract covered one season; after VOL.4, Nike commissioned the following seasons.",
-        "UI design internship at an advertising agency. I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.",
+        "As the agency's sole designer, I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.",
       ],
-      signals: ["end-to-end", "brand-storytelling"],
+      // The results of the three parts, in the business's terms (from the original case study).
+      steps: [
+        {
+          title: "Delivery",
+          text: "One component system made each volume faster to deliver, with less back-and-forth between design and Nike's engineers.",
+        },
+        {
+          title: "Conversion",
+          text: "Product tags and larger product cards made the products easier to find in the stories and gave readers a clearer path from story to product. Nike's feedback was positive.",
+        },
+        {
+          title: "Engagement",
+          text: "Likes, the prize draw and Star Voice Q&A lifted engagement beyond what Nike expected, and Star Voice was recommended for other campaigns.",
+        },
+      ],
+      signals: ["end-to-end", "conversion", "brand-storytelling"],
     },
     {
       id: "handoff",

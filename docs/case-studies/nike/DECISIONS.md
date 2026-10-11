@@ -62,6 +62,9 @@ The case file is built into the site from the approved v3 prototype, with your t
 40. **"See it at" opens a clip beside the card** instead of scrolling to the top: a small player plays that moment once (Play again at the end); Escape, the close button or a click outside closes it. 01.2 (Visual style) gained one, for the poster card at 0:40.
 41. **01.4 leads with the wireframes again** (your call, 13:51), redrawn from the original slide: before, one long column with an arrow down; after, the views as pages with an arrow across and the next page at the edge. The app screens are the inset; pressing it swaps them, as in 02.1.
 
+42. **04.1 is now the results card** (13:57), in our three parts' business terms, from your original case study's results: Delivery (Read), Conversion (Shop), Engagement (Return), then the role. Heading: "Design that helped win Nike's next seasons". The two result lines that sat in 01.5 and 03.2 moved here, so each result is said once. No numbers: the original page has none, and the figures in the Figma drafts aren't confirmed.
+43. **"Sole designer", not "only designer"**: the same fact without the defensive tone you didn't want earlier.
+
 ## Process## Process
 
 12. **Going live.** You said it can go live once done, so after the tests passed I rebased onto `main` and merged. To undo: revert the merge commit on `main`.

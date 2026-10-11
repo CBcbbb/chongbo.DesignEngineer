@@ -48,7 +48,7 @@ const PARTS: ContentsPart[] = [
     n: "04",
     label: "Outcome",
     cards: [
-      { id: "outcome", label: "One season became several" },
+      { id: "outcome", label: "Results" },
       { id: "handoff", label: "What I'd do now" },
     ],
   },
@@ -532,15 +532,19 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
                   {outcome.title}
                 </h3>
               </div>
-              <div className="nk-ogrid">
-                <div>
-                  <p className="nk-olabel">Outcome</p>
-                  <p>{outcome.body[0]}</p>
-                </div>
-                <div>
-                  <p className="nk-olabel">Role</p>
-                  <p>{outcome.body[1]}</p>
-                </div>
+              <div className="nk-ofoot">
+                <ul className="nk-ogrid">
+                  {(outcome.steps ?? []).map((r) => (
+                    <li key={r.title}>
+                      <p className="nk-olabel">{r.title}</p>
+                      <p>{r.text}</p>
+                    </li>
+                  ))}
+                </ul>
+                <p className="nk-orole">
+                  <span className="nk-olabel">Role</span>
+                  {outcome.body[0]}
+                </p>
               </div>
             </section>
 
