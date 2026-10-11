@@ -723,340 +723,6 @@
   }
 }
 
-/* ---------- 01.1 a template made of components ---------- */
-.ad-tpl {
-  display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-  gap: 16px;
-  width: 100%;
-}
-.ad-tpl-page,
-.ad-shelf {
-  display: grid;
-  align-content: start;
-  gap: 10px;
-  padding: 12px;
-}
-.ad-tpl-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-.ad-tpl-tabs span {
-  padding: 5px 10px;
-  border-radius: 999px;
-  font-size: 13px;
-  color: var(--ad-dim);
-}
-.ad-tpl-tabs .is-on {
-  background: var(--ad-brand);
-  color: var(--ad-on-brand);
-}
-.ad-tpl-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-auto-rows: minmax(58px, auto);
-  gap: 8px;
-}
-.ad-slot {
-  display: grid;
-  align-content: space-between;
-  gap: 8px;
-  min-width: 0;
-  padding: 10px;
-  border: 1px dashed var(--ad-line);
-  border-radius: 8px;
-  background: var(--ad-inset);
-}
-.ad-slot b {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ad-ink);
-}
-.ad-q {
-  font: 400 12.5px var(--mono);
-  color: var(--ad-dim);
-}
-.ad-q em {
-  padding: 0 4px;
-  border-radius: 4px;
-  background: var(--ad-bg);
-  box-shadow: inset 0 0 0 1px var(--ad-line);
-  font-style: normal;
-  color: var(--ad-ink);
-}
-.ad-slot.w2 { grid-column: span 2; }
-.ad-slot.w3 { grid-column: span 3; }
-.ad-slot.h2 { grid-row: span 2; }
-.ad-slot-art {
-  display: flex;
-  gap: 4px;
-  align-items: flex-end;
-  height: 48px;
-}
-.ad-slot-art i {
-  flex: 1;
-  border-radius: 3px 3px 0 0;
-  background: var(--ad-line);
-}
-.ad-shelf-item {
-  display: grid;
-  grid-template-columns: 34px minmax(0, 1fr);
-  gap: 10px;
-  align-items: center;
-  padding: 8px;
-  border: 1px solid var(--ad-rule);
-  border-radius: 8px;
-}
-.ad-thumb {
-  height: 26px;
-  border-radius: 5px;
-  background: var(--ad-inset);
-  box-shadow: inset 0 0 0 1px var(--ad-rule);
-}
-.ad-shelf-item b {
-  display: block;
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ad-ink);
-}
-.ad-shelf-item span {
-  font-size: 12.5px;
-  color: var(--ad-dim);
-}
-@media (max-width: 760px) {
-  .ad-tpl {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
-/* ---------- 01.2 one component ---------- */
-.ad-one {
-  display: grid;
-  gap: 12px;
-  width: 100%;
-  padding: 16px;
-}
-
-/* ---------- 01.3 the store ---------- */
-.ad-store {
-  display: grid;
-  grid-template-columns: 13rem minmax(0, 1fr);
-  width: 100%;
-}
-.ad-store-side {
-  display: grid;
-  align-content: start;
-  gap: 4px;
-  padding: 14px;
-  border-right: 1px solid var(--ad-rule);
-}
-.ad-store-side .ad-label {
-  padding: 4px 10px 6px;
-}
-.ad-store-side button {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  min-height: 40px;
-  padding: 0 10px;
-  border: 0;
-  border-radius: 7px;
-  background: transparent;
-  color: var(--ad-body);
-  font: 400 13.5px var(--sans);
-  text-align: left;
-  cursor: pointer;
-}
-.ad-store-side button:hover {
-  background: var(--ad-hover);
-}
-.ad-store-side button[aria-pressed="true"] {
-  background: var(--ad-sel-bg);
-  color: var(--ad-sel-ink);
-  font-weight: 600;
-}
-/* what a component needs, as a shape (so it never relies on colour) */
-.ad-kind {
-  flex: none;
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 1.5px currentColor;
-}
-.ad-kind.k-stream { background: currentColor; }
-.ad-kind.k-page { background: linear-gradient(90deg, currentColor 50%, transparent 50%); }
-.ad-kind.k-static { opacity: 0.55; }
-.ad-store-main {
-  display: grid;
-  align-content: start;
-  gap: 12px;
-  min-width: 0;
-  padding: 14px;
-}
-.ad-search {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  min-height: 42px;
-  padding: 0 12px;
-  border-radius: 8px;
-  box-shadow: inset 0 0 0 1px var(--ad-line);
-  color: var(--ad-dim);
-}
-.ad-search input {
-  flex: 1;
-  min-width: 0;
-  border: 0;
-  outline: none;
-  background: transparent;
-  color: var(--ad-ink);
-  font: 400 13.5px var(--sans);
-}
-.ad-search input::placeholder {
-  color: var(--ad-dim);
-}
-.ad-search:has(input:focus-visible) {
-  box-shadow: inset 0 0 0 2px var(--ad-ink);
-}
-.ad-search svg {
-  width: 15px;
-  height: 15px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
-}
-.ad-store-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.ad-comp {
-  display: grid;
-  grid-template-rows: 64px auto;
-  overflow: hidden;
-  border: 1px solid var(--ad-rule);
-  border-radius: 9px;
-}
-.ad-comp-art {
-  display: grid;
-  place-items: center;
-  padding: 8px 14px;
-  border-bottom: 1px solid var(--ad-rule);
-  background: var(--ad-inset);
-}
-.ad-comp-body {
-  display: grid;
-  gap: 5px;
-  padding: 9px 10px 10px;
-}
-.ad-comp-body b {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--ad-ink);
-}
-.ad-comp-kind,
-.ad-comp-fields {
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-  font: 400 12px var(--mono);
-  color: var(--ad-dim);
-}
-.ad-store-empty {
-  padding: 18px;
-  font-size: 13.5px;
-  color: var(--ad-dim);
-}
-.ad-art {
-  display: flex;
-  gap: 4px;
-  align-items: flex-end;
-  width: 100%;
-  height: 44px;
-}
-.ad-art i {
-  display: block;
-  border-radius: 2px;
-  background: var(--ad-line);
-}
-.ad-art.is-tree {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 3px;
-  align-items: stretch;
-}
-.ad-art.is-col {
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: space-between;
-}
-.ad-art.is-form {
-  justify-content: center;
-  gap: 5px;
-}
-.ad-art.is-mid {
-  align-items: center;
-}
-@media (max-width: 760px) {
-  .ad-store {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .ad-store-side {
-    display: flex;
-    flex-wrap: wrap;
-    border-right: 0;
-    border-bottom: 1px solid var(--ad-rule);
-  }
-  .ad-store-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* ---------- 02.2 one mapping, three charts ---------- */
-.ad-trio {
-  display: grid;
-  gap: 12px;
-  width: 100%;
-}
-.ad-trio-map {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 16px;
-  justify-content: center;
-  font: 400 13px var(--mono);
-  color: var(--case-dim);
-}
-.ad-trio-map span {
-  display: inline-flex;
-  gap: 6px;
-  align-items: center;
-}
-.ad-trio-map b {
-  font-weight: 500;
-  color: var(--case-ink);
-}
-.ad-trio-row {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-}
-.ad-trio-row .ad-panel {
-  display: grid;
-  align-content: start;
-  gap: 8px;
-  padding: 12px 12px 10px;
-}
-@media (max-width: 760px) {
-  .ad-trio-row {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
 /* ---------- 02.3 the pipeline: one row per layer; what feeds in sits to the right ---------- */
 .ad-pipe {
   display: grid;
@@ -1069,7 +735,7 @@
 .ad-pipe > li {
   position: relative;
   display: grid;
-  grid-template-columns: 11rem minmax(0, 1fr) 13rem;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
   gap: 16px;
   align-items: center;
 }
@@ -1161,87 +827,6 @@
   .ad-feed::before {
     display: none;
   }
-}
-
-/* ---------- 03.1 the picker, before and after (one place, so the panel never resizes) ---------- */
-.ad-pk-compare {
-  display: grid;
-  gap: 14px;
-  justify-items: center;
-  width: 100%;
-}
-.ad-stack {
-  display: grid;
-  width: min(100%, 420px);
-}
-.ad-stack > * {
-  grid-area: 1 / 1;
-  transition: opacity 0.3s var(--ease);
-}
-.ad-stack > [data-hidden="true"] {
-  opacity: 0;
-  visibility: hidden;
-}
-.ad-pk-panel {
-  display: grid;
-  align-content: start;
-  gap: 8px;
-  padding: 14px;
-}
-.ad-pk-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 4px;
-}
-.ad-pk-list {
-  display: grid;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.ad-pk-list li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 10px;
-  align-items: center;
-  min-height: 34px;
-  padding: 0 8px;
-  border-bottom: 1px solid var(--ad-rule);
-}
-.ad-pk-list li:last-child {
-  border-bottom: 0;
-}
-.ad-pk-list .ad-pk-name {
-  grid-column: 1;
-  font-weight: 400;
-}
-.ad-n {
-  font: 400 12.5px var(--mono);
-  color: var(--ad-dim);
-  font-variant-numeric: tabular-nums;
-}
-.ad-more {
-  font-size: 13px;
-  color: var(--ad-dim);
-}
-.ad-fake-search {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  min-height: 36px;
-  padding: 0 10px;
-  border-radius: 7px;
-  box-shadow: inset 0 0 0 1px var(--ad-line);
-  font-size: 13px;
-  color: var(--ad-dim);
-}
-.ad-fake-search svg {
-  width: 14px;
-  height: 14px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.8;
 }
 
 /* ---------- 03.2 one endpoint, two phases ---------- */
@@ -1413,50 +998,12 @@
 }
 
 /* ---------- one card, one screen (playbook §7): tighter on wide-but-short windows ---------- */
-.ad-store {
-  container-type: inline-size;
-}
-@container (min-width: 44rem) {
-  .ad-store-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-.ad-comp {
-  grid-template-rows: 52px auto;
-}
-.ad-comp-art {
-  padding: 6px 12px;
-}
-.ad-art {
-  height: 36px;
-}
 @media (min-width: 761px) and (max-height: 800px) {
-  .ad-tpl-grid {
-    grid-auto-rows: minmax(46px, auto);
-    gap: 6px;
-  }
-  .ad-slot {
-    padding: 8px 10px;
-    gap: 4px;
-  }
-  .ad-slot-art {
-    height: 34px;
-  }
-  .ad-shelf-item {
-    padding: 6px 8px;
-  }
-  .ad-tpl-page,
-  .ad-shelf {
-    gap: 8px;
-  }
   .ad-pipe {
     gap: 8px;
   }
   .ad-pipe-ex {
     padding: 7px 12px;
-  }
-  .ad-store-side button {
-    min-height: 36px;
   }
   .ad-axis > div {
     gap: 10px;
@@ -1470,7 +1017,7 @@
 /* tablets: the pipeline keeps its steps beside the examples, so it stays one screen tall */
 @media (min-width: 601px) and (max-width: 900px) {
   .ad-pipe > li {
-    grid-template-columns: 9.5rem minmax(0, 1fr);
+    grid-template-columns: 7.5rem minmax(0, 1fr);
     gap: 6px 14px;
   }
   .ad-pipe-step {
@@ -1485,23 +1032,6 @@
 }
 
 @media (min-width: 761px) and (max-height: 800px) {
-  .ad-comp {
-    grid-template-rows: 40px auto;
-  }
-  .ad-art {
-    height: 28px;
-  }
-  .ad-comp-body {
-    gap: 3px;
-    padding: 7px 10px 8px;
-  }
-  .ad-store-main,
-  .ad-store-side {
-    padding: 12px;
-  }
-  .ad-store-side button {
-    min-height: 34px;
-  }
   .ad-select select {
     min-height: 38px;
   }
@@ -1512,4 +1042,19 @@
     min-height: 15px;
     font-size: 12px;
   }
+}
+
+/* ---------- 01 three streams, one meaning ---------- */
+.ad-shapes {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+}
+.ad-shape {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+.ad-shape .ad-table th {
+  box-shadow: none;
 }

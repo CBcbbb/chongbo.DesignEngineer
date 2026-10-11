@@ -143,3 +143,11 @@ Copy may only use these, or what Chongbo adds later.
 `content/projects/components-for-any-data.ts` follows `copy.md` word for word. The evidence is the project's own code in `src/components/case/any-data/` (invented data only): `Demo` (the work), `Templates`, `SampleData`, `Store`, `Trio`, `Pipeline`, `Picker`, `Phases`, `AxisPickers`, and the cover art `CoverWires`. Palette: `src/app/case-palettes.css` (shared tokens) and `any-data.css` (panels, roles, canvas). The prototype in `docs/design/case-components-for-any-data.html` is the record of the design before the playbook of 11 October (no mounts, one edge per piece); the build follows the new rules.
 
 Checks: unit tests, lint, typecheck, contrast (197 pairs), production build, Playwright + axe (60 tests), axe on the page in both themes at 1440 and 390 (0 violations), every card within one screen at 1440 × 900, 1280 × 720, 1366 × 768, 1024 × 1366 and 768 × 1024, keyboard walk of the demo. Open items: `DECISIONS.md`.
+
+## Draft 3 (11 October 2026, Chongbo's review of the live page)
+
+- Too detailed, and the rebuilt screens after the first weren't strong: ten cards cut to five plus a Takeaway; parts and openers removed.
+- Kept: the preview panel (the work), the field pickers (its own components), the pipeline and phases diagrams, the contract code. New: three invented streams side by side (01.1). Cut: templates, sample toggle, store filter, three charts, picker before/after, the phase switch, the pipeline's step descriptions and feed boxes (they repeated the body).
+- "What this shows": Front-end architecture · Data contracts · Data-binding UX (Chongbo: name the engineering capability; UX last).
+- Closing card: "Takeaway", three points; no role, no "sole designer".
+- Card ids now: `shapes`, `contract`, `pipeline`, `stream-fit`, `axis-pickers`, `takeaway`.

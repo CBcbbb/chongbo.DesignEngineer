@@ -202,7 +202,7 @@ export type Step = {
   image?: { asset: string; alt: string };
 };
 /** A label's icon on the cover, where a project wants a different one from its capability's default. */
-export type CapabilityIconName = "picker";
+export type CapabilityIconName = "picker" | "layers";
 
 export type Section = {
   id: string;

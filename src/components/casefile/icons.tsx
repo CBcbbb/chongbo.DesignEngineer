@@ -57,9 +57,20 @@ function PickerIcon() {
   );
 }
 
+/** Layers: an architecture of parts with one job each. */
+function LayersIcon() {
+  return (
+    <svg className="cf-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="m12 4 8 4-8 4-8-4z" />
+      <path d="m4 12 8 4 8-4M4 16l8 4 8-4" />
+    </svg>
+  );
+}
+
 /** One icon per capability (`icon` overrides it). Capabilities without one show none. */
 export function CapabilityIcon({ capability, icon }: { capability: Capability; icon?: CapabilityIconName }) {
   if (icon === "picker") return <PickerIcon />;
+  if (icon === "layers") return <LayersIcon />;
   if (capability === "C") return <MergeIcon />;
   if (capability === "E") return <KeyIcon />;
   if (capability === "B") return <BuiltIcon />;

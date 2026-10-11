@@ -26,7 +26,7 @@ describe("askModel", () => {
       missing: [],
       sheets: [
         sheet("hhcd-data-platform", "dual-view", "accessibility", "An accessible second view."),
-        sheet("components-for-any-data", "role", "accessibility", "Contrast in the tokens."),
+        sheet("components-for-any-data", "takeaway", "accessibility", "Contrast in the tokens."),
       ],
       line: "Two projects show accessibility.",
     });
@@ -49,7 +49,7 @@ describe("askModel", () => {
       sheets: [
         sheet("hhcd-data-platform", "dual-view", "accessibility"),
         sheet("hhcd-data-platform", "keyboard", "accessibility"),
-        sheet("components-for-any-data", "role", "accessibility"),
+        sheet("components-for-any-data", "takeaway", "accessibility"),
         sheet("components-for-any-data", "axis-pickers", "data"),
         sheet("this-site", "foundations", "accessibility"),
         sheet("nike-athletes-closet", "graphic-system", "reusable-components"),

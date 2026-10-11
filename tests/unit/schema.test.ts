@@ -50,7 +50,7 @@ describe("AskResponseSchema", () => {
   });
 
   it("enforces limits", () => {
-    const other = { ...sheet, project: "components-for-any-data", section: "role" };
+    const other = { ...sheet, project: "components-for-any-data", section: "takeaway" };
     expect(AskResponseSchema.safeParse({ ...ok, line: "x".repeat(91) }).success).toBe(false);
     expect(AskResponseSchema.safeParse({ ...ok, asked: [] }).success).toBe(false);
     expect(AskResponseSchema.safeParse({ ...ok, asked: ["vibes"] }).success).toBe(false);

@@ -71,7 +71,8 @@ describe("fallback: one capability", () => {
   });
 
   it("routes design systems, brand and this site sensibly", () => {
-    expect(fallbackAnswer("Have you built a design system?").sheets[0]!.project).toBe("components-for-any-data");
+    const ds = fallbackAnswer("Have you built a design system?").sheets[0]!;
+    expect(projects.find((p) => p.slug === ds.project)!.sections.find((x) => x.id === ds.section)!.signals).toContain("design-systems");
     expect(fallbackAnswer("Have you built a design system?").asked[0]).toBe("design-systems");
     expect(fallbackAnswer("Show me brand or marketing work.").sheets[0]!.project).toBe("nike-athletes-closet");
     expect(fallbackAnswer("How does this site work?").sheets[0]!.project).toBe("this-site");
