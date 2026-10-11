@@ -84,6 +84,8 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
   const machineRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const paperRef = useRef<HTMLDivElement>(null);
   const sheetRefs = useRef<(HTMLElement | null)[]>([]);
 
   const deckCards = useMemo(() => result?.cards ?? [], [result]);
@@ -115,6 +117,16 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
     timer = setTimeout(tick, 0);
     return () => clearTimeout(timer);
   }, [anyPicked]);
+
+  // The sheet grows with its chips; the machine moves down to keep clear of the cards above.
+  useEffect(() => {
+    const paper = paperRef.current;
+    const stage = stageRef.current;
+    if (!paper || !stage || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(() => stage.style.setProperty("--pm", `${paper.offsetHeight}px`));
+    ro.observe(paper);
+    return () => ro.disconnect();
+  }, []);
 
   // ---------- skills cards ----------
   const toggle = (id: string, el?: HTMLElement | null) => {
@@ -397,7 +409,7 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
         </ul>
       </section>
 
-      <div className="stage">
+      <div className="stage" ref={stageRef}>
         <div ref={machineRef} className={`machine${ready ? " ready" : ""}`} data-state={working ? "working" : ready ? "ready" : "idle"}>
           <form
             ref={formRef}
@@ -410,7 +422,7 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
             aria-labelledby={labelledBy}
             onSubmit={onSubmit}
           >
-            <div className="paper">
+            <div className="paper" ref={paperRef}>
               <div className={`field${brief || focused ? " on" : ""}`} hidden={working}>
                 <label htmlFor="brief" className="sr-only">
                   Describe the role or paste a job description.

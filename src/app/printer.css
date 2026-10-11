@@ -121,7 +121,9 @@
   position: relative;
   width: clamp(440px, calc((100svh - 500px) * 2.2), 680px);
   max-width: 100%;
-  margin: calc(var(--ph) + var(--s5)) auto 0;
+  /* --pm is the paper's measured height (set from the client), so a taller sheet pushes the machine down instead of covering the cards */
+  margin: calc(var(--pm, var(--ph)) + var(--s5)) auto 0;
+  transition: margin-top 0.5s var(--ease);
 }
 .machine {
   position: relative;
@@ -261,16 +263,16 @@
   left: 15.5%;
   width: 69%;
   bottom: calc(100% - 7.7%);
-  height: var(--ph);
+  min-height: var(--ph);
   z-index: 3;
   margin: 0;
-  transition: height 0.5s var(--ease);
+  transition: min-height 0.5s var(--ease);
 }
 .paperbox[data-size="focus"] {
-  height: calc(var(--ph) + 20px);
+  min-height: calc(var(--ph) + 20px);
 }
 .paperbox[data-size="full"] {
-  height: calc(var(--ph) + 40px);
+  min-height: calc(var(--ph) + 40px);
 }
 .paperbox::after {
   content: "";
@@ -283,10 +285,11 @@
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0));
   pointer-events: none;
 }
+/* The sheet grows upwards with what is on it (chips, steps); the field keeps at least three lines. */
 .paper {
   --focus: var(--paper-ink);
-  position: absolute;
-  inset: 0;
+  position: relative;
+  min-height: inherit;
   background: var(--paper);
   color: var(--paper-ink);
   border-radius: 3px 3px 0 0;
@@ -303,12 +306,13 @@
 .field {
   position: relative;
   flex: 1;
-  min-height: 0;
+  min-height: 4.6em;
 }
 .field textarea {
   display: block;
   width: 100%;
   height: 100%;
+  min-height: 4.6em;
   resize: none;
   border: 0;
   background: transparent;
@@ -884,7 +888,7 @@
   .stage {
     --ph: 112px;
     width: 100%;
-    margin-top: calc(var(--ph) + var(--s4));
+    margin-top: calc(var(--pm, var(--ph)) + var(--s4));
   }
   .paper {
     padding: 14px 14px 10px;
