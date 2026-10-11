@@ -150,7 +150,7 @@ export const hhcd: Project = {
         kind: "image",
         asset: "hhcd/workshop-cards.png",
         alt: "Seven stakeholder cards, from the Eco-Social Artist to the EU Cluster Coordinator, each with a short motivation.",
-        caption: "The seven stakeholder cards.",
+        caption: "Each participant judged the prototypes as one of these seven stakeholders.",
         need: "Paper figure: stakeholder cards.",
         ratio: "4:3",
       },

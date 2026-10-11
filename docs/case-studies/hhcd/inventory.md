@@ -117,3 +117,12 @@ Recorded in `SHARED-CHANGES.md` (2026-10-11). The fallback default is now `hhcd-
 ## Built
 
 `content/projects/hhcd.ts` follows `copy.md` draft 3 word for word. Card order in the build: Part 1 · VOICE (`brief`, `no-borders`, `sample-data`, `workshop`, `four-types`, `dual-view`), Part 2 · Helen Hamlyn Centre (`taken-up`, `arrangements`, `guide`, `keyboard`, `narrow-screens`, `contrast`, `results`, `role`).
+
+## Workshop photos (11 October 2026)
+
+Originals from Chongbo's folder "Pictures prepared for paper" (not in the repo). Chosen and cropped:
+- `workshop-wall-content.jpg` from `IMG_0941.jpeg`.
+- `workshop-wall-scope.jpg` from `IMG_0942.jpeg`.
+- `workshop-wall-functionality.jpg` from `IMG_0943.jpeg`.
+
+Left out: every photo with people in it, including from behind (Chongbo's call), and `IMG_2848.HEIC`, a whiteboard unrelated to this project. Originals now live outside the repo, in `~/Documents/GitHub/HHCD paper photos`.
