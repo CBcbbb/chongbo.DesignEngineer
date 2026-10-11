@@ -76,3 +76,11 @@ None of these are used unless Chongbo confirms them as real. One detail to check
 - Orange cover, orange part openers (01 Read / 02 Shop / 03 Return / 04 Outcome) with huge numbers; black sheets for story and motion evidence and the outcome.
 - New interactions: framing-device switcher (five configurations from the original Figma crops, keyboard arrows work); retouch compare slider on the orange field; product card compare on orange; Star Voice loop (Preview, Ask, Vote, Answered live).
 - Checked: no image rendered off its native ratio or above its native size, at 1440 and 390, light and dark; no horizontal scroll.
+
+## Built into the site (11 Oct 2026)
+
+- `src/components/case/nike/`: `NikeCase.tsx` (server: layout and art direction), `NikeClient.tsx` (recording, seek, compare, switcher, swap, shoebox, contents), `nike.css` (scoped to `.nk`). The Wix-copy components (`Slideshow.tsx`, `LottiePlayer.tsx`) are gone; `fonts.ts` stays for WildEcho.
+- Copy comes from `content/projects/nike.ts`, so printed sheets and the page use the same words.
+- Changes from prototype v3: card heads split claim left / reasoning right (Granola); headings at weight 500; larger radii; grain backdrops; product card as a side-by-side pair (Chongbo's review); retouching keeps the slider; controls at least 44px, contents links 32px.
+- Checks: lint, typecheck, 59 unit tests, build, 60 Playwright tests including axe on every route at 1440 and 390, no image off its native ratio, all Nike colour pairs ≥ 4.5:1 in both modes.
+- Local builds need Google Fonts for WildEcho's `fonts.ts`, which this sandbox can't reach; I stubbed it locally for testing and restored it before committing.
