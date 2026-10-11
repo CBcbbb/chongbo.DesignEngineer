@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { BrowserFrame } from "./Frame";
-import { PlayMarks } from "./motion";
 
 /** Pauses every other video and audio element on the page, so only one thing plays at a time. */
 export function pauseOthers(self: HTMLMediaElement) {
@@ -11,34 +10,18 @@ export function pauseOthers(self: HTMLMediaElement) {
   });
 }
 
-/** Play, pause and replay as one shape. */
-function Glyph({ state }: { state: "idle" | "playing" | "paused" | "ended" }) {
-  if (state === "playing")
-    return (
-      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="currentColor">
-        <rect x="5" y="4" width="3.4" height="12" rx="1" />
-        <rect x="11.6" y="4" width="3.4" height="12" rx="1" />
-      </svg>
-    );
-  if (state === "ended")
-    return (
-      <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M4 10a6 6 0 1 0 1.9-4.4" />
-        <path d="M4 3.5v3.4h3.4" />
-      </svg>
-    );
-  return (
-    <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-      <path d="M7 4.6v10.8l8.6-5.4L7 4.6Z" fill="currentColor" />
-    </svg>
-  );
+const clock = (t: number) => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, "0")}`;
+
+/** Play and pause as one shape: the two halves of the triangle slide apart into two bars. */
+function PlayMorph({ playing }: { playing: boolean }) {
+  return <span className={`cf-morph${playing ? " is-pause" : ""}`} aria-hidden="true" />;
 }
 
 /**
- * A recording of the product, whole, in a browser window (playbook §6). It plays once when it comes into view
- * and can be replayed; with reduced motion it rests on its first frame until the reader presses play.
- * The whole screen is the one play control; the progress line sits in the window's toolbar, so nothing adds height.
- * The recordings have no sound, so there is no sound control.
+ * A recording of the product, whole, in a browser window (playbook §6). It plays once when it comes into view;
+ * with reduced motion it rests on its first frame until the reader presses play. Controls are serious and complete
+ * (playbook §7): the whole screen plays and pauses, and the window's toolbar holds a scrubber and the time, so
+ * nothing adds height. The recordings have no sound, so there is no sound control.
  */
 export function VideoPlate({
   src,
@@ -47,6 +30,7 @@ export function VideoPlate({
   label,
   url,
   ratio,
+  seconds,
 }: {
   src: string;
   /** A VP9 version for browsers without H.264 (some Chromium builds). */
@@ -55,17 +39,26 @@ export function VideoPlate({
   label: string;
   url: string;
   ratio: number;
+  /** Length, shown before the recording has loaded. */
+  seconds?: number;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
-  const [state, setState] = useState<"idle" | "playing" | "paused" | "ended">("idle");
-  const [progress, setProgress] = useState(0);
+  const [playing, setPlaying] = useState(false);
+  const [time, setTime] = useState(0);
+  const [duration, setDuration] = useState(seconds ?? 0);
+  const total = duration || 1;
 
-  const play = () => {
+  // The metadata may load before hydration, so read the length directly as well as on the event.
+  useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    if (v.ended) v.currentTime = 0;
-    void v.play().catch(() => setState((s) => (s === "playing" ? "paused" : s)));
-  };
+    const read = () => {
+      if (Number.isFinite(v.duration) && v.duration > 0) setDuration(v.duration);
+    };
+    read();
+    v.addEventListener("durationchange", read);
+    return () => v.removeEventListener("durationchange", read);
+  }, []);
 
   useEffect(() => {
     const v = ref.current;
@@ -88,20 +81,50 @@ export function VideoPlate({
   const toggle = () => {
     const v = ref.current;
     if (!v) return;
-    if (v.paused) play();
-    else v.pause();
+    if (v.paused) {
+      if (v.ended) v.currentTime = 0;
+      void v.play().catch(() => {});
+    } else v.pause();
   };
 
-  const name = state === "playing" ? "Pause the recording" : state === "ended" ? "Play the recording again" : "Play the recording";
+  const seek = (t: number) => {
+    const v = ref.current;
+    setTime(t);
+    if (!v) return;
+    if (v.readyState >= 1) v.currentTime = t;
+    else {
+      v.addEventListener("loadedmetadata", () => (v.currentTime = t), { once: true });
+      v.preload = "auto";
+      v.load();
+    }
+  };
 
   return (
-    <figure className="cf-figure cf-rec" data-state={state}>
+    <figure className={`cf-figure cf-rec${playing ? " is-playing" : ""}`}>
       <BrowserFrame
         url={url}
         ratio={ratio}
         bar={
-          <span className="cf-progress" aria-hidden="true">
-            <i style={{ transform: `scaleX(${progress})` }} />
+          <span className="cf-rec-bar">
+            <span className="cf-track">
+              <span className="cf-track-bar" aria-hidden="true">
+                <i style={{ transform: `scaleX(${Math.min(1, time / total)})` }} />
+              </span>
+              <input
+                type="range"
+                min={0}
+                max={total}
+                step={0.1}
+                value={Math.min(time, total)}
+                aria-label="Position in the recording"
+                aria-valuetext={`${clock(time)} of ${clock(total)}`}
+                onChange={(e) => seek(Number(e.currentTarget.value))}
+              />
+            </span>
+            <span className="cf-clock">
+              {clock(time)}
+              <i> / {clock(duration)}</i>
+            </span>
           </span>
         }
       >
@@ -110,29 +133,24 @@ export function VideoPlate({
           poster={poster}
           muted
           playsInline
-          preload="none"
+          preload="metadata"
           tabIndex={-1}
           aria-label={label}
           onPlay={(e) => {
             pauseOthers(e.currentTarget);
-            setState("playing");
+            setPlaying(true);
           }}
-          onPause={(e) => setState(e.currentTarget.ended ? "ended" : "paused")}
-          onEnded={() => setState("ended")}
-          onTimeUpdate={(e) => {
-            const v = e.currentTarget;
-            if (v.duration) setProgress(v.currentTime / v.duration);
-          }}
+          onPause={() => setPlaying(false)}
+          onEnded={() => setPlaying(false)}
+          onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
         >
           {webm && <source src={webm} type="video/webm" />}
           <source src={src} type="video/mp4" />
         </video>
-        <button type="button" className="cf-screen" aria-label={name} onClick={toggle}>
+        {/* The one play control: the whole screen, with the button at its centre. */}
+        <button type="button" className="cf-screen" aria-label={playing ? "Pause the recording" : "Play the recording"} onClick={toggle}>
           <span className="cf-bigplay">
-            <PlayMarks />
-            <span className="cf-bigplay-btn">
-              <Glyph state={state} />
-            </span>
+            <PlayMorph playing={playing} />
           </span>
         </button>
       </BrowserFrame>

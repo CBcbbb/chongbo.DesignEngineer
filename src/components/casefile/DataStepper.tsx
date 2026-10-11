@@ -183,10 +183,10 @@ export function DataStepper({ steps }: { steps: string[] }) {
           </svg>
           <span className="cf-stepper-note">Sample labels{scrolls ? " · scroll ⟷" : ""}</span>
           <div className="cf-stepper-nav">
-            <button type="button" className="cf-nudge-l" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0} aria-label="Previous step">
+            <button type="button" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0} aria-label="Previous step">
               <Arrow flip />
             </button>
-            <button type="button" className="cf-nudge-r" onClick={() => setStep((s) => Math.min(steps.length - 1, s + 1))} disabled={step === steps.length - 1} aria-label="Next step">
+            <button type="button" onClick={() => setStep((s) => Math.min(steps.length - 1, s + 1))} disabled={step === steps.length - 1} aria-label="Next step">
               <Arrow />
             </button>
           </div>

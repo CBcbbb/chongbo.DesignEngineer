@@ -14,7 +14,7 @@ No captions under evidence. Labels inside the evidence are listed with each card
 - **One line:** A research repository that anyone can explore, with a mouse, a keyboard or on a phone.
 - **Role:** Data collection, analysis and modelling; design and build.
 - **Outcome:** Live and in use. Used to teach the Centre's summer interns. Paper on its accessibility approach accepted at DRS 2026.
-- **What this shows:** Accessibility · Idea to production · Craft and interaction
+- **What this shows** (labels, not links): Accessibility · Idea to production · Craft and interaction
 
 ## The work
 

@@ -1,6 +1,6 @@
 # HHCD: open decisions (for Chongbo, 11 Oct 2026)
 
-The case file now follows the playbook of 11 October (the Nike review's standards). Below is everything I decided on your behalf, or couldn't settle without you. Each item says what I chose; tell me to change any of them and I'll update the page.
+The case file now follows the playbook of 11 October (the Nike review's standards, including the later rule that case files keep their controls serious). Below is everything I decided on your behalf, or couldn't settle without you. Each item says what I chose; tell me to change any of them and I'll update the page.
 
 ## Copy
 
@@ -30,16 +30,10 @@ The case file now follows the playbook of 11 October (the Nike review's standard
 15. **Title size.** The cover title is a step smaller than Nike's (4.75rem at most), so "Helen Hamlyn Centre / Data Platform" sits on two lines with the live link beside the second. Nike's title is half the length.
 16. **One card, one screen.** Every card is the same height on tablets and computers. At 1280 × 720 the stepper diagram and the wall photos are small but whole; they're larger at every other review size. The side layout (text beside evidence) is in the template, but no HHCD card uses it: every card's evidence came out larger stacked.
 17. **On phones the cover runs to the bottom of a 390 × 844 screen** and is longer than smaller screens. Phones scroll as normal (§7); making it shorter would mean cutting cover content.
-18. **Recordings play once when they come into view.** They have no sound, so there's no sound control. The screen is the one play control. With reduced motion they rest on their first frame.
-19. **Micro-interactions, tied to the content:**
-    - Accessibility chip: a key that presses and turns its arrow.
-    - Idea to production: a dashed sketch that draws itself solid.
-    - Craft and interaction: the four marks trade places, like the map's arrangements.
-    - Live link: the arrow flies off and comes back.
-    - Play button: the four marks swing round it.
-    - Letters wobble on the live link, the chips, the switch and the next case file.
-
-    `Wobble` now lives in the block library (`src/components/casefile/motion.tsx`). Nike keeps its own copy until it moves onto the template.
+18. **Recordings play once when they come into view.** With reduced motion they rest on their first frame. The screen is the one play control. A scrubber and the time sit in the browser window's toolbar, so the controls add no height. The recordings have no sound, so there's no sound control.
+19. **No playful micro-interactions in the case file**, following the playbook's latest rule (§7: they belong to the site's shell).
+    - Capability labels have small still icons: a keycap, a ticked box and the four marks. They're labels, not links.
+    - The live link and the switch change shade on hover, nothing more.
 
 ## Outside this repo
 

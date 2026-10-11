@@ -8,7 +8,7 @@ import { imageSize } from "@/lib/assets";
 import { CaseMedia, CardTitle, Facts, Keys, StepsRow } from "./blocks";
 import { CaseContents, type ContentsPart } from "./CaseContents";
 import { BrowserFrame } from "./Frame";
-import { ChipIcon, OutArrow, Wobble } from "./motion";
+import { CapabilityIcon, OutArrow } from "./icons";
 
 /** Interactive evidence and phone screens sit on the project's mount. */
 function mountOf(section: Section): "field" | undefined {
@@ -100,7 +100,6 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
   }));
   const live = project.links.find((l) => /live/i.test(l.label));
   const others = project.links.filter((l) => l !== live);
-  const titleOf = (id: string) => project.sections.find((s) => s.id === id)?.title ?? id;
   const cover = project.cover.kind === "image" ? project.cover : null;
   const coverSize = cover ? imageSize(cover.asset) : undefined;
   const url = project.work?.url ?? (live ? new URL(live.href).host : "");
@@ -129,7 +128,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
               </h1>
               {live && (
                 <a className="cf-btn" href={live.href} target="_blank" rel="noopener">
-                  <Wobble text={`Open the ${live.label.toLowerCase()}`} />
+                  Open the {live.label.toLowerCase()}
                   <OutArrow />
                   <span className="sr-only"> (opens in a new tab)</span>
                 </a>
@@ -150,29 +149,25 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
             </dl>
             {((project.shows && project.shows.length > 0) || others.length > 0) && (
               <div className="cf-cover-foot">
+                {/* capability labels, not links: a capability usually spans several cards (playbook §7) */}
                 {project.shows && project.shows.length > 0 && (
-                  <nav aria-labelledby="cf-shows-title">
-                    <ul className="cf-chips">
-                      <li id="cf-shows-title" className="cf-chips-label">
-                        What this shows
-                      </li>
+                  <div className="cf-shows">
+                    <p id="cf-shows-title">What this shows</p>
+                    <ul aria-labelledby="cf-shows-title">
                       {project.shows.map((c) => (
-                        <li key={c.section}>
-                          <a className="cf-chip" href={`#${c.section}`}>
-                            <ChipIcon capability={c.capability} />
-                            <Wobble text={c.label} />
-                            <span className="sr-only">: {titleOf(c.section)}</span>
-                          </a>
+                        <li key={c.label}>
+                          <CapabilityIcon capability={c.capability} />
+                          {c.label}
                         </li>
                       ))}
                     </ul>
-                  </nav>
+                  </div>
                 )}
                 {others.length > 0 && (
                   <p className="cf-actions">
                     {others.map((l) => (
                       <a key={l.href} className="cf-link" href={l.href} target="_blank" rel="noopener">
-                        <Wobble text={l.label} />
+                        {l.label}
                         <OutArrow />
                         <span className="sr-only"> (opens in a new tab)</span>
                       </a>
@@ -254,9 +249,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
           <nav aria-label="Next case file">
             <Link href={`/work/${next.slug}`} className="cf-sheet cf-next">
               <span className="cf-kind">Next case file · {projectNumber(next)}</span>
-              <strong>
-                <Wobble text={next.title} />
-              </strong>
+              <strong>{next.title}</strong>
               <span>{next.oneLiner}</span>
             </Link>
           </nav>

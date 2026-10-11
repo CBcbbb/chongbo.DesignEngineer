@@ -165,7 +165,10 @@ const hhcdDarkCover: Pair[] = [
   { fg: "#8d89d6", bg: "#1c1b21", where: "dark hhcd: people mark on the cover", min: LARGE },
   { fg: "#dc2680", bg: "#1c1b21", where: "dark hhcd: partners mark on the cover", min: LARGE },
   { fg: "#148d66", bg: "#1c1b21", where: "dark hhcd: methods mark on the cover", min: LARGE },
-  { fg: "#aeacb8", bg: "#2a2930", where: "dark hhcd: browser toolbar", min: LARGE },
+  { fg: "#aeacb8", bg: "#2a2930", where: "dark hhcd: recording length in the toolbar", min: TEXT },
+  { fg: "#f2f1f4", bg: "#2a2930", where: "dark hhcd: recording time in the toolbar", min: TEXT },
+  { fg: "#f2f1f4", bg: "#2a2930", where: "dark hhcd: scrubber thumb on the toolbar", min: 3 },
+  { fg: "#f2f1f4", bg: "#1c1b21", where: "dark hhcd: capability label text", min: TEXT },
   { fg: "#aeacb8", bg: "#1c1b21", where: "dark hhcd: address in the browser frame", min: TEXT },
 ];
 
@@ -173,7 +176,11 @@ const hhcdDarkCover: Pair[] = [
 const browserFrame: Pair[] = [
   { fg: "#5b5966", bg: "#ffffff", where: "browser frame: address", min: TEXT },
   { fg: "#5b5966", bg: "#f1f0f3", where: "browser frame: toolbar", min: TEXT },
+  { fg: "#22212a", bg: "#f1f0f3", where: "browser frame: recording time", min: TEXT },
+  { fg: "#22212a", bg: "#f1f0f3", where: "browser frame: scrubber thumb", min: 3 },
   { fg: "#ffffff", bg: "#22212a", where: "recording: play button glyph", min: LARGE },
+  { fg: "#ffffff", bg: "#3a3946", where: "recording: play button glyph, hovered", min: LARGE },
+  { fg: "#22212a", bg: "#ffffff", where: "light hhcd: capability label text", min: TEXT },
   { fg: "#22212a", bg: "#ffffff", where: "recording: focus ring on the screen", min: 3 },
 ];
 

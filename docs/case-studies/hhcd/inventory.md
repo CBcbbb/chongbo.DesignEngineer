@@ -127,11 +127,11 @@ Recorded in `SHARED-CHANGES.md` (2026-10-11). The fallback default is now `hhcd-
 
 ## Draft 4 changes (playbook of 11 October 2026)
 
-- Cover: client, title with the live link beside it, one line, Role and Outcome in a row, chips. The intro paragraph and the "Live" status are gone (they repeated the client and the Outcome).
+- Cover: client, title with the live link beside it, one line, Role and Outcome in a row, capability labels. The intro paragraph and the "Live" status are gone (they repeated the client and the Outcome).
 - The work: a sheet straight after the cover with the live map, whole, in a browser window.
 - Cards: index above the heading; no kind labels, capability tags or captions; one card, one screen on tablets and computers.
-- Recordings: whole, in a browser window; they play once when they come into view; the screen is the one play control; one plays at a time.
-- Micro-interactions on the live link, the chips, the switch, the stepper, the play button and the next case file.
+- Recordings: whole, in a browser window; they play once when they come into view; the screen plays and pauses; a scrubber and the time sit in the window's toolbar; one plays at a time.
+- "What this shows" is three capability labels, not links. No playful micro-interactions in the case file.
 
 ## Workshop photos (11 October 2026)
 

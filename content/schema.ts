@@ -237,7 +237,10 @@ export type Project = {
   openers?: "field" | "ground";
   /** Case-file template: the key to the cover image, e.g. a map's entity types. */
   legend?: { type: EntityType; label: string }[];
-  /** Case-file template: "What this shows", two or three capability chips that jump to their cards. */
+  /**
+   * Case-file template: "What this shows", two or three capability labels on the cover (playbook §7: labels, not
+   * links). `section` is the card that proves it best, for the printer and the AI; the cover doesn't link to it.
+   */
   shows?: { capability: Capability; label: string; section: string }[];
   /** Questions the ask box suggests when this card is on the table. */
   prompts: string[];
