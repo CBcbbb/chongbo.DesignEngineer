@@ -96,7 +96,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Reusable components, built for handover",
       body: [
-        "The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them.",
+        "The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them. It cut the back-and-forth between design and engineering.",
       ],
       signals: ["reusable-components", "design-systems", "design-eng-gap"],
       media: {
@@ -112,7 +112,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Shop the look, straight from the photo",
       body: [
-        "Readers engaged with the stories, but product click-through stayed low, because the stories didn't connect to the products. I added tappable product tags.",
+        "Readers engaged with the stories, but product click-through stayed low, because the stories didn't connect to the products. I added tappable product tags to the photos, so readers go from an outfit to its products in one tap.",
       ],
       signals: ["conversion", "brand-storytelling"],
       media: {
@@ -144,7 +144,7 @@ export const nike: Project = {
       kind: "decision",
       title: "A ranking that leads to similar outfits",
       body: [
-        "The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear hierarchy, and added two calls to action after a like.",
+        "The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard with a clear hierarchy, and added two calls to action after a like: \"See more\" and \"View similar outfits\".",
       ],
       signals: ["conversion", "brand-storytelling"],
       media: {
@@ -176,7 +176,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Star Voice Q&A",
       body: [
-        "To maintain audience interest between volumes and build anticipation for the next influencer, I designed a new feature.",
+        "To maintain audience interest between volumes and build anticipation for the next influencer, I designed a new feature. It shipped, and was recommended for wider use in other campaigns.",
       ],
       signals: ["brand-storytelling", "motion-interaction", "prototyping"],
       media: {
@@ -198,7 +198,7 @@ export const nike: Project = {
       steps: [
         {
           title: "Delivery",
-          text: "One component system made each volume faster to deliver, with less back-and-forth between design and Nike's engineers.",
+          text: "One component system made each volume faster to deliver, and Nike's engineers were more satisfied with the handover.",
         },
         {
           title: "Conversion",
@@ -206,7 +206,7 @@ export const nike: Project = {
         },
         {
           title: "Engagement",
-          text: "Likes, the prize draw and Star Voice Q&A lifted engagement beyond what Nike expected, and Star Voice was recommended for other campaigns.",
+          text: "Likes, the prize draw and Star Voice Q&A lifted engagement beyond what Nike expected.",
         },
       ],
       signals: ["end-to-end", "conversion", "brand-storytelling"],

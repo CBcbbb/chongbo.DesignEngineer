@@ -73,6 +73,9 @@ The case file is built into the site from the approved v3 prototype, with your t
 
 47. **01.2: the six posters, one file each** (your Figma exports at 3x, 990 × 1320), as a strip swiped sideways: about two and a half posters in view at 1440 × 900, the next one at the edge, previous and next buttons below. Replaces the old single composite image.
 
+48. **Every card keeps its effect** (your rule, 16:02, applied to all cards in the final check): 01.5 "It cut the back-and-forth between design and engineering"; 02.1 "so readers go from an outfit to its products in one tap"; 02.3 names its two calls to action; 03.2 "It shipped, and was recommended for wider use in other campaigns". 04.1 now sums up without repeating those lines (Delivery: "faster to deliver, and Nike's engineers were more satisfied with the handover"; Engagement: "beyond what Nike expected").
+49. **Still yours to decide:** Stack on the work list is "Figma, Lottie"; notes.md says the retouching was in Photoshop, so "Figma, Photoshop, Lottie" would be accurate. And your CV: the Nike line should say "designed", not "led".
+
 ## Process## Process
 
 12. **Going live.** You said it can go live once done, so after the tests passed I rebased onto `main` and merged. To undo: revert the merge commit on `main`.

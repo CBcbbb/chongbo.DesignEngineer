@@ -74,7 +74,8 @@ Expect 8 to 12 cards per main project and 4 to 6 for earlier work.
 - **One decision, traced honestly.** Show what I tried first, what didn't work, what I traded away. The strongest cases have a turn in them.
 - **Contribution is unmistakable.** Say what I did with "I". Use "we" only for genuine team work, and then say which part was mine.
 - **Outcomes are concrete.** A number, a shipped thing, a live link, a real consequence. If there's no number, say what happened, in professional terms: "Launched across China as a section of the Nike App's home screen. On the strength of the first season, Nike renewed the agency's contract for the seasons that followed." Past tense if it's no longer live. Never invent a number.
-- **The cover and the ending don't repeat each other.** The cover gives the role and the outcome; the closing card adds what the cover doesn't (context, team), then what I'd do now.
+- **Every card keeps its effect.** A card says the problem, what I did and what it achieved. Cutting for brevity never cuts the effect. The closing card sums the results up in the business's terms (Nike: Delivery, Conversion, Engagement, one per part) and states my contribution plainly ("As the agency's sole UI designer, …"), without repeating a card's own line.
+- **The cover and the ending don't repeat each other.** The cover gives the role and the outcome in a line each; the closing card gives the results by part and the role in full.
 - **Role:** on the cover, the job title ("UI Designer"); team and context at the end. Say "designed", never "led", unless I led. Where the work was partly shared, the job title is followed by up to three short lines saying what I did and with whom, each with a small icon: two people for work done with others ("Data collection with the VOICE team"), one person for work done on my own ("Analysis, modelling, design and build on my own"). The activity reads first, the "with whom" steps back in tone. Content field `roleSplit`.
 - **Cut** anything that doesn't support a decision: generic process photos, tool lists, "my contributions" bullet lists (fold them into the role line), and anything I couldn't defend in an interview.
 - **Shipped beats concept.** Link to live work wherever it exists.
@@ -117,10 +118,12 @@ Rules:
 - **No captions under evidence.** What an image proves goes in the card's heading or body. Labels inside the evidence stay (Before / After, Original / Retouched, Figma layer names, Specified / Shipped).
 - **Annotations on an original are content.** If a screenshot's notes explain it, keep them, as live text beside it if that reads better.
 - **One point per image.** Large enough to judge without zooming; never thumbnails of whole flows. Evidence takes as much of the card as it can, with tight padding. Two phone screens of different layouts sit side by side; a before/after slider only when both images share a frame (retouching).
-- **Motion is video or Lottie, not GIF.** Animations play once when they come into view, can be replayed, and sit at about 85% of their stage. With reduced motion: a still frame and a play control.
-- **Recordings are never cropped:** shown whole in a device frame, with their sound and a sound toggle. One play control only, and controls never add height. Sound that tells the story gets its own control (Nike: the voice teaser, played from the screenshot like a voice message). Only one thing plays at a time.
+- **Motion is video or Lottie, not GIF.** Short animations loop while in view (paused out of view; a click pauses them, and keyboards get a pause control) and sit at about 85% of their stage. With reduced motion: the last frame, still.
+- **Recordings are never cropped:** shown whole in a device frame, with their sound and a sound toggle. One play control only, and controls never add height. Sound that tells the story gets its own control (Nike: the voice teaser, played from the screenshot like a voice message, with "Tap to listen · 0:05" until the first play). Only one thing plays at a time.
+- **Moments in a recording are timed from the footage**, frame by frame, each with a start and an end, and grouped by the page's parts; a moment lights up only while it's on screen. A card's "See it at 0:24" opens that moment as a clip beside the card (once, at 0.75× speed, with Play again), never scrolling the reader away.
 - **Never change an image's ratio, stretch it or crop an original.** Where a frame needs a different ratio, pad the original on a mount.
-- **Originals, sharp:** at least twice their display size, screenshots served at quality 90. If a file is too small, list it and ask me for the original; never upscale.
+- **Originals, sharp:** at least twice their display size, screenshots served at quality 90. Check every image's pixels against its display size before building, and ask me for originals at the start (Figma exports at 3x). A composite is not an original: a set of posters is six files, not one picture of six. Never upscale.
+- **Choose the evidence for the decision.** A structural decision leads with a wireframe or diagram, with the real screens as the inset; a layout change is two screens side by side; a photo edit is a slider; a set (posters, templates) is shown as separate items, side by side or in a strip swiped sideways with the next one at the edge.
 - **Each main project gets one signature interactive module**, something a reader can touch: an embedded live piece of the product, a before/after slider, an interactive diagram.
 - **An inventory for every project:** keep / cut / redraw / missing, with the reason. Images I need to supply go into `docs/ASSETS.md`.
 
@@ -178,7 +181,7 @@ Rules:
 
 - **Playful micro-interactions belong to the site, not the case files.** Buttons that do more than change colour (letters knocked about, icons that act, a little randomness each time) are for the portfolio's own shell: the home page, navigation, the printer. Inside a case file they compete with the work.
 - **In a case file, controls are serious and well made:** they work fully (a recording can be scrubbed, paused, muted; one thing plays at a time), look finished (Nike: a lit orange gradient on the play buttons, a gradient progress fill, a ring that fills as a clip plays), and guide where needed (a small hint, "Tap to listen · 0:05", until the first play).
-- **Obvious affordances:** what can be pressed looks pressable (Nike's wireframe inset sits on the canvas's top-right corner and overhangs it).
+- **Obvious affordances:** what can be pressed looks pressable (Nike's wireframe inset sits on the canvas's top-right corner and overhangs it). A swap keeps both boxes still: the inset has the same place and size whichever image is large.
 - **Restraint and access:** transitions short (0.35s or less for controls); focus behaves like hover; everything stands still with reduced motion.
 
 **Per project (its own character):** each project has its own palette, defined once with a light and a dark value for every token:
@@ -219,6 +222,7 @@ Work with me in conversation. Talk it through and confirm before building.
 5. **Visual prototype.** A single-file HTML prototype of the case file in `docs/design/case-<slug>.html` (same approach as `docs/design/prototype.html`), using the real assets, at desktop and phone widths, in light and dark mode. Iterate with me. Publish it as an artifact so I can view it on any device.
 6. **Build.** Move the approved design into the site (see §9), with tests passing and a Vercel preview.
 7. **Review.** Heading test, read-aloud test for copy, contrast check in both modes, keyboard and screen-reader pass, phone check, and every card at 1440 × 900, 1280 × 720, 1366 × 768, 1024 × 1366 and 768 × 1024 (no overflow, nothing distorted). Once I've said it can go live, merge when it's done and list anything uncertain in `docs/case-studies/<slug>/DECISIONS.md` for me to decide.
+8. **Final check.** Re-read every card for its effect and for repetition; list everything we discussed that isn't done yet; regenerate `copy.md` from the content file so it matches the page; confirm every change is on the live site (a production deploy marked successful), since a change that isn't live isn't done.
 
 ## 9. Working in parallel without collisions
 
