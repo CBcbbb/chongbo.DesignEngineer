@@ -126,6 +126,7 @@ Copy may only use these, or what Chongbo adds later.
 - Merge only with Chongbo's approval.
 - Copy draft 2 approved: Outcome as written; 74 streams stays; no "what I'd do now".
 - Closing card notes that every component and the store follow the design system he built (11 Oct). The ChatGPT summary's card-kinds split is not used.
+- Colour (11 Oct): the product's blue, as in the store's own interface (field #1d4fd7, accent #1f55d0). Contract roles move off blue: violet = category, orange = value, green = period (validated all-pairs, light and dark).
 - Stream fit is Chongbo's own work, server included; never "proposed to the backend team".
 
 ## Gaps
