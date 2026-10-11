@@ -58,6 +58,10 @@ The case file is built into the site from the approved v3 prototype, with your t
 
 38. **Cover outcome reworded** (13:41): "Launched across China as a section of the Nike App's home screen. On the strength of the first season, Nike renewed the agency's contract for the seasons that followed." "Across China" in place of "nationwide" (an app isn't rolled out region by region); "official" dropped (the Nike App is Nike's own); "the agency's contract" says whose contract; "On the strength of the first season" carries your point that the renewal followed the work.
 
+39. **The recording, re-timed from the footage.** Every moment now has a start and an end measured frame by frame (Opening video 0:04–0:10, Lock-up on the cover 0:13–0:16, Headline framing device 0:21–0:22, Several views 0:23–0:24, Product tag 0:24–0:26, Product cards 0:26, Headline typed in 0:26–0:28, Like 0:28–0:30, Poster card 0:40–0:42, Star Voice Q&A 0:42–0:48, Star Ranking 0:48–0:50). The list is in the order things happen, each marked Read, Shop or Return, and lights up only while that moment is on screen. The progress bar has no chapter dots.
+40. **"See it at" opens a clip beside the card** instead of scrolling to the top: a small player plays that moment once (Play again at the end); Escape, the close button or a click outside closes it. 01.2 (Visual style) gained one, for the poster card at 0:40.
+41. **01.4 leads with the wireframes again** (your call, 13:51), redrawn from the original slide: before, one long column with an arrow down; after, the views as pages with an arrow across and the next page at the edge. The app screens are the inset; pressing it swaps them, as in 02.1.
+
 ## Process## Process
 
 12. **Going live.** You said it can go live once done, so after the tests passed I rebased onto `main` and merged. To undo: revert the merge commit on `main`.

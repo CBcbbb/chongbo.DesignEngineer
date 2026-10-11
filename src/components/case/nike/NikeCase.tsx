@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Project, Section } from "@content";
-import { ChipIcon, Compare, Contents, GiftBox, Pip, RecordingPlayer, RecordingProvider, SeekButton, Switcher, VoiceTeaser, type ContentsPart } from "./NikeClient";
+import { ChipIcon, Compare, Contents, GiftBox, Pip, RecordingPlayer, SeekButton, Switcher, VoiceTeaser, type ContentsPart, type Moment } from "./NikeClient";
 import "./nike.css";
 
 /** Asset path. Every image is served at quality 90 (`Q`), so text in screenshots stays sharp. */
@@ -54,31 +54,22 @@ const PARTS: ContentsPart[] = [
   },
 ];
 
-const CHAPTERS = [
-  {
-    part: "Read",
-    items: [
-      { t: 13, label: "Logo lock-up" },
-      { t: 19, label: "Headline framing device" },
-      { t: 22, label: "Several views, swiped" },
-    ],
-  },
-  {
-    part: "Shop",
-    items: [
-      { t: 25, label: "Product tag" },
-      { t: 26, label: "Product cards" },
-      { t: 48, label: "Star Ranking" },
-    ],
-  },
-  {
-    part: "Return",
-    items: [
-      { t: 28.4, label: "Like" },
-      { t: 42, label: "Star Voice Q&A" },
-    ],
-  },
-];
+/** Moments in the recording, timed from the footage (seconds), in the order they happen. */
+const M = {
+  opening: { start: 4, end: 9.7, label: "Opening video", part: "Read" },
+  lockup: { start: 13.3, end: 15.9, label: "Lock-up on the cover", part: "Read" },
+  framing: { start: 20.6, end: 22, label: "Headline framing device", part: "Read" },
+  views: { start: 22.8, end: 24.2, label: "Several views, swiped", part: "Read" },
+  tag: { start: 24.2, end: 25.6, label: "Product tag", part: "Shop" },
+  cards: { start: 25.6, end: 26.4, label: "Product cards", part: "Shop" },
+  typing: { start: 26.4, end: 27.6, label: "Headline typed in", part: "Read" },
+  like: { start: 27.8, end: 29.7, label: "Like", part: "Return" },
+  poster: { start: 40.4, end: 41.5, label: "Poster card", part: "Read" },
+  starVoice: { start: 41.5, end: 48.4, label: "Star Voice Q&A", part: "Return" },
+  ranking: { start: 48.4, end: 50.4, label: "Star Ranking", part: "Shop" },
+} satisfies Record<string, Moment>;
+const CHAPTERS: Moment[] = Object.values(M);
+
 
 /**
  * Star Voice Q&A: the notes from the original presentation, each pinned to the part of the screen it
@@ -96,8 +87,87 @@ const SV_NOTES = [
   { y: 0.895, side: "l", title: "Ask a question", text: "Readers submit questions in real time, shown in an interactive feed." },
 ] as const;
 
+/** An image placeholder: a box with a cross. */
+function X({ x, y, w, h }: { x: number; y: number; w: number; h: number }) {
+  return (
+    <>
+      <rect x={x} y={y} width={w} height={h} />
+      <path d={`M${x} ${y}L${x + w} ${y + h}M${x + w} ${y}L${x} ${y + h}`} />
+    </>
+  );
+}
+/** Lines of text, the last one shorter. */
+const lines = (x: number, y: number, w: number, n: number) =>
+  Array.from({ length: n }, (_, i) => <path key={i} d={`M${x} ${y + i * 9}h${i === n - 1 ? w * 0.6 : w}`} />);
+
+/**
+ * 01.4's decision as wireframes, redrawn from the original slide: before, one long vertical scroll;
+ * after, the outfit's views as pages swiped sideways, with the next page showing at the edge.
+ */
+function FeedWireframes() {
+  return (
+    <svg
+      className="nk-wire"
+      viewBox="0 0 1000 620"
+      role="img"
+      aria-label="Wireframes. Before: one long vertical scroll, with an arrow pointing down. After: an outfit's views set side by side as pages, with an arrow pointing right and the next page showing at the edge."
+    >
+      {/* before: one long column */}
+      <g className="nk-wire-paper">
+        <rect x="170" y="30" width="120" height="530" />
+        <rect x="430" y="60" width="190" height="120" />
+        <rect x="430" y="180" width="190" height="250" />
+        <rect x="620" y="190" width="170" height="230" />
+        <rect x="790" y="190" width="170" height="230" />
+        <rect x="960" y="190" width="60" height="230" />
+        <rect x="430" y="430" width="190" height="130" />
+      </g>
+      <g className="nk-wire-line">
+        <X x={170} y={30} w={120} h={110} />
+        <rect x="180" y="150" width="100" height="22" />
+        {lines(180, 186, 100, 4)}
+        <X x={170} y={222} w={120} h={120} />
+        {lines(180, 356, 100, 4)}
+        <X x={178} y={392} w={104} h={96} />
+        {lines(180, 500, 100, 2)}
+        <X x={172} y={520} w={36} h={34} />
+        <X x={212} y={520} w={36} h={34} />
+        <X x={252} y={520} w={36} h={34} />
+        {/* after: a header, then the views as pages, the fourth showing at the edge */}
+        <rect x="442" y="72" width="166" height="30" />
+        {lines(442, 120, 166, 3)}
+        <X x={430} y={180} w={190} h={250} />
+        <rect x="632" y="202" width="146" height="150" />
+        {lines(632, 372, 146, 4)}
+        {lines(802, 204, 146, 4)}
+        <rect x="802" y="244" width="146" height="160" />
+        <X x={440} y={450} w={80} h={66} />
+        <X x={530} y={450} w={80} h={66} />
+        {lines(440, 530, 170, 2)}
+      </g>
+      <g className="nk-wire-dot">
+        <circle cx="180" cy="40" r="5" />
+        <circle cx="444" cy="194" r="7" />
+        <circle cx="606" cy="194" r="7" />
+      </g>
+      <g className="nk-wire-arrow">
+        <path d="M230 62V300" />
+        <path d="M212 280l18 22 18-22" />
+        <path d="M462 305H900" />
+        <path d="M878 287l22 18-22 18" />
+      </g>
+      <text x="230" y="600" className="nk-wire-label">
+        Before
+      </text>
+      <text x="695" y="600" className="nk-wire-label">
+        After
+      </text>
+    </svg>
+  );
+}
+
 /** A card's head: index and claim on the left, the reasoning on the right. */
-function Head({ s, idx, seek }: { s: Section; idx: string; seek?: number }) {
+function Head({ s, idx, clip }: { s: Section; idx: string; clip?: Moment }) {
   return (
     <div className="nk-head">
       <div>
@@ -110,7 +180,7 @@ function Head({ s, idx, seek }: { s: Section; idx: string; seek?: number }) {
         {s.body.map((p) => (
           <p key={p.slice(0, 24)}>{p}</p>
         ))}
-        {seek !== undefined && <SeekButton t={seek} />}
+        {clip && <SeekButton moment={clip} />}
       </div>
     </div>
   );
@@ -158,7 +228,6 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
 
   return (
     <div className="nk" id="top">
-      <RecordingProvider>
         <div className="nk-frame">
           <Contents title={project.title} parts={PARTS} />
 
@@ -210,7 +279,7 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
             <Opener part={PARTS[0]!} />
 
             <Card s={sec("graphic-system")}>
-              <Head s={sec("graphic-system")} idx="01.1" seek={19} />
+              <Head s={sec("graphic-system")} idx="01.1" clip={M.framing} />
               <figure className="nk-ev">
                 <Switcher
                   options={[
@@ -246,7 +315,7 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
             </Card>
 
             <Card s={sec("style")}>
-              <Head s={sec("style")} idx="01.2" />
+              <Head s={sec("style")} idx="01.2" clip={M.poster} />
               <figure className="nk-ev nk-ev-one">
                 <div className="nk-box nk-grain nk-posters">
                   <Image quality={Q}
@@ -287,17 +356,26 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
             </Card>
 
             <Card s={sec("views")} tone="black">
-              <Head s={sec("views")} idx="01.4" seek={22} />
-              <figure className="nk-ev nk-bleed nk-bleed-end">
-                <div className="nk-box nk-solo">
-                  <Image quality={Q}
-                    src={A("storytelling-feed.png")}
-                    alt="Before: one long vertical scroll. After: an outfit's views set as horizontal pages, with the next view showing at the edge."
-                    width={1555}
-                    height={813}
-                    sizes="(min-width: 1180px) 900px, 100vw"
-                  />
-                </div>
+              <Head s={sec("views")} idx="01.4" clip={M.views} />
+              <figure className="nk-ev nk-ev-one">
+                {/* The decision is structural, so the wireframes lead; the app screens are one press away. */}
+                <Pip
+                  ratio={1000 / 620}
+                  main={{ label: "Wireframes", image: <FeedWireframes /> }}
+                  inset={{
+                    label: "App screens",
+                    image: (
+                      <Image
+                        quality={Q}
+                        src={A("storytelling-feed.png")}
+                        alt="In the app. Before: one long vertical scroll. After: an outfit's views set as horizontal pages, with the next view showing at the edge."
+                        width={1555}
+                        height={813}
+                        sizes="(min-width: 1180px) 900px, 100vw"
+                      />
+                    ),
+                  }}
+                />
               </figure>
             </Card>
 
@@ -329,7 +407,7 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
             <Opener part={PARTS[1]!} />
 
             <Card s={sec("tags")} tone="black">
-              <Head s={sec("tags")} idx="02.1" seek={25} />
+              <Head s={sec("tags")} idx="02.1" clip={M.tag} />
               <figure className="nk-ev nk-ev-one">
                 <Pip
                   ratio={2500 / 1306}
@@ -362,7 +440,7 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
             </Card>
 
             <Card s={sec("product-card")}>
-              <Head s={sec("product-card")} idx="02.2" seek={26} />
+              <Head s={sec("product-card")} idx="02.2" clip={M.cards} />
               <figure className="nk-ev nk-ev-one">
                 <div className="nk-box nk-field nk-phones">
                   <div className="nk-pair">
@@ -384,7 +462,7 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
             </Card>
 
             <Card s={sec("ranking")}>
-              <Head s={sec("ranking")} idx="02.3" seek={48} />
+              <Head s={sec("ranking")} idx="02.3" clip={M.ranking} />
               <figure className="nk-ev">
                 <div className="nk-box nk-rank">
                   <figure>
@@ -413,7 +491,7 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
             </Card>
 
             <Card s={sec("star-voice")}>
-              <Head s={sec("star-voice")} idx="03.2" seek={42} />
+              <Head s={sec("star-voice")} idx="03.2" clip={M.starVoice} />
               <figure className="nk-ev nk-ev-one">
                 <div className="nk-box nk-sv">
                   <div className="nk-sv-phone">
@@ -467,7 +545,7 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
             </section>
 
             <Card s={sec("handoff")}>
-              <Head s={sec("handoff")} idx="04.2" seek={28.4} />
+              <Head s={sec("handoff")} idx="04.2" clip={M.like} />
               <div className="nk-ev nk-ev-one">
                 <div className="nk-box nk-vs">
                   <figure>
@@ -502,7 +580,6 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
             </nav>
           </div>
         </div>
-      </RecordingProvider>
     </div>
   );
 }

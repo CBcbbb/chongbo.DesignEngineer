@@ -1,38 +1,14 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import { createPortal } from "react-dom";
 
 /* ---------------------------------------------------------------------------------------------
- * The recording: one shared player. Any card can jump to a moment with <SeekButton t={25} />.
+ * The recording. Moments are timed from the footage: the chapter list plays them in the player,
+ * and a card's "See it at" opens the same moment as a clip beside the card, without scrolling away.
  * ------------------------------------------------------------------------------------------- */
 
-type Recording = { seek: (t: number) => void; register: (v: HTMLVideoElement | null) => void };
-const RecordingCtx = createContext<Recording>({ seek: () => {}, register: () => {} });
-
-export function RecordingProvider({ children }: { children: ReactNode }) {
-  const video = useRef<HTMLVideoElement | null>(null);
-  const register = useCallback((v: HTMLVideoElement | null) => {
-    video.current = v;
-  }, []);
-  const seek = useCallback((t: number) => {
-    const v = video.current;
-    if (!v) return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    document.getElementById("recording")?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
-    const go = () => {
-      v.currentTime = t;
-      void v.play().catch(() => {});
-    };
-    if (v.readyState >= 1) go();
-    else {
-      v.addEventListener("loadedmetadata", go, { once: true });
-      v.load();
-    }
-  }, []);
-  return <RecordingCtx.Provider value={{ seek, register }}>{children}</RecordingCtx.Provider>;
-}
-
-export type Chapter = { t: number; label: string };
+export type Moment = { start: number; end: number; label: string; part?: string };
 
 /** A speaker; `off` adds the mute stroke. */
 function Speaker({ off = false }: { off?: boolean }) {
@@ -89,24 +65,16 @@ function PlayMorph({ playing }: { playing: boolean }) {
   return <span className={`nk-morph${playing ? " is-pause" : ""}`} aria-hidden="true" />;
 }
 
-export function RecordingPlayer({ chapters, full }: { chapters: { part: string; items: Chapter[] }[]; full: string }) {
-  const { register, seek } = useContext(RecordingCtx);
+export function RecordingPlayer({ chapters, full }: { chapters: Moment[]; full: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [muted, setMuted] = useState(false);
-  const times = chapters.flatMap((c) => c.items.map((i) => i.t)).sort((a, b) => a - b);
-  let current: number | null = null;
-  for (const s of times) if (time >= s - 0.05) current = s;
-  const next = current === null ? null : (times.find((s) => s > current!) ?? duration);
-  const within = current !== null && next ? Math.min(1, Math.max(0, (time - current) / (next - current))) : 0;
   const total = duration || 50;
+  const current = chapters.find((c) => time >= c.start && time < c.end) ?? null;
+  const within = current ? Math.min(1, Math.max(0, (time - current.start) / (current.end - current.start))) : 0;
 
-  useEffect(() => {
-    register(ref.current);
-    return () => register(null);
-  }, [register]);
   useEffect(() => {
     if (ref.current) ref.current.muted = muted;
   }, [muted]);
@@ -116,6 +84,19 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
     if (!v) return;
     if (v.paused) void v.play().catch(() => {});
     else v.pause();
+  };
+  const jump = (t: number) => {
+    const v = ref.current;
+    if (!v) return;
+    const go = () => {
+      v.currentTime = t;
+      void v.play().catch(() => {});
+    };
+    if (v.readyState >= 1) go();
+    else {
+      v.addEventListener("loadedmetadata", go, { once: true });
+      v.load();
+    }
   };
 
   return (
@@ -139,13 +120,8 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
           onEnded={() => setPlaying(false)}
           onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
         />
-        {/* The one play control: the whole screen, with the button drawn at its centre. */}
-        <button
-          type="button"
-          className="nk-screen"
-          aria-label={playing ? "Pause recording" : "Play recording"}
-          onClick={toggle}
-        >
+        {/* The one play control: the whole screen, with the button at its centre. */}
+        <button type="button" className="nk-screen" aria-label={playing ? "Pause recording" : "Play recording"} onClick={toggle}>
           <span className="nk-bigplay">
             <PlayMorph playing={playing} />
           </span>
@@ -155,9 +131,6 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
           <span className="nk-track">
             <span className="nk-track-bar" aria-hidden="true">
               <i style={{ transform: `scaleX(${time / total})` }} />
-              {times.map((t) => (
-                <b key={t} style={{ left: `${(t / total) * 100}%` }} className={current !== null && t <= current ? "is-past" : undefined} />
-              ))}
             </span>
             <input
               type="range"
@@ -167,7 +140,6 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
               value={time}
               aria-label="Position in the recording"
               aria-valuetext={`${clock(time)} of ${clock(total)}`}
-              style={{ ["--p" as string]: String(time / total) }}
               onChange={(e) => {
                 const v = ref.current;
                 const t = Number(e.currentTarget.value);
@@ -180,13 +152,7 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
             {clock(time)}
             <i> / {clock(total)}</i>
           </span>
-          <button
-            type="button"
-            className={`nk-snd${playing && !muted ? " is-live" : ""}`}
-            aria-label="Sound"
-            aria-pressed={!muted}
-            onClick={() => setMuted((m) => !m)}
-          >
+          <button type="button" className={`nk-snd${playing && !muted ? " is-live" : ""}`} aria-label="Sound" aria-pressed={!muted} onClick={() => setMuted((m) => !m)}>
             <Speaker off={muted} />
           </button>
         </div>
@@ -196,42 +162,191 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
         <a className="nk-outlink" href={full} target="_blank" rel="noopener">
           Full quality on YouTube<span className="sr-only"> (opens in a new tab)</span> <span aria-hidden="true">↗</span>
         </a>
-        <div className="nk-chapters">
+        {/* in the order they happen in the recording; each lights up only while it's on screen */}
+        <ol className="nk-chapters" aria-label="Moments in the recording">
           {chapters.map((c) => (
-            <section key={c.part} aria-label={`${c.part} chapters`}>
-              <h3>{c.part}</h3>
-              <ol>
-                {c.items.map((i) => (
-                  <li key={i.t}>
-                    <button
-                      type="button"
-                      aria-current={current === i.t ? "true" : undefined}
-                      style={current === i.t ? { ["--cp" as string]: String(within) } : undefined}
-                      onClick={() => seek(i.t)}
-                    >
-                      <span className="nk-t">{clock(i.t)}</span>
-                      {i.label}
-                    </button>
-                  </li>
-                ))}
-              </ol>
-            </section>
+            <li key={c.start}>
+              <button
+                type="button"
+                aria-current={current === c ? "true" : undefined}
+                style={current === c ? { ["--cp" as string]: String(within) } : undefined}
+                onClick={() => jump(c.start)}
+              >
+                <span className="nk-t">{clock(c.start)}</span>
+                <span className="nk-cl">{c.label}</span>
+                {c.part && <span className="nk-cpart">{c.part}</span>}
+              </button>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </div>
   );
 }
 
-export function SeekButton({ t }: { t: number }) {
-  const { seek } = useContext(RecordingCtx);
-  const label = `0:${String(Math.floor(t)).padStart(2, "0")}`;
+/** "See it at 0:24": opens that moment of the recording as a clip beside the card. */
+export function SeekButton({ moment }: { moment: Moment }) {
+  const [open, setOpen] = useState(false);
+  const btn = useRef<HTMLButtonElement>(null);
+  // Only one clip open at a time.
+  useEffect(() => {
+    const other = (e: Event) => {
+      if ((e as CustomEvent<number>).detail !== moment.start) setOpen(false);
+    };
+    window.addEventListener("nk-clip", other);
+    return () => window.removeEventListener("nk-clip", other);
+  }, [moment.start]);
   return (
-    <button type="button" className="nk-seek" onClick={() => seek(t)}>
-      <span className="nk-tri" aria-hidden="true" />
-      See it at {label}
-      <span className="sr-only"> in the recording</span>
-    </button>
+    <>
+      <button
+        ref={btn}
+        type="button"
+        className="nk-seek"
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        onClick={() => {
+          if (!open) window.dispatchEvent(new CustomEvent("nk-clip", { detail: moment.start }));
+          setOpen((o) => !o);
+        }}
+      >
+        <span className="nk-tri" aria-hidden="true" />
+        See it at {clock(moment.start)}
+        <span className="sr-only"> in the recording</span>
+      </button>
+      {open && (
+        <Clip
+          moment={moment}
+          anchor={btn}
+          onClose={(refocus) => {
+            setOpen(false);
+            if (refocus) btn.current?.focus({ preventScroll: true });
+          }}
+        />
+      )}
+    </>
+  );
+}
+
+function Clip({ moment, anchor, onClose }: { moment: Moment; anchor: RefObject<HTMLButtonElement | null>; onClose: (refocus: boolean) => void }) {
+  const box = useRef<HTMLDivElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
+  const shut = useRef<HTMLButtonElement>(null);
+  const frame = useRef(0);
+  // The clip only exists after a click, so the page is there to portal into.
+  const [root] = useState<HTMLElement | null>(() => document.querySelector<HTMLElement>(".nk"));
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const [progress, setProgress] = useState(0);
+  const [done, setDone] = useState(false);
+  const span = moment.end - moment.start;
+
+  // Sit under the button (or above it when there's no room), inside the window; close if the button scrolls away.
+  useLayoutEffect(() => {
+    const place = () => {
+      const a = anchor.current?.getBoundingClientRect();
+      const b = box.current;
+      if (!a || !b) return;
+      if (a.bottom < 0 || a.top > window.innerHeight) return onClose(false);
+      const w = b.offsetWidth;
+      const h = b.offsetHeight;
+      const left = Math.min(Math.max(16, a.left), window.innerWidth - w - 16);
+      let top = a.bottom + 10;
+      if (top + h > window.innerHeight - 16) top = a.top - h - 10 >= 16 ? a.top - h - 10 : Math.max(16, window.innerHeight - h - 16);
+      setPos({ top, left });
+    };
+    place();
+    window.addEventListener("resize", place);
+    window.addEventListener("scroll", place, { passive: true });
+    return () => {
+      window.removeEventListener("resize", place);
+      window.removeEventListener("scroll", place);
+    };
+  }, [anchor, onClose, root]);
+
+  const play = useCallback(() => {
+    const v = video.current;
+    if (!v) return;
+    const go = () => {
+      v.currentTime = moment.start;
+      setDone(false);
+      void v.play().catch(() => {});
+    };
+    if (v.readyState >= 1) go();
+    else v.addEventListener("loadedmetadata", go, { once: true });
+  }, [moment.start]);
+
+  // Play the moment once, stopping on its last frame.
+  useEffect(() => {
+    if (!root) return;
+    play();
+    shut.current?.focus({ preventScroll: true });
+    const tick = () => {
+      const v = video.current;
+      if (v && !v.paused) {
+        setProgress(Math.min(1, Math.max(0, (v.currentTime - moment.start) / span)));
+        if (v.currentTime >= moment.end) {
+          v.pause();
+          setDone(true);
+        }
+      }
+      frame.current = requestAnimationFrame(tick);
+    };
+    frame.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame.current);
+  }, [root, play, moment.start, moment.end, span]);
+
+  // Escape or a click outside closes it.
+  useEffect(() => {
+    const key = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose(true);
+    };
+    const away = (e: PointerEvent) => {
+      const t = e.target as Node;
+      if (!box.current?.contains(t) && !anchor.current?.contains(t)) onClose(false);
+    };
+    document.addEventListener("keydown", key);
+    document.addEventListener("pointerdown", away);
+    return () => {
+      document.removeEventListener("keydown", key);
+      document.removeEventListener("pointerdown", away);
+    };
+  }, [anchor, onClose]);
+
+  if (!root) return null;
+  return createPortal(
+    <div
+      ref={box}
+      className="nk-clip"
+      role="dialog"
+      aria-label={`${moment.label}, ${clock(moment.start)} to ${clock(moment.end)} in the recording`}
+      style={pos ? { top: pos.top, left: pos.left } : { visibility: "hidden" }}
+    >
+      <div className="nk-clip-head">
+        <span className="nk-clip-title">
+          <b>{moment.label}</b>
+          <i>
+            {clock(moment.start)}–{clock(moment.end)}
+          </i>
+        </span>
+        <button ref={shut} type="button" className="nk-clip-x" aria-label="Close the clip" onClick={() => onClose(true)}>
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M4 4l8 8M12 4l-8 8" />
+          </svg>
+        </button>
+      </div>
+      <div className="nk-clip-screen">
+        <video ref={video} src="/assets/nike/recording.mp4" playsInline preload="auto" onPlay={(e) => pauseOthers(e.currentTarget)} />
+        {done && (
+          <button type="button" className="nk-clip-again" onClick={play}>
+            <span className="nk-tri" aria-hidden="true" />
+            Play again
+          </button>
+        )}
+      </div>
+      <span className="nk-clip-bar" aria-hidden="true">
+        <i style={{ transform: `scaleX(${progress})` }} />
+      </span>
+    </div>,
+    root,
   );
 }
 

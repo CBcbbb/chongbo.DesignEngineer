@@ -663,22 +663,6 @@
   outline-offset: 2px;
   border-radius: 4px;
 }
-.nk-track b {
-  position: absolute;
-  top: 50%;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #6b6760;
-  transform: translate(-50%, -50%);
-  transition:
-    background 0.2s,
-    transform 0.3s var(--nk-ease);
-}
-.nk-track b.is-past {
-  background: #ffd2b8;
-  transform: translate(-50%, -50%) scale(1.3);
-}
 .nk-clock i {
   font-style: normal;
   color: #6b6760;
@@ -740,19 +724,12 @@
 }
 .nk-chapters {
   display: grid;
-  gap: 0.9rem;
-  max-width: 24rem;
+  max-width: 26rem;
   margin-top: 1.25rem;
-}
-.nk-chapters h3 {
-  margin-bottom: 0.4rem;
-  font: 500 0.75rem/1 var(--mono);
-  letter-spacing: 0;
-  color: var(--nk-on-black-2) !important;
 }
 .nk-chapters button {
   display: grid;
-  grid-template-columns: 2.4rem minmax(0, 1fr);
+  grid-template-columns: 2.4rem minmax(0, 1fr) auto;
   gap: 0.35rem;
   align-items: baseline;
   width: 100%;
@@ -766,9 +743,13 @@
   line-height: 1.3;
   color: var(--nk-on-black);
 }
-.nk-t {
+.nk-t,
+.nk-cpart {
   font: 400 0.75rem/1 var(--mono);
   color: var(--nk-on-black-2);
+}
+.nk-cpart {
+  color: #8a867f;
 }
 .nk-chapters button[aria-current="true"],
 .nk-chapters button[aria-current="true"] .nk-t,
@@ -1096,6 +1077,44 @@
   position: relative;
   width: 100%;
 }
+/* 01.4's wireframes, on the orange field */
+.nk-wire {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  background: var(--nk-orange);
+}
+.nk-wire-paper rect {
+  fill: #fff;
+  stroke: #c2410c;
+  stroke-width: 2;
+}
+.nk-wire-line rect,
+.nk-wire-line path {
+  fill: none;
+  stroke: #e0571b;
+  stroke-width: 1.6;
+}
+.nk-wire-dot circle {
+  fill: #e0571b;
+}
+.nk-wire-arrow path {
+  fill: none;
+  stroke: #e0571b;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.nk-wire-label {
+  fill: #111010;
+  font-size: 22px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+.nk-pip-thumb .nk-wire {
+  border-radius: 0;
+}
 .nk-pip-canvas > img {
   width: 100%;
   border-radius: 10px;
@@ -1185,6 +1204,129 @@
   position: relative;
   width: min(100%, 20rem);
 }
+/* ---------- a moment of the recording, opened beside the card ---------- */
+.nk-clip {
+  position: fixed;
+  z-index: 50;
+  width: min(15rem, 72vw);
+  padding: 0.5rem;
+  border-radius: 1.1rem;
+  background: var(--nk-black);
+  color: var(--nk-on-black);
+  box-shadow:
+    0 0 0 1px #2b2926,
+    0 30px 60px -20px rgba(0, 0, 0, 0.6);
+  animation: nk-clip-in 0.22s var(--nk-ease);
+}
+@keyframes nk-clip-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+.nk-clip-head {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.15rem 0.15rem 0.5rem 0.4rem;
+  font-size: 0.75rem;
+  line-height: 1.3;
+  color: var(--nk-on-black-2);
+}
+.nk-clip-title {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+.nk-clip-head b {
+  overflow: hidden;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--nk-on-black);
+}
+.nk-clip-head i {
+  font: 400 0.6875rem/1 var(--mono);
+  font-style: normal;
+  color: var(--nk-on-black-2);
+}
+.nk-clip-x {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  background: #2b2926;
+  color: var(--nk-on-black) !important;
+}
+.nk-clip-x:hover {
+  background: #3a3835;
+}
+.nk-clip-x svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.nk-clip-screen {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.7rem;
+  background: #000;
+}
+.nk-clip-screen video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 750 / 1624;
+}
+.nk-clip-again {
+  position: absolute;
+  inset: auto 0 1rem;
+  justify-self: center;
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+  width: max-content;
+  margin: 0 auto;
+  padding: 0.55rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  background: var(--nk-orange);
+  color: var(--nk-on-orange) !important;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+.nk-clip-bar {
+  display: block;
+  height: 3px;
+  margin: 0.5rem 0.2rem 0.15rem;
+  overflow: hidden;
+  border-radius: 3px;
+  background: #3a3835;
+}
+.nk-clip-bar i {
+  display: block;
+  height: 100%;
+  background: var(--nk-orange-on-black);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nk-clip {
+    animation: none;
+  }
+}
+
 /* the voice teaser, played like a voice message */
 /* the screenshot's own waveform bars turn orange as the clip plays (darken leaves the dark bubble as it is) */
 .nk-vt-wave {
