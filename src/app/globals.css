@@ -2,6 +2,8 @@
 @import "./tokens.css";
 @import "./components.css" layer(components);
 @import "./printer.css" layer(components);
+@import "./case-palettes.css" layer(components);
+@import "./case-file.css" layer(components);
 
 /* Tokens exposed to Tailwind utilities (bg-studio, text-ink-2, font-mono, ...) */
 @theme inline {

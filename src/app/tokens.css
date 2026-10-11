@@ -31,6 +31,23 @@
   --stamp: #c2311f;
   --focus: #1c1b19;
 
+  /* case file: the reading surface of a project page (template "case-file"). Follows the theme. */
+  --case-bg: #fbfaf7;
+  --case-ink: #1c1b19;
+  --case-body: #3a3732;
+  --case-dim: #67635c;
+  --case-rule: #e3e0d8;
+  --case-line: #c9c5bc;
+  --case-inset: #f2f0eb;
+  --case-red: #c9372a;
+  --case-on-red: #ffffff;
+  /* per-project palette defaults (overridden in case-palettes.css) */
+  --accent: #1c1b19;
+  --accent-strong: #1c1b19;
+  --on-accent: #fbfaf7;
+  --accent-2: #ecebe6;
+  --accent-tint: #f2f0eb;
+
   --sans: var(--font-geist-sans), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: var(--font-geist-mono), "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
@@ -48,6 +65,18 @@
     --ink-2: #aba79f;
     --rule: #3a3835;
     --focus: #eeece8;
+    --case-bg: #1f1e1c;
+    --case-ink: #eeece8;
+    --case-body: #cfcbc3;
+    --case-dim: #a39f97;
+    --case-rule: #36342f;
+    --case-line: #4d4a44;
+    --case-inset: #282624;
+    --accent: #eeece8;
+    --accent-strong: #eeece8;
+    --on-accent: #1f1e1c;
+    --accent-2: #2a2826;
+    --accent-tint: #282624;
     color-scheme: dark;
   }
 }
@@ -59,5 +88,17 @@
   --ink-2: #aba79f;
   --rule: #3a3835;
   --focus: #eeece8;
+  --case-bg: #1f1e1c;
+  --case-ink: #eeece8;
+  --case-body: #cfcbc3;
+  --case-dim: #a39f97;
+  --case-rule: #36342f;
+  --case-line: #4d4a44;
+  --case-inset: #282624;
+  --accent: #eeece8;
+  --accent-strong: #eeece8;
+  --on-accent: #1f1e1c;
+  --accent-2: #2a2826;
+  --accent-tint: #282624;
   color-scheme: dark;
 }

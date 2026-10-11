@@ -41,7 +41,7 @@ describe("fallback: one capability", () => {
     const r = fallbackAnswer("What matters most to us is accessibility.");
     expect(r.asked[0]).toBe("accessibility");
     expect(r.sheets.map((s) => s.project).sort()).toEqual(projectsWith("accessibility").sort());
-    expect(r.sheets[0]).toMatchObject({ project: "hhcd-data-platform", section: "dual-view" });
+    expect(r.sheets[0]).toMatchObject({ project: "hhcd-data-platform", section: "keyboard" });
   });
 
   it("picks each project's best section: the one where the signal comes first", () => {

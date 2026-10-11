@@ -1,0 +1,54 @@
+/*
+ * Per-project palettes for the case-file template (playbook §7).
+ * Each project defines every token once for light and once for dark. Dark is designed, not inverted:
+ * same hue, lighter and calmer for text, deeper for fields.
+ * Checked by `npm run contrast` (scripts/contrast.ts reads this file).
+ */
+
+/* ---------- Helen Hamlyn Centre Data Platform ----------
+ * Accent: the platform's teal (its own text-safe value, #006D69).
+ * Type colours: the Centre's fixed brand colours stay as marks; text uses text-safe variants.
+ */
+[data-palette="hhcd"] {
+  --accent: #006d69;
+  --accent-strong: #006d69;
+  --on-accent: #ffffff;
+  --accent-2: #e6edeb;
+  --accent-tint: #ebf3f1;
+  --mark-people: #5f5ba3;
+  --mark-partners: #dc2680;
+  --mark-projects: #eb631a;
+  --mark-methods: #148d66;
+  --type-people: #5f5ba3;
+  --type-partners: #b01e68;
+  --type-projects: #a8470f;
+  --type-methods: #107052;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) [data-palette="hhcd"] {
+    --accent: #6cc6bd;
+    --accent-strong: #6cc6bd;
+    --on-accent: #10201e;
+    --accent-2: #15292a;
+    --accent-tint: #18302d;
+    --mark-people: #8d89d6; /* the brand purple is 2.8:1 on dark paper */
+    --type-people: #aeaaea;
+    --type-partners: #f283b9;
+    --type-projects: #f4a06c;
+    --type-methods: #6dcda6;
+  }
+}
+
+:root[data-theme="dark"] [data-palette="hhcd"] {
+  --accent: #6cc6bd;
+  --accent-strong: #6cc6bd;
+  --on-accent: #10201e;
+  --accent-2: #15292a;
+  --accent-tint: #18302d;
+  --mark-people: #8d89d6;
+  --type-people: #aeaaea;
+  --type-partners: #f283b9;
+  --type-projects: #f4a06c;
+  --type-methods: #6dcda6;
+}

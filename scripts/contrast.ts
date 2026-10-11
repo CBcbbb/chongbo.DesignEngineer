@@ -76,7 +76,73 @@ function pairs(t: Record<string, string>, theme: string): Pair[] {
   ];
 }
 
-const all = [...pairs(light, "light"), ...pairs(dark, "dark")];
+/** Case-file template (case-file.css): the reading surface follows the theme. */
+function casePairs(t: Record<string, string>, theme: string): Pair[] {
+  const T = (k: string) => {
+    const v = t[k];
+    if (!v) throw new Error(`Missing token --${k}`);
+    return v;
+  };
+  return [
+    { fg: T("case-ink"), bg: T("case-bg"), where: `${theme}: case file headings`, min: TEXT },
+    { fg: T("case-body"), bg: T("case-bg"), where: `${theme}: case file body`, min: TEXT },
+    { fg: T("case-dim"), bg: T("case-bg"), where: `${theme}: case file labels, captions, rail`, min: TEXT },
+    { fg: T("case-ink"), bg: T("case-inset"), where: `${theme}: keycaps, next case file`, min: TEXT },
+    { fg: T("case-dim"), bg: T("case-inset"), where: `${theme}: labels on inset`, min: TEXT },
+    { fg: T("case-dim"), bg: T("case-bg"), where: `${theme}: control borders (segmented control, buttons)`, min: LARGE },
+    { fg: T("case-on-red"), bg: T("case-red"), where: `${theme}: primary action (open the live platform)`, min: TEXT },
+  ];
+}
+
+/** Per-project palettes (case-palettes.css): every pairing a palette is used in, in both themes. */
+const palCss = fs.readFileSync(path.join(process.cwd(), "src/app/case-palettes.css"), "utf8");
+function palBlock(re: RegExp): Record<string, string> {
+  const m = palCss.match(re);
+  if (!m) return {};
+  const out: Record<string, string> = {};
+  for (const [, name, value] of m[1]!.matchAll(/--([a-z0-9-]+):\s*(#[0-9a-f]{3,8})\s*;/gi)) out[name!] = value!.toLowerCase();
+  return out;
+}
+function palettePairs(): Pair[] {
+  const names = [...new Set([...palCss.matchAll(/^\[data-palette="([a-z0-9-]+)"\]\s*\{/gm)].map((m) => m[1]!))];
+  const out: Pair[] = [];
+  for (const n of names) {
+    const lightPal = palBlock(new RegExp(`^\\[data-palette="${n}"\\]\\s*\\{([\\s\\S]*?)\\n\\}`, "m"));
+    const darkPal = { ...lightPal, ...palBlock(new RegExp(`:root\\[data-theme="dark"\\] \\[data-palette="${n}"\\]\\s*\\{([\\s\\S]*?)\\n\\}`)) };
+    for (const [theme, base, pal] of [
+      ["light", light, lightPal],
+      ["dark", dark, darkPal],
+    ] as const) {
+      const P = (k: string) => {
+        const v = pal[k] ?? base[k];
+        if (!v) throw new Error(`Missing palette token --${k} (${n})`);
+        return v;
+      };
+      const bg = P("case-bg");
+      out.push(
+        { fg: P("accent"), bg, where: `${theme} ${n}: accent (links, numbers, rail marker)`, min: TEXT },
+        { fg: P("accent"), bg: P("accent-tint"), where: `${theme} ${n}: accent on tint`, min: TEXT },
+        { fg: P("on-accent"), bg: P("accent-strong"), where: `${theme} ${n}: filled chip text`, min: TEXT },
+        { fg: P("case-body"), bg: P("accent-tint"), where: `${theme} ${n}: body on "Printed for" tint`, min: TEXT },
+        { fg: P("case-dim"), bg: P("accent-2"), where: `${theme} ${n}: labels on the media field`, min: TEXT },
+        { fg: P("case-ink"), bg: P("accent-2"), where: `${theme} ${n}: stepper text on the field`, min: TEXT },
+      );
+      for (const t of ["people", "partners", "projects", "methods"]) {
+        if (pal[`type-${t}`]) out.push({ fg: P(`type-${t}`), bg, where: `${theme} ${n}: ${t} numbers and labels`, min: TEXT });
+        if (pal[`mark-${t}`]) out.push({ fg: P(`mark-${t}`), bg, where: `${theme} ${n}: ${t} shape`, min: LARGE });
+      }
+    }
+  }
+  return out;
+}
+
+const all = [
+  ...pairs(light, "light"),
+  ...pairs(dark, "dark"),
+  ...casePairs(light, "light"),
+  ...casePairs(dark, "dark"),
+  ...palettePairs(),
+];
 let failed = 0;
 for (const p of all) {
   const r = ratio(p.fg, p.bg);

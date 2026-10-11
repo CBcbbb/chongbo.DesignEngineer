@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getProject, projects, SIGNALS } from "@content";
 import { NikeCase } from "@/components/case/nike/NikeCase";
 import { WildEchoCase } from "@/components/case/wildecho/WildEchoCase";
+import { CaseFile as CaseFileTemplate } from "@/components/casefile/CaseFile";
 import { MediaSlot } from "@/components/media/MediaSlot";
 import { PartsRail } from "@/components/PartsRail";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -45,6 +46,24 @@ export default async function CaseFile({ params }: Props) {
 
   const index = projects.indexOf(project);
   const next = projects[(index + 1) % projects.length]!;
+  if (project.template === "case-file") {
+    return (
+      <>
+        <div className="wrap">
+          <SiteHeader current="work" />
+        </div>
+        <main id="main" tabIndex={-1} className="pt-2 sm:pt-4">
+          <div className="px-[clamp(8px,2vw,24px)]">
+            <CaseFileTemplate project={project} next={next} />
+          </div>
+        </main>
+        <div className="wrap">
+          <SiteFooter />
+        </div>
+      </>
+    );
+  }
+
   const Bespoke = BESPOKE[project.slug];
   if (Bespoke) {
     return (

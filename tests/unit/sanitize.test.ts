@@ -5,7 +5,7 @@ describe("sanitizeSheets", () => {
   it("drops unknown ids, keeps one sheet per project and at most five", () => {
     const sheets = sanitizeSheets([
       { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "a" },
-      { project: "hhcd-data-platform", section: "rebuild", signal: "accessibility", reason: "second from same project" },
+      { project: "hhcd-data-platform", section: "keyboard", signal: "accessibility", reason: "second from same project" },
       { project: "made-up", section: "problem", signal: "data", reason: "b" },
       { project: "component-store", section: "nope", signal: "data", reason: "c" },
       { project: "component-store", section: "contracts", signal: "design-eng-gap", reason: "d" },

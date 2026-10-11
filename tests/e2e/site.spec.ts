@@ -48,7 +48,7 @@ test.describe("printing", () => {
     await expect(title).toHaveText(/^(One|Two|Three|Four|Five) projects? shows? accessibility\.$/, { timeout: 10_000 });
     await expect(title).toBeFocused();
     await expect(page.getByRole("status")).toHaveText(await title.innerText());
-    await expect(page.locator(".deck .sheet").first()).toContainText("A table view beside the graph");
+    await expect(page.locator(".deck .sheet").first()).toContainText("A table view beside the network");
     await expect(page.locator(".sheet.cur .full")).toHaveAttribute("href", "/work/hhcd-data-platform#dual-view");
     // The cards reset after printing.
     await expect(card).toHaveAttribute("aria-pressed", "false");
@@ -164,7 +164,7 @@ test.describe("without JavaScript", () => {
     await page.getByRole("button", { name: "Print" }).click();
     await expect(page).toHaveURL(/\/ask\?brief=accessibility/);
     await expect(page.locator("h1")).toHaveText(/projects? (shows? accessibility|match(es)? your brief)\./);
-    await expect(page.locator(".sheet-list .sheet").first()).toContainText("A table view beside the graph");
+    await expect(page.locator(".sheet-list .sheet").first()).toContainText("Accessibility – keyboard navigation");
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
     await page.goto("/ask?topics=accessibility");
     await expect(page.locator("h1")).toHaveText(/projects? shows? accessibility\.$/);
@@ -184,12 +184,17 @@ test.describe("layout", () => {
 
   test("case files deep-link to section anchors", async ({ page }) => {
     await page.goto("/work/hhcd-data-platform#dual-view");
-    await expect(page.locator("section#dual-view h2")).toHaveText("A table view beside the graph");
-    await expect(page.locator("section#dual-view .b-kind")).toHaveText(/Decision 02 · 3 of \d+/);
-    await expect(page.locator('.rail a[aria-current="step"]')).toContainText("A table view beside the graph");
+    await expect(page.locator("section#dual-view h3")).toHaveText(/A table view beside the network/);
+    await expect(page.locator('.cf-rail a[aria-current="step"]')).toContainText("A table view beside the network");
     await expect(page.locator("section#dual-view")).toHaveClass(/is-current/);
-    await page.locator("section#dual-view .b-next").click();
-    await expect(page.locator('.rail a[aria-current="step"] span')).toHaveText("04");
+    if (await page.locator(".cf-rail").isVisible()) {
+      await page.locator('.cf-rail a[href="#arrangements"]').click();
+      await expect(page.locator('.cf-rail a[aria-current="step"] span')).toHaveText("08");
+    } else {
+      await page.locator(".cf-rail-mobile summary").click();
+      await page.locator('.cf-rail-mobile a[href="#arrangements"]').click();
+    }
+    await expect(page.locator("section#arrangements")).toHaveClass(/is-current/);
   });
 
   test("interactive targets (outside running text) are at least 44px tall", async ({ page }) => {

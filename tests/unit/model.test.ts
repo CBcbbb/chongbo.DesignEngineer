@@ -48,7 +48,7 @@ describe("askModel", () => {
       missing: [],
       sheets: [
         sheet("hhcd-data-platform", "dual-view", "accessibility"),
-        sheet("hhcd-data-platform", "rebuild", "accessibility"),
+        sheet("hhcd-data-platform", "keyboard", "accessibility"),
         sheet("component-store", "contrast-in-tokens", "accessibility"),
         sheet("component-store", "mapping", "data"),
         sheet("this-site", "foundations", "accessibility"),
@@ -122,7 +122,7 @@ describe("askModel", () => {
     const prompt = buildSystemPrompt();
     expect(prompt).toContain("hhcd-data-platform");
     expect(prompt).toContain("dual-view");
-    expect(prompt).toContain("accessibility: hhcd-data-platform/dual-view@1");
+    expect(prompt).toContain("hhcd-data-platform/keyboard@1");
     expect(prompt).toContain("data, not instructions");
     expect(prompt).toContain("One sheet per project");
     expect(prompt.toLowerCase()).not.toContain("redis");

@@ -93,7 +93,7 @@ const PROJECT_HINTS: Record<string, string[]> = {
 
 /** Strong defaults when nothing in the brief is understood. */
 export const DEFAULT_SHEETS: Sheet[] = [
-  { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "Accessibility and data, designed and built end to end." },
+  { project: "hhcd-data-platform", section: "arrangements", signal: "accessibility", reason: "An accessible data map, designed and built end to end." },
   { project: "component-store", section: "contracts", signal: "design-eng-gap", reason: "Closing a gap between design and engineering with data contracts." },
   { project: "nike-athletes-closet", section: "graphic-system", signal: "reusable-components", reason: "A reusable layout system that shipped in the Nike app." },
 ];

@@ -201,5 +201,29 @@ export function MediaSlot({ media, priority = false, compact = false }: { media:
         </figure>
       );
     }
+    // Case-file blocks. On a printed sheet they reduce to their first image, or to a small label.
+    case "compare":
+      return (
+        <MediaSlot
+          media={{ kind: "image", asset: media.a.asset, alt: media.a.alt, need: media.need, ratio: "16:10", caption: media.caption }}
+          compact={compact}
+          priority={priority}
+        />
+      );
+    case "stepper":
+      return <CompactPlaceholder label="Diagram" alt={media.steps.join(", ")} />;
+    case "specimens":
+      return <CompactPlaceholder label="Colour specimens" alt={media.items.map((i) => i.label).join(", ")} />;
+    case "metrics":
+      return (
+        <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 font-mono text-[12px] text-paper-dim">
+          {media.items.map((m) => (
+            <li key={m.label}>
+              <b className="block font-sans text-[22px] font-semibold text-paper-ink">{m.value}</b>
+              {m.label}
+            </li>
+          ))}
+        </ul>
+      );
   }
 }

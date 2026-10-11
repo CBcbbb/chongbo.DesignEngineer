@@ -56,7 +56,7 @@ describe("AskResponseSchema", () => {
     expect(AskResponseSchema.safeParse({ ...ok, asked: ["vibes"] }).success).toBe(false);
     expect(AskResponseSchema.safeParse({ ...ok, sheets: [] }).success).toBe(false);
     expect(AskResponseSchema.safeParse({ ...ok, sheets: Array(6).fill(sheet) }).success).toBe(false);
-    expect(AskResponseSchema.safeParse({ ...ok, sheets: [sheet, { ...sheet, section: "rebuild" }] }).success).toBe(false);
+    expect(AskResponseSchema.safeParse({ ...ok, sheets: [sheet, { ...sheet, section: "keyboard" }] }).success).toBe(false);
     expect(AskResponseSchema.safeParse({ ...ok, sheets: [sheet, other] }).success).toBe(true);
     expect(AskResponseSchema.safeParse({ ...ok, sheets: [{ ...sheet, reason: "x".repeat(91) }] }).success).toBe(false);
     expect(AskResponseSchema.safeParse({ ...ok, sheets: [{ ...sheet, signal: "vibes" }] }).success).toBe(false);
