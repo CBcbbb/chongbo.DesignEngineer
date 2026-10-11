@@ -263,7 +263,10 @@ function Row({ items }: { items: { asset: string; alt: string; need?: string; la
   const sum = r.reduce((a, b) => a + b, 0);
   return (
     <div className="cf-cq">
-      <div className="cf-row" style={{ "--sum": sum.toFixed(3), "--gaps": `${(items.length - 1) * 24}px` } as CSSProperties}>
+      <div
+        className="cf-row"
+        style={{ "--sum": sum.toFixed(3), "--inv": r.reduce((a, b) => a + 1 / b, 0).toFixed(3), "--gaps": `${(items.length - 1) * 24}px` } as CSSProperties}
+      >
         {items.map((it, i) => (
           <div key={it.asset} className="cf-row-item" style={{ "--r": r[i]!.toFixed(3) } as CSSProperties}>
             <Shot asset={it.asset} alt={it.alt} need={it.need} sizes="(min-width: 1100px) 460px, 100vw" />
@@ -300,7 +303,16 @@ export function CaseMedia({
         if (!dim || !assetExists(media.asset)) return <Missing asset={media.asset} need={media.need} />;
         return (
           <figure className="cf-figure cf-bleed">
-            <Image src={src(media.asset)} alt={media.alt} width={dim.width} height={dim.height} sizes="(min-width: 1100px) 860px, 100vw" priority={priority} quality={Q} />
+            <Image
+              src={src(media.asset)}
+              alt={media.alt}
+              width={dim.width}
+              height={dim.height}
+              sizes="(min-width: 1100px) 860px, 100vw"
+              priority={priority}
+              quality={Q}
+              style={{ "--r": (dim.width / dim.height).toFixed(4) } as CSSProperties}
+            />
           </figure>
         );
       }
@@ -317,6 +329,8 @@ export function CaseMedia({
       return (
         <ViewToggle
           keys={media.keys}
+          modes={media.modes}
+          index={index}
           a={{ src: src(media.a.asset), width: da.width, height: da.height, alt: media.a.alt, label: media.a.label }}
           b={{ src: src(media.b.asset), width: db.width, height: db.height, alt: media.b.alt, label: media.b.label }}
         />

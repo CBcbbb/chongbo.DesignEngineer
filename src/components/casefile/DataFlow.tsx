@@ -1,107 +1,191 @@
-import type { CSSProperties } from "react";
+"use client";
+
+import { useState, type CSSProperties } from "react";
 
 /**
- * The data pipeline as one diagram, readable at a glance (no stepping): on the left, a survey row with a person at its
- * centre; on the right, the same kind of entries as four linked types of equal weight. The numbered steps sit under
- * it, and the diagram carries their numbers where each happens. Sample labels only: it shows the method, not the data.
+ * The data pipeline, stepped through. The same sample entries move from one stage to the next, so the reader sees
+ * the data change shape: the questions (each becomes one type) → one person's answers → a table of rows, one per
+ * person, cleaned → split into four typed columns, where repeated entries merge → linked as a network.
+ * Sample labels only: it shows the method, not the project's data.
  */
 type Kind = "people" | "projects" | "methods" | "partners";
-type Node = { id: string; kind: Kind; label: string; x: number; y: number; centre?: boolean };
+/** A position on the stage: x and y in %, and whether x is the chip's left edge or its centre. */
+type At = { x: number; y: number; c?: boolean } | null;
 
-/** One survey row: everything hangs off the person. */
-const ROW: Node[] = [
-  { id: "a", kind: "people", label: "Person A", x: 50, y: 50, centre: true },
-  { id: "p1", kind: "projects", label: "Project 1", x: 23, y: 16 },
-  { id: "p2", kind: "projects", label: "Project 2", x: 77, y: 16 },
-  { id: "w", kind: "methods", label: "Workshops", x: 23, y: 84 },
-  { id: "x", kind: "partners", label: "Partner X", x: 77, y: 84 },
+const QUESTIONS: { q: string; kind: Kind; type: string }[] = [
+  { q: "Who are you?", kind: "people", type: "People" },
+  { q: "What did you work on?", kind: "projects", type: "Projects" },
+  { q: "Which methods did you use?", kind: "methods", type: "Methods" },
+  { q: "Who supported it?", kind: "partners", type: "Partners" },
 ];
+const QY = [22, 41, 60, 79];
 
-/** The map: every entry once, the same size, linked through the projects. */
-const MAP: Node[] = [
-  { id: "a", kind: "people", label: "Person A", x: 18, y: 30 },
-  { id: "b", kind: "people", label: "Person B", x: 18, y: 70 },
-  { id: "p1", kind: "projects", label: "Project 1", x: 50, y: 30 },
-  { id: "p2", kind: "projects", label: "Project 2", x: 50, y: 70 },
-  { id: "w", kind: "methods", label: "Workshops", x: 81, y: 9 },
-  { id: "x", kind: "partners", label: "Partner X", x: 81, y: 36 },
-  { id: "m", kind: "methods", label: "Mapping", x: 81, y: 64 },
-  { id: "y", kind: "partners", label: "Partner Y", x: 81, y: 91 },
+/** Every cell of the survey, as a chip. `at` is its place at each of the five steps (null: not shown). */
+type Chip = { id: string; kind: Kind; label: string; fixed?: string; dup?: boolean; at: At[] };
+const COLS = { people: 12.5, projects: 37.5, methods: 62.5, partners: 87.5 } as const;
+const NET = {
+  pa: { x: 15, y: 27 },
+  pb: { x: 15, y: 65 },
+  p1: { x: 45, y: 27 },
+  p2: { x: 45, y: 65 },
+  w: { x: 79, y: 10 },
+  x: { x: 79, y: 33 },
+  m: { x: 79, y: 56 },
+  y: { x: 79, y: 79 },
+};
+const col = (k: Kind, row: 0 | 1) => ({ x: COLS[k], y: row === 0 ? 40 : 64, c: true });
+const net = (e: keyof typeof NET) => ({ ...NET[e], c: true });
+
+const CHIPS: Chip[] = [
+  { id: "a-pa", kind: "people", label: "Person A", at: [null, { x: 54, y: QY[0]! }, { x: 3, y: 34 }, col("people", 0), net("pa")] },
+  { id: "a-p1", kind: "projects", label: "Project 1", at: [null, { x: 54, y: QY[1]! }, { x: 21, y: 34 }, col("projects", 0), net("p1")] },
+  { id: "a-p2", kind: "projects", label: "Project 2", at: [null, { x: 68, y: QY[1]! }, { x: 35.5, y: 34 }, col("projects", 1), net("p2")] },
+  { id: "a-w", kind: "methods", label: "Workshops", at: [null, { x: 54, y: QY[2]! }, { x: 51, y: 34 }, col("methods", 0), net("w")] },
+  { id: "a-x", kind: "partners", label: "Partner X", at: [null, { x: 54, y: QY[3]! }, { x: 80, y: 34 }, col("partners", 0), net("x")] },
+  { id: "b-pb", kind: "people", label: "Person B", at: [null, null, { x: 3, y: 56 }, col("people", 1), net("pb")] },
+  { id: "b-p2", kind: "projects", label: "Project 2", at: [null, null, { x: 21, y: 56 }, col("projects", 1), net("p2")] },
+  { id: "b-m", kind: "methods", label: "Mapping", at: [null, null, { x: 51, y: 56 }, col("methods", 1), net("m")] },
+  { id: "b-w", kind: "methods", label: "workshop", fixed: "Workshops", at: [null, null, { x: 64.5, y: 56 }, col("methods", 0), net("w")] },
+  { id: "b-y", kind: "partners", label: "Partner Y", at: [null, null, { x: 80, y: 56 }, col("partners", 1), net("y")] },
+  { id: "d-pa", kind: "people", label: "person a", dup: true, at: [null, null, { x: 3, y: 78 }, null, null] },
+  { id: "d-p1", kind: "projects", label: "Project 1", dup: true, at: [null, null, { x: 21, y: 78 }, null, null] },
+  { id: "d-w", kind: "methods", label: "Workshops", dup: true, at: [null, null, { x: 51, y: 78 }, null, null] },
+  { id: "d-x", kind: "partners", label: "Partner X", dup: true, at: [null, null, { x: 80, y: 78 }, null, null] },
 ];
-const MAP_LINKS: [string, string][] = [
-  ["a", "p1"],
-  ["a", "p2"],
-  ["b", "p2"],
+const LINKS: [keyof typeof NET, keyof typeof NET][] = [
+  ["pa", "p1"],
+  ["pa", "p2"],
+  ["pb", "p2"],
   ["p1", "w"],
   ["p1", "x"],
   ["p2", "w"],
   ["p2", "m"],
   ["p2", "y"],
 ];
+const TABLE_HEAD = [
+  { label: "Person", x: 3 },
+  { label: "Projects", x: 21 },
+  { label: "Methods", x: 51 },
+  { label: "Supported by", x: 80 },
+];
+/** What the reader is looking at, at each step (shown under the stage, and read out). */
+const NOTES = [
+  "Each question becomes one type",
+  "One person's answers",
+  "One row per person · duplicate removed · spelling unified",
+  "Split by type · repeated entries merge into one",
+  "Linked through the projects · every entry the same weight",
+];
+const DESCRIBE = [
+  "Four questions, each marked with the type its answers become: people, projects, methods, partners.",
+  "Person A's answers: Project 1 and Project 2, Workshops, Partner X.",
+  "A table with one row per person. A repeated row for Person A is struck out, and 'workshop' becomes 'Workshops'.",
+  "Four columns, people, projects, methods and partners. Project 2 and Workshops, given by both people, become one entry each.",
+  "The entries as a network: people link to projects, and projects to methods and partners.",
+];
 
-function Graph({ nodes, links, label }: { nodes: Node[]; links: [string, string][]; label: string }) {
-  const at = (id: string) => nodes.find((n) => n.id === id)!;
-  return (
-    <div className="cf-flow-graph" data-graph={label}>
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-        {links.map(([s, t]) => {
-          const a = at(s);
-          const b = at(t);
-          return <line key={s + t} x1={a.x} y1={a.y} x2={b.x} y2={b.y} vectorEffect="non-scaling-stroke" />;
-        })}
-      </svg>
-      {nodes.map((n) => (
-        <span
-          key={n.id}
-          className={`cf-flow-node${n.centre ? " is-centre" : ""}`}
-          style={{ left: `${n.x}%`, top: `${n.y}%` } as CSSProperties}
-        >
-          <span className={`cf-mark cf-mark-${n.kind}`} />
-          {n.label}
-        </span>
-      ))}
-    </div>
-  );
-}
+const Arrow = ({ flip }: { flip?: boolean }) => (
+  <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d={flip ? "M10 3.5 5.5 8l4.5 4.5" : "M6 3.5 10.5 8 6 12.5"} />
+  </svg>
+);
 
 export function DataFlow({ steps }: { steps: string[] }) {
-  const row: [string, string][] = ROW.filter((n) => !n.centre).map((n) => ["a", n.id]);
+  const [step, setStep] = useState(0);
+  const go = (i: number) => setStep(Math.max(0, Math.min(steps.length - 1, i)));
+  const typed = step >= 3;
   return (
-    <figure className="cf-figure cf-flow">
-      <p className="sr-only">
-        Diagram. In the survey, each row has a person at its centre: Person A, with Project 1, Project 2, Workshops and
-        Partner X. In the map, the same kinds of entry become four types of equal weight, people, projects, methods and
-        partners, linked through the projects. Sample labels.
-      </p>
-      {/* a 3 × 2 grid: the two titles over the two graphs, the arrow between the graphs */}
-      <div className="cf-flow-diagram" aria-hidden="true">
-        <p className="cf-flow-title">
-          <span className="cf-flow-n">01–03</span>
-          One survey row per person
-        </p>
-        <span />
-        <p className="cf-flow-title">
-          <span className="cf-flow-n">05</span>
-          Four types, linked
-        </p>
-        <Graph nodes={ROW} links={row} label="row" />
-        <div className="cf-flow-arrow">
-          <span className="cf-flow-n">04</span>
-          <svg viewBox="0 0 64 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2 8h58M53 2.5 60 8l-7 5.5" />
-          </svg>
-        </div>
-        <Graph nodes={MAP} links={MAP_LINKS} label="map" />
-      </div>
-      <ol className="cf-flow-steps">
+    <figure className="cf-figure cf-pipe">
+      <ol className="cf-pipe-tabs">
         {steps.map((s, i) => (
           <li key={s}>
-            <span className="cf-flow-n">{String(i + 1).padStart(2, "0")}</span>
-            {s}
+            <button
+              type="button"
+              onClick={() => go(i)}
+              aria-current={i === step ? "step" : undefined}
+              data-done={i < step || undefined}
+              aria-label={`Step ${i + 1}: ${s}`}
+            >
+              <span className="cf-pipe-n">{String(i + 1).padStart(2, "0")}</span>
+              {s.split(" ")[0]}
+            </button>
           </li>
         ))}
       </ol>
-      <p className="cf-flow-note">Sample labels</p>
+      <div className="cf-pipe-caption">
+        <p className="cf-pipe-text" aria-live="polite">
+          <span className="sr-only">
+            Step {step + 1} of {steps.length}:{" "}
+          </span>
+          {steps[step]}
+          <span className="sr-only"> {DESCRIBE[step]}</span>
+        </p>
+        <span className="cf-pipe-nav">
+          <button type="button" onClick={() => go(step - 1)} disabled={step === 0} aria-label="Previous step">
+            <Arrow flip />
+          </button>
+          <button type="button" className="is-next" onClick={() => go(step + 1)} disabled={step === steps.length - 1} aria-label="Next step">
+            <span aria-hidden="true">Next</span>
+            <Arrow />
+          </button>
+        </span>
+      </div>
+      <div className="cf-pipe-stage" data-step={step} aria-hidden="true">
+        <div className="cf-pipe-canvas">
+        <svg className="cf-pipe-links" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">
+          {LINKS.map(([s, t]) => (
+            <line key={s + t} x1={NET[s].x} y1={NET[s].y} x2={NET[t].x} y2={NET[t].y} vectorEffect="non-scaling-stroke" />
+          ))}
+        </svg>
+        {QUESTIONS.map((q, i) => (
+          <span key={q.q} className="cf-pipe-q" data-hidden={step > 1} style={{ top: `${QY[i]}%` } as CSSProperties}>
+            {q.q}
+            <span className="cf-pipe-type" data-hidden={step !== 0}>
+              <span className="cf-pipe-to">→</span>
+              <span className={`cf-mark cf-mark-${q.kind}`} />
+              {q.type}
+            </span>
+          </span>
+        ))}
+        {TABLE_HEAD.map((h) => (
+          <span key={h.label} className="cf-pipe-head" data-hidden={step !== 2} style={{ left: `${h.x}%`, top: "13%" } as CSSProperties}>
+            {h.label}
+          </span>
+        ))}
+        <span className="cf-pipe-strike" data-hidden={step !== 2} />
+        {QUESTIONS.map((q) => (
+          <span key={q.kind} className="cf-pipe-head is-col" data-hidden={step !== 3} style={{ left: `${COLS[q.kind]}%`, top: "15%" } as CSSProperties}>
+            <span className={`cf-mark cf-mark-${q.kind}`} />
+            {q.type}
+          </span>
+        ))}
+        {CHIPS.map((c) => {
+          const here = c.at[step];
+          const last = [...c.at.slice(0, step + 1)].reverse().find(Boolean) ?? c.at.find(Boolean)!;
+          const at = here ?? last!;
+          return (
+            <span
+              key={c.id}
+              className="cf-pipe-chip"
+              data-hidden={!here}
+              data-centre={at.c || undefined}
+              data-dup={c.dup || undefined}
+              data-fix={(c.fixed && step === 2) || undefined}
+              data-typed={typed || undefined}
+              style={{ left: `${at.x}%`, top: `${at.y}%` } as CSSProperties}
+            >
+              <span className={`cf-mark cf-mark-${c.kind}`} />
+              {c.fixed && step >= 3 ? c.fixed : c.label}
+            </span>
+          );
+        })}
+        <span className="cf-pipe-note">{NOTES[step]}</span>
+        <span className="cf-pipe-sample">Sample labels</span>
+        </div>
+      </div>
+      <p className="cf-pipe-scroll" aria-hidden="true">
+        Scroll ⟷
+      </p>
     </figure>
   );
 }

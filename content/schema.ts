@@ -106,13 +106,15 @@ export type Media =
     }
   | {
       /**
-       * Two views of one screen, switched by a button that shows the product's shortcut as keycaps (the button
-       * switches the picture; it never takes over the shortcut itself). `a` is shown first.
+       * Two views of the same data side by side, joined by the shortcut that switches between them (shown as keycaps),
+       * and a choice of how the reader is using it (`modes`): each view then says whether it works or is hard to use
+       * that way. The reader sees why both views exist.
        */
       kind: "toggle";
       keys: string[];
       a: CompareSide;
       b: CompareSide;
+      modes: { label: string; a: "works" | "hard"; b: "works" | "hard" }[];
       need: string;
       caption?: string;
     }

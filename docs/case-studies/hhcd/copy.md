@@ -59,7 +59,7 @@ I led the workshop with members of all seven organisations, and designed its pro
 
 To make the survey easy to fill in, I started it from each person's own work: their projects, the methods they used and who supported them. Collecting was easy, but every row of the spreadsheet had a person at its centre. So I gave the map four linked types of equal weight, and decided what each entry stands for.
 
-*Evidence:* one diagram (sample labels): a survey row centred on Person A → four linked types; the steps under it, numbered on the diagram. *Labels:* One survey row per person · Four types, linked
+*Evidence:* one stage the reader steps through (sample labels); the same entries move: questions (each → its type) → one person's answers → one row per person, cleaned → four typed columns, repeats merged → linked. *Tabs:* Decide · Survey · Clean · Split · Link. *Notes on the stage:* Each question becomes one type · One person's answers · One row per person · duplicate removed · spelling unified · Split by type · repeated entries merge into one · Linked through the projects · every entry the same weight
 
 1. Decide what the platform needs to know.
 2. Survey each person about their own work.
@@ -71,7 +71,7 @@ To make the survey easy to fill in, I started it from each person's own work: th
 
 A network graph is hard to use without a mouse or without sight. The table holds the same data, with the same search and filters, and a shortcut switches between the two.
 
-*Evidence:* VOICE's table view, full width; a button with the keycaps Ctrl + E switches to the network view. *Labels:* Show the network / Show the table · Table view / Network view
+*Evidence:* the network and the table side by side, Ctrl + E between them. *Control:* Using it with: Keyboard · Screen reader · Mouse. *States:* Works / Hard to use (network: hard by keyboard and screen reader; table: works for all three)
 
 ## Part 2 · Helen Hamlyn Centre
 
@@ -117,9 +117,11 @@ Automated checks gave VOICE a near-perfect score, but missed that its map entrie
 
 *Figures, by group:* **VOICE** (red): 99 Lighthouse accessibility score · 0 WAVE errors; ✕ Missed: map entries and filters couldn't be reached by keyboard. **Centre's version** (green): 0 axe violations at 1440 and 390px; ✓ Map entries and filters work by keyboard · ✓ Passed in Chrome, Safari and Firefox · ✓ Passed with the VoiceOver screen reader
 
-### 02.8 `role`: Designed, specified and built alone
+### 02.8 `role`: One person, two points of view (contents: Takeaway)
 
-I made the design files, wrote the specification and built the platform. Doing both, I could turn each design straight into working code, which made the work faster.
+**Bringing accessibility in at the start saved a lot of rework later.**
+
+I helped collect the data, then designed and built the platform myself, so there was a lot to weigh at once. Because I could plan as the designer and the developer at the same time, accessibility shaped the data and the layout from the start, rather than being fixed afterwards.
 
 - **Context:** Brunel University, on the VOICE project.
 
