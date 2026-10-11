@@ -259,6 +259,36 @@
   min-width: 0;
   margin-top: 0.75rem;
 }
+/* a short numbered list set large (results) */
+.cf-points {
+  display: grid;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--case-ink);
+}
+.cf-points li {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--case-rule);
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--case-ink);
+}
+.cf-points li:last-child {
+  border-bottom: 0;
+}
+.cf-points-n {
+  font: 500 0.75rem/1 var(--mono);
+  letter-spacing: 0;
+  color: var(--accent);
+}
+
 /* evidence that runs to the sheet's edges (the work in motion on the dark sheets) */
 .cf-bleed {
   margin-inline: calc(-1 * var(--cf-pad));

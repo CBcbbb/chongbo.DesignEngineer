@@ -44,9 +44,10 @@ function Card({ section, idx }: { section: Section; idx: string }) {
           </h3>
         </div>
         <div className="cf-body">
-          {section.body.map((p) => (
-            <p key={p.slice(0, 40)}>{p}</p>
-          ))}
+          {section.bodyStyle !== "list" &&
+            section.body.map((p) => (
+              <p key={p.slice(0, 40)}>{p}</p>
+            ))}
           {section.keys && <Keys keys={section.keys} />}
           <ul className="cf-tags" aria-label="Shows">
             {section.signals.slice(0, 2).map((s) => (
@@ -55,6 +56,18 @@ function Card({ section, idx }: { section: Section; idx: string }) {
           </ul>
         </div>
       </div>
+      {section.bodyStyle === "list" && (
+        <ol className="cf-points">
+          {section.body.map((p, i) => (
+            <li key={p.slice(0, 40)}>
+              <span className="cf-points-n" aria-hidden="true">
+                {pad2(i + 1)}
+              </span>
+              <span>{p}</span>
+            </li>
+          ))}
+        </ol>
+      )}
       {section.media && (
         <div className={`cf-evidence${bleed ? " cf-bleed" : ""}`}>
           <CaseMedia media={section.media} index={idx} />

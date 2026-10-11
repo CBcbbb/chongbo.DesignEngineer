@@ -183,6 +183,8 @@ export type Section = {
   layout?: "stack" | "pair";
   /** Keys shown as keycaps under the body, e.g. ["Tab", "←", "→"]. */
   keys?: string[];
+  /** Case-file template: show the body as a numbered list of short points (e.g. results), set large. */
+  bodyStyle?: "list";
   /** Case-file template: the card's short name in the contents. Defaults to the title. */
   nav?: string;
   /**

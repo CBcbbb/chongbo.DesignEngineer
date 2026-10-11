@@ -395,6 +395,29 @@ export const hhcd: Project = {
       },
     },
     {
+      id: "testing",
+      nav: "Testing",
+      eyebrow: "Evidence",
+      part: "hhcd",
+      kind: "evidence",
+      title: "Accessibility – testing",
+      body: [
+        "Both versions were checked automatically: VOICE with Lighthouse and WAVE, the rebuild with axe on every main page at desktop and phone widths. Tested in Chrome, Safari and Firefox; screen-reader testing is next.",
+      ],
+      signals: ["accessibility", "research"],
+      capabilities: ["E"],
+      lenses: { engineer: "in", web: "in" },
+      layout: "stack",
+      media: {
+        kind: "metrics",
+        items: [
+          { value: "99", label: "Lighthouse accessibility score", note: "VOICE" },
+          { value: "0", label: "WAVE errors", note: "VOICE" },
+          { value: "0", label: "axe violations at 1440 and 390px", note: "Rebuild" },
+        ],
+      },
+    },
+    {
       id: "results",
       nav: "Results",
       eyebrow: "Outcome",
@@ -402,22 +425,15 @@ export const hhcd: Project = {
       part: "hhcd",
       kind: "outcome",
       title: "Results",
+      bodyStyle: "list",
       body: [
-        "The platform is live and in use at the Helen Hamlyn Centre. A paper on the accessibility approach was accepted at DRS 2026. Tested in Chrome, Safari and Firefox; screen-reader testing is next.",
+        "Live and in use at the Helen Hamlyn Centre.",
+        "Used to teach data visualisation to the Centre's summer interns.",
+        "A paper on the accessibility approach, accepted at DRS 2026.",
       ],
       signals: ["end-to-end", "research"],
       capabilities: ["B", "E"],
       lenses: { ux: "in", engineer: "in", web: "in" },
-      layout: "stack",
-      media: {
-        kind: "metrics",
-        items: [
-          { value: "99", label: "Lighthouse accessibility", note: "VOICE" },
-          { value: "0", label: "WAVE errors", note: "VOICE" },
-          { value: "0", label: "axe violations at 1440 and 390px", note: "Rebuild" },
-          { value: "27/27", label: "Contrast pairings pass", note: "Rebuild" },
-        ],
-      },
     },
     {
       id: "role",
@@ -429,8 +445,8 @@ export const hhcd: Project = {
       body: [
         "I made the design files, wrote the specification and built the platform. Doing both, I could turn each design straight into working code, which made the work faster.",
       ],
-      signals: ["end-to-end", "ai-tools"],
-      capabilities: ["B", "F"],
+      signals: ["end-to-end", "design-eng-gap"],
+      capabilities: ["B"],
       lenses: { ux: "in", engineer: "in", web: "in" },
     },
   ],

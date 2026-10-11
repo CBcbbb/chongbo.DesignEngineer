@@ -105,11 +105,19 @@ The Centre's brand colours are fixed, and two of them fail contrast as small tex
 --color-projects-text: #A8470F; /* small text on white: 5.88:1 */
 ```
 
+### `testing`: Accessibility – testing
+
+Both versions were checked automatically: VOICE with Lighthouse and WAVE, the rebuild with axe on every main page at desktop and phone widths. Tested in Chrome, Safari and Firefox; screen-reader testing is next. [Update after the VoiceOver test.]
+
+*Metric strip:* Lighthouse accessibility score 99 (VOICE) · WAVE 0 errors (VOICE) · axe 0 violations at 1440 and 390px (rebuild)
+
 ### `results`: Results
 
-The platform is live and in use at the Helen Hamlyn Centre. A paper on the accessibility approach was accepted at DRS 2026. Tested in Chrome, Safari and Firefox; screen-reader testing is next. [Update after the VoiceOver test.]
+A numbered list, set large:
 
-*Metric strip:* Lighthouse accessibility 99 (VOICE) · WAVE 0 errors (VOICE) · axe 0 violations at 1440 and 390px (rebuild) · 27 of 27 contrast pairings pass
+1. Live and in use at the Helen Hamlyn Centre.
+2. Used to teach data visualisation to the Centre's summer interns.
+3. A paper on the accessibility approach, accepted at DRS 2026.
 
 ### `role`: Designed, specified and built alone
 
