@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Kind = "people" | "projects" | "methods" | "partners";
 type Rec = { id: string; kind: Kind; label: string; col: [number, number]; net: [number, number] };
@@ -61,9 +61,15 @@ export function DataStepper({ steps, caption, index }: { steps: string[]; captio
   const [step, setStep] = useState(0);
   // On phones the diagram keeps its size and scrolls inside its frame, so the frame must take focus.
   const [scrolls, setScrolls] = useState(false);
+  const stage = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 599px)");
-    const read = () => setScrolls(mq.matches);
+    const read = () => {
+      setScrolls(mq.matches);
+      // Start centred, where most of each step sits.
+      const el = stage.current;
+      if (mq.matches && el) el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
+    };
     read();
     mq.addEventListener("change", read);
     return () => mq.removeEventListener("change", read);
@@ -86,6 +92,7 @@ export function DataStepper({ steps, caption, index }: { steps: string[]; captio
           ))}
         </ol>
         <div
+          ref={stage}
           className="cf-stepper-stage"
           {...(scrolls ? { tabIndex: 0, role: "region", "aria-label": "Diagram, scrolls sideways" } : {})}
         >
@@ -173,7 +180,7 @@ export function DataStepper({ steps, caption, index }: { steps: string[]; captio
               );
             })}
           </svg>
-          <span className="cf-stepper-note">Sample labels</span>
+          <span className="cf-stepper-note">Sample labels{scrolls ? " · scroll ⟷" : ""}</span>
           <div className="cf-stepper-nav">
             <button type="button" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0} aria-label="Previous step">
               <Arrow flip />

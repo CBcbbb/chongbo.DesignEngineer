@@ -34,7 +34,7 @@ export function ComparePlate({
   legend: string;
   a: Side;
   b: Side;
-  video?: { src: string; split: number };
+  video?: { src: string; webm?: string; split: number };
   caption?: string;
   index: string;
 }) {
@@ -108,7 +108,10 @@ export function ComparePlate({
           })}
           {video && (
             <div className="cf-layer" data-hidden={!moving} aria-hidden="true">
-              <video ref={ref} src={video.src} muted playsInline preload="none" onTimeUpdate={onTime} onEnded={() => setMoving(false)} tabIndex={-1} />
+              <video ref={ref} muted playsInline preload="none" onTimeUpdate={onTime} onEnded={() => setMoving(false)} tabIndex={-1}>
+                {video.webm && <source src={video.webm} type="video/webm" />}
+                <source src={video.src} type="video/mp4" />
+              </video>
             </div>
           )}
         </div>

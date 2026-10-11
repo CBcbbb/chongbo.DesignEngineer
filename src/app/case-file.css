@@ -402,6 +402,7 @@
 /* ---------- cards ---------- */
 .cf-card {
   position: relative;
+  isolation: isolate;
   padding: clamp(48px, 7vw, 96px) 0 0;
   scroll-margin-top: 24px;
 }
@@ -975,6 +976,7 @@
 
 /* ---------- specimens: the product's own white surface, in both themes ---------- */
 .cf-specimens {
+  --mark-people: #5f5ba3;
   overflow: hidden;
   border-radius: var(--cf-radius);
   background: #ffffff;
@@ -1316,6 +1318,13 @@
     inset: auto;
     width: 608px;
     height: 380px;
+  }
+  .cf-stepper-note {
+    position: sticky;
+    left: 14px;
+    display: inline-block;
+    margin-top: -36px;
+    transform: translateY(-4px);
   }
   /* the step list does the navigating here */
   .cf-stepper-nav {

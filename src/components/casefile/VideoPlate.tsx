@@ -26,6 +26,7 @@ const Pause = () => (
  */
 export function VideoPlate({
   src,
+  webm,
   poster,
   label,
   caption,
@@ -33,6 +34,8 @@ export function VideoPlate({
   seconds,
 }: {
   src: string;
+  /** A VP9 version for browsers without H.264 (some Chromium builds). */
+  webm?: string;
   poster?: string;
   label: string;
   caption?: string;
@@ -56,7 +59,6 @@ export function VideoPlate({
         <div className="cf-video cf-plate-shot">
           <video
             ref={ref}
-            src={src}
             poster={poster}
             muted
             playsInline
@@ -65,7 +67,10 @@ export function VideoPlate({
             onPlay={() => setState("playing")}
             onPause={(e) => setState(e.currentTarget.ended ? "ended" : "paused")}
             onEnded={() => setState("ended")}
-          />
+          >
+            {webm && <source src={webm} type="video/webm" />}
+            <source src={src} type="video/mp4" />
+          </video>
           {state !== "playing" && (
             <button type="button" className="cf-play" onClick={play}>
               <span>

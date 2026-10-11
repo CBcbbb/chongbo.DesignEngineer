@@ -202,6 +202,7 @@ export function CaseMedia({ media, index, priority = false }: { media: Media; in
       return (
         <VideoPlate
           src={src(media.asset)}
+          webm={assetExists(media.asset.replace(/\.mp4$/, ".webm")) ? src(media.asset.replace(/\.mp4$/, ".webm")) : undefined}
           poster={media.poster && assetExists(media.poster) ? src(media.poster) : undefined}
           label={media.alt}
           caption={media.caption}
@@ -248,7 +249,15 @@ export function CaseMedia({ media, index, priority = false }: { media: Media; in
           caption={media.caption}
           a={{ src: src(media.a.asset), width: da.width, height: da.height, alt: media.a.alt, label: media.a.label }}
           b={{ src: src(media.b.asset), width: db.width, height: db.height, alt: media.b.alt, label: media.b.label }}
-          video={media.video && assetExists(media.video.asset) ? { src: src(media.video.asset), split: media.video.split } : undefined}
+          video={
+            media.video && assetExists(media.video.asset)
+              ? {
+                  src: src(media.video.asset),
+                  webm: assetExists(media.video.asset.replace(/\.mp4$/, ".webm")) ? src(media.video.asset.replace(/\.mp4$/, ".webm")) : undefined,
+                  split: media.video.split,
+                }
+              : undefined
+          }
         />
       );
     }
