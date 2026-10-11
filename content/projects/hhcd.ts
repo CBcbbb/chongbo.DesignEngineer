@@ -402,7 +402,7 @@ export const hhcd: Project = {
       kind: "evidence",
       title: "Accessibility – testing",
       body: [
-        "Automated checks gave VOICE a near-perfect score, but missed that its map entries and filters couldn't be reached by keyboard. In the Centre's version both work by keyboard, and axe found no issues on any main page at desktop and phone widths. Tested in Chrome, Safari and Firefox; screen-reader testing is next.",
+        "Automated checks gave VOICE a near-perfect score, but missed that its map entries and filters couldn't be reached by keyboard. In the Centre's version both work by keyboard, and axe found no issues on any main page at desktop and phone widths. It passed testing in Chrome, Safari and Firefox, and with the VoiceOver screen reader.",
       ],
       signals: ["accessibility", "research"],
       capabilities: ["E"],

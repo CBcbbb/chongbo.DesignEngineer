@@ -34,7 +34,7 @@ Capabilities follow playbook §2. Lens roles: `lead` (opens here), `in` (printed
 | `narrow-screens` | Responsive design | E, D | in | in | lead | `path-390.png`: details as a sheet over the map | |
 | `contrast` | Accessibility – colour contrast | E, C | · | in | in | Code: brand colour and text variant | |
 | `results` | Results | B | in | in | in | Metric strip: Lighthouse 99 · WAVE 0 errors · axe 0 violations · 27/27 contrast pairs | |
-| `role` | Designed, specified and built alone | B, F | in | in | in | None needed | [screen-reader / Safari / Firefox testing] |
+| `role` | Designed, specified and built alone | B, F | in | in | in | None needed | |
 
 Dropped: `homepage-removed` (the turn isn't needed) and `own-page` (adds nothing). `web` now opens on `narrow-screens`.
 
@@ -84,7 +84,8 @@ Copy may only use these, or what Chongbo adds later.
   - Mobile: details open as a sheet over the lower part of the map, which stays usable. Map controls have 40px touch targets, and nothing scrolls sideways at 320px.
   - Arrow keys move to the nearest entry in either arrangement. The guide works by keyboard alone.
   - Checks: 57 unit and component tests, 43 Playwright tests at 1440px and 390px (including axe on the guide, the path and the columns), and 27 contrast pairings.
-- Tested by Chongbo in Chrome, Safari and Firefox. Not yet tested with a screen reader.
+- Tested by Chongbo in Chrome, Safari and Firefox.
+- VoiceOver + Safari (11 Oct, live site): Chongbo tested it himself and states it works. A short assisted session recorded: the skip link is announced first; the details panel is a `complementary` landmark with an `h2`. One minor issue: the entry name is read twice in the panel's announcement (fix belongs in the rebuild repo).
 - Chromium accessibility-tree check (10 Oct, local build): map entries announced as "name, type, n connections"; Enter moves focus to the details heading, Escape returns it; search results announced ("39 entries match 'design'."); the table has a caption, column and row headers. This is not a screen-reader test. Live at https://helen-hamlyn-centre-for-design-data.vercel.app/ (48 entries, 104 connections). The Centre uses this version.
 
 ## Image inventory
