@@ -360,10 +360,10 @@
 }
 
 /* ---------- cover ---------- */
-/* the same type scale and spacing as the shared case-file cover, so every project's cover matches */
+/* the same type scale and spacing as the shared case-file cover (src/app/case-file.css, .cf-cover), so every project's cover matches */
 .nk-cover {
-  gap: clamp(1rem, 2vw, 1.5rem);
-  padding-block: clamp(1.5rem, 3.4vw, 2.5rem);
+  gap: 0;
+  padding-block: clamp(1.75rem, 4.2vw, 3rem);
 }
 .nk-client {
   display: flex;
@@ -380,25 +380,29 @@
 }
 .nk-cover h1 {
   max-width: 10em;
-  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  margin-top: clamp(1rem, 2.2vw, 1.5rem);
+  font-size: clamp(2.25rem, 5vw, 4rem);
   font-weight: 600;
-  line-height: 0.94;
-  letter-spacing: -0.05em;
+  line-height: 0.96;
+  letter-spacing: -0.045em;
 }
 .nk-lede {
-  max-width: 44ch;
-  font-size: clamp(1.15rem, 2vw, 1.45rem);
-  font-weight: 500;
-  line-height: 1.25;
-  letter-spacing: -0.015em;
+  max-width: 40ch;
+  margin-top: clamp(0.75rem, 1.6vw, 1.1rem);
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--nk-on-orange-2) !important;
 }
 /* role and outcome in one row under a rule */
 .nk-facts {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   gap: 1rem clamp(1.25rem, 3vw, 2.5rem);
-  padding-top: 1.1rem;
-  border-top: 1.5px solid var(--nk-on-orange);
+  margin-top: clamp(1.75rem, 4vw, 2.75rem);
+  padding-top: 1rem;
+  border-top: 1px solid var(--nk-on-orange);
 }
 .nk-facts div {
   display: grid;
@@ -411,9 +415,10 @@
   color: var(--nk-on-orange-2);
 }
 .nk-facts dd {
-  max-width: 40ch;
+  max-width: 44ch;
+  font-size: 0.9375rem;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 /* what this shows: one quiet line of labels */
 .nk-chips {
@@ -421,6 +426,7 @@
   flex-wrap: wrap;
   gap: 0.5rem 0.9rem;
   align-items: center;
+  margin-top: clamp(1rem, 2vw, 1.4rem);
 }
 .nk-chips p {
   font: 400 0.75rem/1 var(--mono);

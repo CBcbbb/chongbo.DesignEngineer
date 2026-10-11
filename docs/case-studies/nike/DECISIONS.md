@@ -76,6 +76,9 @@ The case file is built into the site from the approved v3 prototype, with your t
 48. **Every card keeps its effect** (your rule, 16:02, applied to all cards in the final check): 01.5 "It cut the back-and-forth between design and engineering"; 02.1 "so readers go from an outfit to its products in one tap"; 02.3 names its two calls to action; 03.2 "It shipped, and was recommended for wider use in other campaigns". 04.1 now sums up without repeating those lines (Delivery: "faster to deliver, and Nike's engineers were more satisfied with the handover"; Engagement: "beyond what Nike expected").
 49. **Still yours to decide:** Stack on the work list is "Figma, Lottie"; notes.md says the retouching was in Photoshop, so "Figma, Photoshop, Lottie" would be accurate. And your CV: the Nike line should say "designed", not "led".
 
+50. **Cover re-matched to the shared template** (19:59): HHCD's cover scale changed this afternoon (title up to 64 px, lighter line under it, new spacing), so Nike's cover now copies the template's current values exactly. Measured at 1440, 1024 and 390 px wide: title, line, facts and spacing are identical; HHCD's cover is taller only because its title runs to two lines and its role has two extra lines.
+51. **Stack: "Figma, Photoshop, Lottie".** It isn't shown on the Nike page (the stack only appears on the older generic case page, which Nike doesn't use); the AI's keyword search reads it.
+
 ## Process## Process
 
 12. **Going live.** You said it can go live once done, so after the tests passed I rebased onto `main` and merged. To undo: revert the merge commit on `main`.
