@@ -338,6 +338,28 @@
 .cf-client .cf-marks .cf-mark {
   background: var(--on-field);
 }
+/* the live link: beside the title's last line, its foot on the baseline; below the title on narrow screens.
+   It shares the title's grid cell, so it needs the last line + button to fit the row (true for HHCD down to 761px). */
+.cf-title-row {
+  display: grid;
+  gap: 1.25rem;
+  justify-items: start;
+}
+.cf-title-row .cf-btn {
+  min-height: 48px;
+  padding-inline: 1.3rem;
+  font-size: 1rem;
+}
+@media (min-width: 761px) {
+  .cf-title-row > * {
+    grid-area: 1 / 1;
+  }
+  .cf-title-row .cf-btn {
+    justify-self: end;
+    align-self: end;
+    margin-bottom: calc(clamp(2.75rem, 7.6vw, 5.75rem) * 0.09);
+  }
+}
 .cf-cover .cf-h1 {
   max-width: 12ch;
   font-size: clamp(2.75rem, 7.6vw, 5.75rem);

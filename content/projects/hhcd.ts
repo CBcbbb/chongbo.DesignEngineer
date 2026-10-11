@@ -16,7 +16,6 @@ export const hhcd: Project = {
   stack: ["Next.js", "TypeScript", "D3", "Tailwind", "Playwright", "axe"],
   links: [
     { label: "Live platform", href: "https://helen-hamlyn-centre-for-design-data.vercel.app/" },
-    { label: "Code", href: "https://github.com/CBcbbb/Helen-Hamlyn-Centre-for-Design-Data-Platform" },
   ],
   tier: "main",
   tab: "moss",

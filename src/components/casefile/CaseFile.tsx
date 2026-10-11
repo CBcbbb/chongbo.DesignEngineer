@@ -120,9 +120,17 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                 {project.client ?? project.context} · {project.status}
               </span>
             </p>
-            <h1 id="case-title" className="cf-h1">
-              {project.title}
-            </h1>
+            <div className="cf-title-row">
+              <h1 id="case-title" className="cf-h1">
+                {project.title}
+              </h1>
+              {live && (
+                <a className="cf-btn" href={live.href} target="_blank" rel="noopener">
+                  Open the {live.label.toLowerCase()} <External />
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              )}
+            </div>
             <p className="cf-lede">{project.oneLiner}</p>
             <div className="cf-intro">
               <p>{project.context}</p>
@@ -157,14 +165,8 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                   </ul>
                 </nav>
               )}
-              {(live || others.length > 0) && (
+              {others.length > 0 && (
                 <p className="cf-actions">
-                  {live && (
-                    <a className="cf-btn" href={live.href} target="_blank" rel="noopener">
-                      Open the {live.label.toLowerCase()} <External />
-                      <span className="sr-only"> (opens in a new tab)</span>
-                    </a>
-                  )}
                   {others.map((l) => (
                     <a key={l.href} className="cf-link" href={l.href} target="_blank" rel="noopener">
                       {l.label} <External />
