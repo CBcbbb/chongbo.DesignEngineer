@@ -317,9 +317,9 @@
 
 /* ---------- cover: one design for every project (playbook §7) ----------
  * Three groups, held apart by space rather than more rules: who and what (client, title), the one line with the
- * live link at its right, then the facts (Role, Outcome, What this shows) as columns under one rule. The title
- * stands alone; the line under it steps back in tone; the live link shares the right-hand column with
- * "What this shows", so it lines up with the facts instead of floating. Fits the first screen at 1280 × 720.
+ * live link at its right, then the facts (Role and Outcome under one rule, the labels under them). The title
+ * stands alone; the line under it steps back in tone; the live link's right edge is the end of the rule below,
+ * so it lines up instead of floating. Fits the first screen at 1280 × 720.
  */
 .cf-cover {
   container: cf-cover / inline-size;
@@ -333,13 +333,13 @@
 .cf-cover-top > .cf-h1 {
   margin-top: clamp(1rem, 2.2vw, 1.5rem);
 }
-.cf-cover-body {
+.cf-cover-line {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  align-items: start;
+  align-items: center;
   margin-top: clamp(0.9rem, 2vw, 1.5rem);
 }
-.cf-cover-body > .cf-cover-act {
+.cf-cover-line > .cf-cover-act {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem 1.25rem;
@@ -383,22 +383,24 @@
   letter-spacing: -0.01em;
   color: var(--on-field-2) !important;
 }
-/* the facts under one rule: Role, Outcome, What this shows. One column on phones; Role and Outcome side by side
-   with the labels in a row under them on tablets; three columns on computers (below) */
+/* role and outcome in one row under a rule */
+.cf-cover > .cf-facts {
+  margin-top: clamp(1.75rem, 4.4vw, 3rem);
+}
+.cf-cover > .cf-cover-foot {
+  margin-top: clamp(1rem, 2vw, 1.4rem);
+}
 .cf-facts {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.25rem clamp(1.25rem, 3vw, 2.5rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 1rem clamp(1.25rem, 3vw, 2.5rem);
   padding-top: 1rem;
   border-top: 1px solid var(--on-field);
 }
-.cf-cover-body > .cf-facts {
-  margin-top: clamp(1.75rem, 4.4vw, 3rem);
-}
-.cf-facts > div {
+.cf-facts div {
   display: grid;
   align-content: start;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 .cf-facts dt {
   font: 400 0.75rem/1.5 var(--mono);
@@ -411,51 +413,14 @@
   line-height: 1.45;
   color: var(--on-field);
 }
-@container cf-cover (min-width: 34rem) {
-  .cf-facts {
-    grid-template-columns: fit-content(18rem) minmax(0, 1fr);
-  }
-  .cf-fact-shows {
-    grid-column: 1 / -1;
-  }
-  .cf-fact-shows .cf-shows {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 0.4rem 1.5rem;
-  }
-}
-/* computers: one grid of three columns. The line spans the first two; the live link takes the third, centred on
-   the line, and "What this shows" sits under it, so the button's edges are the column's edges. */
+/* computers: the live link sits at the right of the line, centred on it, its right edge on the end of the rule */
 @container cf-cover (min-width: 46rem) {
-  .cf-cover-body {
-    grid-template-columns: fit-content(18rem) minmax(0, 1fr) auto;
+  .cf-cover-line {
+    grid-template-columns: minmax(0, 1fr) auto;
     column-gap: 2rem;
   }
-  .cf-lede {
-    grid-column: 1 / 3;
-    grid-row: 1;
-  }
-  .cf-cover-body > .cf-cover-act {
-    grid-column: 3;
-    grid-row: 1;
-    align-self: center;
+  .cf-cover-line > .cf-cover-act {
     margin-top: 0;
-  }
-  .cf-cover-act .cf-btn {
-    flex: 1;
-    justify-content: space-between;
-  }
-  .cf-facts {
-    grid-column: 1 / -1;
-    grid-template-columns: subgrid;
-    column-gap: normal;
-  }
-  .cf-fact-shows {
-    grid-column: auto;
-  }
-  .cf-fact-shows .cf-shows {
-    flex-direction: column;
-    gap: 0.3rem;
   }
 }
 /* cover art "network": the map's marks gather in the top-right corner, run off the sheet and fade before the
@@ -511,15 +476,18 @@
   fill: var(--mark-methods);
 }
 
-/* the role: the job title, then what was done, and with whom under it in the secondary tone, each with an icon */
+/* the role: the job title, then what was done and with whom, each line with a small icon */
+.cf-facts.has-split {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+}
 .cf-role-title {
   display: block;
   font-weight: 600;
 }
 .cf-role-split {
   display: grid;
-  gap: 0.45rem;
-  margin: 0.5rem 0 0;
+  gap: 0.3rem;
+  margin: 0.45rem 0 0;
   padding: 0;
   list-style: none;
 }
@@ -528,10 +496,7 @@
   gap: 0.5rem;
   align-items: flex-start;
 }
-.cf-role-split li > span {
-  display: grid;
-}
-.cf-facts .cf-ico {
+.cf-role-split .cf-ico {
   width: 1.1rem;
   height: 1.1rem;
   margin-top: 0.1rem;
@@ -541,22 +506,43 @@
   font-weight: 400;
   color: var(--on-field-2);
 }
-/* "What this shows": capability labels, not links (playbook §7), in the same voice as the role's lines */
+.cf-cover-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  align-items: center;
+  justify-content: space-between;
+}
+/* "What this shows": capability labels on one line, not links (playbook §7) */
 .cf-shows {
   display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.9rem;
+  align-items: center;
+}
+.cf-shows p {
+  font: 400 0.75rem/1 var(--mono);
+  color: var(--on-field-2);
+}
+.cf-shows ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .cf-shows li {
-  display: flex;
-  gap: 0.5rem;
-  align-items: flex-start;
-}
-.cf-facts .cf-fact-shows dd {
-  max-width: none;
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0.38rem 0.7rem 0.38rem 0.55rem;
+  border-radius: 999px;
+  background: var(--on-field);
+  color: var(--field);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
 }
 .cf-ico {
   flex: none;
@@ -1902,6 +1888,8 @@
 }
 @media (max-width: 760px) {
   .cf-head,
+  .cf-facts,
+  .cf-facts.has-split,
   .cf-opener,
   .cf-opener.is-ground {
     grid-template-columns: minmax(0, 1fr);

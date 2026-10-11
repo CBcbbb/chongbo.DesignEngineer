@@ -128,9 +128,8 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                 {project.title}
               </h1>
             </div>
-            {/* one grid for the rest: the line with the live link at its right, then the facts as columns, so the
-                link stands over "What this shows" (playbook §7) */}
-            <div className="cf-cover-body">
+            {/* the line under the title, with the live link at its right (under it on tablets and phones) */}
+            <div className="cf-cover-line">
               <p className="cf-lede">{project.oneLiner}</p>
               {(live || others.length > 0) && (
                 <p className="cf-cover-act">
@@ -150,53 +149,53 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                   ))}
                 </p>
               )}
-              <dl className="cf-facts">
-                <div className="cf-fact-role">
-                  <dt>Role</dt>
-                  <dd>
-                    {project.roleSplit ? (
-                      <>
-                        <span className="cf-role-title">{project.role}</span>
-                        <ul className="cf-role-split">
-                          {project.roleSplit.map((r) => (
-                            <li key={r.what}>
-                              <WhoIcon who={r.with} />
-                              <span>
-                                <span className="cf-role-what">{r.what}</span> <span className="cf-role-note">{r.note}</span>
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </>
-                    ) : (
-                      project.role
-                    )}
-                  </dd>
-                </div>
-                {project.outcome && (
-                  <div className="cf-fact-outcome">
-                    <dt>Outcome</dt>
-                    <dd>{project.outcome}</dd>
-                  </div>
-                )}
-                {/* capability labels, not links: a capability usually spans several cards (playbook §7) */}
-                {project.shows && project.shows.length > 0 && (
-                  <div className="cf-fact-shows">
-                    <dt>What this shows</dt>
-                    <dd>
-                      <ul className="cf-shows">
-                        {project.shows.map((c) => (
-                          <li key={c.label}>
-                            <CapabilityIcon capability={c.capability} />
-                            {c.label}
+            </div>
+            <dl className={`cf-facts${project.roleSplit ? " has-split" : ""}`}>
+              <div>
+                <dt>Role</dt>
+                <dd>
+                  {project.roleSplit ? (
+                    <>
+                      <span className="cf-role-title">{project.role}</span>
+                      <ul className="cf-role-split">
+                        {project.roleSplit.map((r) => (
+                          <li key={r.what}>
+                            <WhoIcon who={r.with} />
+                            <span>
+                              {r.what} <span className="cf-role-note">{r.note}</span>
+                            </span>
                           </li>
                         ))}
                       </ul>
-                    </dd>
-                  </div>
-                )}
-              </dl>
-            </div>
+                    </>
+                  ) : (
+                    project.role
+                  )}
+                </dd>
+              </div>
+              {project.outcome && (
+                <div>
+                  <dt>Outcome</dt>
+                  <dd>{project.outcome}</dd>
+                </div>
+              )}
+            </dl>
+            {project.shows && project.shows.length > 0 && (
+              <div className="cf-cover-foot">
+                {/* capability labels, not links: a capability usually spans several cards (playbook §7) */}
+                <div className="cf-shows">
+                  <p id="cf-shows-title">What this shows</p>
+                  <ul aria-labelledby="cf-shows-title">
+                    {project.shows.map((c) => (
+                      <li key={c.label}>
+                        <CapabilityIcon capability={c.capability} />
+                        {c.label}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
           </header>
 
           {project.work && cover && coverSize && (

@@ -10,15 +10,14 @@ No captions under evidence. Labels inside the evidence are listed with each card
 
 - **Client:** Helen Hamlyn Centre for Design, Royal College of Art
 - **Title:** Helen Hamlyn Centre Data Platform
-- **Button (at the right of the one line, over "What this shows"):** Open the live platform
+- **Button (at the right of the one line):** Open the live platform
 - **Cover art:** the map's four marks gather in the top-right corner, run off the sheet and fade before the title
 - **One line:** A research repository that anyone can explore, with a mouse, a keyboard or on a phone.
-- **Facts** (three columns under one rule):
-    - **Role:** Research Assistant
-        - (two people) Data collection and analysis / *with the VOICE team*
-        - (one person) Data modelling, design and build / *on my own*
-    - **Outcome:** Live and in use. Used to teach the Centre's summer interns. Paper on its accessibility approach accepted at DRS 2026.
-    - **What this shows** (labels, not links): Accessibility · Idea to production · Craft and interaction
+- **Role:** Research Assistant
+    - (two people) Data collection and analysis *with the VOICE team*
+    - (one person) Data modelling, design and build *on my own*
+- **Outcome:** Live and in use. Used to teach the Centre's summer interns. Paper on its accessibility approach accepted at DRS 2026.
+- **What this shows** (labels, not links): Accessibility · Idea to production · Craft and interaction
 
 ## The work
 

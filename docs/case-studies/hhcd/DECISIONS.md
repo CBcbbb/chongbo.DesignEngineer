@@ -66,10 +66,8 @@ The case file now follows the playbook of 11 October (the Nike review's standard
 You said the button beside the title didn't sit comfortably and the cover was still cramped. What changed:
 
 - **The title stands alone.** Nothing sits beside it, so it reads first and whole.
-- **The live link moved to the right of the line under the title.** It takes the right-hand column of the cover's grid, and its left and right edges are the edges of "What this shows" below it and the end of the rule, so it lines up with something instead of floating. It's still on the first screen and adds no row. On tablets and phones it sits under the line.
-- **One band fewer.** Role, Outcome and What this shows are now three columns under one rule. The separate row of labels and their outlined chips are gone; the labels use the same voice as the Role's lines (small icon, text).
-- **The Role reads in two tones.** Each activity is on its own line with its icon, and "with the VOICE team" / "on my own" sits under it in grey.
+- **The live link moved to the right of the line under the title**, centred on it, with its right edge on the end of the rule below, so it lines up with something instead of floating. It's still on the first screen and adds no row. On tablets and phones it sits under the line.
 - **The art is a corner piece.** 30 marks instead of 48 (same proportions), gathered in the top-right corner, running off the sheet and fading before the title. The ink trail into the button is gone, so the button has clean space round it. A check confirms no mark sits on the client line or the title at any size.
-- **More space between groups:** the line under the title and the rule over the facts are further apart. The cover still fits the first screen at 1280 × 720 (it ends at 671px).
-- Written into the playbook (§7) for every project; Nike is asked to follow in SHARED-CHANGES.md.
-
+- **A little more space** between the title and the line, and between the line and the rule. The cover still fits the first screen at 1280 × 720 (it ends at 675px).
+- **Role, Outcome and the labels are as they were.** I tried them as three columns (Role · Outcome · What this shows); you preferred the original, so it's back. One fix: on phones Role and Outcome now stack in one column (they had been squeezed side by side).
+- Written into the playbook (§7); Nike is asked to follow in SHARED-CHANGES.md.
