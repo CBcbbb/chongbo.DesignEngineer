@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { profile } from "@content";
+import { Pill, WorkPill } from "@/components/nav/Pill";
 
 export function SiteHeader({ current }: { current?: "work" | "about" }) {
   return (
@@ -13,14 +14,10 @@ export function SiteHeader({ current }: { current?: "work" | "about" }) {
       <nav aria-label="Main">
         <ul>
           <li>
-            <Link href="/work" aria-current={current === "work" ? "page" : undefined}>
-              Work
-            </Link>
+            <WorkPill current={current === "work"} />
           </li>
           <li>
-            <Link href="/about" aria-current={current === "about" ? "page" : undefined}>
-              About
-            </Link>
+            <Pill kind="about" href="/about" label="About" current={current === "about"} />
           </li>
         </ul>
       </nav>

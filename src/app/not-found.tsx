@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Pill } from "@/components/nav/Pill";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 
@@ -16,9 +17,7 @@ export default function NotFound() {
             <h1 className="t-num">404</h1>
             <p className="t-reply">This sheet was never printed. The page may have moved.</p>
             <div className="t-cta">
-              <Link className="t-link" href="/">
-                Back to the machine
-              </Link>
+              <Pill kind="back" href="/" label="Back to the machine" />
               <Link className="t-link" href="/work">
                 Browse all work
               </Link>

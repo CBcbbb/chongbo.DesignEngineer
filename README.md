@@ -11,7 +11,7 @@ The portfolio of Chongbo Ning, a design engineer in London. A red ticket printer
 
 Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS v4 · Zod · Anthropic TypeScript SDK · Geist and Geist Mono (self-hosted via the `geist` package) · Vitest · Playwright + axe-core.
 
-Motion is plain CSS (no animation library): the thermal-printer feed is a `steps()` height transition, so the client bundle stays small.
+Motion is plain CSS and the Web Animations API (no animation library): the thermal-printer feed is a `steps()` height transition, and the shell's capsule links (`src/components/nav/Pill.tsx`) animate with `element.animate()`, so the client bundle stays small.
 
 ## Run locally
 

@@ -31,6 +31,15 @@
   --stamp: #c2311f;
   --focus: #1c1b19;
 
+  /* kraft: the capsule links of the site's own shell (nav, back, browse). An object, like paper: the same in both themes. */
+  --kraft: #d9c59e;
+  --kraft-hi: #e4d4b3;
+  --kraft-ink: #2b2317;
+  --kraft-line: #b9a67d;
+  /* the printer's lamp: ready and working */
+  --lamp-ready: #6fcf7c;
+  --lamp-busy: #ffc46b;
+
   /* case file: the reading surface of a project page (template "case-file"). Follows the theme. */
   --case-bg: #fbfaf7;
   --case-ink: #1c1b19;

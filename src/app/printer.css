@@ -148,9 +148,17 @@
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  transition:
+    background 0.3s,
+    box-shadow 0.3s;
+}
+/* the lamp: green once there is something to print, amber while printing */
+.machine[data-state="ready"] .led {
+  background: var(--lamp-ready);
+  box-shadow: 0 0 9px 3px rgba(111, 207, 124, 0.65);
 }
 .machine[data-state="working"] .led {
-  background: #ffc46b;
+  background: var(--lamp-busy);
   box-shadow: 0 0 10px 4px rgba(255, 180, 80, 0.75);
   animation: blink 0.55s steps(2) infinite;
 }
@@ -180,7 +188,8 @@
   border-radius: 50%;
   transition:
     box-shadow 0.2s,
-    background 0.1s;
+    background 0.1s,
+    transform 0.1s;
 }
 .pk:hover::after {
   box-shadow:
@@ -190,7 +199,7 @@
 .pk:active::after,
 .pk[aria-busy="true"]::after {
   background: radial-gradient(circle at 50% 40%, rgba(0, 0, 0, 0.08), rgba(60, 0, 0, 0.32));
-  transform: translateY(1px);
+  transform: translateY(2px) scale(0.97);
 }
 .machine.ready .pk::after {
   animation: invite 1.8s ease-in-out infinite;
@@ -202,13 +211,31 @@
   }
   50% {
     box-shadow:
-      0 0 0 4px rgba(201, 55, 42, 0.18),
-      0 0 26px 6px rgba(201, 55, 42, 0.3);
+      0 0 0 5px rgba(201, 55, 42, 0.22),
+      0 0 30px 8px rgba(201, 55, 42, 0.36);
   }
 }
 .pk:focus-visible {
   outline-offset: 2px;
   border-radius: 50%;
+}
+/* The word under the button, engraved like the name plate. It lights up when there is something to print. */
+.pk-label {
+  position: absolute;
+  left: 86.1%;
+  top: 74.2%;
+  transform: translateX(-50%);
+  font: 600 clamp(6px, 0.8vw, 9px) / 1 var(--mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #7c776f;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+  transition: color 0.3s;
+}
+.machine.ready .pk-label,
+.pk:hover ~ .pk-label {
+  color: var(--red);
 }
 
 /* paper rising from the top slot */
@@ -408,25 +435,12 @@
   display: flex;
   justify-content: center;
   gap: 24px;
-  margin-top: 22px;
-  font-size: 14px;
-}
-.alt a {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 2px;
-  min-height: 44px;
-  font: 500 14px var(--sans);
-  color: var(--ink-2);
-  text-decoration: none;
-}
-.alt a:hover {
-  color: var(--ink);
+  margin-top: 26px;
 }
 
 /* ---------- results ---------- */
 .results {
-  margin-top: 30px;
+  margin-top: 34px;
   overflow-x: clip;
   padding-top: 14px;
   scroll-margin-top: 16px;
@@ -438,7 +452,7 @@
   align-items: baseline;
   gap: 12px;
   max-width: 1100px;
-  margin: 0 auto 22px;
+  margin: 0 auto 30px;
 }
 .rhead h2,
 .rhead h1 {
@@ -455,6 +469,12 @@
   color: var(--ink-2);
   font-size: 15px;
   overflow-wrap: anywhere;
+}
+.rhead .provenance {
+  flex-basis: 100%;
+  margin: 0;
+  font: 500 12.5px/1.5 var(--mono);
+  color: var(--ink-2);
 }
 .deck {
   position: relative;
