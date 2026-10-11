@@ -115,7 +115,7 @@ The Centre's brand colours are fixed, and two of them fail contrast as small tex
 
 Automated checks gave VOICE a near-perfect score, but missed that its map entries and filters couldn't be reached by keyboard. In the Centre's version both work by keyboard, and axe found no issues on any main page at desktop and phone widths. It passed testing in Chrome, Safari and Firefox, and with the VoiceOver screen reader.
 
-*Metric strip:* 99 Lighthouse accessibility score (VOICE) · 0 WAVE errors (VOICE) · 0 axe violations at 1440 and 390px (Centre's version)
+*Figures, by group:* **VOICE** (red): 99 Lighthouse accessibility score · 0 WAVE errors; ✕ Missed: map entries and filters couldn't be reached by keyboard. **Centre's version** (green): 0 axe violations at 1440 and 390px; ✓ Map entries and filters work by keyboard · ✓ Passed in Chrome, Safari and Firefox · ✓ Passed with the VoiceOver screen reader
 
 ### 02.8 `role`: Designed, specified and built alone
 

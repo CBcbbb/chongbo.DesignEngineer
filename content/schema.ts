@@ -122,9 +122,13 @@ export type Media =
       caption?: string;
     }
   | {
-      /** Big numbers with a short label each. */
+      /**
+       * Big numbers with a short label each. Numbers with a `note` are grouped by it (e.g. VOICE / the Centre's
+       * version); `checks` add a line of pass or miss under a group.
+       */
       kind: "metrics";
       items: Metric[];
+      checks?: Check[];
       caption?: string;
     }
   | { kind: "diagram"; diagram: "data-contracts" | "token-layers"; caption?: string }
@@ -164,7 +168,18 @@ export type Specimen = {
   text?: { colour: string; ratio: number };
 };
 
-export type Metric = { value: string; label: string; note?: string; type?: EntityType };
+export type Metric = {
+  value: string;
+  label: string;
+  note?: string;
+  type?: EntityType;
+  /** Case-file template: what the number means for the reader. `pass`: it can be trusted (green); `miss`: it looked right
+   * but missed something (red). */
+  tone?: "pass" | "miss";
+};
+
+/** A line under a group of metrics: what passed or what was missed. `group` matches the metrics' `note`. */
+export type Check = { group: string; text: string; tone: "pass" | "miss" };
 
 /**
  * A numbered step. Older case files use `text` only. Case-file steps can carry a title, a label

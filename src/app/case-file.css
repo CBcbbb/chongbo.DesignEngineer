@@ -1757,6 +1757,108 @@
   color: var(--type-methods);
 }
 
+/* figures that mean something (testing): grouped by what they measured; red for a number that looked right but
+   missed something, green for one that can be trusted; each group's checks under it */
+.cf-tally {
+  display: grid;
+  gap: clamp(1.5rem, 3.4vw, 2.25rem);
+}
+@media (min-width: 640px) {
+  .cf-tally {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1.25rem, 3vw, 2.5rem);
+  }
+}
+.cf-tally-group {
+  --tone: var(--pass, #0a7a48);
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  padding-top: 14px;
+  border-top: 3px solid var(--tone);
+}
+.cf-tally-group[data-tone="miss"] {
+  --tone: var(--miss, #b42318);
+}
+.cf-tally-head {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font: 500 11.5px/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--case-dim);
+}
+.cf-tally-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tone);
+}
+.cf-tally-figures {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cf-tally-figures li {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+.cf-tally-value {
+  font-size: clamp(3.25rem, 7vw, 5.75rem);
+  font-weight: 600;
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  font-variant-numeric: tabular-nums;
+  color: var(--tone);
+}
+.cf-tally-label {
+  max-width: 20ch;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--case-body);
+}
+.cf-tally-checks {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 14px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--case-rule);
+}
+.cf-tally-checks li {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--case-ink);
+}
+.cf-tally-mark {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--pass, #0a7a48);
+  color: var(--case-bg);
+}
+.cf-tally-checks li[data-tone="miss"] .cf-tally-mark {
+  background: var(--miss, #b42318);
+}
+.cf-tally-mark svg {
+  width: 11px;
+  height: 11px;
+}
+
 /* type marks: the platform's own shapes */
 .cf-mark {
   flex: none;
@@ -2149,6 +2251,12 @@
   }
   .is-side .cf-metrics:not(.is-parts) .cf-metric-note {
     align-self: start;
+  }
+  .is-side .cf-tally {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .is-side .cf-tally-value {
+    font-size: clamp(3.25rem, 6vw, 5.25rem);
   }
   /* shares of a whole: the four parts across the column, the total under them */
   .is-side .cf-metrics.is-parts .cf-metric-value {

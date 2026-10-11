@@ -393,9 +393,15 @@ export const hhcd: Project = {
       media: {
         kind: "metrics",
         items: [
-          { value: "99", label: "Lighthouse accessibility score", note: "VOICE" },
-          { value: "0", label: "WAVE errors", note: "VOICE" },
-          { value: "0", label: "axe violations at 1440 and 390px", note: "Centre's version" },
+          { value: "99", label: "Lighthouse accessibility score", note: "VOICE", tone: "miss" },
+          { value: "0", label: "WAVE errors", note: "VOICE", tone: "miss" },
+          { value: "0", label: "axe violations at 1440 and 390px", note: "Centre's version", tone: "pass" },
+        ],
+        checks: [
+          { group: "VOICE", text: "Missed: map entries and filters couldn't be reached by keyboard", tone: "miss" },
+          { group: "Centre's version", text: "Map entries and filters work by keyboard", tone: "pass" },
+          { group: "Centre's version", text: "Passed in Chrome, Safari and Firefox", tone: "pass" },
+          { group: "Centre's version", text: "Passed with the VoiceOver screen reader", tone: "pass" },
         ],
       },
     },

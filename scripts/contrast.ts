@@ -151,6 +151,8 @@ function palettePairs(): Pair[] {
         if (pal[`type-${t}-on-dark`]) out.push({ fg: P(`type-${t}-on-dark`), bg: P("dark"), where: `${theme} ${n}: ${t} numbers on the dark sheet`, min: TEXT });
       }
       if (pal["mark-people-on-dark"]) out.push({ fg: P("mark-people-on-dark"), bg: P("dark"), where: `${theme} ${n}: people shape on the dark sheet`, min: LARGE });
+      if (pal["pass"]) out.push({ fg: P("pass"), bg, where: `${theme} ${n}: trusted figures and pass marks`, min: TEXT }, { fg: bg, bg: P("pass"), where: `${theme} ${n}: tick on a pass mark`, min: LARGE });
+      if (pal["miss"]) out.push({ fg: P("miss"), bg, where: `${theme} ${n}: figures that missed something, miss marks`, min: TEXT }, { fg: bg, bg: P("miss"), where: `${theme} ${n}: cross on a miss mark`, min: LARGE });
       for (const t of ["people", "partners", "projects", "methods"]) {
         if (pal[`type-${t}`]) out.push({ fg: P(`type-${t}`), bg, where: `${theme} ${n}: ${t} numbers and labels`, min: TEXT });
         if (pal[`mark-${t}`]) out.push({ fg: P(`mark-${t}`), bg, where: `${theme} ${n}: ${t} shape`, min: LARGE });

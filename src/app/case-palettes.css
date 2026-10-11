@@ -27,6 +27,9 @@
   --type-partners: #b01e68;
   --type-projects: #a8470f;
   --type-methods: #107052;
+  /* what a number means: green, it can be trusted; red, it looked right but missed something */
+  --pass: #0a7a48;
+  --miss: #b42318;
   --field: #ffffff;
   --on-field: #22212a;
   --on-field-2: #5b5966;
@@ -58,6 +61,8 @@
     --type-partners: #f283b9;
     --type-projects: #f4a06c;
     --type-methods: #6dcda6;
+    --pass: #5bd39b;
+    --miss: #ff8e80;
     --dark: #121116;
     --dark-rule: #26252c;
     --dark-inset: #1d1c22;
@@ -76,6 +81,8 @@
   --type-partners: #f283b9;
   --type-projects: #f4a06c;
   --type-methods: #6dcda6;
+  --pass: #5bd39b;
+  --miss: #ff8e80;
   --dark: #121116;
   --dark-rule: #26252c;
   --dark-inset: #1d1c22;

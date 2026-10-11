@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { CSSProperties } from "react";
-import type { Media, Metric, Section, Specimen, Step } from "@content";
+import type { Check, Media, Metric, Section, Specimen, Step } from "@content";
 import { assetExists, imageSize } from "@/lib/assets";
 import { CodeBlock } from "@/components/media/CodeBlock";
 import { ComparePlate } from "./ComparePlate";
@@ -71,6 +71,56 @@ export function Keys({ keys }: { keys: string[] }) {
         </li>
       ))}
     </ul>
+  );
+}
+
+const Cross = () => (
+  <svg viewBox="0 0 12 12" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+    <path d="M3.2 3.2l5.6 5.6M8.8 3.2 3.2 8.8" />
+  </svg>
+);
+
+/**
+ * Figures grouped by what they measured (e.g. VOICE / the Centre's version), coloured by what they mean: red for a
+ * number that looked right but missed something, green for one that can be trusted; each group's checks under it.
+ */
+function Tally({ items, checks = [] }: { items: Metric[]; checks?: Check[] }) {
+  const groups = [...new Set(items.map((m) => m.note ?? ""))];
+  return (
+    <div className="cf-tally">
+      {groups.map((g) => {
+        const own = items.filter((m) => (m.note ?? "") === g);
+        const tone = own.find((m) => m.tone)?.tone ?? "pass";
+        return (
+          <section key={g} className="cf-tally-group" data-tone={tone} aria-label={g}>
+            <p className="cf-tally-head">
+              <span className="cf-tally-dot" aria-hidden="true" />
+              {g}
+            </p>
+            <ul className="cf-tally-figures">
+              {own.map((m) => (
+                <li key={m.label}>
+                  <span className="cf-tally-value">{m.value}</span>
+                  <span className="cf-tally-label">{m.label}</span>
+                </li>
+              ))}
+            </ul>
+            {checks.some((c) => c.group === g) && (
+              <ul className="cf-tally-checks">
+                {checks
+                  .filter((c) => c.group === g)
+                  .map((c) => (
+                    <li key={c.text} data-tone={c.tone}>
+                      <span className="cf-tally-mark">{c.tone === "pass" ? <Tick /> : <Cross />}</span>
+                      {c.text}
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </section>
+        );
+      })}
+    </div>
   );
 }
 
@@ -342,7 +392,7 @@ export function CaseMedia({
     case "metrics":
       return (
         <figure className="cf-figure">
-          <Metrics items={media.items} />
+          {media.items.some((m) => m.tone) ? <Tally items={media.items} checks={media.checks} /> : <Metrics items={media.items} />}
         </figure>
       );
     case "code":
