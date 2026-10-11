@@ -10,7 +10,7 @@ export const hhcd: Project = {
   title: "Helen Hamlyn Centre Data Platform",
   oneLiner: "A research repository that anyone can explore, with a mouse, a keyboard or on a phone.",
   context: "First built for VOICE, an EU-funded arts research project. Now used by the Helen Hamlyn Centre for Design, Royal College of Art.",
-  role: "Design, data model and build, alone, with AI coding tools.",
+  role: "Data collection, analysis and modelling; design and build.",
   outcome: "Live and in use. Paper accepted at DRS 2026.",
   status: "Live",
   stack: ["Next.js", "TypeScript", "D3", "Tailwind", "Playwright", "axe"],

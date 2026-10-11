@@ -7,7 +7,7 @@ Playbook §8 step 4. Every fact traces to `inventory.md` → "Facts and their so
 - **Title:** Helen Hamlyn Centre Data Platform
 - **One line:** A research repository that anyone can explore, with a mouse, a keyboard or on a phone.
 - **Context:** First built for VOICE, an EU-funded arts research project. Now used by the Helen Hamlyn Centre for Design, Royal College of Art.
-- **Role:** Design, data model and build, alone, with AI coding tools.
+- **Role:** Data collection, analysis and modelling; design and build.
 - **Outcome:** Live and in use. Paper accepted at DRS 2026.
 - **Link:** https://helen-hamlyn-centre-for-design-data.vercel.app/
 - **What this shows:** Accessibility · Idea to production · Craft and interaction
