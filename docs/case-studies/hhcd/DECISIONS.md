@@ -71,3 +71,22 @@ You said the button beside the title didn't sit comfortably and the cover was st
 - **A little more space** between the title and the line, and between the line and the rule. The cover still fits the first screen at 1280 × 720 (it ends at 675px).
 - **Role, Outcome and the labels are as they were.** I tried them as three columns (Role · Outcome · What this shows); you preferred the original, so it's back. One fix: on phones Role and Outcome now stack in one column (they had been squeezed side by side).
 - Written into the playbook (§7); Nike is asked to follow in SHARED-CHANGES.md.
+
+## Every card, redesigned (11 Oct, night)
+
+You said some images had too many frames, the purple canvas made no sense, and it didn't look high-end. Each piece of evidence now has one edge, and the canvas is the card itself. Card by card:
+
+- **01.1, 01.3, 01.6 (VOICE screens):** straight on the card with a hairline, on the dot canvas. No mount, no shadow. They're the paper's figures (1,100–1,600px wide), so they don't open larger: there's nothing more to see.
+- **01.2 (two map prototypes):** side by side at one height, each as wide as its own ratio, with "Prototype A / B" above. Before, each floated small in a tall box.
+- **01.4 (workshop):** the stakeholder cards with a hairline; the three wall photos without their boxes. **New:** each wall photo opens larger (800px wide), so the sticky notes can be read.
+- **01.5 (stepper):** the steps are a ruled row (the current one has an ink line above it), and the diagram is a white sheet with one edge on the canvas. Before: a purple box, a white tab, and a box inside it.
+- **02.1 (the Centre's version):** the numbers are the picture: each type's column is as wide as its share of the 48 entries, under a bar in its colour; 104 connections stands apart.
+- **02.2 (two arrangements):** the switch moved into the window's own bar, where the product's controls would be, so the window is the whole figure. The window has no fake buttons; the address sits on the left.
+- **02.3, 02.4 (recordings):** the same flat window; scrubber and time stay in the bar.
+- **02.5 (phones):** larger, straight on the canvas. **New:** each screen opens larger.
+- **02.6 (contrast):** unchanged: the white table is the product's surface, and it's already one layer.
+- **02.7 (testing):** 99 · 0 · 0 set very large at the foot.
+- **02.8 (closing card):** the body is set as a statement in large type at the foot, above Context.
+- **The map today:** the same flat window on the canvas.
+- Written into the playbook (§6–7) and SHARED-CHANGES.md.
+

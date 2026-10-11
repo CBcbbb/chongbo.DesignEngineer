@@ -11,13 +11,14 @@ import { CoverNetwork } from "./CoverNetwork";
 import { BrowserFrame } from "./Frame";
 import { CapabilityIcon, OutArrow, WhoIcon } from "./icons";
 
-/** Interactive evidence and phone screens sit on the project's mount. */
-function mountOf(section: Section): "field" | undefined {
+/**
+ * The canvas (a dot field that is the card itself, not a box) sits under product screens, prototypes and diagrams;
+ * photos, tables and numbers sit on plain paper.
+ */
+function canvasOf(section: Section): "" | undefined {
   const m = section.media;
-  if (!m) return undefined;
-  if (m.kind === "compare") return "field";
-  if (m.kind === "group" && m.ratio === "9:16") return "field";
-  return undefined;
+  if (!m || section.steps?.length) return undefined;
+  return m.kind === "image" || m.kind === "group" || m.kind === "compare" || m.kind === "video" || m.kind === "stepper" ? "" : undefined;
 }
 
 /**
@@ -42,7 +43,7 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
   const hasEvidence = !!section.media || !!section.steps?.length;
   const cls = ["cf-sheet", "is-card", dark && "is-dark", side && "is-side", !hasEvidence && "is-text"].filter(Boolean).join(" ");
   return (
-    <section id={section.id} className={cls} data-mount={mountOf(section)} aria-labelledby={`${section.id}-title`}>
+    <section id={section.id} className={cls} data-canvas={canvasOf(section)} aria-labelledby={`${section.id}-title`}>
       <div className="cf-head">
         <div>
           <p className="cf-meta">
@@ -199,7 +200,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
           </header>
 
           {project.work && cover && coverSize && (
-            <section className="cf-sheet is-field cf-work" aria-labelledby="cf-work-title">
+            <section className="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
               <div className="cf-work-head">
                 <h2 id="cf-work-title">{project.work.title}</h2>
                 {project.legend && (

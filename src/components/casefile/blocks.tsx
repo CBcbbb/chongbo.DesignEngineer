@@ -1,17 +1,20 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 import type { Media, Metric, Section, Specimen, Step } from "@content";
 import { assetExists, imageSize } from "@/lib/assets";
 import { CodeBlock } from "@/components/media/CodeBlock";
 import { ComparePlate } from "./ComparePlate";
 import { DataStepper } from "./DataStepper";
 import { VideoPlate } from "./VideoPlate";
+import { Zoom } from "./Zoom";
 
 /**
  * The block library (playbook §7): every case file is built from these.
  * text · media (plate, recording in a browser frame) · decision pair (Section.layout "pair") · compare · code ·
  * diagram (stepper) · metric strip · steps · gallery (row, phones) · specimens · facts.
  * No captions under evidence (playbook §6): what it proves is in the card's heading or body; labels inside the
- * evidence stay. Images keep their own ratio and are never cropped; a mount pads them where a frame needs room.
+ * evidence stay. Images keep their own ratio and are never cropped. One edge per piece of evidence (a hairline),
+ * never a mount: where a project wants a surface, the card itself becomes the canvas (`data-canvas`).
  */
 
 const src = (asset: string) => `/assets/${asset}`;
@@ -27,7 +30,7 @@ function Missing({ asset, need }: { asset: string; need: string }) {
   );
 }
 
-/** A screenshot or photo on the project's mount, whole and at its own proportions. */
+/** A screenshot or photo straight on the card, whole and at its own proportions, with a hairline edge. */
 export function Shot({
   asset,
   alt,
@@ -71,10 +74,13 @@ export function Keys({ keys }: { keys: string[] }) {
 }
 
 function Metrics({ items }: { items: Metric[] }) {
+  const typed = items.filter((m) => m.type);
+  const parts = typed.length > 1 && typed.every((m) => /^\d+$/.test(m.value));
+  const cols = parts ? items.map((m) => (m.type ? `minmax(0, ${m.value}fr)` : "auto")).join(" ") : undefined;
   return (
-    <ul className="cf-metrics">
+    <ul className={`cf-metrics${parts ? " is-parts" : ""}`} style={cols ? { gridTemplateColumns: cols } : undefined}>
       {items.map((m) => (
-        <li key={m.label}>
+        <li key={m.label} className={parts && !m.type ? "is-total" : m.type ? `is-${m.type}` : undefined}>
           <span className={`cf-metric-value ${m.type ? `cf-type-${m.type}` : ""}`}>{m.value}</span>
           <span className="cf-metric-label">
             {m.type && <span className={`cf-mark cf-mark-${m.type}`} aria-hidden="true" />}
@@ -169,7 +175,7 @@ export function StepsRow({ steps }: { steps: Step[] }) {
         <li key={s.text}>
           {s.image && dim && assetExists(s.image.asset) && (
             <div className="cf-step-img">
-              <Image src={src(s.image.asset)} alt={s.image.alt} width={dim.width} height={dim.height} quality={Q} sizes="(min-width: 760px) 300px, 100vw" />
+              <Zoom src={src(s.image.asset)} alt={s.image.alt} width={dim.width} height={dim.height} sizes="(min-width: 760px) 300px, 100vw" />
             </div>
           )}
           {s.label && <p className="cf-mono cf-step-label">{s.label}</p>}
@@ -193,6 +199,27 @@ export function Facts({ items }: { items: { label: string; text: string }[] }) {
         </div>
       ))}
     </dl>
+  );
+}
+
+/** Images side by side at one height, each as wide as its own ratio makes it; the label above each. */
+function Row({ items }: { items: { asset: string; alt: string; need?: string; label?: string }[] }) {
+  const r = items.map((it) => {
+    const d = imageSize(it.asset);
+    return d ? d.width / d.height : 4 / 3;
+  });
+  const sum = r.reduce((a, b) => a + b, 0);
+  return (
+    <div className="cf-cq">
+      <div className="cf-row" style={{ "--sum": sum.toFixed(3), "--gaps": `${(items.length - 1) * 24}px` } as CSSProperties}>
+        {items.map((it, i) => (
+          <div key={it.asset} className="cf-row-item" style={{ "--r": r[i]!.toFixed(3) } as CSSProperties}>
+            <Shot asset={it.asset} alt={it.alt} need={it.need} sizes="(min-width: 1100px) 460px, 100vw" />
+            {it.label && <p className="cf-label">{it.label}</p>}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -233,23 +260,14 @@ export function CaseMedia({ media, index, url, priority = false }: { media: Medi
                 const dim = imageSize(it.asset);
                 return (
                   <div key={it.asset} className="cf-phone">
-                    {dim && (
-                      <Image src={src(it.asset)} alt={it.alt} width={dim.width} height={dim.height} quality={Q} sizes="(min-width: 1000px) 260px, 45vw" />
-                    )}
+                    {dim && <Zoom src={src(it.asset)} alt={it.alt} width={dim.width} height={dim.height} sizes="(min-width: 1000px) 300px, 45vw" />}
                     {it.label && <p className="cf-label">{it.label}</p>}
                   </div>
                 );
               })}
             </div>
           ) : (
-            <div className="cf-row">
-              {media.items.map((it) => (
-                <div key={it.asset} className="cf-row-item">
-                  <Shot asset={it.asset} alt={it.alt} need={it.need} sizes="(min-width: 1100px) 430px, 100vw" />
-                  {it.label && <p className="cf-label">{it.label}</p>}
-                </div>
-              ))}
-            </div>
+            <Row items={media.items} />
           )}
         </figure>
       );

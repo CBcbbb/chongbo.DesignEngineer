@@ -121,7 +121,11 @@ Rules:
 - **Motion is video or Lottie, not GIF.** Short animations loop while in view (paused out of view; a click pauses them, and keyboards get a pause control) and sit at about 85% of their stage. With reduced motion: the last frame, still.
 - **Recordings are never cropped:** shown whole in a device frame, with their sound and a sound toggle. One play control only, and controls never add height. Sound that tells the story gets its own control (Nike: the voice teaser, played from the screenshot like a voice message, with "Tap to listen · 0:05" until the first play). Only one thing plays at a time.
 - **Moments in a recording are timed from the footage**, frame by frame, each with a start and an end, and grouped by the page's parts; a moment lights up only while it's on screen. A card's "See it at 0:24" opens that moment as a clip beside the card (once, at 0.75× speed, with Play again), never scrolling the reader away.
-- **Never change an image's ratio, stretch it or crop an original.** Where a frame needs a different ratio, pad the original on a mount.
+- **Never change an image's ratio, stretch it or crop an original.** Where a frame needs a different ratio, leave the space round it on the card; never pad it on a mount.
+- **One edge per piece of evidence.** A screenshot, a diagram's sheet or a phone screen gets a hairline and a small radius, nothing more: no mounts, no drop shadows, no box inside a box. A browser window only for the live product, with one slim bar: the address on the left, any controls on the right (a switch, a scrubber); no fake window buttons. Photos and phone screens with more detail than the card can show open larger (the picture is the button, with a small enlarge badge; a native dialog; never past half the original's pixel width).
+- **The canvas is the card, not a box.** Where a project wants a working surface (HHCD: a dot grid, like map paper), it runs under the evidence to the card's left, right and bottom edges and fades in under the text. Behind product screens, prototypes and diagrams only; photos, tables and numbers sit on plain paper.
+- **Numbers are the picture.** A card whose evidence is figures sets them large (up to 9rem) at the card's foot. Where the figures are shares of one whole (HHCD: 17 projects, 12 methods, 10 people, 9 partners), each column is as wide as its share, under a bar in its colour, so the row is also the chart; a total stands apart.
+- **A card without evidence** (the closing card) sets its body as a statement in large type at the foot, so the card isn't a heading over an empty field.
 - **Originals, sharp:** at least twice their display size, screenshots served at quality 90. Check every image's pixels against its display size before building, and ask me for originals at the start (Figma exports at 3x). A composite is not an original: a set of posters is six files, not one picture of six. Never upscale.
 - **Choose the evidence for the decision.** A structural decision leads with a wireframe or diagram, with the real screens as the inset; a layout change is two screens side by side; a photo edit is a slider; a set (posters, templates) is shown as separate items, side by side or in a strip swiped sideways with the next one at the edge.
 - **Each main project gets one signature interactive module**, something a reader can touch: an embedded live piece of the product, a before/after slider, an interactive diagram.
@@ -158,9 +162,9 @@ Rules:
     - its dark (`--dark`);
     - its cover, for example art running off the sheet (`coverArt`);
     - its part openers: on the field, or on the studio as chapter pages (`openers`);
-    - its evidence mounts;
+    - its canvas (a field under the evidence, or none);
     - its signature module.
-  - Nike: orange field, black, full-bleed imagery. HHCD: no brand field; its identity is four equal colours on white, so colour lives only in the work and the four marks, with evidence on dot-grid paper.
+  - Nike: orange field, black, full-bleed imagery. HHCD: no brand field; its identity is four equal colours on white, so colour lives only in the work and the four marks, with the evidence on a dot-grid canvas that is the card itself.
   - The project's colour is prominent where it has one; the quality bar is Granola's graphic design (textured backdrops, strong type, sure contrast).
 - **Block library:** every project is built from the same blocks:
   - text (heading + body)

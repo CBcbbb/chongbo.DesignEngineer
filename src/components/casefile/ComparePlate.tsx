@@ -27,8 +27,9 @@ const TypeIcon = () => (
 );
 
 /**
- * The signature module: one window, two arrangements. Choosing an arrangement plays the recorded move between them,
- * then rests on the screenshot. With reduced motion, or before the recording has loaded, it cross-fades.
+ * The signature module: one window, two arrangements. The switch sits in the window's own bar, like the product's
+ * controls, so it adds no layer and no height. Choosing an arrangement plays the recorded move between them, then
+ * rests on the screenshot. With reduced motion, or before the recording has loaded, it cross-fades.
  * Both arrangements share one frame, so the window keeps its size whichever is shown.
  */
 export function ComparePlate({
@@ -87,20 +88,23 @@ export function ComparePlate({
     }
   };
 
+  const seg = (
+    <fieldset className="cf-seg" onPointerEnter={warm} onFocus={warm}>
+      <legend>{legend}</legend>
+      {(["a", "b"] as const).map((k) => (
+        <label key={k}>
+          <input type="radio" name={`compare-${index}`} value={k} checked={side === k} onChange={() => choose(k)} />
+          {k === "a" ? <FreeIcon /> : <TypeIcon />}
+          {(k === "a" ? a : b).label}
+        </label>
+      ))}
+    </fieldset>
+  );
+
   return (
     <figure className="cf-figure cf-compare">
-      <fieldset className="cf-seg" onPointerEnter={warm} onFocus={warm}>
-        <legend>{legend}</legend>
-        {(["a", "b"] as const).map((k) => (
-          <label key={k}>
-            <input type="radio" name={`compare-${index}`} value={k} checked={side === k} onChange={() => choose(k)} />
-            {k === "a" ? <FreeIcon /> : <TypeIcon />}
-            {(k === "a" ? a : b).label}
-          </label>
-        ))}
-      </fieldset>
       <div className="cf-plate">
-        <BrowserFrame url={url} ratio={a.width / a.height}>
+        <BrowserFrame url={url} ratio={a.width / a.height} bar={seg}>
           <div className="cf-stack">
             {([a, b] as const).map((s, i) => {
               const k = i === 0 ? "a" : "b";

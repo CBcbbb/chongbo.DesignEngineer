@@ -49,7 +49,7 @@ I coded each prototype idea, so people could try it rather than imagine it. That
 
 I led the workshop with members of all seven organisations, and designed its process around the data the platform needed. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view.
 
-*Evidence:* the stakeholder cards on the left; the three walls down the right, each photo (cropped to 2:1, sheet whole) beside its finding.
+*Evidence:* the stakeholder cards on the left; the three walls down the right, each photo (cropped to 2:1, sheet whole) beside its finding; each wall photo opens larger.
 
 1. **Wall 1 · Content.** Every type got a consistent structure, and methods were linked to the projects and people that used them.
 2. **Wall 2 · Scope.** Entries should touch at least two of three themes: technology, community and environment. The scope went beyond Europe.
@@ -85,7 +85,7 @@ VOICE soft-launched in September 2025. The Centre brought its own research data 
 
 The map opens as a free network, with every entry the same size. One switch moves the same entries into four columns by type, which are easier to scan and to follow by keyboard. Both layouts are calculated in advance, so the switch is a single animated move.
 
-*Signature module:* the switch, in a browser window. *Labels:* Free network · By type
+*Signature module:* the window, with the switch in its bar. *Labels:* Free network · By type
 
 ### 02.3 `guide`: A guide inside the map
 
@@ -103,7 +103,7 @@ The map is a single stop in the tab order. Arrow keys move to the nearest entry 
 
 On a phone, details open as a sheet over the lower part of the map, and the selected entry pans into view above it. The map opens at a readable zoom, and its controls have 40px touch targets. Nothing scrolls sideways, down to 320px.
 
-*Evidence:* two phone screens, side by side.
+*Evidence:* two phone screens, side by side; each opens larger.
 
 ### 02.6 `contrast`: Accessibility – colour contrast
 

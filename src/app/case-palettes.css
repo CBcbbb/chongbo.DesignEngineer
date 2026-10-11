@@ -9,7 +9,8 @@
  * No single brand colour: the platform's identity is four equal colours on white paper, so colour belongs
  * to the work and the four marks only. Cover and the work: the product's own white sheets (the platform's ink in
  * dark mode, with the product's white screen in a dark window).
- * Accent and markers: the platform's ink. Evidence sits on dot-grid paper, like a map or a chart.
+ * Accent and markers: the platform's ink. Product screens and diagrams sit on a dot-grid canvas that is the card
+ * itself (case-file.css, `data-canvas`), like a map or a chart; never in a box.
  */
 [data-palette="hhcd"] {
   --accent: #22212a;
@@ -116,19 +117,28 @@
     box-shadow: inset 0 0 0 1px #4a4853;
   }
   :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-browser {
-    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08), 0 24px 60px -24px rgb(0 0 0 / 0.8);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1);
   }
   :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-browser-bar {
-    background: #2a2930;
+    background: #26252c;
     border-bottom-color: #1c1b21;
     color: #aeacb8;
   }
-  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-dots i {
-    background: #4a4853;
-  }
   :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-url {
-    background: #1c1b21;
     color: #aeacb8;
+  }
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-seg {
+    background: #1c1b21;
+  }
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-seg label {
+    color: #aeacb8;
+  }
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-seg label:hover {
+    color: #f2f1f4;
+  }
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-seg label:has(input:checked) {
+    background: #f2f1f4;
+    color: #1c1b21;
   }
   :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-track-bar {
     background: #3a3942;
@@ -164,19 +174,28 @@
   box-shadow: inset 0 0 0 1px #4a4853;
 }
 :root[data-theme="dark"] [data-palette="hhcd"] .cf-browser {
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08), 0 24px 60px -24px rgb(0 0 0 / 0.8);
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.1);
 }
 :root[data-theme="dark"] [data-palette="hhcd"] .cf-browser-bar {
-  background: #2a2930;
+  background: #26252c;
   border-bottom-color: #1c1b21;
   color: #aeacb8;
 }
-:root[data-theme="dark"] [data-palette="hhcd"] .cf-dots i {
-  background: #4a4853;
-}
 :root[data-theme="dark"] [data-palette="hhcd"] .cf-url {
-  background: #1c1b21;
   color: #aeacb8;
+}
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-seg {
+  background: #1c1b21;
+}
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-seg label {
+  color: #aeacb8;
+}
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-seg label:hover {
+  color: #f2f1f4;
+}
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-seg label:has(input:checked) {
+  background: #f2f1f4;
+  color: #1c1b21;
 }
 :root[data-theme="dark"] [data-palette="hhcd"] .cf-track-bar {
   background: #3a3942;
@@ -205,21 +224,4 @@
   background: var(--on-field);
   color: var(--field) !important;
 }
-/* evidence on dot-grid paper */
-[data-palette="hhcd"] .cf-plate,
-[data-palette="hhcd"] .cf-phones,
-[data-palette="hhcd"] .cf-sheet[data-mount="field"] .cf-plate,
-[data-palette="hhcd"] .cf-sheet[data-mount="field"] .cf-phones {
-  background-color: var(--accent-2);
-  background-image: radial-gradient(var(--dot) 1px, transparent 1.3px);
-  background-size: 14px 14px;
-  background-position: 7px 7px;
-  box-shadow: inset 0 0 0 1px var(--case-rule);
-}
-[data-palette="hhcd"] .cf-sheet[data-mount="field"] .cf-phones .cf-label {
-  color: var(--case-dim);
-}
-[data-palette="hhcd"] .cf-sheet.is-dark .cf-plate {
-  background-image: none;
-  box-shadow: none;
-}
+
