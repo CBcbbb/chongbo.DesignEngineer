@@ -14,7 +14,10 @@ type Props = {
   as?: "h2" | "h3";
 };
 
-/** One printed sheet: a project's best matching section. Used by the home deck and the /ask list. */
+/**
+ * One printed sheet: a section of a case file, printed as the card it is there. The index above, the claim on the
+ * left, the reasoning on the right, the evidence underneath at full width. Used by the home results and the /ask list.
+ */
 export function Sheet({ card, index, total, media, current = true, headingId, as: H = "h3" }: Props) {
   return (
     <>
@@ -24,21 +27,21 @@ export function Sheet({ card, index, total, media, current = true, headingId, as
           {pad2(index + 1)} / {pad2(total)}
         </span>
       </div>
-      <H id={headingId} className="sheet-title">
-        {card.title}
-      </H>
-      {card.body.map((p) => (
-        <p key={p.slice(0, 40)}>{p}</p>
-      ))}
+      <div className="s-head">
+        <H id={headingId} className="sheet-title">
+          {card.title}
+        </H>
+        <div className="s-body">
+          {card.body.map((p) => (
+            <p key={p.slice(0, 40)}>{p}</p>
+          ))}
+        </div>
+      </div>
       {media && <div className="s-media">{media}</div>}
       <div className="s-foot">
-        <ul className="tags" aria-label="Shows">
-          {card.tags.map((t) => (
-            <li key={t}>{t}</li>
-          ))}
-        </ul>
+        <span className="s-from">Case file: {card.projectTitle}</span>
         <Link className="full" href={card.href} tabIndex={current ? 0 : -1}>
-          Full project<span className="sr-only">: {card.projectTitle}</span>
+          Read it in context<span className="sr-only">: {card.projectTitle}, {card.title}</span>
           <span aria-hidden="true">&nbsp;→</span>
         </Link>
       </div>

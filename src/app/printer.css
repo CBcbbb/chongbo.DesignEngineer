@@ -472,13 +472,13 @@
   align-items: baseline;
   gap: 12px;
   max-width: 1100px;
-  margin: 0 auto var(--s6);
+  margin: 0 auto var(--s5);
 }
 .rhead h2,
 .rhead h1 {
   margin: 0;
-  font: 600 26px/1.15 var(--sans);
-  letter-spacing: -0.025em;
+  font: 600 clamp(26px, 3vw, 34px) / 1.12 var(--sans);
+  letter-spacing: -0.03em;
 }
 .rhead h2:focus,
 .rhead h1:focus {
@@ -496,69 +496,64 @@
   font: 500 12.5px/1.5 var(--mono);
   color: var(--ink-2);
 }
-.deck {
-  position: relative;
-  max-width: 1100px;
+/* the printed sheets: one per project, each the case-file card it comes from. A column on phones; side by side,
+   swiped or stepped along, on wider screens, with the next sheet showing at the edge. */
+.sheets {
+  display: grid;
+  gap: var(--s5);
+  max-width: 880px;
   margin: 0 auto;
-  touch-action: pan-y;
-  user-select: none;
-  cursor: grab;
+  padding: 0;
+  list-style: none;
   outline: none;
 }
-.deck.dragging {
-  cursor: grabbing;
-}
-.deck:focus-visible {
+.sheets:focus-visible {
   outline: 2px solid var(--focus);
-  outline-offset: 8px;
-  border-radius: 8px;
+  outline-offset: 6px;
+  border-radius: 6px;
 }
-.sheet {
-  --focus: var(--paper-ink);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-height: 440px;
-  background: var(--paper);
-  color: var(--paper-ink);
-  padding: 22px 22px 20px;
-  border-radius: 2px;
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.06),
-    -10px 0 24px -16px rgba(40, 30, 20, 0.35),
-    0 22px 36px -22px rgba(40, 30, 20, 0.5);
-}
-.deck .sheet {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: var(--w, 340px);
-  transition:
-    transform 0.45s var(--ease),
-    box-shadow 0.3s;
-  will-change: transform;
-}
-.deck.dragging .sheet {
-  transition: none;
-}
-.sheet.cur {
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.06),
-    -14px 0 30px -18px rgba(40, 30, 20, 0.45),
-    0 34px 50px -26px rgba(40, 30, 20, 0.55);
-}
-.deck .sheet:not(.cur) {
-  cursor: pointer;
-}
-.deck .sheet:not(.cur) .full {
-  pointer-events: none;
+@media (min-width: 900px) {
+  .sheets {
+    display: flex;
+    gap: var(--s5);
+    max-width: 1100px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+    padding: var(--s3) var(--s3) var(--s6);
+    scrollbar-width: none;
+  }
+  .sheets::-webkit-scrollbar {
+    display: none;
+  }
+  .sheets .sheet {
+    flex: 0 0 min(640px, 72%);
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+  }
+  .sheets .s-foot {
+    margin-top: auto;
+    padding-top: var(--s4);
+  }
+  .sheets .s-media {
+    margin-bottom: var(--s4);
+  }
+  /* on a sheet this wide the claim sits above the reasoning */
+  .sheets .s-head {
+    grid-template-columns: 1fr;
+    gap: var(--s3);
+  }
+  .sheets .sheet p {
+    max-width: none;
+  }
 }
 .deckbar {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  margin-top: 22px;
+  gap: var(--s3);
+  margin-top: var(--s3);
   font: 500 13px var(--mono);
   color: var(--ink-2);
 }
@@ -569,75 +564,102 @@
   border: 1px solid var(--rule);
   background: transparent;
   color: var(--ink);
-  font: 500 16px var(--sans);
+  font: 400 18px var(--sans);
   cursor: pointer;
 }
 .deckbar button:disabled {
-  opacity: 0.3;
+  opacity: 0.35;
   cursor: default;
+}
+.sheet {
+  --focus: var(--paper-ink);
+  position: relative;
+  background: var(--paper);
+  color: var(--paper-ink);
+  border-radius: 3px;
+  padding: clamp(18px, 2.6vw, 28px) clamp(18px, 3vw, 32px) clamp(14px, 2vw, 20px);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.6) inset,
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 24px 40px -28px rgba(30, 26, 20, 0.45);
+  animation: deal 0.55s var(--ease-out) both;
+}
+@keyframes deal {
+  from {
+    opacity: 0;
+    translate: 0 -18px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
 }
 .s-top {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 10px;
+  margin-bottom: var(--s4);
   font: 500 11.5px var(--mono);
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--paper-dim);
 }
 .s-proj {
-  font: 600 14px var(--sans);
+  font: 600 13px var(--sans);
   letter-spacing: -0.01em;
   text-transform: none;
   color: var(--paper-ink);
 }
+/* the claim on the left, the reasoning on the right, as on a case-file card */
+.s-head {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: var(--s3) clamp(var(--s5), 4vw, var(--s7));
+  align-items: start;
+}
 .sheet .sheet-title {
-  margin: 4px 0 0;
-  font: 600 22px/1.2 var(--sans);
-  letter-spacing: -0.02em;
+  margin: 0;
+  font: 500 clamp(22px, 2.6vw, 30px) / 1.12 var(--sans);
+  letter-spacing: -0.03em;
   text-wrap: balance;
+}
+.s-body {
+  display: grid;
+  gap: var(--s3);
+  padding-top: 4px;
 }
 .sheet p {
   margin: 0;
+  max-width: 60ch;
   font-size: 15px;
   line-height: 1.55;
   color: var(--paper-body);
 }
 .s-media {
-  margin-top: auto;
+  margin-top: var(--s5);
 }
 .s-media .slot-ph {
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 16 / 7;
   border: 1px dashed var(--paper-line);
   border-radius: 2px;
   background: transparent;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 10px;
-  font: 500 11.5px var(--mono);
+  font: 400 12px var(--mono);
+  color: var(--paper-dim);
 }
 .s-foot {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
+  margin-top: var(--s4);
+  padding-top: var(--s3);
+  border-top: 1px solid var(--paper-rule);
 }
-.sheet .tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-.sheet .tags li {
-  font: 500 11.5px var(--mono);
-  padding: 3px 8px;
-  border: 1px solid var(--paper-chip);
-  border-radius: 999px;
-  color: var(--paper-tag);
+.s-from {
+  font: 400 12px var(--mono);
+  color: var(--paper-dim);
 }
 .full {
   flex: none;
@@ -652,7 +674,7 @@
   white-space: nowrap;
 }
 .missing {
-  max-width: 1100px;
+  max-width: 880px;
   margin: 20px auto 0;
   font: 500 13px var(--mono);
   color: var(--ink-2);
@@ -679,18 +701,14 @@
 }
 
 /* /ask without JavaScript: the same sheets, stacked */
+/* /ask (no JavaScript): the same sheets, the same column */
 .sheet-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
-  gap: 22px;
-  max-width: 1100px;
+  gap: var(--s5);
+  max-width: 880px;
   margin: 0 auto;
   padding: 0;
   list-style: none;
-}
-.sheet-list .sheet {
-  height: 100%;
-  min-height: 0;
 }
 .ask-form {
   max-width: 620px;
@@ -921,6 +939,17 @@
   .topic {
     width: 112px;
     min-height: 80px;
+  }
+}
+
+@media (max-width: 760px) {
+  .s-head {
+    grid-template-columns: 1fr;
+  }
+  .s-foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
   }
 }
 

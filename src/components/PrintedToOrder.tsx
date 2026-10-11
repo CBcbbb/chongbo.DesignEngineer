@@ -1,17 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-  type KeyboardEvent,
-  type ReactNode,
-} from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import { SIGNALS } from "@content/schema";
 import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type AskResponse } from "@/lib/ask/schema";
 import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
@@ -75,21 +65,16 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
   const [live, setLive] = useState("");
 
   const busyRef = useRef(false);
-  const curRef = useRef(0);
   const introRef = useRef(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const outfeedRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const deckRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLOListElement>(null);
   const machineRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
-  const sheetRefs = useRef<(HTMLElement | null)[]>([]);
-
-  const deckCards = useMemo(() => result?.cards ?? [], [result]);
-  const deckN = deckCards.length;
 
   // ---------- typed examples on the paper; a still hint once a skill is picked ----------
   const anyPicked = picked.length > 0;
@@ -201,10 +186,9 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
     }
     await sleep(FEED_MS);
 
-    const topicLabel = ids.length === 1 && !text.trim() ? topicById(ids[0]!)?.label : undefined;
     const r: Result = outcome.ok
       ? {
-          title: resultTitle({ count: sheets.length, startHere, topicLabel }),
+          title: resultTitle({ asked: outcome.data.asked, startHere }),
           asked: quoteBrief(text),
           cards: sheets,
           missing: missingLine(outcome.data.missing),
@@ -212,7 +196,6 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
         }
       : { title: outcome.message, asked: quoteBrief(text), cards: [], missing: "", provenance: "", error: true };
     introRef.current = true;
-    curRef.current = 0;
     setCur(0);
     setResult(r);
     setLive(r.title);
@@ -239,138 +222,48 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
     if (e.key === "Escape") setBrief("");
   };
 
-  // ---------- the deck: sheets overlap left to right; the current one opens out and sits on top ----------
-  const deckGeom = useCallback(() => {
-    const wrapW = deckRef.current?.clientWidth || 1000;
-    const W = Math.min(340, wrapW - 44);
-    const step = Math.max(14, Math.min(96, (wrapW - 2 * W) / Math.max(1, deckN - 1)));
-    const total = (deckN - 1) * step + W + (deckN > 1 ? W - step : 0);
-    return { W, step, wrapW, left: Math.max(0, (wrapW - total) / 2) };
-  }, [deckN]);
-
-  const layoutDeck = useCallback(
-    (drag = 0, intro = false) => {
-      const deck = deckRef.current;
-      if (!deck || !deckN) return;
-      const g = deckGeom();
-      const current = curRef.current;
-      const reduce = prefersReduced();
-      let h = 0;
-      sheetRefs.current.slice(0, deckN).forEach((c, i) => {
-        if (!c) return;
-        const fromCur = i - current;
-        let x = g.left + i * g.step + (i > current ? g.W - g.step : 0) + drag;
-        // Keep the peeking edges on screen on narrow phones.
-        if (i > current) x = Math.min(x, g.wrapW - 26 - (deckN - 1 - i) * 8 + drag);
-        const rot = i === current ? 0 : (fromCur < 0 ? -1.2 : 1.2) * Math.min(1, Math.abs(fromCur));
-        const y = i === current ? -10 : 0;
-        c.style.setProperty("--w", `${g.W}px`);
-        c.style.zIndex = String(i <= current ? 10 + i : 10 + deckN - (i - current));
-        const to = `translate(${x}px, ${y}px) rotate(${rot}deg)`;
-        if (intro && !reduce) {
-          c.style.transition = "none";
-          c.style.transform = `translate(${g.left + i * 6}px, -60px) rotate(0)`;
-          void c.offsetWidth;
-          c.style.transition = "";
-          setTimeout(() => {
-            c.style.transform = to;
-          }, 80 + 90 * i);
-        } else c.style.transform = to;
-        h = Math.max(h, c.offsetHeight);
-      });
-      deck.style.height = `${h + 30}px`;
-    },
-    [deckGeom, deckN],
-  );
-
-  // A new print: lay out with the intro, then move focus to the title and bring the results into view.
+  // A new print: move focus to the title and bring the results into view.
   useLayoutEffect(() => {
-    if (!result) return;
-    if (introRef.current) {
-      introRef.current = false;
-      layoutDeck(0, true);
-      titleRef.current?.focus({ preventScroll: true });
-      resultsRef.current?.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
-    }
-  }, [result, layoutDeck]);
+    if (!result || !introRef.current) return;
+    introRef.current = false;
+    if (stripRef.current) stripRef.current.scrollLeft = 0;
+    titleRef.current?.focus({ preventScroll: true });
+    resultsRef.current?.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
+  }, [result]);
 
-  useLayoutEffect(() => {
-    curRef.current = cur;
-    layoutDeck();
-  }, [cur, layoutDeck]);
-
-  useEffect(() => {
-    if (!deckN) return;
-    const onResize = () => layoutDeck();
-    window.addEventListener("resize", onResize);
-    // Geist arriving can change sheet heights.
-    void document.fonts?.ready.then(onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [deckN, layoutDeck]);
-
-  const goDeck = useCallback(
+  // The sheets sit side by side on wide screens: arrows, keys and swiping move along the strip; the counter follows the scroll.
+  const n = result?.cards.length ?? 0;
+  const goSheet = useCallback(
     (i: number) => {
-      if (!deckN) return;
-      const n = Math.max(0, Math.min(deckN - 1, i));
-      curRef.current = n;
-      setCur(n);
-      layoutDeck();
-      setLive(`Sheet ${n + 1} of ${deckN}: ${deckCards[n]?.title ?? ""}`);
+      const strip = stripRef.current;
+      if (!strip || !n) return;
+      const k = Math.max(0, Math.min(n - 1, i));
+      const el = strip.children[k] as HTMLElement | undefined;
+      el?.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", inline: "start", block: "nearest" });
+      setCur(k);
+      setLive(`Sheet ${k + 1} of ${n}: ${result?.cards[k]?.title ?? ""}`);
     },
-    [deckN, deckCards, layoutDeck],
+    [n, result],
   );
-
-  // Drag or swipe the deck; a click on a peeking sheet brings it to the top.
-  useEffect(() => {
-    const deck = deckRef.current;
-    if (!deck || !deckN) return;
-    let dd: { x: number; moved: boolean } | null = null;
-    const down = (e: PointerEvent) => {
-      if ((e.target as Element).closest(".full")) return;
-      dd = { x: e.clientX, moved: false };
-    };
-    const move = (e: PointerEvent) => {
-      if (!dd) return;
-      const dx = e.clientX - dd.x;
-      if (Math.abs(dx) > 6) {
-        dd.moved = true;
-        deck.classList.add("dragging");
-        layoutDeck(dx * 0.6);
-      }
-    };
-    const up = (e: PointerEvent) => {
-      if (!dd) return;
-      const dx = e.clientX - dd.x;
-      const moved = dd.moved;
-      dd = null;
-      deck.classList.remove("dragging");
-      if (moved) {
-        const g = deckGeom();
-        const n = Math.round(-dx / Math.max(60, g.step + 20));
-        goDeck(curRef.current + (n || (Math.abs(dx) > 40 ? (dx < 0 ? 1 : -1) : 0)));
-        return;
-      }
-      const c = (e.target as Element).closest<HTMLElement>(".sheet");
-      if (c && !c.classList.contains("cur")) goDeck(Number(c.dataset.i));
-    };
-    deck.addEventListener("pointerdown", down);
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
-    return () => {
-      deck.removeEventListener("pointerdown", down);
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-    };
-  }, [deckN, deckGeom, goDeck, layoutDeck]);
-
-  const onDeckKey = (e: KeyboardEvent<HTMLDivElement>) => {
+  const onStripScroll = () => {
+    const strip = stripRef.current;
+    if (!strip || !n) return;
+    const items = Array.from(strip.children) as HTMLElement[];
+    const x = strip.scrollLeft;
+    let best = 0;
+    items.forEach((el, i) => {
+      if (Math.abs(el.offsetLeft - x) < Math.abs(items[best]!.offsetLeft - x)) best = i;
+    });
+    setCur(best);
+  };
+  const onStripKey = (e: KeyboardEvent<HTMLOListElement>) => {
     if (e.key === "ArrowRight") {
       e.preventDefault();
-      goDeck(curRef.current + 1);
+      goSheet(cur + 1);
     }
     if (e.key === "ArrowLeft") {
       e.preventDefault();
-      goDeck(curRef.current - 1);
+      goSheet(cur - 1);
     }
   };
 
@@ -495,52 +388,42 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
             </div>
             {result.provenance && <p className="provenance">{result.provenance}</p>}
           </div>
-          {deckN > 0 && (
-            <>
-              <div
-                className="deck"
-                ref={deckRef}
-                tabIndex={0}
-                role="region"
-                aria-roledescription="carousel"
-                aria-label="Printed sheets"
-                onKeyDown={onDeckKey}
-              >
-                {deckCards.map((card, i) => (
-                  <article
-                    key={card.project}
-                    ref={(el) => {
-                      sheetRefs.current[i] = el;
-                    }}
-                    className={`sheet${i === cur ? " cur" : ""}`}
-                    data-i={i}
-                    aria-roledescription="slide"
-                    aria-labelledby={`sh-${i}`}
-                    aria-hidden={i !== cur}
-                  >
+          {result.cards.length > 0 && (
+            <ol
+              className="sheets"
+              ref={stripRef}
+              aria-label="Printed sheets"
+              tabIndex={0}
+              onScroll={onStripScroll}
+              onKeyDown={onStripKey}
+            >
+              {result.cards.map((card, i) => (
+                <li key={card.project} className="sheet" style={{ animationDelay: `${80 + 110 * i}ms` }}>
+                  <article aria-labelledby={`sh-${i}`}>
                     <Sheet
                       card={card}
                       index={i}
-                      total={deckN}
-                      current={i === cur}
+                      total={result.cards.length}
                       headingId={`sh-${i}`}
                       media={card.hasMedia ? media[cardKey(card.project, card.section)] : undefined}
                     />
                   </article>
-                ))}
-              </div>
-              <div className="deckbar">
-                <button type="button" aria-label="Previous sheet" disabled={cur === 0} onClick={() => goDeck(cur - 1)}>
-                  ←
-                </button>
-                <span>
-                  {pad2(cur + 1)} / {pad2(deckN)}
-                </span>
-                <button type="button" aria-label="Next sheet" disabled={cur === deckN - 1} onClick={() => goDeck(cur + 1)}>
-                  →
-                </button>
-              </div>
-            </>
+                </li>
+              ))}
+            </ol>
+          )}
+          {n > 1 && (
+            <div className="deckbar">
+              <button type="button" aria-label="Previous sheet" disabled={cur === 0} onClick={() => goSheet(cur - 1)}>
+                ←
+              </button>
+              <span>
+                {pad2(cur + 1)} / {pad2(n)}
+              </span>
+              <button type="button" aria-label="Next sheet" disabled={cur === n - 1} onClick={() => goSheet(cur + 1)}>
+                →
+              </button>
+            </div>
           )}
           {result.missing && <p className="missing">{result.missing}</p>}
           <div className="again">

@@ -10,7 +10,7 @@ async function printAccessibility(page: Page) {
   await page.getByRole("button", { name: "Accessibility", exact: true }).click();
   await page.getByRole("button", { name: "Print" }).click();
   await page.locator("#r-title").waitFor({ timeout: 10_000 });
-  await page.waitForTimeout(1200); // let the deck deal
+  await page.waitForTimeout(1200); // let the sheets deal
 }
 
 for (const s of SIZES) {
@@ -21,9 +21,7 @@ for (const s of SIZES) {
     await page.screenshot({ path: `${OUT}/home-idle-${s.name}.png`, fullPage: true });
     await printAccessibility(page);
     await page.screenshot({ path: `${OUT}/home-accessibility-${s.name}.png`, fullPage: true });
-    await page.getByRole("button", { name: "Next sheet" }).click();
-    await page.waitForTimeout(700);
-    await page.locator(".results").screenshot({ path: `${OUT}/deck-next-${s.name}.png` });
+    await page.locator(".results").screenshot({ path: `${OUT}/sheets-${s.name}.png` });
     await page.goto("/work/hhcd-data-platform#dual-view");
     await page.waitForTimeout(500);
     await page.screenshot({ path: `${OUT}/case-rail-${s.name}.png` });

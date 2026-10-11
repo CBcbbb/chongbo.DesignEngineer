@@ -1,29 +1,8 @@
-import { mainProjects, projects, type Project, type Section, type Signal } from "@content";
+import { mainProjects, projects, type Project, type Section } from "@content";
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
 
-/** Short labels for stamps and chips. The long names live in content SIGNALS. */
-export const SIGNAL_SHORT: Record<Signal | "start-here", string> = {
-  "end-to-end": "End to end",
-  "design-systems": "Design systems",
-  "cross-platform": "Cross-platform",
-  "design-eng-gap": "Design–engineering",
-  accessibility: "Accessibility",
-  "seo-performance": "SEO and performance",
-  "publishing-workflow": "Publishing",
-  "reusable-components": "Reusable components",
-  "brand-storytelling": "Brand",
-  conversion: "Conversion",
-  "motion-interaction": "Motion",
-  typography: "Typography",
-  data: "Data",
-  "data-architecture": "Data architecture",
-  prototyping: "Prototyping",
-  "ai-tools": "AI tools",
-  research: "Research",
-  judgement: "Judgement",
-  "start-here": "Start here",
-};
+export { SIGNAL_SHORT } from "./printed";
 
 /** Short place labels for the tray tickets (presentation only). */
 const TRAY_PLACE: Record<string, string> = {

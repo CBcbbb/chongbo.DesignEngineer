@@ -17,7 +17,7 @@ import {
 } from "@/lib/ask/schema";
 import { getProject, type Signal } from "@content";
 import { buildCardIndex, cardKey, type SheetCard } from "@/lib/cards";
-import { missingLine, quoteBrief, resultTitle, TOPICS } from "@/lib/printed";
+import { missingLine, provenanceLine, quoteBrief, resultTitle } from "@/lib/printed";
 
 export const metadata: Metadata = {
   title: "Your answer",
@@ -56,11 +56,7 @@ export default async function AskPage({ searchParams }: Props) {
   const sheets = (result?.sheets ?? [])
     .map((s) => index[cardKey(s.project, s.section)])
     .filter((c): c is SheetCard => Boolean(c));
-  // One skills card's worth of topics and no words reads "Three projects show accessibility."
-  const card = !brief.trim() ? TOPICS.find((t) => t.signals.join(",") === topics.join(",") || (topics.length === 1 && t.signals[0] === topics[0])) : undefined;
-  const title = result
-    ? resultTitle({ count: sheets.length, startHere: result.matched === "start-here", topicLabel: card?.label })
-    : (error ?? "What skills are you looking for?");
+  const title = result ? resultTitle({ asked: result.asked, startHere: result.matched === "start-here" }) : (error ?? "What skills are you looking for?");
 
   return (
     <div className="wrap">
@@ -74,13 +70,14 @@ export default async function AskPage({ searchParams }: Props) {
                 <h1 id="r-title">{title}</h1>
                 {brief.trim() && <p>{quoteBrief(brief)}</p>}
               </div>
+              <p className="provenance">{provenanceLine(result.source, sheets.length)}</p>
             </div>
             <ol className="sheet-list" aria-label="Printed sheets">
               {sheets.map((c, i) => {
                 const section = getProject(c.project)?.sections.find((s) => s.id === c.section);
                 return (
-                  <li key={c.project}>
-                    <article className="sheet" aria-labelledby={`sh-${i}`}>
+                  <li key={c.project} className="sheet">
+                    <article aria-labelledby={`sh-${i}`}>
                       <Sheet
                         card={c}
                         index={i}
