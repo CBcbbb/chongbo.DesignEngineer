@@ -116,7 +116,9 @@ function GroupSlot({ media }: { media: Extract<Media, { kind: "group" }> }) {
  */
 export function MediaSlot({ media, priority = false, compact = false }: { media: Media; priority?: boolean; compact?: boolean }) {
   if (compact) {
-    if (media.kind === "code") return <CompactPlaceholder label="Code sample" alt={media.caption ?? `${media.language} code`} />;
+    // A code sample or a project's interactive module doesn't fit a printed sheet: the sheet prints without evidence
+    // (the full case file has it), never a "to come" box that reads as unfinished work.
+    if (media.kind === "code" || media.kind === "module") return null;
     if (media.kind === "group") return <CompactPlaceholder label="Images" alt={media.caption ?? "image group"} />;
     if ((media.kind === "image" || media.kind === "video") && !assetExists(media.asset))
       return <CompactPlaceholder label={media.kind === "image" ? "Image" : "Video"} alt={media.alt} />;
