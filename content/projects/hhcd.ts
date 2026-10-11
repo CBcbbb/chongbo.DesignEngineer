@@ -11,7 +11,7 @@ export const hhcd: Project = {
   title: "Helen Hamlyn Centre Data Platform",
   oneLiner: "A research repository that anyone can explore, with a mouse, a keyboard or on a phone.",
   context: "First built for VOICE, an EU-funded arts research project. Now used by the Helen Hamlyn Centre for Design, Royal College of Art.",
-  role: "Data collection, analysis and modelling; design and build.",
+  role: "Research Assistant: data collection, analysis and modelling; design and build.",
   outcome: "Live and in use. Used to teach the Centre's summer interns. Paper on its accessibility approach accepted at DRS 2026.",
   status: "Live",
   stack: ["Next.js", "TypeScript", "D3", "Tailwind", "Playwright", "axe"],
@@ -36,7 +36,7 @@ export const hhcd: Project = {
     { capability: "D", label: "Craft and interaction", section: "arrangements" },
   ],
   parts: [
-    { id: "voice", label: "Part 1", title: "VOICE" },
+    { id: "voice", label: "Part 1", title: "VOICE, the first version" },
     { id: "hhcd", label: "Part 2", title: "Helen Hamlyn Centre" },
   ],
   cover: {
@@ -129,7 +129,7 @@ export const hhcd: Project = {
       kind: "evidence",
       title: "A 75-minute workshop with 14 stakeholders",
       body: [
-        "We ran the workshop with members of all seven organisations, and I designed its process. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view.",
+        "I led the workshop with members of all seven organisations, and designed its process around the data the platform needed. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view.",
       ],
       signals: ["research", "accessibility"],
       capabilities: ["E"],
@@ -390,10 +390,7 @@ export const hhcd: Project = {
       body: [
         "I made the design files, wrote the specification and built the platform. Doing both, I could turn each design straight into working code, which made the work faster.",
       ],
-      facts: [
-        { label: "Context", text: "Research assistant at Brunel University, on VOICE." },
-        { label: "Team", text: "VOICE's team ran the workshop and chose the network together." },
-      ],
+      facts: [{ label: "Context", text: "Brunel University, on the VOICE project." }],
       signals: ["end-to-end", "design-eng-gap"],
       capabilities: ["B"],
       lenses: { ux: "in", engineer: "in", web: "in" },

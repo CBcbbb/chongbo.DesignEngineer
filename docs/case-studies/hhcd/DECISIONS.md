@@ -37,9 +37,17 @@ The case file now follows the playbook of 11 October (the Nike review's standard
 
 ## After your review (11 Oct, lunch)
 
-21. **The cover now matches Nike's:** the same box, padding, spacing, lede size, Role/Outcome row and labels, and the same height (740px at 1440 × 900). The title is a step smaller than Nike's because it's longer: three lines, with the live link beside "Platform". Like Nike's, the cover now fills the first screen at 1280 × 720 and 1366 × 768. The playbook asks for a compact cover; you chose matching Nike.
+21. **One cover design for every project.** You asked for the cover to be less crowded and to set the size for all projects. The title is a step smaller (4rem at most). The line under it is regular weight, in the secondary colour and narrower. Space, not extra rules, separates three groups: name and live link · the line · the facts. The whole cover fits the first screen at 1280 × 720. The values are in the playbook (§7), and Nike is asked to follow in SHARED-CHANGES.md.
 22. **The # after each heading is gone.** It copied a link to the card on hover, and wasn't clear.
 
 ## Outside this repo
 
 20. **VoiceOver reads an entry's name twice** when the details panel opens (from the 11 Oct report). The testing card says it passed, as you asked. The fix belongs in the rebuild repo; the prompt for that conversation is in our chat.
+
+## Your answers (11 Oct, 15:40, in the status doc)
+
+- 1 "What I'd do now": not needed. Stays out.
+- 2 Role: "Research Assistant: data collection, analysis and modelling; design and build." The closing card's Context is now "Brunel University, on the VOICE project." so the title isn't said twice.
+- 3 Brunel: yes, named.
+- 4 Team: you led the workshop (with one researcher) and designed its process around the data the platform needed. Only your part is told: "I led the workshop with members of all seven organisations, and designed its process around the data the platform needed." The Team line is gone.
+- 9 Parts stay by time. Part 1 is now "VOICE, the first version": it was built, tested in the workshop and soft-launched, so "pilot" or "early concept" would undersell it. Say if you'd rather have "VOICE pilot".
