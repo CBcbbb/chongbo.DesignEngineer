@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Project, Section } from "@content";
-import { ChipIcon, Compare, Contents, GiftBox, Pip, RecordingPlayer, SeekButton, Switcher, VoiceTeaser, type ContentsPart, type Moment } from "./NikeClient";
+import { ChipIcon, Compare, Contents, GiftBox, Pip, PosterStrip, RecordingPlayer, SeekButton, Switcher, VoiceTeaser, type ContentsPart, type Moment } from "./NikeClient";
 import "./nike.css";
 
 /** Asset path. Every image is served at quality 90 (`Q`), so text in screenshots stays sharp. */
@@ -163,6 +163,18 @@ function FeedWireframes() {
   );
 }
 
+/** 01.2: the six influencer poster cards, one file each. */
+const POSTER_W = 990;
+const POSTER_H = 1320;
+const POSTERS = [
+  { file: "poster-1.png", alt: "Max, a wild explorer, standing on a sofa in her room." },
+  { file: "poster-2.png", alt: "Kyoka, a culture crosser, in sunglasses and a cap." },
+  { file: "poster-3.png", alt: "Emma, a hip-hop dancer, mid-move under a neon sign." },
+  { file: "poster-4.png", alt: "Emma, a drummer, on a flight case with drumsticks." },
+  { file: "poster-5.png", alt: "A popping dancer by a window." },
+  { file: "poster-6.png", alt: "Emma, a happy little monster, in a pink T-shirt." },
+];
+
 /** A card's head: index and claim on the left, the reasoning on the right. */
 function Head({ s, idx, clip }: { s: Section; idx: string; clip?: Moment }) {
   return (
@@ -315,13 +327,19 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
               <Head s={sec("style")} idx="01.2" clip={M.poster} />
               <figure className="nk-ev nk-ev-one">
                 <div className="nk-box nk-grain nk-posters">
-                  <Image quality={Q}
-                    src={A("guest-posters.png")}
-                    alt="Six poster cards, one per influencer, in the same layout: photo, name line, headline and QR code."
-                    width={1181}
-                    height={939}
-                    sizes="(min-width: 1180px) 840px, 100vw"
-                  />
+                  <PosterStrip label="Six poster cards, one per influencer">
+                    {POSTERS.map((p, i) => (
+                      <Image
+                        key={p.file}
+                        quality={Q}
+                        src={A(p.file)}
+                        alt={`Poster card ${i + 1} of 6: ${p.alt}`}
+                        width={POSTER_W}
+                        height={POSTER_H}
+                        sizes="(min-width: 761px) 300px, 70vw"
+                      />
+                    ))}
+                  </PosterStrip>
                 </div>
               </figure>
             </Card>

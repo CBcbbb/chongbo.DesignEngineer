@@ -514,6 +514,54 @@ export function VoiceTeaser({ src, label, seconds }: { src: string; label: strin
 }
 
 /* ---------------------------------------------------------------------------------------------
+ * A strip of posters, swiped sideways: as large as the card allows, with the next one showing at
+ * the edge. Previous / next buttons move one poster at a time for mouse and keyboard users.
+ * ------------------------------------------------------------------------------------------- */
+
+export function PosterStrip({ label, children }: { label: string; children: ReactNode[] }) {
+  const track = useRef<HTMLUListElement>(null);
+  const [edge, setEdge] = useState({ start: true, end: false });
+  const update = useCallback(() => {
+    const t = track.current;
+    if (!t) return;
+    setEdge({ start: t.scrollLeft < 4, end: t.scrollLeft + t.clientWidth > t.scrollWidth - 4 });
+  }, []);
+  useEffect(() => {
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [update]);
+  const move = (dir: 1 | -1) => {
+    const t = track.current;
+    const item = t?.querySelector("li");
+    if (!t || !item) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    t.scrollBy({ left: dir * (item.getBoundingClientRect().width + 16), behavior: reduce ? "auto" : "smooth" });
+  };
+  return (
+    <div className="nk-strip">
+      <ul ref={track} className="nk-strip-track" aria-label={label} onScroll={update} tabIndex={0}>
+        {children.map((c, i) => (
+          <li key={i}>{c}</li>
+        ))}
+      </ul>
+      <div className="nk-strip-nav">
+        <button type="button" aria-label="Previous poster" disabled={edge.start} onClick={() => move(-1)}>
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M10 3L5 8l5 5" />
+          </svg>
+        </button>
+        <button type="button" aria-label="Next poster" disabled={edge.end} onClick={() => move(1)}>
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <path d="M6 3l5 5-5 5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------------------------------------
  * Picture in picture: the shipped screens large, the wireframe as a labelled inset pinned to the
  * canvas's top-right corner and overhanging it. Pressing the inset swaps which one is large.
  * ------------------------------------------------------------------------------------------- */
