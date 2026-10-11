@@ -71,6 +71,8 @@ The case file is built into the site from the approved v3 prototype, with your t
 
 46. **02.2 body back to your wording** (16:02), with the effect kept: "The old product cards were small tiles under the photo. I redesigned the layout and enlarged the product visuals, to make each item more visible and give it a clear role in the content flow, so products are more noticeable and click-worthy."
 
+47. **01.2: the six posters, one file each** (your Figma exports at 3x, 990 × 1320), as a strip swiped sideways: about two and a half posters in view at 1440 × 900, the next one at the edge, previous and next buttons below. Replaces the old single composite image.
+
 ## Process## Process
 
 12. **Going live.** You said it can go live once done, so after the tests passed I rebased onto `main` and merged. To undo: revert the merge commit on `main`.

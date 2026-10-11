@@ -165,14 +165,14 @@ function FeedWireframes() {
 
 /** 01.2: the six influencer poster cards, one file each. */
 const POSTER_W = 990;
-const POSTER_H = 1320;
+const POSTER_H = 1320; // Figma exports at 3x
 const POSTERS = [
-  { file: "poster-1.png", alt: "Max, a wild explorer, standing on a sofa in her room." },
-  { file: "poster-2.png", alt: "Kyoka, a culture crosser, in sunglasses and a cap." },
-  { file: "poster-3.png", alt: "Emma, a hip-hop dancer, mid-move under a neon sign." },
-  { file: "poster-4.png", alt: "Emma, a drummer, on a flight case with drumsticks." },
-  { file: "poster-5.png", alt: "A popping dancer by a window." },
-  { file: "poster-6.png", alt: "Emma, a happy little monster, in a pink T-shirt." },
+  { file: "poster-1.jpg", alt: "Max, a wild explorer, standing on a sofa in her room." },
+  { file: "poster-2.jpg", alt: "Kyoka, a culture crosser, in sunglasses and a cap." },
+  { file: "poster-3.jpg", alt: "Emma, a hip-hop dancer, mid-move under a neon sign." },
+  { file: "poster-4.jpg", alt: "Emma, a drummer, on a flight case with drumsticks." },
+  { file: "poster-5.jpg", alt: "Zhou Yuxiang, a popping dancer, by a window." },
+  { file: "poster-6.jpg", alt: "Emma, a happy little monster, in a pink T-shirt." },
 ];
 
 /** A card's head: index and claim on the left, the reasoning on the right. */

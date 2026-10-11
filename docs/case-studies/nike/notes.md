@@ -95,3 +95,4 @@ None of these are used unless Chongbo confirms them as real. One detail to check
 - Star Voice: keep the original Wix paragraph and the notes on the original image (Voice teaser, Livestream reveal, Vote with likes, Ask a question). He judged the rewrite as drifting from the meaning.
 - High-quality originals: his repo folder `public/assets/nike/high-quality photos` (not committed); copied into the asset names the page uses.
 - Audio in the recording: 0:04–0:10 (the story page's own sound) and 0:43–0:48 (the Star Voice voice teaser). `recording.mp4` carries it (AAC 96k); `star-voice-teaser.mp3` is the 0:43.1–0:47.9 cut.
+- Poster originals: Figma, Page 1, frame "Poster Cards" (74:4671): five "故事分享页" frames and the "野生探险家" image, exported by Chongbo at 3x into `poster-1…6.jpg` (Max, Kyoka, Emma hip-hop, Emma drummer, popping dancer, Emma pink).
