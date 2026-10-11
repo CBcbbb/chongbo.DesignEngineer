@@ -106,10 +106,7 @@ The paragraph is the original Wix text, cut where the notes take over (how the l
 - **Delivery:** One component system made each volume faster to deliver, with less back-and-forth between design and Nike's engineers.
 - **Conversion:** Product tags and larger product cards made the products easier to find in the stories and gave readers a clearer path from story to product. Nike's feedback was positive.
 - **Engagement:** Likes, the prize draw and Star Voice Q&A lifted engagement beyond what Nike expected, and Star Voice was recommended for other campaigns.
-- **Role:** As the agency's sole designer, I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
+- **Role:** As the agency's sole UI designer, I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
 
-### 04.2 What I'd do now: take motion from idea to production myself
+*04.2 (What I'd do now) is off the page for now; its text is in DECISIONS.md, item 44.*
 
-I specified the like in four states and handed it over in Figma. It shipped as a plain red heart.
-
-*Evidence: Specified / Shipped.*

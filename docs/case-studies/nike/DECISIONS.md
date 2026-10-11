@@ -65,6 +65,8 @@ The case file is built into the site from the approved v3 prototype, with your t
 42. **04.1 is now the results card** (13:57), in our three parts' business terms, from your original case study's results: Delivery (Read), Conversion (Shop), Engagement (Return), then the role. Heading: "Design that helped win Nike's next seasons". The two result lines that sat in 01.5 and 03.2 moved here, so each result is said once. No numbers: the original page has none, and the figures in the Figma drafts aren't confirmed.
 43. **"Sole designer", not "only designer"**: the same fact without the defensive tone you didn't want earlier.
 
+44. **Round of 14:44:** the moments are grouped by Read / Shop / Return again (times stay as measured); in 01.4 the inset keeps the same place and size whichever image is large; "sole UI designer"; every clip plays at 0.75× speed; **04.2 (What I'd do now) is off the page for now.** Its text, kept for later: "What I'd do now: take motion from idea to production myself. I specified the like in four states and handed it over in Figma. It shipped as a plain red heart." (assets `like-states.png`, `like-shipped.jpg` stay in the repo).
+
 ## Process## Process
 
 12. **Going live.** You said it can go live once done, so after the tests passed I rebased onto `main` and merged. To undo: revert the merge commit on `main`.

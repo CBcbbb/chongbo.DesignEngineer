@@ -9,6 +9,7 @@ import { createPortal } from "react-dom";
  * ------------------------------------------------------------------------------------------- */
 
 export type Moment = { start: number; end: number; label: string; part?: string };
+const PARTS_ORDER = ["Read", "Shop", "Return"];
 
 /** A speaker; `off` adds the mute stroke. */
 function Speaker({ off = false }: { off?: boolean }) {
@@ -162,23 +163,31 @@ export function RecordingPlayer({ chapters, full }: { chapters: Moment[]; full: 
         <a className="nk-outlink" href={full} target="_blank" rel="noopener">
           Full quality on YouTube<span className="sr-only"> (opens in a new tab)</span> <span aria-hidden="true">↗</span>
         </a>
-        {/* in the order they happen in the recording; each lights up only while it's on screen */}
-        <ol className="nk-chapters" aria-label="Moments in the recording">
-          {chapters.map((c) => (
-            <li key={c.start}>
-              <button
-                type="button"
-                aria-current={current === c ? "true" : undefined}
-                style={current === c ? { ["--cp" as string]: String(within) } : undefined}
-                onClick={() => jump(c.start)}
-              >
-                <span className="nk-t">{clock(c.start)}</span>
-                <span className="nk-cl">{c.label}</span>
-                {c.part && <span className="nk-cpart">{c.part}</span>}
-              </button>
-            </li>
+        {/* grouped by part, as the page is; each moment lights up only while it's on screen */}
+        <div className="nk-chapters">
+          {PARTS_ORDER.map((part) => (
+            <section key={part} aria-label={`${part} moments`}>
+              <h3>{part}</h3>
+              <ol>
+                {chapters
+                  .filter((c) => c.part === part)
+                  .map((c) => (
+                    <li key={c.start}>
+                      <button
+                        type="button"
+                        aria-current={current === c ? "true" : undefined}
+                        style={current === c ? { ["--cp" as string]: String(within) } : undefined}
+                        onClick={() => jump(c.start)}
+                      >
+                        <span className="nk-t">{clock(c.start)}</span>
+                        {c.label}
+                      </button>
+                    </li>
+                  ))}
+              </ol>
+            </section>
           ))}
-        </ol>
+        </div>
       </div>
     </div>
   );
@@ -267,6 +276,9 @@ function Clip({ moment, anchor, onClose }: { moment: Moment; anchor: RefObject<H
     if (!v) return;
     const go = () => {
       v.currentTime = moment.start;
+      // The moments are short, and the recording moves fast: play them at three-quarter speed.
+      v.defaultPlaybackRate = 0.75;
+      v.playbackRate = 0.75;
       setDone(false);
       void v.play().catch(() => {});
     };
@@ -508,7 +520,19 @@ export function VoiceTeaser({ src, label, seconds }: { src: string; label: strin
 
 type PipState = { label: string; image: ReactNode };
 
-export function Pip({ main, inset, ratio }: { main: PipState; inset: PipState; /** width / height of both images */ ratio: number }) {
+export function Pip({
+  main,
+  inset,
+  ratio,
+  insetRatio = ratio,
+}: {
+  main: PipState;
+  inset: PipState;
+  /** width / height of the main image: the canvas keeps this shape whichever image is large */
+  ratio: number;
+  /** width / height of the inset image: the inset keeps this shape whichever image is small */
+  insetRatio?: number;
+}) {
   const [swapped, setSwapped] = useState(false);
   const big = swapped ? inset : main;
   const small = swapped ? main : inset;
@@ -523,7 +547,7 @@ export function Pip({ main, inset, ratio }: { main: PipState; inset: PipState; /
             aria-label={`Show the ${small.label.toLowerCase()} large`}
             onClick={() => setSwapped((v) => !v)}
           >
-            <span className="nk-pip-thumb" aria-hidden="true">
+            <span className="nk-pip-thumb" aria-hidden="true" style={{ ["--iar" as string]: String(insetRatio) }}>
               {small.image}
             </span>
             <span className="nk-pip-lbl" aria-hidden="true">
@@ -537,7 +561,7 @@ export function Pip({ main, inset, ratio }: { main: PipState; inset: PipState; /
 }
 
 /* ---------------------------------------------------------------------------------------------
- * The shoebox: a Lottie that plays once when it comes into view, and again on Replay.
+ * The shoebox: a Lottie that loops while it's in view.
  * ------------------------------------------------------------------------------------------- */
 
 export function GiftBox({ src, label }: { src: string; label: string }) {

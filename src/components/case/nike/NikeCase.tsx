@@ -47,10 +47,7 @@ const PARTS: ContentsPart[] = [
     id: "part-outcome",
     n: "04",
     label: "Outcome",
-    cards: [
-      { id: "outcome", label: "Results" },
-      { id: "handoff", label: "What I'd do now" },
-    ],
+    cards: [{ id: "outcome", label: "Results" }],
   },
 ];
 
@@ -361,6 +358,7 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
                 {/* The decision is structural, so the wireframes lead; the app screens are one press away. */}
                 <Pip
                   ratio={1000 / 620}
+                  insetRatio={1555 / 813}
                   main={{ label: "Wireframes", image: <FeedWireframes /> }}
                   inset={{
                     label: "App screens",
@@ -548,35 +546,6 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
               </div>
             </section>
 
-            <Card s={sec("handoff")}>
-              <Head s={sec("handoff")} idx="04.2" clip={M.like} />
-              <div className="nk-ev nk-ev-one">
-                <div className="nk-box nk-vs">
-                  <figure>
-                    <div className="nk-vs-lbl">
-                      <b>Specified</b>
-                    </div>
-                    <div className="nk-vs-img">
-                      <Image quality={Q}
-                        src={A("like-states.png")}
-                        alt="The like specified in Figma: an outline heart, a pill reading 点赞赢好礼 (like to win a gift), then a black heart with the count, and hearts floating out."
-                        width={1474}
-                        height={962}
-                        sizes="(min-width: 1180px) 560px, 100vw"
-                      />
-                    </div>
-                  </figure>
-                  <figure className="is-shipped">
-                    <div className="nk-vs-lbl">
-                      <b>Shipped</b>
-                    </div>
-                    <div className="nk-vs-img">
-                      <Image quality={Q} src={A("like-shipped.jpg")} alt="The shipped like: a plain red heart over the photo." width={828} height={1034} sizes="320px" />
-                    </div>
-                  </figure>
-                </div>
-              </div>
-            </Card>
 
             <nav className="nk-next" aria-label="Next case file">
               <span>Next case file</span>

@@ -190,7 +190,7 @@ export const nike: Project = {
       kind: "outcome",
       title: "Design that helped win Nike's next seasons",
       body: [
-        "As the agency's sole designer, I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.",
+        "As the agency's sole UI designer, I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.",
       ],
       // The results of the three parts, in the business's terms (from the original case study).
       steps: [
@@ -208,22 +208,6 @@ export const nike: Project = {
         },
       ],
       signals: ["end-to-end", "conversion", "brand-storytelling"],
-    },
-    {
-      id: "handoff",
-      kind: "retrospective",
-      title: "What I'd do now: take motion from idea to production myself",
-      body: [
-        "I specified the like in four states and handed it over in Figma. It shipped as a plain red heart.",
-      ],
-      signals: ["design-eng-gap", "motion-interaction", "judgement"],
-      media: {
-        kind: "image",
-        asset: "nike/print/handoff.jpg",
-        alt: "The like as specified in four states, beside the plain red heart that shipped.",
-        need: "The like as specified and as shipped.",
-        ratio: "16:10",
-      },
     },
   ],
   prompts: ["Show me some brand or marketing work.", "Have you shipped something consumer-facing?", "How do you use motion?"],
