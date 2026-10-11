@@ -66,11 +66,19 @@ export const SIGNAL_SHORT: Record<Signal | "start-here", string> = {
 /**
  * The results title is what was asked for, never a count: the sheets underneath are the answer.
  *  - nothing understood, so the machine chose: "Where to start."
- *  - otherwise the asked signals, up to three, as short labels: "Accessibility", "Brand · Motion · SEO and performance".
+ *  - skills cards picked (no words): the cards' own names, "Front‑end · Motion"
+ *  - words typed: what the machine understood, as short signal labels, "Brand · Motion · SEO and performance"
  */
-export function resultTitle(opts: { asked: readonly Signal[]; startHere: boolean }): string {
-  if (opts.startHere || !opts.asked.length) return "Where to start.";
+export function resultTitle(opts: { asked: readonly Signal[]; startHere: boolean; picked?: readonly string[] }): string {
+  if (opts.startHere) return "Where to start.";
+  if (opts.picked?.length) return opts.picked.slice(0, 4).join(" · ");
+  if (!opts.asked.length) return "Where to start.";
   return opts.asked.slice(0, 3).map((k) => SIGNAL_SHORT[k]).join(" · ");
+}
+
+/** The skills cards a list of signal keys came from (the no-JavaScript page), in card order. */
+export function topicsToLabels(signals: readonly string[]): string[] {
+  return TOPICS.filter((t) => t.signals.every((s) => signals.includes(s))).map((t) => t.label);
 }
 
 /** Under the results title: who chose the sheets, so the reader knows the words are mine. */

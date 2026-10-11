@@ -52,6 +52,7 @@ describe("wording", () => {
     expect(resultTitle({ asked: ["brand-storytelling", "motion-interaction", "seo-performance", "data"], startHere: false })).toBe(
       "Brand · Motion · SEO and performance",
     );
+    expect(resultTitle({ asked: ["design-eng-gap", "seo-performance"], startHere: false, picked: ["Front‑end", "Motion"] })).toBe("Front‑end · Motion");
     expect(resultTitle({ asked: [], startHere: false })).toBe("Where to start.");
     expect(resultTitle({ asked: ["accessibility"], startHere: true })).toBe("Where to start.");
   });

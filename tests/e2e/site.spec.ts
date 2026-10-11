@@ -63,7 +63,7 @@ test.describe("printing", () => {
     await page.getByRole("button", { name: "Design systems", exact: true }).click();
     await page.getByRole("button", { name: "Print" }).click();
     expect((await req).postDataJSON()).toEqual({ brief: "", topics: ["design-systems", "cross-platform"] });
-    await expect(page.locator("#r-title")).toHaveText(/^Design systems/, { timeout: 10_000 });
+    await expect(page.locator("#r-title")).toHaveText("Design systems", { timeout: 10_000 });
   });
 
   test("keyboard only: type on the paper, Enter, results title focused, Tab reaches the first sheet's link", async ({ page }) => {
