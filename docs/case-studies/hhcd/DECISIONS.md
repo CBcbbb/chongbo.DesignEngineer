@@ -60,3 +60,16 @@ The case file now follows the playbook of 11 October (the Nike review's standard
 
 - **Role corrected:** teamwork was data collection and analysis; from data modelling on, it was yours. The lines now read "Data collection and analysis *with the VOICE team*" and "Data modelling, design and build *on my own*".
 - **Cover art, "network":** the map's four marks spill from the cover's top-right corner, run off the sheet and fade before the text. A short ink trail (like the platform's path of opened entries) runs down into "Open the live platform", so the button reads as the way into the map. It is illustrative: 48 marks in the platform's proportions (17 projects, 12 methods, 10 people, 9 partners), not a chart of the real links. The cover's height doesn't change, so it still fits the first screen. Hidden on phones, where it would crowd the title. Built as a template option (`coverArt: "network"`), so other projects can have their own cover art.
+
+## Cover layout, second pass (11 Oct, night)
+
+You said the button beside the title didn't sit comfortably and the cover was still cramped. What changed:
+
+- **The title stands alone.** Nothing sits beside it, so it reads first and whole.
+- **The live link moved to the right of the line under the title.** It takes the right-hand column of the cover's grid, and its left and right edges are the edges of "What this shows" below it and the end of the rule, so it lines up with something instead of floating. It's still on the first screen and adds no row. On tablets and phones it sits under the line.
+- **One band fewer.** Role, Outcome and What this shows are now three columns under one rule. The separate row of labels and their outlined chips are gone; the labels use the same voice as the Role's lines (small icon, text).
+- **The Role reads in two tones.** Each activity is on its own line with its icon, and "with the VOICE team" / "on my own" sits under it in grey.
+- **The art is a corner piece.** 30 marks instead of 48 (same proportions), gathered in the top-right corner, running off the sheet and fading before the title. The ink trail into the button is gone, so the button has clean space round it. A check confirms no mark sits on the client line or the title at any size.
+- **More space between groups:** the line under the title and the rule over the facts are further apart. The cover still fits the first screen at 1280 × 720 (it ends at 671px).
+- Written into the playbook (§7) for every project; Nike is asked to follow in SHARED-CHANGES.md.
+

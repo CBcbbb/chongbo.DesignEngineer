@@ -111,91 +111,92 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
 
         <article className="cf-sheets" aria-labelledby="case-title">
           <header id="top" className={`cf-sheet is-field cf-cover${project.coverArt ? ` has-art-${project.coverArt}` : ""}`}>
+            {/* who and what: the client and the title, with the cover art (if any) in the corner above them */}
             <div className="cf-cover-top">
-            {project.coverArt === "network" && <CoverNetwork />}
-            <p className="cf-client">
-              {project.legend && (
-                <span className="cf-marks" aria-hidden="true">
-                  {project.legend.map((l) => (
-                    <span key={l.type} className={`cf-mark cf-mark-${l.type}`} />
-                  ))}
-                </span>
-              )}
-              <span>{project.client ?? project.context}</span>
-            </p>
-            <div className="cf-title-row">
+              {project.coverArt === "network" && <CoverNetwork />}
+              <p className="cf-client">
+                {project.legend && (
+                  <span className="cf-marks" aria-hidden="true">
+                    {project.legend.map((l) => (
+                      <span key={l.type} className={`cf-mark cf-mark-${l.type}`} />
+                    ))}
+                  </span>
+                )}
+                <span>{project.client ?? project.context}</span>
+              </p>
               <h1 id="case-title" className="cf-h1">
                 {project.title}
               </h1>
-              {live && (
-                <a className="cf-btn" href={live.href} target="_blank" rel="noopener">
-                  Open the {live.label.toLowerCase()}
-                  <OutArrow />
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
+            </div>
+            {/* one grid for the rest: the line with the live link at its right, then the facts as columns, so the
+                link stands over "What this shows" (playbook §7) */}
+            <div className="cf-cover-body">
+              <p className="cf-lede">{project.oneLiner}</p>
+              {(live || others.length > 0) && (
+                <p className="cf-cover-act">
+                  {live && (
+                    <a className="cf-btn" href={live.href} target="_blank" rel="noopener">
+                      Open the {live.label.toLowerCase()}
+                      <OutArrow />
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  )}
+                  {others.map((l) => (
+                    <a key={l.href} className="cf-link" href={l.href} target="_blank" rel="noopener">
+                      {l.label}
+                      <OutArrow />
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  ))}
+                </p>
               )}
-            </div>
-            <p className="cf-lede">{project.oneLiner}</p>
-            </div>
-            <dl className={`cf-facts${project.roleSplit ? " has-split" : ""}`}>
-              <div>
-                <dt>Role</dt>
-                <dd>
-                  {project.roleSplit ? (
-                    <>
-                      <span className="cf-role-title">{project.role}</span>
-                      <ul className="cf-role-split">
-                        {project.roleSplit.map((r) => (
-                          <li key={r.what}>
-                            <WhoIcon who={r.with} />
-                            <span>
-                              {r.what} <span className="cf-role-note">{r.note}</span>
-                            </span>
+              <dl className="cf-facts">
+                <div className="cf-fact-role">
+                  <dt>Role</dt>
+                  <dd>
+                    {project.roleSplit ? (
+                      <>
+                        <span className="cf-role-title">{project.role}</span>
+                        <ul className="cf-role-split">
+                          {project.roleSplit.map((r) => (
+                            <li key={r.what}>
+                              <WhoIcon who={r.with} />
+                              <span>
+                                <span className="cf-role-what">{r.what}</span> <span className="cf-role-note">{r.note}</span>
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    ) : (
+                      project.role
+                    )}
+                  </dd>
+                </div>
+                {project.outcome && (
+                  <div className="cf-fact-outcome">
+                    <dt>Outcome</dt>
+                    <dd>{project.outcome}</dd>
+                  </div>
+                )}
+                {/* capability labels, not links: a capability usually spans several cards (playbook §7) */}
+                {project.shows && project.shows.length > 0 && (
+                  <div className="cf-fact-shows">
+                    <dt>What this shows</dt>
+                    <dd>
+                      <ul className="cf-shows">
+                        {project.shows.map((c) => (
+                          <li key={c.label}>
+                            <CapabilityIcon capability={c.capability} />
+                            {c.label}
                           </li>
                         ))}
                       </ul>
-                    </>
-                  ) : (
-                    project.role
-                  )}
-                </dd>
-              </div>
-              {project.outcome && (
-                <div>
-                  <dt>Outcome</dt>
-                  <dd>{project.outcome}</dd>
-                </div>
-              )}
-            </dl>
-            {((project.shows && project.shows.length > 0) || others.length > 0) && (
-              <div className="cf-cover-foot">
-                {/* capability labels, not links: a capability usually spans several cards (playbook §7) */}
-                {project.shows && project.shows.length > 0 && (
-                  <div className="cf-shows">
-                    <p id="cf-shows-title">What this shows</p>
-                    <ul aria-labelledby="cf-shows-title">
-                      {project.shows.map((c) => (
-                        <li key={c.label}>
-                          <CapabilityIcon capability={c.capability} />
-                          {c.label}
-                        </li>
-                      ))}
-                    </ul>
+                    </dd>
                   </div>
                 )}
-                {others.length > 0 && (
-                  <p className="cf-actions">
-                    {others.map((l) => (
-                      <a key={l.href} className="cf-link" href={l.href} target="_blank" rel="noopener">
-                        {l.label}
-                        <OutArrow />
-                        <span className="sr-only"> (opens in a new tab)</span>
-                      </a>
-                    ))}
-                  </p>
-                )}
-              </div>
-            )}
+              </dl>
+            </div>
           </header>
 
           {project.work && cover && coverSize && (
