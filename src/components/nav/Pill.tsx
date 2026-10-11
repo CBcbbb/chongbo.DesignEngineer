@@ -1,16 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, type FocusEvent, type PointerEvent as ReactPointerEvent } from "react";
 
 /*
- * Kraft-paper capsule links for the site's own shell (nav, back links, the browse link).
- * Each one's icon does what the word means on hover and on keyboard focus:
+ * The shell's own links (nav, the browse link): a word with a small drawn icon that does what the word
+ * means on hover and on keyboard focus:
  *   work  – a hammer knocks the letters about; they spring back
  *   about – the eyes look at the pointer
  *   all   – the asterisk turns
- *   back  – a hand-drawn line draws out to the left and, on leaving, draws back
+ *   back  – a hand-drawn line draws out to the left and, on leaving, draws back (unused for now)
  * A little randomness each time, short (≤ 0.6 s), nothing changes layout, and with
  * "reduce motion" everything stands still. Plain Web Animations API: no library.
  * Case files don't use these (playbook §7): their controls stay serious.
@@ -296,9 +295,7 @@ function Icon({ kind }: { kind: PillKind }) {
   }
 }
 
-/** The header's Work pill. On a case file it becomes the way back to all work, with the drawn line. */
+/** The header's Work link. */
 export function WorkPill({ current }: { current?: boolean }) {
-  const path = usePathname();
-  const onCase = /^\/work\/[^/]+/.test(path ?? "");
-  return onCase ? <Pill kind="back" href="/work" label="All work" /> : <Pill kind="work" href="/work" label="Work" current={current} />;
+  return <Pill kind="work" href="/work" label="Work" current={current} />;
 }

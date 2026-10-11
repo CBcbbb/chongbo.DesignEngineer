@@ -38,6 +38,10 @@ export default function Home() {
         <h1 id="home-title" className="home-h1">
           What skills are you looking for?
         </h1>
+        <p className="home-intro">
+          <b>I&apos;m {profile.name}, a design engineer in {profile.location}.</b> Pick the skills your role needs, or paste the job
+          description, and the machine prints the parts of my work that show them.
+        </p>
         <PrintedToOrder cards={buildCardIndex()} media={sheetMedia()} labelledBy="home-title" />
       </main>
       <SiteFooter />

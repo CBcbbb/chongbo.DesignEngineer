@@ -31,11 +31,15 @@
   --stamp: #c2311f;
   --focus: #1c1b19;
 
-  /* kraft: the capsule links of the site's own shell (nav, back, browse). An object, like paper: the same in both themes. */
-  --kraft: #d9c59e;
-  --kraft-hi: #e4d4b3;
-  --kraft-ink: #2b2317;
-  --kraft-line: #b9a67d;
+  /* spacing scale: every vertical gap in the shell is one of these */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
   /* the printer's lamp: ready and working */
   --lamp-ready: #6fcf7c;
   --lamp-busy: #ffc46b;

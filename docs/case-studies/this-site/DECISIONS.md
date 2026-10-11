@@ -14,3 +14,9 @@ Open points from the shell work of 11 October 2026 (`shell/micro-interactions`).
 10. **Profile summary** (`content/index.ts`): "brand work that has to earn a tap" is the one phrase in the shell that is more clever than clear. Suggested: "and brand work measured by what people tap". Not changed, as content files are yours.
 11. **Not done, worth a prototype:** sheets feeding out of the tray before the deck fans; a "Printed for: …" chip row above long decks; a `missing` line that offers the nearest work.
 12. **Local builds in this sandbox** stub `src/components/case/fonts.ts` because Google Fonts is unreachable; the stub was never committed. WildEcho still loads Open Sans and Nunito Sans from Google at build time, so any offline build fails there until WildEcho moves to Geist (playbook §7 retires the Wix fonts once a project is rebuilt).
+
+## 11 October, latest: what went live
+
+15. **Nav links are plain again**: the word and its drawn icon (hammer for Work, eyes for About), no kraft capsule; the "All work" back variant on case files is gone, the nav is Work / About everywhere. Items 5, 8 and 9 above are closed by this.
+16. **The intro line** under the headline: "I'm Chongbo Ning, a design engineer in London. Pick the skills your role needs, or paste the job description, and the machine prints the parts of my work that show them." Built from `profile.name` and `profile.location`; the rest is in `src/app/page.tsx`. Wording is yours to change.
+17. **First screen**: the machine's width now follows the viewport height (`clamp(440px, (100svh − 500px) × 2.2, 680px)`) and the idle paper scales with it, so the whole printer and its paper sit in the first screen at 1440 × 900, 1366 × 768, 1280 × 720 and 1024 × 768. Every vertical gap on the home page is on the new spacing scale (`--s1`…`--s8` in `tokens.css`). The skill cards are 74px tall (were 84). The projector direction (`docs/HANDOFF-projector.md` on `shell/v2`) replaces all of this later.

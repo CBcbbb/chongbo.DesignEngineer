@@ -7,12 +7,12 @@
   max-width: 1200px;
 }
 .bar {
-  padding-block: 22px;
+  padding-block: var(--s3);
 }
 
 /* ---------- intro ---------- */
 .eyebrow {
-  margin: clamp(12px, 4vh, 40px) 0 0;
+  margin: clamp(var(--s2), 2.5vh, var(--s6)) 0 0;
   text-align: center;
   font: 500 12px var(--mono);
   letter-spacing: 0.18em;
@@ -20,17 +20,30 @@
   color: var(--ink-2);
 }
 .home-h1 {
-  margin: 6px 0 0;
+  margin: var(--s1) 0 0;
   text-align: center;
-  font: 600 clamp(30px, 4.4vw, 48px) / 1.05 var(--sans);
+  font: 600 clamp(30px, 4vw, 44px) / 1.05 var(--sans);
   letter-spacing: -0.035em;
   text-wrap: balance;
+}
+.home-intro {
+  max-width: 58ch;
+  margin: var(--s3) auto 0;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+.home-intro b {
+  font-weight: 500;
+  color: var(--ink);
 }
 
 /* ---------- skills cards ---------- */
 .skills {
   max-width: 1000px;
-  margin: 26px auto 0;
+  margin: clamp(var(--s3), 2vh, var(--s5)) auto 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,15 +55,15 @@
   gap: 10px;
   width: 100%;
   margin: 0;
-  padding: 12px 0 6px;
+  padding: var(--s3) 0 var(--s2);
   list-style: none;
 }
 .topic {
   --focus: var(--ink);
   position: relative;
   width: 100%;
-  min-height: 84px;
-  padding: 10px 10px 12px;
+  min-height: 74px;
+  padding: 9px 10px 10px;
   border: 0;
   border-radius: 6px;
   cursor: pointer;
@@ -100,11 +113,15 @@
   background: var(--red);
 }
 
-/* ---------- the printer ---------- */
+/* ---------- the printer ----------
+   Sized so the whole machine, with the paper above it, sits in the first screen on a laptop:
+   the width follows the viewport height, between 440px and 680px, and the paper's idle height scales with it. */
 .stage {
+  --ph: clamp(100px, 13vh, 136px);
   position: relative;
-  width: min(760px, 100%);
-  margin: 200px auto 0;
+  width: clamp(440px, calc((100svh - 500px) * 2.2), 680px);
+  max-width: 100%;
+  margin: calc(var(--ph) + var(--s5)) auto 0;
 }
 .machine {
   position: relative;
@@ -240,7 +257,6 @@
 
 /* paper rising from the top slot */
 .paperbox {
-  --ph: 140px;
   position: absolute;
   left: 15.5%;
   width: 69%;
@@ -251,10 +267,10 @@
   transition: height 0.5s var(--ease);
 }
 .paperbox[data-size="focus"] {
-  --ph: 160px;
+  height: calc(var(--ph) + 20px);
 }
 .paperbox[data-size="full"] {
-  --ph: 176px;
+  height: calc(var(--ph) + 40px);
 }
 .paperbox::after {
   content: "";
@@ -434,16 +450,16 @@
 .alt {
   display: flex;
   justify-content: center;
-  gap: 24px;
-  margin-top: 26px;
+  gap: var(--s5);
+  margin-top: var(--s4);
 }
 
 /* ---------- results ---------- */
 .results {
-  margin-top: 34px;
+  margin-top: var(--s6);
   overflow-x: clip;
-  padding-top: 14px;
-  scroll-margin-top: 16px;
+  padding-top: var(--s3);
+  scroll-margin-top: var(--s4);
 }
 .rhead {
   display: flex;
@@ -452,7 +468,7 @@
   align-items: baseline;
   gap: 12px;
   max-width: 1100px;
-  margin: 0 auto 30px;
+  margin: 0 auto var(--s6);
 }
 .rhead h2,
 .rhead h1 {
@@ -641,7 +657,7 @@
 .again {
   display: flex;
   justify-content: center;
-  margin-top: 26px;
+  margin-top: var(--s5);
 }
 .again button,
 .again a {
@@ -866,16 +882,9 @@
     display: none;
   }
   .stage {
-    margin-top: 166px;
-  }
-  .paperbox {
-    --ph: 116px;
-  }
-  .paperbox[data-size="focus"] {
-    --ph: 136px;
-  }
-  .paperbox[data-size="full"] {
-    --ph: 150px;
+    --ph: 112px;
+    width: 100%;
+    margin-top: calc(var(--ph) + var(--s4));
   }
   .paper {
     padding: 14px 14px 10px;
@@ -885,7 +894,10 @@
     font-size: 15px;
   }
   .skills {
-    margin-top: 18px;
+    margin-top: var(--s4);
+  }
+  .home-intro {
+    font-size: 15px;
   }
   .topics {
     display: flex;
