@@ -135,6 +135,13 @@ export const hhcd: Project = {
       capabilities: ["E"],
       lenses: { ux: "in" },
       layout: "stack",
+      media: {
+        kind: "image",
+        asset: "hhcd/workshop-cards.png",
+        alt: "Seven stakeholder cards, from the Eco-Social Artist to the EU Cluster Coordinator, each with a short motivation.",
+        need: "Paper figure: stakeholder cards.",
+        ratio: "4:3",
+      },
       steps: [
         {
           label: "Wall 1",

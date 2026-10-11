@@ -51,3 +51,6 @@ The case file now follows the playbook of 11 October (the Nike review's standard
 - 3 Brunel: yes, named.
 - 4 Team: you led the workshop (with one researcher) and designed its process around the data the platform needed. Only your part is told: "I led the workshop with members of all seven organisations, and designed its process around the data the platform needed." The Team line is gone.
 - 9 Parts stay by time. Part 1 is now "VOICE, the first version": it was built, tested in the workshop and soft-launched, so "pilot" or "early concept" would undersell it. Say if you'd rather have "VOICE pilot".
+- 6 Stakeholder cards: back in 01.4, beside the three walls. The cards sit on their own mount on the left; the walls run down the right as rows, each photo beside its finding. Phones stack them.
+- 7 `brief`: approved as written.
+- 8 Wall photos: cropped, as you asked, to one 2:1 ratio (1600 × 800) that keeps each whole sheet and drops the ceiling and the floor. The playbook says never crop an original; this is your call, noted here.

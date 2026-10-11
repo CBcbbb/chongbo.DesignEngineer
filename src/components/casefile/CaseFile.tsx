@@ -27,6 +27,7 @@ function mountOf(section: Section): "field" | undefined {
 function fitOf(section: Section): "fill" | "foot" {
   const k = section.media?.kind;
   if (!k) return "foot";
+  if (section.steps?.length) return "fill";
   return k === "metrics" || k === "specimens" || k === "code" ? "foot" : "fill";
 }
 
@@ -72,7 +73,7 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
       )}
       {section.facts && <Facts items={section.facts} />}
       {hasEvidence && (
-        <div className="cf-evidence" data-fit={fitOf(section)}>
+        <div className="cf-evidence" data-fit={fitOf(section)} data-split={section.media && section.steps?.length ? "" : undefined}>
           {section.media && <CaseMedia media={section.media} index={idx} url={url} />}
           {section.steps && section.steps.length > 0 && <StepsRow steps={section.steps} />}
         </div>

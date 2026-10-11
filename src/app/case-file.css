@@ -1107,6 +1107,59 @@
   color: var(--case-body);
 }
 
+/* a picture beside its steps (the workshop: the stakeholder cards, then the three walls, each a row) */
+@media (min-width: 761px) {
+  .cf-evidence[data-split] {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.25rem, 2.6vw, 2rem);
+    align-items: center;
+  }
+  /* the picture keeps its own size on a mount that hugs it, centred against the steps */
+  .cf-evidence[data-split] > .cf-figure {
+    height: auto !important;
+    align-self: center;
+  }
+  .cf-evidence[data-split] .cf-plate,
+  .cf-evidence[data-split] .cf-plate-shot {
+    height: auto !important;
+  }
+  .cf-evidence[data-split] .cf-plate {
+    padding: clamp(14px, 4%, 28px);
+  }
+  .cf-evidence[data-split] .cf-plate-shot img {
+    width: 100% !important;
+    max-height: none !important;
+  }
+  .cf-evidence[data-split] > .cf-steps {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    row-gap: clamp(0.75rem, 1.6vw, 1.1rem);
+    align-content: center;
+  }
+  .cf-evidence[data-split] > .cf-steps li {
+    grid-row: auto;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: 14px;
+    align-content: start;
+  }
+  .cf-evidence[data-split] .cf-step-img {
+    grid-row: 1 / span 3;
+    align-self: start;
+    padding: 6px;
+  }
+  .cf-evidence[data-split] .cf-step-label {
+    margin-top: 0 !important;
+  }
+  .cf-evidence[data-split] .cf-steps h4 {
+    margin-top: 2px;
+  }
+  .cf-evidence[data-split] .cf-steps p:not(.cf-step-label) {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+}
+
 /* ---------- metrics ---------- */
 .cf-metrics {
   display: grid;

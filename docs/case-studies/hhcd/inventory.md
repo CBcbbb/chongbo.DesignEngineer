@@ -98,8 +98,8 @@ Copy may only use these, or what Chongbo adds later.
 |---|---|---|
 | Keep | Paper figs 1, 4 (geographic prototypes) | Shows what came before the network |
 | Keep | Paper figs 15, 16 (VOICE graph and table views) | Proof that VOICE was built and launched |
-| Keep | The three walls (Chongbo's originals IMG_0941–0943, whole) | The workshop steps block |
-| Cut | Paper fig. 9 (stakeholder cards) | Process artefact that carries no decision (playbook §6); the body names the cards. File kept in `public/assets/hhcd/workshop-cards.png` |
+| Keep | The three walls (Chongbo's originals IMG_0941–0943, cropped to 2:1 at his request, each sheet whole) | The workshop steps block |
+| Keep | Paper fig. 9 (stakeholder cards) | Back in `workshop` at Chongbo's request, beside the walls |
 | Keep | Paper fig. 5 (prototype with sample labels) | Proof that the prototypes ran on sample data |
 | Keep | Paper fig. 22 (WAVE result, cropped to the summary) | `results` |
 | Keep | Rebuild `columns-1440`, `path-390` | Columns arrangement, phone sheet |

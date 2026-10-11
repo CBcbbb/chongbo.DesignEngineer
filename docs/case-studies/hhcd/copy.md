@@ -46,7 +46,7 @@ I coded each prototype idea, so people could try it rather than imagine it. That
 
 I led the workshop with members of all seven organisations, and designed its process around the data the platform needed. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view.
 
-*Evidence:* the three walls, each photo whole.
+*Evidence:* the stakeholder cards on the left; the three walls down the right, each photo (cropped to 2:1, sheet whole) beside its finding.
 
 1. **Wall 1 · Content.** Every type got a consistent structure, and methods were linked to the projects and people that used them.
 2. **Wall 2 · Scope.** Entries should touch at least two of three themes: technology, community and environment. The scope went beyond Europe.
