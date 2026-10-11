@@ -126,3 +126,15 @@ Originals from Chongbo's folder "Pictures prepared for paper" (not in the repo).
 - `workshop-wall-functionality.jpg` from `IMG_0943.jpeg`.
 
 Left out: every photo with people in it, including from behind (Chongbo's call), and `IMG_2848.HEIC`, a whiteboard unrelated to this project. Originals now live outside the repo, in `~/Documents/GitHub/HHCD paper photos`.
+
+## Browser accessibility check (10–11 October 2026, run by Chongbo in a separate session)
+
+Source: the report Chongbo pasted on 11 October. It used the desktop app's built-in Chromium browser, the accessibility tree and keyboard input. It was not a VoiceOver or Safari test.
+- VOICE (https://voice-knowledge-platform.vercel.app/, still online):
+  - map entries can't be focused by keyboard;
+  - filters are `div`s, not checkboxes;
+  - project and method labels fail AA at about 10px;
+  - the feedback button isn't keyboard-accessible.
+- HHCD rebuild:
+  - map, filters, details, live announcements, dialogs and the table all pass.
+  - Four smaller issues were passed to the rebuild's conversation: "Fit" hides labels, the path highlight persists, mobile Filters ignores Escape, and "By type" headings are about 8px.

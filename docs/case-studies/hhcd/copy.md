@@ -107,7 +107,7 @@ The Centre's brand colours are fixed, and two of them fail contrast as small tex
 
 ### `testing`: Accessibility – testing
 
-Both versions were checked automatically: VOICE with Lighthouse and WAVE, the rebuild with axe on every main page at desktop and phone widths. Tested in Chrome, Safari and Firefox; screen-reader testing is next. [Update after the VoiceOver test.]
+Automated checks gave VOICE a near-perfect score, but missed that its map entries and filters couldn't be reached by keyboard. In the Centre's version both work by keyboard, and axe found no issues on any main page at desktop and phone widths. Tested in Chrome, Safari and Firefox; screen-reader testing is next. [Update after the VoiceOver test.]
 
 *Metric strip:* Lighthouse accessibility score 99 (VOICE) · WAVE 0 errors (VOICE) · axe 0 violations at 1440 and 390px (rebuild)
 
