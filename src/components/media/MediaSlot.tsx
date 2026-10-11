@@ -111,15 +111,16 @@ function GroupSlot({ media }: { media: Extract<Media, { kind: "group" }> }) {
 }
 
 /**
- * `compact` is for printed sheets: diagrams render for real, images that exist render at sheet width,
- * and missing images, videos and code samples become a small placeholder rather than the author's note.
+ * `compact` is for printed sheets (about 300px wide): diagrams and images that exist render; evidence that doesn't
+ * fit a sheet (code, image groups, steppers, specimens, project modules) is left off; only a genuinely missing image
+ * or video shows a small placeholder.
  */
 export function MediaSlot({ media, priority = false, compact = false }: { media: Media; priority?: boolean; compact?: boolean }) {
   if (compact) {
     // A code sample or a project's interactive module doesn't fit a printed sheet: the sheet prints without evidence
     // (the full case file has it), never a "to come" box that reads as unfinished work.
     if (media.kind === "code" || media.kind === "module") return null;
-    if (media.kind === "group") return <CompactPlaceholder label="Images" alt={media.caption ?? "image group"} />;
+    if (media.kind === "group") return null;
     if ((media.kind === "image" || media.kind === "video") && !assetExists(media.asset))
       return <CompactPlaceholder label={media.kind === "image" ? "Image" : "Video"} alt={media.alt} />;
   }
@@ -201,10 +202,12 @@ export function MediaSlot({ media, priority = false, compact = false }: { media:
           priority={priority}
         />
       );
+    // A diagram that steps through states, or colour specimens, don't fit a printed sheet: the sheet prints
+    // without evidence rather than a "to come" box that reads as unfinished work.
     case "stepper":
-      return <CompactPlaceholder label="Diagram" alt={media.steps.join(", ")} />;
     case "specimens":
-      return <CompactPlaceholder label="Colour specimens" alt={media.items.map((i) => i.label).join(", ")} />;
+    case "module":
+      return null;
     case "metrics":
       return (
         <ul className="m-0 grid list-none grid-cols-2 gap-3 p-0 font-mono text-[12px] text-paper-dim">
