@@ -84,6 +84,9 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
   const titleOf = (id: string) => project.sections.find((s) => s.id === id)?.title ?? id;
   const cover = project.cover.kind === "image" ? project.cover : null;
   const coverSize = cover ? imageSize(cover.asset) : undefined;
+  const art = project.coverArt;
+  const artSize = art ? imageSize(art.asset) : undefined;
+  const ground = project.openers === "ground";
 
   return (
     <div className="cf" data-palette={project.slug === "hhcd-data-platform" ? "hhcd" : project.slug}>
@@ -91,7 +94,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
         <CaseContents title={project.title} parts={contents} />
 
         <article className="cf-sheets" aria-labelledby="case-title">
-          <header id="top" className="cf-sheet is-field cf-cover">
+          <header id="top" className={`cf-sheet is-field cf-cover${art ? " has-art" : ""}`}>
             <p className="cf-client">
               {project.legend && (
                 <span className="cf-marks" aria-hidden="true">
@@ -100,9 +103,9 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                   ))}
                 </span>
               )}
-              <span>{project.client ?? project.context}</span>
-              <span aria-hidden="true">·</span>
-              <span>{project.status}</span>
+              <span>
+                {project.client ?? project.context} · {project.status}
+              </span>
             </p>
             <h1 id="case-title" className="cf-h1">
               {project.title}
@@ -158,9 +161,21 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                 </p>
               )}
             </div>
+            {art && artSize && (
+              <figure className="cf-cover-art">
+                <Image
+                  src={`/assets/${art.asset}`}
+                  alt={art.alt}
+                  width={artSize.width}
+                  height={artSize.height}
+                  sizes="(min-width: 1180px) 960px, 100vw"
+                  priority
+                />
+              </figure>
+            )}
           </header>
 
-          {cover && coverSize && (
+          {!art && cover && coverSize && (
             <section className="cf-sheet is-dark cf-show" aria-labelledby="cf-show-title">
               <div className="cf-show-head">
                 <div>
@@ -198,7 +213,11 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
             return (
               <Fragment key={p.id}>
                 {p.label && (
-                  <section id={p.id} className="cf-sheet is-field cf-opener" aria-labelledby={`${p.id}-h`}>
+                  <section
+                    id={p.id}
+                    className={ground ? "cf-opener is-ground" : "cf-sheet is-field cf-opener"}
+                    aria-labelledby={`${p.id}-h`}
+                  >
                     <span className="cf-num" aria-hidden="true">
                       {n}
                     </span>
@@ -209,6 +228,13 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                       </h2>
                       <p className="cf-cards">{cards.map((s) => s.nav ?? s.title).join(" · ")}</p>
                     </div>
+                    {ground && project.legend && (
+                      <span className="cf-opener-marks" aria-hidden="true">
+                        {project.legend.map((l) => (
+                          <span key={l.type} className={`cf-mark cf-mark-${l.type}`} />
+                        ))}
+                      </span>
+                    )}
                   </section>
                 )}
                 {cards.map((s, ci) => (

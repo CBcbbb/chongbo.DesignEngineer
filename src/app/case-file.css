@@ -437,6 +437,25 @@
   color: var(--on-field) !important;
 }
 
+/* cover art: the work runs off the sheet's sides and bottom */
+.cf .cf-cover-art {
+  margin: 0.5rem calc(-1 * var(--cf-pad)) 0;
+  overflow: hidden;
+}
+.cf-cover-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 36rem;
+  object-fit: cover;
+  object-position: 50% 40%;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 22%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 22%);
+}
+.cf-cover.has-art {
+  padding-bottom: 0;
+}
+
 /* ---------- the platform, right after the cover ---------- */
 .cf-show-head {
   display: grid;
@@ -507,6 +526,30 @@
   margin-top: 0.6rem;
   font: 400 0.8125rem/1.5 var(--mono);
   color: var(--on-field-2);
+}
+/* openers on the studio ground: a chapter page, not a sheet */
+.cf-opener.is-ground {
+  display: grid;
+  margin-top: clamp(2rem, 6vw, 4.5rem);
+  padding: 1.1rem 0 clamp(1.25rem, 3vw, 2rem);
+  border-top: 1.5px solid var(--ink);
+  scroll-margin-top: 1.5rem;
+}
+.cf-opener.is-ground .cf-num,
+.cf-opener.is-ground h2 {
+  color: var(--ink);
+}
+.cf-opener.is-ground .cf-cards {
+  color: var(--ink-2);
+}
+.cf-opener-marks {
+  display: flex;
+  gap: 0.45rem;
+  align-self: start;
+  padding-top: 0.35rem;
+}
+.cf-opener.is-ground {
+  grid-template-columns: auto minmax(0, 1fr) auto;
 }
 
 /* ---------- keycaps ---------- */
@@ -1302,8 +1345,12 @@
   .cf-head,
   .cf-intro,
   .cf-show-head,
-  .cf-opener {
+  .cf-opener,
+  .cf-opener.is-ground {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .cf-opener-marks {
+    display: none;
   }
   .cf-body {
     padding-top: 0;

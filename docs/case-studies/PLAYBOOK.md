@@ -130,7 +130,14 @@ Rules:
     - then next project.
   - Card anatomy: index (`01.2`) and kind; the claim on the left; body and tags on the right; evidence at full sheet width; caption.
   - Three surfaces set the rhythm: paper for reading, the project's colour field for the cover, openers and interactive evidence, and the project's dark for the work in motion and results.
-  - A project changes only its two colours (`--field`, `--dark`), its cover and its signature module.
+  - The skeleton is shared; the art direction is not. Each project decides, from what it has to say:
+    - its surfaces: a colour field (`--field`), or none;
+    - its dark (`--dark`);
+    - its cover, for example art running off the sheet (`coverArt`);
+    - its part openers: on the field, or on the studio as chapter pages (`openers`);
+    - its evidence mounts;
+    - its signature module.
+  - Nike: orange field, black, full-bleed imagery. HHCD: no brand field; its identity is four equal colours on white, so colour lives only in the work and the four marks, with evidence on dot-grid paper.
 - **Block library:** every project is built from the same blocks:
   - text (heading + body)
   - media (image / video / Lottie, with caption)

@@ -6,15 +6,18 @@
  */
 
 /* ---------- Helen Hamlyn Centre Data Platform ----------
- * Accent: the platform's teal (its own text-safe value, #006D69).
- * Type colours: the Centre's fixed brand colours stay as marks; text uses text-safe variants.
+ * No single brand colour: the platform's identity is four equal colours on white paper, so colour belongs
+ * to the work and the four marks only. Cover: the product's own white sheet, with the network running off it
+ * (white in both themes: it is the product's surface, like the printed sheets on the home page).
+ * Accent and markers: the platform's ink. Evidence sits on dot-grid paper, like a map or a chart.
  */
 [data-palette="hhcd"] {
-  --accent: #006d69;
-  --accent-strong: #006d69;
+  --accent: #22212a;
+  --accent-strong: #22212a;
   --on-accent: #ffffff;
-  --accent-2: #e6edeb;
-  --accent-tint: #ebf3f1;
+  --accent-2: #f1f0f3;
+  --accent-tint: #ecebf1;
+  --dot: #d6d4dc;
   --mark-people: #5f5ba3;
   --mark-partners: #dc2680;
   --mark-projects: #eb631a;
@@ -23,19 +26,17 @@
   --type-partners: #b01e68;
   --type-projects: #a8470f;
   --type-methods: #107052;
-  /* colour field: the platform's teal (#006D69, its text-safe accent), white type on it */
-  --field: #006d69;
-  --on-field: #ffffff;
-  --on-field-2: #d3ebe8;
-  /* the platform's ink, deepened, for the work in motion and the results */
-  --dark: #1b1a20;
+  --field: #ffffff;
+  --on-field: #22212a;
+  --on-field-2: #5b5966;
+  --dark: #1e1d24;
   --on-dark: #f2f1f4;
   --on-dark-body: #d3d1da;
   --on-dark-2: #aeacb8;
-  --dark-rule: #2f2e36;
+  --dark-rule: #312f38;
   --dark-line: #4a4853;
-  --dark-inset: #26252c;
-  --accent-on-dark: #6cc6bd;
+  --dark-inset: #28272f;
+  --accent-on-dark: #dcdae4;
   --mark-people-on-dark: #8d89d6;
   --type-people-on-dark: #aeaaea;
   --type-partners-on-dark: #f283b9;
@@ -45,34 +46,85 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) [data-palette="hhcd"] {
-    --accent: #6cc6bd;
-    --accent-strong: #6cc6bd;
-    --on-accent: #10201e;
-    --accent-2: #15292a;
-    --accent-tint: #18302d;
+    --accent: #e9e7ef;
+    --accent-strong: #e9e7ef;
+    --on-accent: #1c1b21;
+    --accent-2: #1a191f;
+    --accent-tint: #25242b;
+    --dot: #2e2d35;
     --mark-people: #8d89d6; /* the brand purple is 2.8:1 on dark paper */
     --type-people: #aeaaea;
     --type-partners: #f283b9;
     --type-projects: #f4a06c;
     --type-methods: #6dcda6;
-    --dark: #111015;
+    --dark: #121116;
     --dark-rule: #26252c;
     --dark-inset: #1d1c22;
   }
 }
 
 :root[data-theme="dark"] [data-palette="hhcd"] {
-  --accent: #6cc6bd;
-  --accent-strong: #6cc6bd;
-  --on-accent: #10201e;
-  --accent-2: #15292a;
-  --accent-tint: #18302d;
+  --accent: #e9e7ef;
+  --accent-strong: #e9e7ef;
+  --on-accent: #1c1b21;
+  --accent-2: #1a191f;
+  --accent-tint: #25242b;
+  --dot: #2e2d35;
   --mark-people: #8d89d6;
   --type-people: #aeaaea;
   --type-partners: #f283b9;
   --type-projects: #f4a06c;
   --type-methods: #6dcda6;
-  --dark: #111015;
+  --dark: #121116;
   --dark-rule: #26252c;
   --dark-inset: #1d1c22;
+}
+
+/* the cover is the product's white sheet: its marks keep the brand colours, in both themes */
+[data-palette="hhcd"] .cf-cover {
+  --mark-people: #5f5ba3;
+  --case-rule: #e4e3e8;
+  border-color: #e4e3e8;
+}
+[data-palette="hhcd"] .cf-client .cf-marks .cf-mark-people {
+  background: #5f5ba3;
+}
+[data-palette="hhcd"] .cf-client .cf-marks .cf-mark-partners {
+  background: #dc2680;
+}
+[data-palette="hhcd"] .cf-client .cf-marks .cf-mark-projects {
+  background: #eb631a;
+}
+[data-palette="hhcd"] .cf-client .cf-marks .cf-mark-methods {
+  background: #148d66;
+}
+[data-palette="hhcd"] .cf-chip {
+  background: transparent;
+  color: var(--on-field) !important;
+  box-shadow: inset 0 0 0 1px #c9c7d0;
+}
+[data-palette="hhcd"] .cf-chip:hover {
+  box-shadow: inset 0 0 0 1px var(--on-field);
+}
+[data-palette="hhcd"] .cf-btn {
+  background: var(--on-field);
+  color: var(--field) !important;
+}
+/* evidence on dot-grid paper */
+[data-palette="hhcd"] .cf-plate,
+[data-palette="hhcd"] .cf-phones,
+[data-palette="hhcd"] .cf-sheet[data-mount="field"] .cf-plate,
+[data-palette="hhcd"] .cf-sheet[data-mount="field"] .cf-phones {
+  background-color: var(--accent-2);
+  background-image: radial-gradient(var(--dot) 1px, transparent 1.3px);
+  background-size: 14px 14px;
+  background-position: 7px 7px;
+  box-shadow: inset 0 0 0 1px var(--case-rule);
+}
+[data-palette="hhcd"] .cf-sheet[data-mount="field"] .cf-phones .cf-label {
+  color: var(--case-dim);
+}
+[data-palette="hhcd"] .cf-sheet.is-dark .cf-plate {
+  background-image: none;
+  box-shadow: none;
 }

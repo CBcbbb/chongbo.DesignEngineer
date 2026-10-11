@@ -224,6 +224,13 @@ export type Project = {
   outcome?: string;
   /** Case-file template: who the work was for, shown first on the cover (e.g. "Nike App, China"). */
   client?: string;
+  /**
+   * Case-file template: art for the cover sheet, running off its sides and bottom (e.g. the network itself).
+   * When set, the separate "the work" sheet after the cover is left out.
+   */
+  coverArt?: { asset: string; alt: string };
+  /** Case-file template: part openers on the project's colour field (`field`, default) or on the studio (`ground`). */
+  openers?: "field" | "ground";
   /** Case-file template: the key to the cover image, e.g. a map's entity types. */
   legend?: { type: EntityType; label: string }[];
   /** Case-file template: "What this shows", two or three capability chips that jump to their cards. */

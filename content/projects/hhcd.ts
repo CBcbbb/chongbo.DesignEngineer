@@ -22,6 +22,11 @@ export const hhcd: Project = {
   tab: "moss",
   template: "case-file",
   client: "Helen Hamlyn Centre for Design, Royal College of Art",
+  coverArt: {
+    asset: "hhcd/cover-network.png",
+    alt: "The platform's map: 48 people, projects, partners and methods as a free network, each name in its type's colour and joined by fine lines.",
+  },
+  openers: "ground",
   legend: [
     { type: "projects", label: "Projects" },
     { type: "methods", label: "Methods" },
