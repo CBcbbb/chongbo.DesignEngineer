@@ -483,46 +483,87 @@
   background: #000;
   box-shadow: 0 0 0 1px #2b2926;
 }
-/* the device and its dock: the play controls sit under the phone, not on it */
-.nk-device {
-  display: grid;
-  gap: 1rem;
-  justify-items: center;
-}
 .nk-phone {
-  cursor: pointer;
+  isolation: isolate;
 }
-/* the big play glyph over the poster; it grows and fades as the recording starts */
-.nk-bigplay {
+/* the one play control: the whole screen is the button, its glyph drawn at the centre */
+.nk-screen {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset: 2.4rem 0.6rem 2.6rem;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+  color: #fff;
+}
+.nk-bigplay {
+  position: relative;
   display: grid;
   place-items: center;
   width: 4.25rem;
   height: 4.25rem;
   border-radius: 50%;
-  background: rgba(14, 13, 12, 0.55);
-  color: #fff;
-  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.55);
+  background: rgba(14, 13, 12, 0.5);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.6);
   backdrop-filter: blur(6px);
-  transform: translate(-50%, -50%);
   transition:
     opacity 0.35s var(--nk-ease),
     transform 0.45s var(--nk-ease);
-  pointer-events: none;
 }
 .nk-bigplay .nk-morph {
   width: 1.15rem;
   height: 1.3rem;
-  margin-left: 0.2rem;
 }
-.nk-phone:hover .nk-bigplay {
-  transform: translate(-50%, -50%) scale(1.08);
+.nk-phone:not(.is-playing) .nk-bigplay .nk-morph {
+  margin-left: 0.25rem;
 }
+.nk-screen:hover .nk-bigplay {
+  transform: scale(1.06);
+}
+.nk-screen:active .nk-bigplay {
+  transform: scale(0.92);
+}
+/* playing: the glyph has already morphed into pause; it fades away, and comes back on hover */
 .nk-phone.is-playing .nk-bigplay {
   opacity: 0;
-  transform: translate(-50%, -50%) scale(1.6);
+  transform: scale(1.35);
+}
+.nk-phone.is-playing .nk-screen:hover .nk-bigplay,
+.nk-phone.is-playing .nk-screen:focus-visible .nk-bigplay {
+  opacity: 1;
+  transform: scale(1);
+}
+/* the swoosh scribble: draws itself round the button on hover */
+.nk-scribble {
+  position: absolute;
+  inset: -0.85rem;
+  width: calc(100% + 1.7rem);
+  height: calc(100% + 1.7rem);
+  overflow: visible;
+  pointer-events: none;
+}
+.nk-scribble path {
+  fill: none;
+  stroke: var(--nk-orange-on-black);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+.nk-screen:hover .nk-scribble path {
+  opacity: 1;
+  animation: nk-draw 0.65s var(--nk-ease) forwards;
+}
+.nk-phone.is-playing .nk-scribble {
+  display: none;
+}
+@keyframes nk-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 /* play ↔ pause: two halves of the triangle that slide apart into bars */
@@ -553,76 +594,60 @@
   clip-path: polygon(64% 0, 96% 0, 96% 100%, 64% 100%);
 }
 
-.nk-dock {
-  display: flex;
-  gap: 0.85rem;
-  align-items: center;
-  padding: 0.3rem 0.4rem 0.3rem 0.3rem;
-  border-radius: 999px;
-  background: #1d1c1a;
-  box-shadow: inset 0 0 0 1px #3a3835;
-}
-/* the play button carries the progress as a ring */
-.nk-dock-play {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 3rem;
-  height: 3rem;
-  padding: 0;
-  border: 0;
-  border-radius: 50%;
-  cursor: pointer;
-  background: var(--nk-orange-on-black);
-  color: var(--nk-on-orange) !important;
-  transition: transform 0.2s var(--nk-ease);
-}
-.nk-dock-play:active {
-  transform: scale(0.94);
-}
-.nk-dock-play svg {
+/* slim controls in the bezel: progress with a dot per chapter, the time, the sound */
+.nk-bezel {
   position: absolute;
-  inset: -0.2rem;
-  width: calc(100% + 0.4rem);
-  height: calc(100% + 0.4rem);
-  transform: rotate(-90deg);
-  pointer-events: none;
+  right: 0.75rem;
+  bottom: 0.45rem;
+  left: 1.1rem;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  height: 1.75rem;
 }
-.nk-ring-track,
-.nk-ring {
-  fill: none;
-  stroke-width: 2.5;
+.nk-track {
+  position: relative;
+  flex: 1;
+  height: 3px;
+  border-radius: 3px;
+  background: #3a3835;
 }
-.nk-ring-track {
-  stroke: transparent;
+.nk-track i {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--nk-orange-on-black);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.25s linear;
 }
-.nk-ring {
-  stroke: #ffd2b8;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 0.25s linear;
+.nk-track b {
+  position: absolute;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #6b6760;
+  transform: translate(-50%, -50%);
+  transition:
+    background 0.2s,
+    transform 0.3s var(--nk-ease);
 }
-.nk-dock-play .nk-morph {
-  width: 0.8rem;
-  height: 0.9rem;
-}
-.nk-dock-play:not([aria-label^="Pause"]) .nk-morph {
-  margin-left: 0.15rem;
+.nk-track b.is-past {
+  background: #ffd2b8;
+  transform: translate(-50%, -50%) scale(1.3);
 }
 .nk-clock {
-  min-width: 6.4rem;
-  font: 500 0.8125rem/1 var(--mono);
+  min-width: 2.1rem;
+  font: 500 0.6875rem/1 var(--mono);
   font-variant-numeric: tabular-nums;
-  color: var(--nk-on-black);
-}
-.nk-clock i {
-  font-style: normal;
   color: var(--nk-on-black-2);
 }
-.nk-dock-snd {
+.nk-snd {
   display: grid;
   place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 1.75rem;
+  height: 1.75rem;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -630,22 +655,33 @@
   background: transparent;
   color: var(--nk-on-black) !important;
 }
-.nk-dock-snd:hover {
+.nk-snd:hover {
   background: #2b2926;
 }
-.nk-dock-snd[aria-pressed="false"] {
+.nk-snd[aria-pressed="false"] {
   color: var(--nk-on-black-2) !important;
 }
-.nk-dock-snd .nk-spk {
-  width: 20px;
-  height: 20px;
+.nk-snd .nk-spk {
+  width: 17px;
+  height: 17px;
 }
-/* while sound plays, the speaker's two waves pulse in turn */
-.nk-dock-snd.is-live .nk-w1 {
+/* while sound plays, the speaker's two waves pulse in turn; on hover they wiggle */
+.nk-snd.is-live .nk-w1 {
   animation: nk-wave 1.1s ease-in-out infinite;
 }
-.nk-dock-snd.is-live .nk-w2 {
+.nk-snd.is-live .nk-w2 {
   animation: nk-wave 1.1s ease-in-out 0.25s infinite;
+}
+.nk-spk path {
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: transform 0.3s var(--nk-ease);
+}
+.nk-snd:hover .nk-w1 {
+  transform: translateX(1px) scaleY(1.15);
+}
+.nk-snd:hover .nk-w2 {
+  transform: translateX(2px) scaleY(1.2);
 }
 @keyframes nk-wave {
   0%,
@@ -1196,11 +1232,237 @@
 .nk-eq i:nth-child(3) {
   transform: scaleY(calc(0.3 + var(--b3, 0.5) * 0.7));
 }
+/* sound leaving the button on hover, three rings at a time */
+.nk-vt-rip {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.nk-vt-rip i {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid #fff;
+  border-radius: 50%;
+  opacity: 0;
+}
+.nk-vt:hover .nk-vt-rip i {
+  animation: nk-ripple 1.3s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+.nk-vt:hover .nk-vt-rip i:nth-child(2) {
+  animation-delay: 0.27s;
+}
+.nk-vt:hover .nk-vt-rip i:nth-child(3) {
+  animation-delay: 0.61s;
+}
+@keyframes nk-ripple {
+  0% {
+    opacity: 0.75;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.3);
+  }
+}
+
+/* ---------- micro-interactions: letters, digits and icons that take part in a hover ---------- */
+/* words never break inside; each letter moves on its own */
+.nk-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+.nk-wob i {
+  display: inline-block;
+  font-style: normal;
+  transform: translateY(var(--y, 0)) rotate(var(--r, 0deg));
+  transition: transform 0.45s cubic-bezier(0.34, 1.8, 0.5, 1);
+}
+.nk-scr {
+  font-variant-numeric: tabular-nums;
+}
+
+/* cover chips: an icon that acts, beside letters that wobble */
+.nk-chip {
+  gap: 0.45rem;
+}
+.nk-ico {
+  flex: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.nk-ico-swoosh path {
+  stroke-width: 2.6;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.nk-chip:hover .nk-ico-swoosh path,
+.nk-chip:focus-visible .nk-ico-swoosh path {
+  animation: nk-redraw 0.7s var(--nk-ease);
+}
+@keyframes nk-redraw {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+.nk-ico-heart path {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.nk-ico-heart .nk-h {
+  fill: currentColor;
+  stroke: none;
+}
+.nk-ico-heart .nk-h1,
+.nk-ico-heart .nk-h2 {
+  fill: currentColor;
+  stroke: none;
+  opacity: 0;
+}
+.nk-chip:hover .nk-ico-heart .nk-h,
+.nk-chip:focus-visible .nk-ico-heart .nk-h {
+  animation: nk-beat 0.6s cubic-bezier(0.34, 1.8, 0.5, 1);
+}
+.nk-chip:hover .nk-ico-heart .nk-h1,
+.nk-chip:focus-visible .nk-ico-heart .nk-h1 {
+  animation: nk-float 0.9s ease-out 0.1s;
+}
+.nk-chip:hover .nk-ico-heart .nk-h2,
+.nk-chip:focus-visible .nk-ico-heart .nk-h2 {
+  animation: nk-float 0.9s ease-out 0.25s;
+}
+@keyframes nk-beat {
+  30% {
+    transform: scale(1.35);
+  }
+  60% {
+    transform: scale(0.9);
+  }
+}
+@keyframes nk-float {
+  0% {
+    opacity: 1;
+    transform: translateY(4px) scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-9px) scale(1.1);
+  }
+}
+.nk-ico-grid rect {
+  fill: currentColor;
+  stroke: none;
+  transition: transform 0.5s cubic-bezier(0.34, 1.6, 0.5, 1);
+}
+/* one square is hollow, so the swap reads */
+.nk-ico-grid .g1 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+/* the four squares trade places, clockwise */
+.nk-chip:hover .nk-ico-grid .g1,
+.nk-chip:focus-visible .nk-ico-grid .g1 {
+  transform: translateX(9.5px);
+}
+.nk-chip:hover .nk-ico-grid .g2,
+.nk-chip:focus-visible .nk-ico-grid .g2 {
+  transform: translateY(9.5px);
+}
+.nk-chip:hover .nk-ico-grid .g3,
+.nk-chip:focus-visible .nk-ico-grid .g3 {
+  transform: translateX(-9.5px);
+}
+.nk-chip:hover .nk-ico-grid .g4,
+.nk-chip:focus-visible .nk-ico-grid .g4 {
+  transform: translateY(-9.5px);
+}
+
+/* "See it at": the triangle becomes fast-forward */
+.nk-ff {
+  position: relative;
+  display: inline-flex;
+  width: 0.95rem;
+}
+.nk-ff .nk-tri {
+  transition:
+    transform 0.35s var(--nk-ease),
+    opacity 0.25s;
+}
+.nk-ff .nk-tri + .nk-tri {
+  position: absolute;
+  left: 0;
+  opacity: 0;
+}
+.nk-seek:hover .nk-ff .nk-tri,
+.nk-seek:focus-visible .nk-ff .nk-tri {
+  transform: translateX(-2px);
+}
+.nk-seek:hover .nk-ff .nk-tri + .nk-tri,
+.nk-seek:focus-visible .nk-ff .nk-tri + .nk-tri {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+/* Replay: the arrow loops once on hover */
+.nk-loop-ico {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.6s var(--nk-ease);
+}
+.nk-btn:hover .nk-loop-ico,
+.nk-btn:focus-visible .nk-loop-ico {
+  transform: rotate(360deg);
+}
+
+/* the YouTube arrow flies off and comes back round */
+.nk-outlink:hover .nk-launch,
+.nk-outlink:focus-visible .nk-launch {
+  animation: nk-launch 0.55s var(--nk-ease);
+}
+.nk-launch {
+  display: inline-block;
+}
+@keyframes nk-launch {
+  45% {
+    opacity: 0;
+    transform: translate(10px, -10px);
+  }
+  46% {
+    opacity: 0;
+    transform: translate(-10px, 10px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .nk-vt::after,
-  .nk-dock-snd.is-live .nk-w1,
-  .nk-dock-snd.is-live .nk-w2 {
-    animation: none;
+  .nk-snd.is-live .nk-w1,
+  .nk-snd.is-live .nk-w2,
+  .nk-vt:hover .nk-vt-rip i,
+  .nk-chip .nk-ico *,
+  .nk-outlink .nk-launch,
+  .nk-screen:hover .nk-scribble path {
+    animation: none !important;
+  }
+  .nk-scribble {
+    display: none;
   }
 }
 .nk-sv-phone img {

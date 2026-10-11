@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Project, Section } from "@content";
-import { Compare, Contents, GiftBox, Pip, RecordingPlayer, RecordingProvider, SeekButton, Switcher, VoiceTeaser, type ContentsPart } from "./NikeClient";
+import { ChipIcon, Compare, Contents, GiftBox, Pip, RecordingPlayer, RecordingProvider, SeekButton, Switcher, VoiceTeaser, Wobble, type ContentsPart } from "./NikeClient";
 import "./nike.css";
 
 /** Asset path. Every image is served at quality 90 (`Q`), so text in screenshots stays sharp. */
@@ -184,13 +184,16 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
               <p className="nk-chips">
                 <span>What this shows</span>
                 <a className="nk-chip" href="#graphic-system">
-                  Brand storytelling
+                  <ChipIcon kind="swoosh" />
+                  <Wobble text="Brand storytelling" />
                 </a>
                 <a className="nk-chip" href="#draw">
-                  Motion and microinteractions
+                  <ChipIcon kind="heart" />
+                  <Wobble text="Motion and microinteractions" />
                 </a>
                 <a className="nk-chip" href="#components">
-                  Design systems
+                  <ChipIcon kind="grid" />
+                  <Wobble text="Design systems" />
                 </a>
               </p>
             </header>
@@ -492,7 +495,9 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
 
             <nav className="nk-next" aria-label="Next case file">
               <span>Next case file</span>
-              <Link href={`/work/${next.slug}`}>{next.title}</Link>
+              <Link href={`/work/${next.slug}`}>
+                <Wobble text={next.title} />
+              </Link>
             </nav>
           </div>
         </div>
