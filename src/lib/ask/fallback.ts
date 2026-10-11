@@ -85,7 +85,7 @@ export const MISSING_ASKS: { label: string; pattern: RegExp }[] = [
 /** Names and places in a brief that point at one project. */
 const PROJECT_HINTS: Record<string, string[]> = {
   "hhcd-data-platform": ["hhcd", "helen hamlyn", "hamlyn", "royal college", "rca!", "archive", "brunel"],
-  "component-store": ["component store", "logistics", "current role", "current job", "day job"],
+  "components-for-any-data": ["component library", "components", "own data", "data contracts", "logistics", "current role", "current job", "day job"],
   "nike-athletes-closet": ["nike", "athletes closet", "athlete", "agency", "sportswear", "fashion"],
   "this-site": ["this site", "this website", "this portfolio", "portfolio", "ticket", "printer", "built this", "build this", "made this", "work here"],
   wildecho: ["wildecho", "wild echo", "wildlife", "tourist", "sound", "listening"],
@@ -94,7 +94,7 @@ const PROJECT_HINTS: Record<string, string[]> = {
 /** Strong defaults when nothing in the brief is understood. */
 export const DEFAULT_SHEETS: Sheet[] = [
   { project: "hhcd-data-platform", section: "arrangements", signal: "accessibility", reason: "An accessible data map, designed and built end to end." },
-  { project: "component-store", section: "contracts", signal: "design-eng-gap", reason: "Closing a gap between design and engineering with data contracts." },
+  { project: "components-for-any-data", section: "contract", signal: "design-eng-gap", reason: "Closing a gap between design and engineering with data contracts." },
   { project: "nike-athletes-closet", section: "graphic-system", signal: "reusable-components", reason: "A reusable layout system that shipped in the Nike app." },
 ];
 

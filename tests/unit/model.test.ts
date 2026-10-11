@@ -26,7 +26,7 @@ describe("askModel", () => {
       missing: [],
       sheets: [
         sheet("hhcd-data-platform", "dual-view", "accessibility", "An accessible second view."),
-        sheet("component-store", "contrast-in-tokens", "accessibility", "Contrast in the tokens."),
+        sheet("components-for-any-data", "role", "accessibility", "Contrast in the tokens."),
       ],
       line: "Two projects show accessibility.",
     });
@@ -49,8 +49,8 @@ describe("askModel", () => {
       sheets: [
         sheet("hhcd-data-platform", "dual-view", "accessibility"),
         sheet("hhcd-data-platform", "keyboard", "accessibility"),
-        sheet("component-store", "contrast-in-tokens", "accessibility"),
-        sheet("component-store", "mapping", "data"),
+        sheet("components-for-any-data", "role", "accessibility"),
+        sheet("components-for-any-data", "axis-pickers", "data"),
         sheet("this-site", "foundations", "accessibility"),
         sheet("nike-athletes-closet", "graphic-system", "reusable-components"),
         sheet("wildecho", "prototype", "prototyping"),
@@ -60,7 +60,7 @@ describe("askModel", () => {
     const r = await askModel({ brief: "a11y and data", topics: [] }, { client });
     expect(r!.sheets.map((s) => s.project)).toEqual([
       "hhcd-data-platform",
-      "component-store",
+      "components-for-any-data",
       "this-site",
       "nike-athletes-closet",
       "wildecho",
@@ -81,7 +81,7 @@ describe("askModel", () => {
     const { client } = fakeClient({
       asked: ["nonsense"],
       missing: ["A/B testing", "<script>"],
-      sheets: [sheet("component-store", "contracts", "vibes")],
+      sheets: [sheet("components-for-any-data", "contract", "vibes")],
       line: "x".repeat(400),
     });
     const r = await askModel("q", { client });

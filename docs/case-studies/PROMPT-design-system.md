@@ -4,7 +4,7 @@ Paste everything below the line into a new conversation.
 
 ---
 
-I'm Chongbo Ning, a Design Engineer in London. You're working with me as a senior product designer, a senior UX designer and a design-engineering hiring manager in one. We're going to add one new, small project to my site: **the design system I built at my current job**. It used to be two sections of the Component Store case; it's now its own project, and the Component Store case (renamed "Components for Any Data") no longer covers it.
+I'm Chongbo Ning, a Design Engineer in London. You're working with me as a senior product designer, a senior UX designer and a design-engineering hiring manager in one. We're going to add one new, small project to my site: **the design system I built at my current job**. It used to be two sections of the component-library case; it's now its own project, and that case ("Components for Any Data") no longer covers it.
 
 ## Background
 
@@ -21,11 +21,11 @@ I'm Chongbo Ning, a Design Engineer in London. You're working with me as a senio
 
 ## Confidentiality
 
-Never name my employer, its products (including the "Component Store"), its customers or its storage technology anywhere: code, copy, file names, prompts. Describe the employer as a "logistics infrastructure company". Never use real screenshots unless I say so and they're cleaned of every name.
+Never name my employer, its products (the store included), its customers or its storage technology anywhere: code, copy, file names, prompts. Describe the employer as a "logistics infrastructure company". Never use real screenshots unless I say so and they're cleaned of every name.
 
 ## Sources
 
-- `content/projects/component-store.ts` on `main`: the sections `token-layers` and `contrast-in-tokens` (the current copy for this project), and `src/components/media/TokenLayersDiagram.tsx`.
+- The sections `token-layers` and `contrast-in-tokens` in `content/projects/component-store.ts` at commit `97022e0` (`git show 97022e0:content/projects/component-store.ts`): the last copy for this project. Also `src/components/media/TokenLayersDiagram.tsx`.
 - What I've told you before:
   - I started the design system in Figma (components and palettes, designed for accessibility and every screen size), then moved it into code (Tailwind).
   - It has two tiers: a shared global stylesheet across five product lines, and a per-platform tokens file. Each app overrides only what it needs, and customers apply their own colours, fonts and button shapes.

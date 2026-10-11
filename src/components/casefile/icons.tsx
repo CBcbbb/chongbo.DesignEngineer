@@ -1,4 +1,4 @@
-import type { Capability } from "@content";
+import type { Capability, CapabilityIconName } from "@content";
 
 /*
  * Small, still icons for the cover's capability labels, one per capability and tied to what its cards show.
@@ -38,8 +38,29 @@ function MarksIcon() {
   );
 }
 
-/** One icon per capability. Capabilities without one show none. */
-export function CapabilityIcon({ capability }: { capability: Capability }) {
+/** Systems and reuse: several inputs meet one shape. */
+function MergeIcon() {
+  return (
+    <svg className="cf-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M4 6h5c3 0 3 6 6 6h5M4 12h16M4 18h5c3 0 3-6 6-6" />
+    </svg>
+  );
+}
+
+/** A dropdown: a choice made in the interface. */
+function PickerIcon() {
+  return (
+    <svg className="cf-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <rect x="3.5" y="7" width="17" height="10" rx="2.5" />
+      <path d="m13.5 11 2 2 2-2" />
+    </svg>
+  );
+}
+
+/** One icon per capability (`icon` overrides it). Capabilities without one show none. */
+export function CapabilityIcon({ capability, icon }: { capability: Capability; icon?: CapabilityIconName }) {
+  if (icon === "picker") return <PickerIcon />;
+  if (capability === "C") return <MergeIcon />;
   if (capability === "E") return <KeyIcon />;
   if (capability === "B") return <BuiltIcon />;
   if (capability === "D") return <MarksIcon />;

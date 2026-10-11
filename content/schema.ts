@@ -133,6 +133,16 @@ export type Media =
     }
   | { kind: "diagram"; diagram: "data-contracts" | "token-layers"; caption?: string }
   | {
+      /**
+       * A project's own interactive evidence (playbook §6: each main project gets one signature module), registered by
+       * name in `src/components/casefile/modules.tsx`. Built from scratch for the case file, e.g. a product panel
+       * rebuilt on invented data where real screens are confidential.
+       */
+      kind: "module";
+      module: string;
+      caption?: string;
+    }
+  | {
       /** An ordered set of images shown together, mirroring the blocks in the old case study. */
       kind: "group";
       layout: "row" | "grid" | "stack";
@@ -191,6 +201,9 @@ export type Step = {
   label?: string;
   image?: { asset: string; alt: string };
 };
+/** A label's icon on the cover, where a project wants a different one from its capability's default. */
+export type CapabilityIconName = "picker";
+
 export type Section = {
   id: string;
   kind: SectionKind;
@@ -270,12 +283,18 @@ export type Project = {
    * Case-file template: the sheet straight after the cover that shows the product itself (playbook §4, "lead with
    * the product"): `Project.cover` in a browser frame, with this heading and the address shown in the frame.
    */
-  work?: { title: string; url: string };
+  work?: {
+    title: string;
+    /** The live product's address, shown in the browser frame. */
+    url?: string;
+    /** Instead of `Project.cover` in a browser frame: a project module (see `Media` kind "module"), on the field. */
+    module?: string;
+  };
   /**
    * Case-file template: the project's own art on the cover (playbook §7: the skeleton is shared, the art direction
    * is not). `network`: the map's four marks spilling from the cover's top-right corner, fading towards the text.
    */
-  coverArt?: "network";
+  coverArt?: "network" | "wires";
   /** Case-file template: part openers on the project's colour field (`field`, default) or on the studio (`ground`). */
   openers?: "field" | "ground";
   /** Case-file template: the key to the cover image, e.g. a map's entity types. */
@@ -284,7 +303,7 @@ export type Project = {
    * Case-file template: "What this shows", two or three capability labels on the cover (playbook §7: labels, not
    * links). `section` is the card that proves it best, for the printer and the AI; the cover doesn't link to it.
    */
-  shows?: { capability: Capability; label: string; section: string }[];
+  shows?: { capability: Capability; label: string; section: string; icon?: CapabilityIconName }[];
   /** Questions the ask box suggests when this card is on the table. */
   prompts: string[];
 };

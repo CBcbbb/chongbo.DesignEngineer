@@ -27,7 +27,7 @@ export const SIGNAL_SHORT: Record<Signal | "start-here", string> = {
 /** Short place labels for the tray tickets (presentation only). */
 const TRAY_PLACE: Record<string, string> = {
   "hhcd-data-platform": "RCA",
-  "component-store": "Logistics",
+  "components-for-any-data": "Logistics",
   "nike-athletes-closet": "Nike app",
   "this-site": "Personal",
   wildecho: "RCA",

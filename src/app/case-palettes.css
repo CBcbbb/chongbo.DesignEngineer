@@ -232,3 +232,59 @@
   color: var(--field) !important;
 }
 
+
+/* ---------- Components for Any Data ----------
+ * The product's own blue, as in the store's interface: the field (cover, openers, the work), the accent and the
+ * charts. Colour inside the work means a contract role (violet, orange, green), set in the project's own
+ * any-data.css with the product panels. The canvas under the evidence is a fine grid instead of dots.
+ */
+[data-palette="components-for-any-data"] {
+  --accent: #1f55d0;
+  --accent-strong: #1747b8;
+  --on-accent: #ffffff;
+  --accent-2: #e9effc;
+  --accent-tint: #eef3fd;
+  --field: #1d4fd7;
+  --on-field: #ffffff;
+  --on-field-2: #d6e2fd;
+  --dark: #0e1730;
+  --on-dark: #eef3ff;
+  --on-dark-body: #c8d2e6;
+  --on-dark-2: #9aa6c0;
+  --dark-rule: #1c2744;
+  --dark-line: #34436a;
+  --dark-inset: #131e3a;
+  --accent-on-dark: #a9c1ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) [data-palette="components-for-any-data"] {
+    --accent: #8fb0ff;
+    --accent-strong: #a9c1ff;
+    --on-accent: #0b1226;
+    --accent-2: #121b30;
+    --accent-tint: #17213a;
+    --field: #173fae;
+    --on-field-2: #c3d3fa;
+    --dark: #0a1124;
+    --dark-rule: #18223c;
+    --dark-inset: #101a33;
+  }
+}
+
+:root[data-theme="dark"] [data-palette="components-for-any-data"] {
+  --accent: #8fb0ff;
+  --accent-strong: #a9c1ff;
+  --on-accent: #0b1226;
+  --accent-2: #121b30;
+  --accent-tint: #17213a;
+  --field: #173fae;
+  --on-field-2: #c3d3fa;
+  --dark: #0a1124;
+  --dark-rule: #18223c;
+  --dark-inset: #101a33;
+}
+[data-palette="components-for-any-data"] .cf-shows li {
+  background: var(--on-field);
+  color: var(--field);
+}

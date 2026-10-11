@@ -8,6 +8,8 @@ import { imageSize } from "@/lib/assets";
 import { CaseMedia, CardTitle, Facts, Keys, StepsRow } from "./blocks";
 import { CaseContents, type ContentsPart } from "./CaseContents";
 import { CoverNetwork } from "./CoverNetwork";
+import { CaseModule } from "./modules";
+import { CoverWires } from "@/components/case/any-data";
 import { BrowserFrame } from "./Frame";
 import { CapabilityIcon, OutArrow, WhoIcon } from "./icons";
 
@@ -18,7 +20,7 @@ import { CapabilityIcon, OutArrow, WhoIcon } from "./icons";
 function canvasOf(section: Section): "" | undefined {
   const m = section.media;
   if (!m || section.steps?.length || (section.layout && section.layout !== "stack")) return undefined;
-  return m.kind === "compare" || m.kind === "video" || (m.kind === "group" && m.ratio === "9:16") ? "" : undefined;
+  return m.kind === "compare" || m.kind === "video" || m.kind === "module" || (m.kind === "group" && m.ratio === "9:16") ? "" : undefined;
 }
 
 /**
@@ -127,6 +129,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
             {/* who and what: the client and the title, with the cover art (if any) in the corner above them */}
             <div className="cf-cover-top">
               {project.coverArt === "network" && <CoverNetwork />}
+              {project.coverArt === "wires" && <CoverWires />}
               <p className="cf-client">
                 {project.legend && (
                   <span className="cf-marks" aria-hidden="true">
@@ -201,7 +204,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                   <ul aria-labelledby="cf-shows-title">
                     {project.shows.map((c) => (
                       <li key={c.label}>
-                        <CapabilityIcon capability={c.capability} />
+                        <CapabilityIcon capability={c.capability} icon={c.icon} />
                         {c.label}
                       </li>
                     ))}
@@ -211,7 +214,18 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
             )}
           </header>
 
-          {project.work && cover && coverSize && (
+          {project.work?.module && (
+            <section className="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
+              <div className="cf-work-head">
+                <h2 id="cf-work-title">{project.work.title}</h2>
+              </div>
+              <div className="cf-plate">
+                <CaseModule name={project.work.module} />
+              </div>
+            </section>
+          )}
+
+          {project.work && !project.work.module && project.work.url && cover && coverSize && (
             <section className="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
               <div className="cf-work-head">
                 <h2 id="cf-work-title">{project.work.title}</h2>

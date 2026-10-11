@@ -7,15 +7,15 @@ describe("sanitizeSheets", () => {
       { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "a" },
       { project: "hhcd-data-platform", section: "keyboard", signal: "accessibility", reason: "second from same project" },
       { project: "made-up", section: "problem", signal: "data", reason: "b" },
-      { project: "component-store", section: "nope", signal: "data", reason: "c" },
-      { project: "component-store", section: "contracts", signal: "design-eng-gap", reason: "d" },
+      { project: "components-for-any-data", section: "nope", signal: "data", reason: "c" },
+      { project: "components-for-any-data", section: "contract", signal: "design-eng-gap", reason: "d" },
       { project: "nike-athletes-closet", section: "graphic-system", signal: "reusable-components", reason: "e" },
       { project: "this-site", section: "idea", signal: "ai-tools", reason: "f" },
       { project: "wildecho", section: "prototype", signal: "prototyping", reason: "g" },
     ]);
     expect(sheets.map((s) => `${s.project}#${s.section}`)).toEqual([
       "hhcd-data-platform#dual-view",
-      "component-store#contracts",
+      "components-for-any-data#contract",
       "nike-athletes-closet#graphic-system",
       "this-site#idea",
       "wildecho#prototype",
@@ -43,7 +43,7 @@ describe("sanitizeSheets", () => {
   it("clips long reasons and fills missing or unsafe ones", () => {
     const [a, b, c] = sanitizeSheets([
       { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "x".repeat(200) },
-      { project: "component-store", section: "contracts", signal: "design-eng-gap" },
+      { project: "components-for-any-data", section: "contract", signal: "design-eng-gap" },
       { project: "this-site", section: "idea", signal: "ai-tools", reason: "<b>see https://evil.example</b>" },
     ]);
     expect(a!.reason.length).toBeLessThanOrEqual(90);

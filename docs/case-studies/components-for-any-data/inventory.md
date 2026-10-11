@@ -2,7 +2,7 @@
 
 Playbook §8 step 3. Draft 1, 11 October 2026. Approved by Chongbo, 11 October 2026 (decisions below). Copy is in `copy.md`.
 
-Title: **Components for Any Data** (was "Component Store", a product name, which §9 rules out). Proposed slug: `components-for-any-data` (see "Slug" below).
+Title: **Components for Any Data** (the old title was the product's own name, which §9 rules out). Proposed slug: `components-for-any-data` (see "Slug" below).
 
 ## Framing
 
@@ -14,7 +14,7 @@ Title: **Components for Any Data** (was "Component Store", a product name, which
 
 ## Never shown or named
 
-The employer, its product names (including "Component Store", "Flow Lab", "FarPoint" and the other navigation items), customers, the storage technology, stream names, charge codes, component names that reveal the domain (port calls, vessels, charges, OD pairings), file paths, endpoint paths, internal document names, and real screenshots. The screenshot Chongbo shared on 11 Oct contains the company name, his work email, customer names and port codes: **reference only, never in the repo**.
+The employer, its product names (the store's own name and every item in the product's navigation), customers, the storage technology, stream names, charge codes, component names that reveal the domain (port calls, vessels, charges, OD pairings), file paths, endpoint paths, internal document names, and real screenshots. The screenshot Chongbo shared on 11 Oct contains the company name, his work email, customer names and port codes: **reference only, never in the repo**.
 
 ## Cover
 
@@ -137,3 +137,9 @@ Copy may only use these, or what Chongbo adds later.
 ## Slug
 
 `component-store` names the product in the URL. Proposed `components-for-any-data`. This changes ids in shared files (`src/lib/ask/fallback.ts`, `src/lib/ask/model.ts`, `src/lib/site.ts`): to be noted in `SHARED-CHANGES.md` at the build. Section ids change too: `contracts` becomes `contract`; `problem`, `mapping`, `token-layers`, `contrast-in-tokens`, `outcome` go.
+
+## Built (11 October 2026)
+
+`content/projects/components-for-any-data.ts` follows `copy.md` word for word. The evidence is the project's own code in `src/components/case/any-data/` (invented data only): `Demo` (the work), `Templates`, `SampleData`, `Store`, `Trio`, `Pipeline`, `Picker`, `Phases`, `AxisPickers`, and the cover art `CoverWires`. Palette: `src/app/case-palettes.css` (shared tokens) and `any-data.css` (panels, roles, canvas). The prototype in `docs/design/case-components-for-any-data.html` is the record of the design before the playbook of 11 October (no mounts, one edge per piece); the build follows the new rules.
+
+Checks: unit tests, lint, typecheck, contrast (197 pairs), production build, Playwright + axe (60 tests), axe on the page in both themes at 1440 and 390 (0 violations), every card within one screen at 1440 × 900, 1280 × 720, 1366 × 768, 1024 × 1366 and 768 × 1024, keyboard walk of the demo. Open items: `DECISIONS.md`.

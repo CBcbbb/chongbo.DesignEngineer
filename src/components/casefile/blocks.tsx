@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import type { Check, Media, Metric, Section, Specimen, Step } from "@content";
 import { assetExists, imageSize } from "@/lib/assets";
 import { CodeBlock } from "@/components/media/CodeBlock";
+import { CaseModule } from "./modules";
 import { ComparePlate } from "./ComparePlate";
 import { DataFlow } from "./DataFlow";
 import { ViewToggle } from "./ViewToggle";
@@ -403,6 +404,8 @@ export function CaseMedia({
       );
     case "diagram":
       return null;
+    case "module":
+      return <CaseModule name={media.module} />;
   }
 }
 

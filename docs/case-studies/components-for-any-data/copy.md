@@ -1,6 +1,6 @@
-# Components for Any Data: copy, draft 2 (approved 11 Oct)
+# Components for Any Data: copy, as live (draft 2, approved 11 Oct)
 
-Playbook §8 step 4. Every line traces to the facts in `inventory.md`. Nothing states status or progress (Chongbo, 11 Oct).
+Playbook §8 step 4. Every line traces to the facts in `inventory.md`. Nothing states status or progress (Chongbo, 11 Oct). The words live in `content/projects/components-for-any-data.ts`; this file is the readable copy of them.
 
 **Story.** An infrastructure company can't design for its customers' data, so the components are designed for the shape of data, and the customer connects their own. Three parts: what a component is, the contract, connecting your own data. Each card pairs an engineering decision with what the user sees because of it.
 
@@ -17,7 +17,7 @@ Logistics infrastructure company
 A component library customers preview with their own data, before they build with it.
 
 - **Role:** Design Engineer
-  - (one person) Data model, interface, front end and server, on my own
+  - (one person) Data model, interface, front end and server · on my own
 - **Outcome:** One library serves every customer. Each component declares the shape of data it needs, and customers connect their own streams by choosing fields.
 
 ## The work
@@ -107,10 +107,14 @@ The panel suggests a field for each role, using aliases and industry terms ("ccy
 - The work: the preview panel rebuilt on invented delivery data (three depots' streams). Pick a stream, map fields, switch charts.
 - 01.1: diagram, a template as a layout of component slots; the store sits beside the customer's own templates.
 - 01.2: one chart with a Sample / My stream toggle, the "Sample" tag visible.
-- 01.3: the store's filter and two cards, rebuilt with invented content (Connects to a stream · Reads the page · User input · Static).
+- 01.3: the store's filter and six components, rebuilt with invented content (Connects to a stream · Reads the page · Asks the user · Static), searchable by field.
 - 02.1: code, a short contract written for the site.
-- 02.2: one mapped dataset as bar, pie and treemap.
+- 02.2: one mapped dataset as bar, donut and treemap.
 - 02.3: diagram, producer → adapter → binding → contract → component.
 - 03.1: before / after picker, rebuilt.
 - 03.2: diagram, one endpoint with two phases behind it.
 - 03.3: the panel's role dropdowns with suggestions marked exact / known / close.
+
+## Layouts (playbook §7: each card composed for its content)
+
+`stack` for 01.1, 01.3, 02.2, 02.3, 03.2, 03.3 (evidence across the card, on the grid canvas); `pair` for 01.2, 02.1, 03.1 (narrow evidence beside the text); the closing card is a statement on the dark sheet.
