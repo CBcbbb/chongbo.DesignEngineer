@@ -127,7 +127,9 @@ export const nike: Project = {
       id: "product-card",
       kind: "decision",
       title: "Products as part of the story",
-      body: ["The old product cards were small tiles under the photo. I enlarged the product image."],
+      body: [
+        "The old product cards were small tiles under the photo. I redesigned the layout and enlarged the product visuals, to make each item more visible and give it a clear role in the content flow, so products are more noticeable and click-worthy.",
+      ],
       signals: ["conversion", "brand-storytelling"],
       media: {
         kind: "image",

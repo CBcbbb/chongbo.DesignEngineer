@@ -71,7 +71,7 @@ Readers engaged with the stories, but product click-through stayed low, because 
 
 ### 02.2 Products as part of the story
 
-The old product cards were small tiles under the photo. I enlarged the product image.
+The old product cards were small tiles under the photo. I redesigned the layout and enlarged the product visuals, to make each item more visible and give it a clear role in the content flow, so products are more noticeable and click-worthy.
 
 ### 02.3 A ranking that leads to similar outfits
 

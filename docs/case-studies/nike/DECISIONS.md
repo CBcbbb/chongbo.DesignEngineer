@@ -69,6 +69,8 @@ The case file is built into the site from the approved v3 prototype, with your t
 
 45. **Cover at the shared scale** (15:33): the title, line under it and spacing now match the case-file template HHCD uses, so the covers look like one system. The whole cover fits in the first screen at 1280 × 720 and up (486 px tall at 1440 × 900).
 
+46. **02.2 body back to your wording** (16:02), with the effect kept: "The old product cards were small tiles under the photo. I redesigned the layout and enlarged the product visuals, to make each item more visible and give it a clear role in the content flow, so products are more noticeable and click-worthy."
+
 ## Process## Process
 
 12. **Going live.** You said it can go live once done, so after the tests passed I rebased onto `main` and merged. To undo: revert the merge commit on `main`.
