@@ -21,7 +21,7 @@ Nike China
 Style stories from fashion influencers, designed to be read, shopped and returned to.
 
 - **Role:** UI Designer
-- **Outcome:** Launched nationwide as a home-screen section of the official Nike App. Nike renewed the contract for the following seasons.
+- **Outcome:** Launched across China as a section of the Nike App's home screen. On the strength of the first season, Nike renewed the agency's contract for the seasons that followed.
 
 ## Screen recording
 

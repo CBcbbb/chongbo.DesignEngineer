@@ -73,7 +73,7 @@ Expect 8 to 12 cards per main project and 4 to 6 for earlier work.
   - No "I" in headings; "I" belongs in the body. No slogans: no wordplay, parallel phrasing, rhetorical contrasts or punchlines.
 - **One decision, traced honestly.** Show what I tried first, what didn't work, what I traded away. The strongest cases have a turn in them.
 - **Contribution is unmistakable.** Say what I did with "I". Use "we" only for genuine team work, and then say which part was mine.
-- **Outcomes are concrete.** A number, a shipped thing, a live link, a real consequence. If there's no number, say what happened, in professional terms: "Launched nationwide as a home-screen section of the official Nike App. Nike renewed the contract for the following seasons." Past tense if it's no longer live. Never invent a number.
+- **Outcomes are concrete.** A number, a shipped thing, a live link, a real consequence. If there's no number, say what happened, in professional terms: "Launched across China as a section of the Nike App's home screen. On the strength of the first season, Nike renewed the agency's contract for the seasons that followed." Past tense if it's no longer live. Never invent a number.
 - **The cover and the ending don't repeat each other.** The cover gives the role and the outcome; the closing card adds what the cover doesn't (context, team), then what I'd do now.
 - **Role:** on the cover, the job title ("UI Designer"); team and context at the end. Say "designed", never "led", unless I led.
 - **Cut** anything that doesn't support a decision: generic process photos, tool lists, "my contributions" bullet lists (fold them into the role line), and anything I couldn't defend in an interview.

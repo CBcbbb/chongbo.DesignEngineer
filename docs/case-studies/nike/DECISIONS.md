@@ -56,6 +56,8 @@ The case file is built into the site from the approved v3 prototype, with your t
 36. **04.1 is back to its first version** (your call, 13:33): "One season became several", with Outcome and Role. The YouTube link stays with the recording.
 37. **Play buttons** are flat Nike orange, like the rest of the page (no 3D gradient or glow). The voice button has no progress ring: the waveform shows the progress. The "Tap to listen · 0:05" hint stays. The shoebox loops while it's in view (no Replay button); clicking it pauses it, and keyboards get a pause button when they reach it.
 
+38. **Cover outcome reworded** (13:41): "Launched across China as a section of the Nike App's home screen. On the strength of the first season, Nike renewed the agency's contract for the seasons that followed." "Across China" in place of "nationwide" (an app isn't rolled out region by region); "official" dropped (the Nike App is Nike's own); "the agency's contract" says whose contract; "On the strength of the first season" carries your point that the renewal followed the work.
+
 ## Process## Process
 
 12. **Going live.** You said it can go live once done, so after the tests passed I rebased onto `main` and merged. To undo: revert the merge commit on `main`.
