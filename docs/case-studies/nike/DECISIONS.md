@@ -33,27 +33,23 @@ The case file is built into the site from the approved v3 prototype, with your t
 ## Changes after your review (11 Oct, late morning): one thing said once
 
 18. **Cover.** The intro paragraph is gone; the line under the title says what the feature is, and two facts follow (after HHCD's cover): Role "UI Designer"; Outcome "Launched nationwide as a home-screen section of the official Nike App. Nike renewed the contract for the following seasons." The kicker is "Nike China". Team is off the cover (your call, 11:23); the brief and build credits stay on the printed outcome sheet. Full text in `copy.md` (draft 8).
-19. **"Launched"** is past tense because the feature ran over several seasons; if it's still running today, "Live nationwide" is the HHCD-style alternative.
-20. **The closing outcome card is gone**, because the cover now says the same thing. Part 04 is "Reflection", with one card (What I'd do now). The printer's outcome sheet links to the cover's Outcome line.
+19. **"Launched"** stays: the section is no longer in the app (you confirmed).
+20. ~~The closing outcome card is gone~~: back, see 29.
 21. **Card labels:** index only. The kind labels and capability pills repeated the evidence ("Before and after"), the heading ("Visual style") or each other ("Design system" + "Design systems"). The cover chips still map the three capabilities.
 22. **Copy:** every body sentence that restated its heading is cut or rewritten (full list in `copy.md`). One heading changed: 02.2 is now "Products as part of the story" (was "Larger product cards", which the body then repeated). Star Voice's four-step loop (Preview, Ask, Vote, Answered live) is gone: the heading and body already say it.
 23. **Recording:** heading "Screen recording"; the YouTube link sits under it (it was on the outcome card).
 24. **Layout:** 01.1 is back to text on top and the tabs down the left of the canvas. The label-to-heading gap is fixed (a reset was zeroing it). The wireframe inset is pinned to the canvas's top-right corner and overhangs it. 02.2's phone screens are larger (tighter field, no width cap): about 274 × 538 px at 1440 × 900, the most a card one screen tall allows for two full phones side by side.
 
-## Images: originals needed
+## Changes after your review (11 Oct, midday)
 
-Measured at 1440 × 900 on a 2× screen: a file needs to be twice its display width to look sharp.
+26. **Originals in.** From your "high-quality photos" folder: the five framing devices (3–4×), the three imagery templates and the poster card (3×), both rankings (3×), the four retouching photos (1332 × 2000, saved as quality-92 JPEG) and the Star Voice screen. Every image on the page is now at least twice its display size. The original retouching photos were 4 px wider than the retouched ones; I trimmed 2 px from each side so the slider lines up.
+27. **Image quality 90.** `next.config.ts` now allows quality 90 (you approved it); every Nike image uses it.
+28. **Star Voice.** The notes from your original image are back, set as text beside the screen so they stay sharp and readable. Heading "Star Voice Q&A"; the body is your original paragraph up to where the notes take over, plus the result. "Episodes" and "guest" read "volumes" and "influencer", to match the rest of the page.
+29. **Openers** list their cards again. **The closing card** is back as 04.1; it adds the context and the team (the cover already gives the outcome). **The shoebox** plays once when it comes into view (not with reduced motion), and Replay plays it again.
+30. **"Image and text"** in 01.1 is larger (the canvas has less padding); the retouching sliders are larger too.
+31. **Sound.** The recording now has its sound (from your original file), with a Sound button above Play. It plays only when someone presses Play or a chapter; nothing plays on its own.
+32. **Voice teaser.** The Star Voice screen has a Listen button on the waveform. It plays the teaser from the recording (0:43–0:48, 5 seconds, levelled) and sweeps the waveform in orange as it plays; a slow ring invites the first tap (none with reduced motion). Starting it pauses the recording, and the other way round.
 
-| Card | File (in `public/assets/nike/`) | Now | Shown at | Please export |
-|---|---|---|---|---|
-| 01.3 Retouching | `retouch-1-original.png`, `retouch-1-after.png`, `retouch-2-original.png`, `retouch-2-after.png` | 334 × 500 (from Wix) | 313 × 470 | The four photos from your Photoshop files or the Figma "Retouching" frame, at least 1000 px wide. Same crop for each original/retouched pair. |
-| 02.3 Star Ranking | `ranking-before.png`, `ranking-after.png` | 375 px wide | 188 px | The old list and RANK LIST OP2 from Figma at 3×. |
-| 01.1 Framing device | `gs-logo-lockup.png`, `gs-header-one-line.png`, `gs-key-message.png`, `gs-text-simplified.png`, `gs-image-text-combo.png` | about 500 px wide (sharp, but they can only be shown small) | 253 px | The five configurations from the "Creative System" page at 4×, so they can fill the canvas. |
-
-Drop them in under the same names and I'll update the sizes. Until then these eleven are served as they are (no recompression), which is the best the current files can look. Everything else on the page is at least twice its display size.
-
-25. **Recompression.** The site's image optimiser saves at quality 75, which can soften text in screenshots. Raising it needs a one-line change to `next.config.ts` (shared, proposed in `SHARED-CHANGES.md`).
-
-## Process
+## Process## Process
 
 12. **Going live.** You said it can go live once done, so after the tests passed I rebased onto `main` and merged. To undo: revert the merge commit on `main`.

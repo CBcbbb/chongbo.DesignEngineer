@@ -172,9 +172,9 @@ export const nike: Project = {
     {
       id: "star-voice",
       kind: "decision",
-      title: "Star Voice Q&A: ask now, answered live",
+      title: "Star Voice Q&A",
       body: [
-        "I designed it to hold attention between volumes: the next influencer records a short voice teaser, and readers vote on each other's questions. It shipped, and was recommended for wider use in other campaigns.",
+        "To maintain audience interest between volumes and build anticipation for the next influencer, I designed a new feature. It shipped, and was recommended for wider use in other campaigns.",
       ],
       signals: ["brand-storytelling", "motion-interaction", "prototyping"],
       media: {
@@ -185,14 +185,13 @@ export const nike: Project = {
         ratio: "1:1",
       },
     },
-    // Printed sheets and the AI. On the page, the outcome is the cover's Outcome line, which carries this id.
     {
       id: "outcome",
       kind: "outcome",
-      title: "Nike renewed for the following seasons",
+      title: "One season became several",
       body: [
-        "The feature launched nationwide as a home-screen section of the official Nike App, on a contract that covered one season.",
-        "UI design internship at an advertising agency. Nike's marketing team set the brief; Nike's engineers built it.",
+        "UI design internship at an advertising agency.",
+        "Nike's marketing team set the brief. The agency team also had a copywriter and a photographer, and Nike's engineers built the feature.",
       ],
       signals: ["end-to-end", "brand-storytelling"],
     },

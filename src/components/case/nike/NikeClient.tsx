@@ -34,18 +34,43 @@ export function RecordingProvider({ children }: { children: ReactNode }) {
 
 export type Chapter = { t: number; label: string };
 
+/** A speaker; `off` adds the mute stroke. */
+function Speaker({ off = false }: { off?: boolean }) {
+  return (
+    <svg className="nk-spk" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
+      <path d="M3 7.5h3l4.5-3.5v12L6 12.5H3z" fill="currentColor" />
+      {off ? (
+        <path d="M13.5 7.5l4 5m0-5l-4 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+      ) : (
+        <path d="M13.5 7a4 4 0 0 1 0 6m2-8.5a7 7 0 0 1 0 11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+      )}
+    </svg>
+  );
+}
+
+/** Pauses every other video and audio element on the page, so only one thing plays at a time. */
+function pauseOthers(self: HTMLMediaElement) {
+  document.querySelectorAll<HTMLMediaElement>("video, audio").forEach((m) => {
+    if (m !== self && !m.paused) m.pause();
+  });
+}
+
 export function RecordingPlayer({ chapters, full }: { chapters: { part: string; items: Chapter[] }[]; full: string }) {
   const { register, seek } = useContext(RecordingCtx);
   const ref = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [current, setCurrent] = useState<number | null>(null);
+  const [muted, setMuted] = useState(false);
   const times = chapters.flatMap((c) => c.items.map((i) => i.t)).sort((a, b) => a - b);
 
   useEffect(() => {
     register(ref.current);
     return () => register(null);
   }, [register]);
+  useEffect(() => {
+    if (ref.current) ref.current.muted = muted;
+  }, [muted]);
 
   return (
     <div className="nk-rec">
@@ -56,11 +81,13 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
           poster="/assets/nike/recording-poster.jpg"
           width={750}
           height={1624}
-          muted
           playsInline
           preload="metadata"
           aria-label="Screen recording of Athletes Closet in Nike's app"
-          onPlay={() => setPlaying(true)}
+          onPlay={(e) => {
+            pauseOthers(e.currentTarget);
+            setPlaying(true);
+          }}
           onPause={() => setPlaying(false)}
           onEnded={() => setPlaying(false)}
           onTimeUpdate={(e) => {
@@ -90,6 +117,9 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
           ) : (
             <span className="nk-tri" aria-hidden="true" />
           )}
+        </button>
+        <button type="button" className="nk-snd" aria-label="Sound" aria-pressed={!muted} onClick={() => setMuted((m) => !m)}>
+          <Speaker off={muted} />
         </button>
       </div>
       <div className="nk-rec-side">
@@ -227,6 +257,58 @@ export function Switcher({ options }: { options: { label: string; layer: string;
 }
 
 /* ---------------------------------------------------------------------------------------------
+ * Voice teaser: a Listen button pinned to the waveform on the Star Voice screen. It plays the
+ * influencer's teaser (cut from the recording) and sweeps the waveform as it plays.
+ * ------------------------------------------------------------------------------------------- */
+
+export function VoiceTeaser({ src, label }: { src: string; label: string }) {
+  const audio = useRef<HTMLAudioElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  return (
+    <>
+      <span className={`nk-vt-wave${playing ? " is-playing" : ""}`} aria-hidden="true">
+        <i style={{ transform: `scaleX(${progress})` }} />
+      </span>
+      <button
+        type="button"
+        className={`nk-vt${playing ? " is-playing" : ""}`}
+        aria-label={playing ? `Pause ${label}` : `Play ${label}`}
+        onClick={() => {
+          const a = audio.current;
+          if (!a) return;
+          if (a.paused) {
+            if (a.ended) a.currentTime = 0;
+            void a.play().catch(() => {});
+          } else a.pause();
+        }}
+      >
+        <Speaker />
+        <span aria-hidden="true">{playing ? "Playing" : "Listen"}</span>
+      </button>
+      <audio
+        ref={audio}
+        src={src}
+        preload="none"
+        onPlay={(e) => {
+          pauseOthers(e.currentTarget);
+          setPlaying(true);
+        }}
+        onPause={() => setPlaying(false)}
+        onEnded={() => {
+          setPlaying(false);
+          setProgress(0);
+        }}
+        onTimeUpdate={(e) => {
+          const a = e.currentTarget;
+          if (a.duration) setProgress(a.currentTime / a.duration);
+        }}
+      />
+    </>
+  );
+}
+
+/* ---------------------------------------------------------------------------------------------
  * Picture in picture: the shipped screens large, the wireframe as a labelled inset pinned to the
  * canvas's top-right corner and overhanging it. Pressing the inset swaps which one is large.
  * ------------------------------------------------------------------------------------------- */
@@ -262,7 +344,7 @@ export function Pip({ main, inset, ratio }: { main: PipState; inset: PipState; /
 }
 
 /* ---------------------------------------------------------------------------------------------
- * The shoebox: a Lottie that plays on demand. Reduced motion shows the last frame.
+ * The shoebox: a Lottie that plays once when it comes into view, and again on Replay.
  * ------------------------------------------------------------------------------------------- */
 
 export function GiftBox({ src, label }: { src: string; label: string }) {
@@ -296,20 +378,37 @@ export function GiftBox({ src, label }: { src: string; label: string }) {
     return loading.current;
   }, [src]);
 
+  /* Loads just before it scrolls into view and plays once when most of it is visible.
+     With reduced motion it rests on the last frame until someone presses Play. */
   useEffect(() => {
     const el = box.current;
     if (!el) return;
-    const io = new IntersectionObserver(
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let started = false;
+    const preload = new IntersectionObserver(
       ([entry]) => {
         if (!entry?.isIntersecting) return;
-        io.disconnect();
-        void load().then((a) => a.goToAndStop(0, true));
+        preload.disconnect();
+        void load().then((a) => {
+          if (!started) a.goToAndStop(reduce ? a.totalFrames - 1 : 0, true);
+        });
       },
       { rootMargin: "300px" },
     );
-    io.observe(el);
+    const autoplay = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry?.isIntersecting || reduce) return;
+        autoplay.disconnect();
+        started = true;
+        void load().then((a) => a.goToAndPlay(0, true));
+      },
+      { threshold: 0.6 },
+    );
+    preload.observe(el);
+    autoplay.observe(el);
     return () => {
-      io.disconnect();
+      preload.disconnect();
+      autoplay.disconnect();
       anim.current?.destroy();
       anim.current = null;
       loading.current = null;
@@ -325,15 +424,7 @@ export function GiftBox({ src, label }: { src: string; label: string }) {
         <button
           type="button"
           className="nk-btn"
-          onClick={() =>
-            void load().then((a) => {
-              const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-              if (reduce) {
-                a.goToAndStop(a.totalFrames - 1, true);
-                setPlayed(true);
-              } else a.goToAndPlay(0, true);
-            })
-          }
+          onClick={() => void load().then((a) => a.goToAndPlay(0, true))}
         >
           <span className="nk-tri" aria-hidden="true" />
           {played ? "Replay" : "Play"}

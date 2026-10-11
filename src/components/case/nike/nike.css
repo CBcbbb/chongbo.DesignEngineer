@@ -498,6 +498,24 @@
   color: var(--nk-on-orange) !important;
   box-shadow: 0 8px 20px -8px #000;
 }
+/* sound on/off, above the play button */
+.nk-snd {
+  position: absolute;
+  right: -0.35rem;
+  bottom: 7.4rem;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid #4a4743;
+  border-radius: 50%;
+  cursor: pointer;
+  background: #1d1c1a;
+  color: var(--nk-on-black) !important;
+}
+.nk-snd[aria-pressed="false"] {
+  color: var(--nk-on-black-2) !important;
+}
 .nk-bars {
   display: flex;
   gap: 4px;
@@ -578,6 +596,11 @@
   font-size: clamp(2rem, 5vw, 3.4rem);
   line-height: 0.95;
   letter-spacing: -0.05em;
+}
+.nk-opener .nk-cards {
+  margin-top: 0.6rem;
+  font: 400 0.8125rem/1.5 var(--mono);
+  color: var(--nk-on-orange-2);
 }
 
 /* ---------- framing device switcher ---------- */
@@ -923,17 +946,143 @@
   bottom: 1.1rem;
 }
 
-/* ---------- Star Voice ---------- */
+/* ---------- Star Voice: the screen with its notes pinned beside it ---------- */
 .nk-sv {
   display: grid;
-  place-items: center;
-  padding: clamp(1rem, 3vw, 1.75rem);
-  border-radius: var(--nk-r-in);
+  gap: 1.25rem;
+  justify-items: center;
 }
-.nk-sv img {
+.nk-sv-phone {
+  position: relative;
+  width: min(100%, 20rem);
+}
+/* the voice teaser: a sweep over the waveform bubble while it plays, and a Listen button on the bubble */
+.nk-vt-wave {
+  position: absolute;
+  left: 25.6%;
+  top: 18.7%;
+  width: 67.3%;
+  height: 6.9%;
+  overflow: hidden;
+  border-radius: 0.55rem;
+  pointer-events: none;
+}
+.nk-vt-wave i {
+  display: block;
+  height: 100%;
+  background: rgba(242, 101, 34, 0.42);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.25s linear;
+}
+.nk-vt {
+  position: absolute;
+  top: 22.15%;
+  right: 8.5%;
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.7rem 0 0.55rem;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  background: var(--nk-orange);
+  color: var(--nk-on-orange) !important;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  transform: translateY(-50%);
+  box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.6);
+}
+.nk-vt .nk-spk {
+  width: 16px;
+  height: 16px;
+}
+/* a slow ring that invites a tap, until it has been played */
+.nk-vt::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--nk-orange);
+  border-radius: inherit;
+  opacity: 0;
+  animation: nk-ping 2.2s var(--nk-ease) infinite;
+}
+.nk-vt.is-playing::after {
+  animation: none;
+}
+@keyframes nk-ping {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.18, 1.45);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nk-vt::after {
+    animation: none;
+  }
+}
+.nk-sv-phone img {
   width: 100%;
-  max-width: 24rem;
-  border-radius: 6px;
+  border-radius: 10px;
+  box-shadow: 0 24px 40px -24px rgba(0, 0, 0, 0.55);
+}
+.nk-sv-notes {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+}
+.nk-sv-notes li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+.nk-sv-notes b {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-weight: 600;
+  color: var(--nk-ink);
+}
+.nk-sv-notes span {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--nk-body);
+}
+/* the pointer: a short rule with an arrowhead at the screen's end */
+.nk-sv-notes i {
+  position: relative;
+  flex: 0 0 2.25rem;
+  height: 1px;
+  background: var(--nk-ink);
+}
+.nk-sv-notes i::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 7px;
+  height: 7px;
+  border: solid var(--nk-ink);
+}
+.nk-sv-notes .is-r i::after {
+  left: 0;
+  border-width: 0 0 1px 1px;
+  transform: rotate(45deg);
+}
+.nk-sv-notes .is-l i::after {
+  right: 0;
+  border-width: 1px 1px 0 0;
+  transform: rotate(45deg);
+}
+@media (max-width: 760px) {
+  .nk-sv-notes i {
+    display: none;
+  }
 }
 
 /* ---------- ranking ---------- */
@@ -962,6 +1111,36 @@
 .nk-arrow {
   font: 600 1.5rem/1 var(--sans);
   color: var(--nk-accent);
+}
+
+/* ---------- outcome ---------- */
+.nk-noise {
+  background: var(--nk-grain), var(--nk-black);
+}
+.nk-big {
+  max-width: 12ch;
+  font-size: clamp(2.6rem, 7.5vw, 5.5rem) !important;
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+  color: var(--nk-orange-on-black) !important;
+}
+.nk-ogrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem 2.5rem;
+  padding-top: 1.1rem;
+  border-top: 1.5px solid var(--nk-orange-on-black);
+}
+.nk-olabel {
+  margin-bottom: 0.4rem;
+  font: 500 0.75rem/1 var(--mono);
+  letter-spacing: 0;
+  color: var(--nk-on-black-2);
+}
+.nk-ogrid p {
+  max-width: 42ch;
+  color: var(--nk-on-black);
 }
 
 /* ---------- links on black ---------- */
@@ -1059,6 +1238,10 @@
     height: var(--nk-card-h);
     grid-template-rows: auto minmax(0, 1fr);
   }
+  .nk-outcome.is-card {
+    grid-template-rows: auto auto;
+    align-content: space-between;
+  }
   .nk-ev {
     height: 100%;
     min-height: 0;
@@ -1094,6 +1277,7 @@
   .nk-spec-view {
     height: 100%;
     min-height: 0;
+    padding: 2.1rem 1.25rem 1rem;
   }
   .nk-spec-img {
     display: grid;
@@ -1185,6 +1369,8 @@
   .nk-retouch {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: minmax(0, 1fr);
+    gap: 1.25rem;
+    padding: 1.25rem;
   }
   .nk-cq {
     container-type: size;
@@ -1232,14 +1418,44 @@
     align-self: end;
   }
 
-  /* Star Voice */
+  /* Star Voice: the screen as tall as the space allows (and no wider than 36% of it); notes pinned beside it */
   .nk-sv {
-    grid-template-rows: minmax(0, 1fr);
+    container-type: size;
+    position: relative;
+    display: block;
   }
-  .nk-sv img {
-    width: auto;
-    max-width: 100%;
-    max-height: 100%;
+  .nk-sv-phone,
+  .nk-sv-notes li {
+    --pw: min(calc(100cqh * 1125 / 1833), 36cqw);
+    --ph: calc(var(--pw) * 1833 / 1125);
+    --top: calc((100cqh - var(--ph)) / 2);
+  }
+  .nk-sv-phone {
+    position: absolute;
+    top: var(--top);
+    left: calc(50cqw - var(--pw) / 2);
+    width: var(--pw);
+  }
+  .nk-sv-notes {
+    display: block;
+  }
+  .nk-sv-notes li {
+    position: absolute;
+    top: calc(var(--top) + var(--ph) * var(--y));
+    transform: translateY(-50%);
+  }
+  .nk-sv-notes .is-r {
+    left: calc(50cqw + var(--pw) / 2 + 0.4rem);
+    right: 0;
+  }
+  .nk-sv-notes .is-l {
+    right: calc(50cqw + var(--pw) / 2 + 0.4rem);
+    left: 0;
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+  .nk-sv-notes span {
+    max-width: 17rem;
   }
 
   /* specified vs shipped */
@@ -1385,6 +1601,7 @@
 @media (max-width: 760px) {
   .nk-head,
   .nk-facts,
+  .nk-ogrid,
   .nk-vs,
   .nk-retouch {
     grid-template-columns: minmax(0, 1fr);

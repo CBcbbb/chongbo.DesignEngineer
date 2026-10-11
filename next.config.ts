@@ -3,7 +3,8 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  images: { formats: ["image/avif", "image/webp"] },
+  // 90 is for screenshots with fine text (case files ask for it per image).
+  images: { formats: ["image/avif", "image/webp"], qualities: [75, 90] },
   async headers() {
     return [
       {

@@ -4,7 +4,7 @@ Playbook §8 step 4. Every line traces to the Wix page or `notes.md`. The page s
 
 **Story.** The cover sets one idea in three verbs: stories people read, shop and return to. The page follows those verbs as three parts, then closes with what I'd do now. Every card still stands alone when printed.
 
-**No repetition (draft 8).** Each thing is said once. The heading makes the claim; the body adds what the heading doesn't say (the problem, the method, the result) and never restates it; the evidence shows it, so the body doesn't describe it. The cover holds the role and the outcome, so the page doesn't end on a second copy of them. Card labels are the index only: the old kind labels ("Before and after", "Design system") and capability pills repeated the evidence, the heading or each other.
+**No repetition (draft 8).** Each thing is said once. The heading makes the claim; the body adds what the heading doesn't say (the problem, the method, the result) and never restates it; the evidence shows it, so the body doesn't describe it. The cover gives the role and the outcome; the closing card adds the context and the team. Card labels are the index only: the old kind labels ("Before and after", "Design system") and capability pills repeated the evidence, the heading or each other.
 
 **JD language.** Checked against both Granola JDs (10 Oct 2026): "from typography and color to motion", "reusable components", "balance consistency with flexibility", "calls to action", "hierarchy", "gaps between design and engineering", "from an initial idea into production".
 
@@ -85,24 +85,29 @@ The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard w
 
 The stories were static, so readers had little reason to act. I made each like an entry in a prize draw, then designed and animated the microinteraction.
 
-### 03.2 Star Voice Q&A: ask now, answered live
+### 03.2 Star Voice Q&A
 
-I designed it to hold attention between volumes: the next influencer records a short voice teaser, and readers vote on each other's questions. It shipped, and was recommended for wider use in other campaigns.
+To maintain audience interest between volumes and build anticipation for the next influencer, I designed a new feature. It shipped, and was recommended for wider use in other campaigns.
+
+*Evidence: the screen with the original presentation's notes pinned beside it:*
+- **Voice teaser:** Each influencer introduces the next volume through a short voice clip, with an animated waveform to catch attention and add realism.
+- **Livestream reveal:** Selected top questions are answered live during Nike's 618 livestream.
+- **Vote with likes:** Questions can be upvoted by others; the most liked are prioritised for an answer.
+- **Ask a question:** Readers submit questions in real time, shown in an interactive feed.
+
+The paragraph is the original Wix text, cut where the notes take over (how the loop works), with "episodes" and "guest" changed to the page's "volumes" and "influencer".
 
 ---
 
-## 04 Reflection
+## 04 Outcome
 
-### 04.1 What I'd do now: take motion from idea to production myself
+### 04.1 One season became several
+
+- **Context:** UI design internship at an advertising agency.
+- **Team:** Nike's marketing team set the brief. The agency team also had a copywriter and a photographer, and Nike's engineers built the feature.
+
+### 04.2 What I'd do now: take motion from idea to production myself
 
 I specified the like in four states and handed it over in Figma. It shipped as a plain red heart.
 
 *Evidence: Specified / Shipped.*
-
----
-
-## Printed sheet only: outcome
-
-Not a card on the page (the cover says it); the printer and the AI still use it, and its link lands on the cover's Outcome line.
-
-**Nike renewed for the following seasons.** The feature launched nationwide as a home-screen section of the official Nike App, on a contract that covered one season. UI design internship at an advertising agency. Nike's marketing team set the brief; Nike's engineers built it.
