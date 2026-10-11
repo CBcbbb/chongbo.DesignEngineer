@@ -3276,7 +3276,7 @@ body {
 }
 .pipe {
   display: grid;
-  gap: 14px;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -3329,8 +3329,8 @@ body {
 }
 .pipe .ds.chart {
   display: block;
-  width: min(100%, 300px);
-  padding: 8px 10px 4px;
+  width: min(100%, 280px);
+  padding: 6px 10px 2px;
 }
 .pipe .ds .ln {
   display: inline-flex;
@@ -3461,7 +3461,7 @@ body {
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.14);
 }
 .cf-sheet[data-mount="field"] .cf-seg label {
-  color: var(--on-field-2);
+  color: var(--on-field);
 }
 .cf-sheet[data-mount="field"] .cf-seg label:hover {
   color: var(--on-field);
@@ -3524,11 +3524,24 @@ body {
   transition: opacity 0.3s var(--ease), box-shadow 0.3s;
 }
 .phase[data-on="false"] {
-  opacity: 0.45;
-  box-shadow: 0 0 0 1px var(--ds-rule);
+  background: var(--ds-inset);
+  box-shadow: inset 0 0 0 1px var(--ds-line);
 }
 .phase[data-on="true"] {
-  box-shadow: 0 0 0 2px var(--ds-ink), 0 24px 60px -30px rgb(0 0 0 / 0.55);
+  box-shadow: 0 0 0 2px var(--ds-brand), 0 24px 60px -30px rgb(0 0 0 / 0.55);
+}
+.phase .ds-label b {
+  display: none;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--ds-brand);
+  color: var(--ds-on-brand);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+.phase[data-on="true"] .ds-label b {
+  display: inline-block;
 }
 .phase p {
   margin: 0;
@@ -3634,9 +3647,7 @@ body {
     height: 100%;
     min-height: 0;
   }
-  .cf-evidence .cf-plate.ev-fill {
-    overflow: auto;
-  }
+
 }
 
 .roles.is-row .role-top {
@@ -3647,7 +3658,7 @@ body {
 </style>
 </head>
 <body>
-<div class="cf" data-palette="components-for-any-data">
+<main class="cf" data-palette="components-for-any-data">
   <div class="cf-frame">
     <nav class="cf-toc" aria-label="Contents">
       <a class="cf-toc-proj" href="#top" aria-current="step">Components for Any Data</a>
@@ -4157,12 +4168,12 @@ body {
                 </div>
                 <div class="srv-phases">
                   <div class="ds phase" data-phase="1" data-on="true">
-                    <span class="ds-label">Phase 1</span>
+                    <span class="ds-label">Phase 1<b>Shown</b></span>
                     <h4>The newest entry</h4>
                     <p>Its field names, from a read the platform already makes. No extra load.</p>
                   </div>
                   <div class="ds phase" data-phase="2" data-on="false">
-                    <span class="ds-label">Phase 2</span>
+                    <span class="ds-label">Phase 2<b>Shown</b></span>
                     <h4>A stored field profile</h4>
                     <p>Fields, types and fill rate per stream, and an index from field to streams. Same cost for 50 streams or 5,000.</p>
                   </div>
@@ -4238,14 +4249,14 @@ body {
       </nav>
     </article>
   </div>
-</div>
+</main>
 
-<div class="proto-bar" role="group" aria-label="Prototype theme">
+<aside class="proto-bar" aria-label="Prototype theme">
   <span>Theme</span>
   <button type="button" data-theme-set="system" aria-pressed="true">Auto</button>
   <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
   <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
-</div>
+</aside>
 
 <script>
 (() => {
@@ -4857,7 +4868,7 @@ body {
   /* ---------- 02.3 the component at the end of the pipe ---------- */
   function initPipe() {
     const d = totals(STREAMS[0], { category: "town", value: "parcels" }).slice(0, 4);
-    draw(document.getElementById("pipe-chart"), (w) => bar(d, { w, h: 120 }));
+    draw(document.getElementById("pipe-chart"), (w) => bar(d, { w, h: 100 }));
   }
 
   /* ---------- 03.1 and 03.2: two-state switches ---------- */
