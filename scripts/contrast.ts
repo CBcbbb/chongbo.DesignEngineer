@@ -54,6 +54,9 @@ function pairs(t: Record<string, string>, theme: string): Pair[] {
     { fg: T("studio"), bg: T("ink"), where: `${theme}: New request button and skip link`, min: TEXT },
     { fg: T("ink"), bg: T("studio"), where: `${theme}: deck arrows and counter`, min: TEXT },
     { fg: T("focus"), bg: T("studio"), where: `${theme}: focus ring on studio`, min: LARGE },
+    // kraft pills of the shell (an object, the same in both themes)
+    { fg: T("kraft-ink"), bg: T("kraft"), where: `${theme}: pill label on kraft`, min: TEXT },
+    { fg: T("kraft-ink"), bg: T("kraft-hi"), where: `${theme}: pill label on kraft, hovered`, min: TEXT },
     // paper (same in both themes: it is an object)
     { fg: T("paper-ink"), bg: T("paper"), where: `${theme}: ticket text`, min: TEXT },
     { fg: T("paper-body"), bg: T("paper"), where: `${theme}: ticket body`, min: TEXT },

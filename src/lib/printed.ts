@@ -35,6 +35,9 @@ export const EXAMPLES = [
   "Paste a job description",
 ];
 
+/** Shown on the paper, still, once a skills card is picked. */
+export const PICKED_HINT = "Add a line about the role, or press the red button.";
+
 export const NUM = ["No", "One", "Two", "Three", "Four", "Five"];
 const num = (n: number) => NUM[n] ?? String(n);
 
@@ -49,6 +52,13 @@ export function resultTitle(opts: { count: number; startHere: boolean; topicLabe
   if (startHere) return `Here are ${num(count).toLowerCase()} ${count === 1 ? "place" : "places"} to start.`;
   if (topicLabel) return `${num(count)} ${count === 1 ? "project shows" : "projects show"} ${topicLabel.toLowerCase()}.`;
   return `${num(count)} ${count === 1 ? "project matches" : "projects match"} your brief.`;
+}
+
+/** Under the results title: who chose the sheets, so the reader knows the words are mine. */
+export function provenanceLine(source: "model" | "fallback", count: number): string {
+  if (!count) return "";
+  const per = count === 1 ? "" : ", one section per project";
+  return source === "model" ? `Chosen by Claude from my case files${per}. The words are mine.` : `Matched by keyword from my case files${per}.`;
 }
 
 export function missingLine(missing: readonly string[]): string {

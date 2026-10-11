@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
   useCallback,
   useEffect,
@@ -16,7 +15,8 @@ import {
 import { SIGNALS } from "@content/schema";
 import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type AskResponse } from "@/lib/ask/schema";
 import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
-import { EXAMPLES, NUM, TOPICS, missingLine, pad2, quoteBrief, resultTitle, topicById, topicsToSignals } from "@/lib/printed";
+import { EXAMPLES, NUM, PICKED_HINT, TOPICS, missingLine, pad2, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals } from "@/lib/printed";
+import { Pill } from "./nav/Pill";
 import { Sheet } from "./Sheet";
 
 type Props = {
@@ -27,7 +27,7 @@ type Props = {
   labelledBy: string;
 };
 
-type Result = { title: string; asked: string; cards: SheetCard[]; missing: string; error?: boolean };
+type Result = { title: string; asked: string; cards: SheetCard[]; missing: string; provenance: string; error?: boolean };
 
 /** Per step of the paper's checklist. Four steps plus the feed: under two seconds, long enough to read. */
 const STEP_MS = 320;
@@ -36,6 +36,8 @@ const FEED_MS = 600;
 const prefersReduced = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, prefersReduced() ? 0 : ms));
+const rnd = (a: number, b: number) => a + Math.random() * (b - a);
+const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 
 type Outcome = { ok: true; data: AskResponse } | { ok: false; message: string };
 
@@ -81,14 +83,17 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
   const resultsRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const deckRef = useRef<HTMLDivElement>(null);
+  const machineRef = useRef<HTMLDivElement>(null);
   const sheetRefs = useRef<(HTMLElement | null)[]>([]);
 
   const deckCards = useMemo(() => result?.cards ?? [], [result]);
   const deckN = deckCards.length;
 
-  // ---------- typed examples on the paper ----------
+  // ---------- typed examples on the paper; a still hint once a skill is picked ----------
+  const anyPicked = picked.length > 0;
+  const ghostText = anyPicked ? PICKED_HINT : ghost;
   useEffect(() => {
-    if (prefersReduced()) return;
+    if (anyPicked || prefersReduced()) return;
     let ex = 0;
     let i = EXAMPLES[0]!.length;
     let timer: ReturnType<typeof setTimeout>;
@@ -109,12 +114,29 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
     };
     timer = setTimeout(tick, 0);
     return () => clearTimeout(timer);
-  }, []);
+  }, [anyPicked]);
 
   // ---------- skills cards ----------
-  const toggle = (id: string) => {
+  const toggle = (id: string, el?: HTMLElement | null) => {
     if (busyRef.current) return;
     setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+    // A card picked up gets a small random tilt and settles; the layout never moves.
+    if (el && !prefersReduced())
+      el.animate([{ rotate: "0deg" }, { rotate: `${rnd(-2.4, 2.4)}deg`, offset: 0.35 }, { rotate: "0deg" }], { duration: 480, easing: SPRING });
+  };
+
+  /** The button goes down and the whole machine takes the knock, a little differently each time. */
+  const thunk = () => {
+    const m = machineRef.current;
+    if (!m || prefersReduced()) return;
+    m.animate(
+      [
+        { translate: "0 0", rotate: "0deg" },
+        { translate: `0 ${rnd(1.5, 3)}px`, rotate: `${rnd(-0.25, 0.25)}deg`, offset: 0.3 },
+        { translate: "0 0", rotate: "0deg" },
+      ],
+      { duration: 420, easing: SPRING },
+    );
   };
 
   // ---------- printing ----------
@@ -128,6 +150,7 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
     }
     busyRef.current = true;
     setBusy(true);
+    thunk();
     const pending = ask(text, topicsToSignals(ids));
     const labels = ids.map((id) => topicById(id)?.label ?? id);
     const list = [
@@ -173,8 +196,9 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
           asked: quoteBrief(text),
           cards: sheets,
           missing: missingLine(outcome.data.missing),
+          provenance: provenanceLine(outcome.data.source, sheets.length),
         }
-      : { title: outcome.message, asked: quoteBrief(text), cards: [], missing: "", error: true };
+      : { title: outcome.message, asked: quoteBrief(text), cards: [], missing: "", provenance: "", error: true };
     introRef.current = true;
     curRef.current = 0;
     setCur(0);
@@ -363,7 +387,7 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
                 type="button"
                 className="topic"
                 aria-pressed={picked.includes(t.id)}
-                onClick={() => toggle(t.id)}
+                onClick={(e) => toggle(t.id, e.currentTarget)}
               >
                 <small aria-hidden="true">{pad2(i + 1)}</small>
                 <b>{t.label}</b>
@@ -374,7 +398,7 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
       </section>
 
       <div className="stage">
-        <div className={`machine${ready ? " ready" : ""}`} data-state={working ? "working" : "idle"}>
+        <div ref={machineRef} className={`machine${ready ? " ready" : ""}`} data-state={working ? "working" : ready ? "ready" : "idle"}>
           <form
             ref={formRef}
             id="order"
@@ -403,7 +427,7 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
                   onKeyDown={onKeyDown}
                 />
                 <div className="ghost" aria-hidden="true">
-                  {ghost}
+                  {ghostText}
                 </div>
               </div>
               <input type="hidden" name="topics" value={topicsToSignals(picked).join(",")} />
@@ -435,6 +459,9 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
           </div>
           <span className="led" aria-hidden="true" />
           <button className="pk" type="submit" form="order" aria-label="Print" aria-busy={busy || undefined} />
+          <span className="pk-label" aria-hidden="true">
+            Print
+          </span>
           <div className="outfeed" ref={outfeedRef} aria-hidden="true">
             <i />
           </div>
@@ -442,7 +469,7 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
       </div>
 
       <div className="alt" hidden={Boolean(result)}>
-        <Link href="/work">Or browse all work</Link>
+        <Pill kind="all" href="/work" label="Or browse all work" />
       </div>
 
       {result && (
@@ -454,6 +481,7 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
               </h2>
               {result.asked && <p>{result.asked}</p>}
             </div>
+            {result.provenance && <p className="provenance">{result.provenance}</p>}
           </div>
           {deckN > 0 && (
             <>
