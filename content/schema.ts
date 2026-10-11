@@ -226,6 +226,11 @@ export type Project = {
   parts?: CasePart[];
   /** Case-file template: one line on the result, shown on the cover. */
   outcome?: string;
+  /**
+   * Case-file template: what was done and with whom, shown on the cover under the job title (`role`), one short
+   * line each with a small icon: `team` (done with others) or `solo` (done on my own).
+   */
+  roleSplit?: { with: "team" | "solo"; what: string; note: string }[];
   /** Case-file template: who the work was for, shown first on the cover (e.g. "Nike App, China"). */
   client?: string;
   /**

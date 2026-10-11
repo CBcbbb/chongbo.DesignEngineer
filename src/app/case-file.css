@@ -415,6 +415,36 @@
   line-height: 1.45;
   color: var(--on-field);
 }
+/* the role: the job title, then what was done and with whom, each line with a small icon */
+.cf-facts.has-split {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+}
+.cf-role-title {
+  display: block;
+  font-weight: 600;
+}
+.cf-role-split {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0.45rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.cf-role-split li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+.cf-role-split .cf-ico {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.1rem;
+  color: var(--on-field-2);
+}
+.cf-role-note {
+  font-weight: 400;
+  color: var(--on-field-2);
+}
 .cf-cover-foot {
   display: flex;
   flex-wrap: wrap;

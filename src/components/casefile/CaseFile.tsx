@@ -8,7 +8,7 @@ import { imageSize } from "@/lib/assets";
 import { CaseMedia, CardTitle, Facts, Keys, StepsRow } from "./blocks";
 import { CaseContents, type ContentsPart } from "./CaseContents";
 import { BrowserFrame } from "./Frame";
-import { CapabilityIcon, OutArrow } from "./icons";
+import { CapabilityIcon, OutArrow, WhoIcon } from "./icons";
 
 /** Interactive evidence and phone screens sit on the project's mount. */
 function mountOf(section: Section): "field" | undefined {
@@ -133,10 +133,28 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
               )}
             </div>
             <p className="cf-lede">{project.oneLiner}</p>
-            <dl className="cf-facts">
+            <dl className={`cf-facts${project.roleSplit ? " has-split" : ""}`}>
               <div>
                 <dt>Role</dt>
-                <dd>{project.role}</dd>
+                <dd>
+                  {project.roleSplit ? (
+                    <>
+                      <span className="cf-role-title">{project.role}</span>
+                      <ul className="cf-role-split">
+                        {project.roleSplit.map((r) => (
+                          <li key={r.what}>
+                            <WhoIcon who={r.with} />
+                            <span>
+                              {r.what} <span className="cf-role-note">{r.note}</span>
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  ) : (
+                    project.role
+                  )}
+                </dd>
               </div>
               {project.outcome && (
                 <div>

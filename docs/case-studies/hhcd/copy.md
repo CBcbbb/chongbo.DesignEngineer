@@ -12,7 +12,9 @@ No captions under evidence. Labels inside the evidence are listed with each card
 - **Title:** Helen Hamlyn Centre Data Platform
 - **Button (beside the title):** Open the live platform
 - **One line:** A research repository that anyone can explore, with a mouse, a keyboard or on a phone.
-- **Role:** Research Assistant: data collection, analysis and modelling; design and build.
+- **Role:** Research Assistant
+    - (two people) Data collection *with the VOICE team*
+    - (one person) Analysis, modelling, design and build *on my own*
 - **Outcome:** Live and in use. Used to teach the Centre's summer interns. Paper on its accessibility approach accepted at DRS 2026.
 - **What this shows** (labels, not links): Accessibility · Idea to production · Craft and interaction
 

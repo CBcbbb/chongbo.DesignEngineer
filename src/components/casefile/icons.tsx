@@ -46,6 +46,25 @@ export function CapabilityIcon({ capability }: { capability: Capability }) {
   return null;
 }
 
+/** Two people: work done with others. One person: work done on my own. */
+export function WhoIcon({ who }: { who: "team" | "solo" }) {
+  if (who === "team")
+    return (
+      <svg className="cf-ico cf-ico-who" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="9" cy="8.5" r="3" />
+        <path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5" />
+        <circle cx="16.5" cy="9.5" r="2.5" />
+        <path d="M15.6 14.2c2.4-.3 4.3 1.2 4.9 4.3" />
+      </svg>
+    );
+  return (
+    <svg className="cf-ico cf-ico-who" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="12" cy="8.5" r="3.2" />
+      <path d="M6 19.5c.6-3.4 3-5.3 6-5.3s5.4 1.9 6 5.3" />
+    </svg>
+  );
+}
+
 /** The arrow on a link that opens in a new tab. */
 export function OutArrow() {
   return (

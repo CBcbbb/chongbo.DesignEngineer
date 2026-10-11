@@ -54,3 +54,4 @@ The case file now follows the playbook of 11 October (the Nike review's standard
 - 6 Stakeholder cards: back in 01.4, beside the three walls. The cards sit on their own mount on the left; the walls run down the right as rows, each photo beside its finding. Phones stack them.
 - 7 `brief`: approved as written.
 - 8 Wall photos: cropped, as you asked, to one 2:1 ratio (1600 × 800) that keeps each whole sheet and drops the ceiling and the floor. The playbook says never crop an original; this is your call, noted here.
+- Role, after your note at 16:05: "Research Assistant", then two lines with small icons: Data collection *with the VOICE team* (two people) and Analysis, modelling, design and build *on my own* (one person). Written into the playbook (§4) for every project; Nike is asked to follow if it fits.
