@@ -22,6 +22,7 @@ export const SIGNALS = {
   "motion-interaction": "Motion and interaction",
   typography: "Typography and layout",
   data: "Data and visualisation",
+  "data-architecture": "Data architecture and APIs",
   prototyping: "Prototyping new interactions",
   "ai-tools": "Working with AI tools",
   research: "Research and testing",

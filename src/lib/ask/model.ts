@@ -78,7 +78,7 @@ export function buildSystemPrompt(): string {
     "",
     "Steps:",
     `1. asked: extract the capabilities the visitor asks for and map each to a signal key, most important first (1 to ${ASKED_MAX}). For a job description, keep the capabilities it stresses most.`,
-    '2. missing: anything asked for that no signal or section covers (for example "A/B testing", "Kotlin", "backend and databases") goes here as a short plain label. Never stretch a section to cover it. Empty if nothing is missing.',
+    '2. missing: anything asked for that no signal or section covers (for example "A/B testing", "Kotlin", "databases") goes here as a short plain label. Never stretch a section to cover it. Empty if nothing is missing.',
     `3. sheets: for the asked capabilities, find every project with a section that shows one of them, and choose that project's single best section (prefer sections where the asked signal comes first, then the closest fit to the visitor's words). One sheet per project, at most ${MAX_SHEETS}, strongest first. signal is the asked key that section shows.`,
     `4. reason: at most ${REASON_MAX} characters, plain British English, what the section shows for this ask.`,
     `5. line: one plain sentence, at most ${LINE_MAX} characters, about what was printed, e.g. "Three projects show accessibility." or "Two projects match your brief." No hype, no exclamation marks, no questions back.`,

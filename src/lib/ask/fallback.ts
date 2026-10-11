@@ -41,6 +41,7 @@ export const KEYS: Record<Signal, string[]> = {
   conversion: ["conversion", "convert", "growth", "ab test", "a b test", "split test", "experiment", "click", "tap through", "sales", "revenue", "funnel", "engagement"],
   "motion-interaction": ["motion", "animat", "interaction", "micro", "delight", "polish", "detail", "feel", "transition", "craft", "playful", "tactile"],
   typography: ["typograph", "type!", "typeface", "font", "layout", "visual design", "hierarchy", "grid", "colour", "color"],
+  "data-architecture": ["api!", "apis", "back end", "backend", "server", "schema", "data contract", "data layer", "data model", "architecture", "full stack", "fullstack", "endpoint", "integration"],
   data: ["data", "visualis", "visualiz", "chart", "graph", "dashboard", "d3!", "network", "table", "spreadsheet", "messy"],
   prototyping: ["prototyp", "explor", "invent", "new interaction", "test idea", "early", "concept", "sketch", "iterat"],
   "ai-tools": ["ai!", "llm", "claude", "gpt", "chatgpt", "model", "cursor", "agent", "copilot", "machine learning", "artificial intelligence", "vibe"],
@@ -63,6 +64,7 @@ export const LINE_LABEL: Record<Signal, string> = {
   "motion-interaction": "motion and interaction",
   typography: "typography and layout",
   data: "data work",
+  "data-architecture": "data architecture and APIs",
   prototyping: "prototyping",
   "ai-tools": "work with AI tools",
   research: "research and testing",
@@ -78,7 +80,7 @@ export const MISSING_ASKS: { label: string; pattern: RegExp }[] = [
   { label: "native iOS or Android", pattern: /\b(native (mobile|apps?|ios|android)|ios|android)\b/ },
   { label: "Swift", pattern: /\bswift(ui)?\b/ },
   { label: "Kotlin", pattern: /\b(kotlin|jetpack compose)\b/ },
-  { label: "backend and databases", pattern: /\b(back ?end|databases?|sql|postgres(ql)?|mysql|mongo(db)?|server side)\b/ },
+  { label: "databases", pattern: /\b(databases?|sql|postgres(ql)?|mysql|mongo(db)?)\b/ },
   { label: "analytics", pattern: /\b(analytics|amplitude|mixpanel)\b/ },
 ];
 

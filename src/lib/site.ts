@@ -17,6 +17,7 @@ export const SIGNAL_SHORT: Record<Signal | "start-here", string> = {
   "motion-interaction": "Motion",
   typography: "Typography",
   data: "Data",
+  "data-architecture": "Data architecture",
   prototyping: "Prototyping",
   "ai-tools": "AI tools",
   research: "Research",

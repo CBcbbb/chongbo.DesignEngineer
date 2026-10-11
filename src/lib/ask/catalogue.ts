@@ -32,7 +32,7 @@ export function excerpt(section: Section, max = 150): string {
 export function catalogueForPrompt(): string {
   const lines: string[] = [];
   for (const p of projects) {
-    lines.push(`## project: ${p.slug} — ${p.title} (${p.status}; ${p.context})`);
+    lines.push(`## project: ${p.slug} — ${p.title} (${p.status}; ${p.context}; built with ${p.stack.join(", ")})`);
     for (const s of p.sections) {
       lines.push(`- section: ${s.id} | kind: ${s.kind} | title: ${s.title} | signals: ${s.signals.join(", ")} | ${excerpt(s)}`);
     }

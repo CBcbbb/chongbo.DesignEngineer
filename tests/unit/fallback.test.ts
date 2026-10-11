@@ -136,7 +136,7 @@ Bonus: Swift or Kotlin experience.`;
 
   it("reports asks no work shows", () => {
     const r = fallbackAnswer(jd);
-    expect(r.missing).toEqual(expect.arrayContaining(["A/B testing", "Swift", "Kotlin", "backend and databases", "analytics"]));
+    expect(r.missing).toEqual(expect.arrayContaining(["A/B testing", "Swift", "Kotlin", "analytics"]));
   });
 
   it("accepts a brief up to 4,000 characters", () => {
@@ -149,7 +149,7 @@ describe("fallback: missing", () => {
   it("detects common missing asks only when the brief mentions them", () => {
     expect(detectMissing("Do you run A/B tests?")).toEqual(["A/B testing"]);
     expect(detectMissing("native iOS and Android apps")).toEqual(["native iOS or Android"]);
-    expect(detectMissing("Postgres and SQL")).toEqual(["backend and databases"]);
+    expect(detectMissing("Postgres and SQL")).toEqual(["databases"]);
     expect(detectMissing("Show me accessibility")).toEqual([]);
   });
 
@@ -202,7 +202,7 @@ describe("fallback: shape", () => {
     for (const sig of Object.keys(LINE_LABEL) as Signal[]) {
       expect(lineFor([sig], DEFAULT_SHEETS.map((s) => ({ ...s, signal: sig })), []).length).toBeLessThanOrEqual(LINE_MAX);
     }
-    expect(lineFor([], DEFAULT_SHEETS, ["backend and databases"], true).length).toBeLessThanOrEqual(LINE_MAX);
+    expect(lineFor([], DEFAULT_SHEETS, ["databases"], true).length).toBeLessThanOrEqual(LINE_MAX);
   });
 
   it("has synonyms for every signal used in content", () => {
