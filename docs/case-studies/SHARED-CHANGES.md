@@ -26,3 +26,81 @@ Proposed changes to shared files (playbook §9), written by the project conversa
 | 2026-10-11 | Nike | `next.config.ts` | Add `qualities: [75, 90]` to `images`, so a case file can ask for `quality={90}` on screenshots with fine text. | The default 75 softens UI text in screenshots. | Done (approved by Chongbo, 11 Oct) |
 | 2026-10-11 | Nike | PLAYBOOK §5 | Add: "Say each thing once. A heading makes the claim; the body adds what the heading doesn't say and never restates it; the evidence shows it, so the body doesn't describe it. Labels don't repeat the heading, the evidence or each other. If the cover gives the outcome, the page doesn't end on a second copy of it." | Chongbo's review of the Nike cover and cards. | Proposed |
 | 2026-10-11 | HHCD | `src/lib/ask/*` eval set (AI conversation); `content/schema.ts` | New HHCD card `testing` ("Accessibility – testing"). `results` is now three short points. The `role` card's signals changed from `ai-tools` to `design-eng-gap`: HHCD no longer prints for "AI tools". New optional `Section.bodyStyle: "list"` (a numbered list set large). | Chongbo: tests are accessibility evidence, not results; the role card is about design and code together. | Done on `case/hhcd`; eval set to update |
+| 2026-10-11 | Nike | PLAYBOOK §4–§8 | Adopt the standards below ("Case-file standards from the Nike review") for every project, and settle the four conflicts listed there. | Chongbo asked for everything he required across the Nike review to be written down, so HHCD and the other projects match. | Proposed |
+
+---
+
+## Case-file standards from the Nike review (Chongbo, 10–11 Oct 2026)
+
+Everything Chongbo asked for while reviewing the Nike case file, written as rules for every project. Live example: `/work/nike-athletes-closet`. Where a rule differs from the playbook, it is listed under **Conflicts with the playbook** at the end; Chongbo decides which wins.
+
+### 1. Story
+
+- **Know what each card is for.** Before writing a card, say in one line what it proves on its own (which capability, which decision). If it proves nothing new, merge or cut it.
+- **Parts follow the reader, not the process.** Nike: Read → Shop → Return → Outcome. Each part has an opener; each card is one decision or one piece of evidence.
+- **Lead with the product.** The work in use (the recording) comes straight after the cover.
+- **The cover and the ending don't repeat each other.** The cover gives the role and the outcome; the closing card adds what the cover doesn't (context, team), then "What I'd do now".
+- **Outcomes in professional, concrete terms.** Say where it shipped and what followed: "Launched nationwide as a home-screen section of the official Nike App. Nike renewed the contract for the following seasons." Past tense if it's no longer live.
+- **Role on the cover is the job title** ("UI Designer"). Team and context belong at the end, not on the cover. Say "designed", never "led", unless I led.
+
+### 2. Copy
+
+- **Final, reader-facing text.** Nothing from our working discussions (what I nearly dropped, what I'd have liked, how we decided). No process narration.
+- **No emotional or defensive words:** "only", "just", "simply", "unfortunately", "looks awful". Honest limits are stated as facts.
+- **Say each thing once.** The heading makes the claim; the body adds what the heading doesn't say (the problem, the method, the result) and never restates it; the evidence shows it, so the body doesn't describe it. Labels don't repeat the heading, the evidence or each other. No lede and intro paragraph saying the same thing.
+- **No explanatory captions under evidence.** Anything worth saying goes in the card's heading or body. Labels inside the evidence stay (Before / After, Original / Retouched, Figma layer names, Specified / Shipped).
+- **Keep my original wording when it's good.** When editing, cut and harmonise; don't rewrite into something that drifts from what I meant. If the original text on an image carries meaning (annotations), keep it.
+- **One term per thing across the page** (Nike: "volume", "influencer", never "episode" or "guest" in one card and not the others).
+- **Don't over-stress one detail.** A date or label that matters (VOL.4) appears once, where it explains something.
+- **Headings:** mostly plain statements, a few livelier ones where earned, never negative. Mirror the job description's language where it fits the facts.
+- **Never fabricate** facts, numbers, quotes or client feedback. British English.
+
+### 3. Cover
+
+- Kicker (the client, e.g. "Nike China"), the title, one line under it saying what the thing is, then a rule and two facts: **Role** and **Outcome**.
+- "What this shows": two or three chips, each jumping to the card that proves it.
+- Compact: the cover must not dominate the first screen.
+
+### 4. Cards and layout
+
+- **Contents on the left on every project:** the project, then each part with its cards; the card you're reading is marked (one marker, text centred in its highlight). Below 1000px it becomes a strip of parts.
+- **One card, one screen** on tablets and computers: every card the same height, `min(100svh − 3rem, 58rem)` (761–1000px wide: `100svh − 7rem`), so a card is seen whole without scrolling, like a tablet screen. Evidence scales into the space under the text and keeps its ratio. Phones scroll as normal.
+- **Card head:** the index (`01.2`) above the heading, with a clear gap between them; heading on the left, body on the right; evidence underneath. Text beside evidence only where it doesn't cramp either (Chongbo preferred text on top, with tabs down the left of the canvas, over a cramped two-column card).
+- **No kind labels or capability pills on cards** (they repeated the evidence or each other); the cover chips carry the capabilities.
+- **Openers:** on the project colour, a big number, the part name and its card list.
+- **Each card is designed for its content**, but sizes stay consistent: a switcher's canvas keeps one size whichever tab is open.
+- **Evidence as large as the card allows:** tight padding round it; two phone screens side by side for a before/after of different layouts; a slider only when both images share a frame (retouching).
+- **The project's colour is prominent** (Nike orange on the cover, openers and evidence fields); paper and black sheets set the rhythm; Granola-quality graphic design (textured backdrops, strong type).
+
+### 5. Images, video and sound
+
+- **Never change an image's ratio, never stretch it, never crop an original.** Where a frame needs a different ratio, pad the original on a mount.
+- **Use originals,** at least twice their display size; serve screenshots at quality 90. If a file is too small, list it and ask for the original; don't upscale.
+- **Annotations on an original are content:** if a screenshot's notes explain it, keep them (as live text beside it if that reads better).
+- **Recordings are never cropped:** shown whole in a device frame, with their sound and a sound toggle. One play control only (no second play button), and controls never add height.
+- **Animations** play once when they come into view and can be replayed; they sit at about 85% of their stage, not edge to edge.
+- **Sound that tells the story gets its own control** (Nike: the influencer's voice teaser, playable from the screenshot like a voice message). Only one thing plays at a time.
+
+### 6. Interaction and motion
+
+- **Buttons do more than change colour.** Icon and text both take part in a hover, with a little randomness each time: letters jolt and spring back, icons act (a swoosh draws itself, a heart beats, squares trade places, an arrow loops or flies off and comes back), times run like a scoreboard before they settle.
+- **Tie each interaction to the content:** a voice message for a voice feature, a stadium scoreboard for timestamps, the brand's swoosh round a play button.
+- **Obvious affordances:** something you can press should look pressable (the wireframe inset sits on the canvas's top-right corner and overhangs it).
+- **Restraint:** small, quick (≤ 0.7s), springy; nothing loops forever except a gentle ring that invites a first tap. Everything stands still with reduced motion.
+- **Accessibility holds:** contrast ≥ 4.5:1 in both modes, controls at least 44px outside running text (32px in the contents), keyboard focus triggers the same micro-interactions as hover.
+
+### 7. Process
+
+- **Don't ask me for small details** (exact dates, volume numbers). Think about the story, the capability each card shows, the layout and the effect.
+- **Show me the full text** when copy changes, not a summary of changes.
+- **Go live when it's done**, and list anything uncertain in the project's `DECISIONS.md` for me to decide.
+- **Check the page the way I'll see it:** every card at 1440 × 900, 1280 × 720, 1366 × 768, 1024 × 1366 and 768 × 1024 (no overflow, nothing distorted), and on a phone.
+
+### Conflicts with the playbook
+
+| Playbook | Says | Nike review says |
+|---|---|---|
+| §5 example | "I was the only UI designer…" | No "only" anywhere; the example needs rewriting. |
+| §6 rules | "Every image has a caption that says what it proves" | No captions under evidence; the point goes in the heading or body. |
+| §6 ratios | "Re-crop and re-export to these" | Never crop an original or change its ratio; pad it on a mount instead. |
+| §7 card anatomy | "index and kind … body and tags on the right … caption" | Index only; no kind label, no tags, no caption. |
