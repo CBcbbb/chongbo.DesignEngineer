@@ -137,7 +137,7 @@ Rules:
 - **Page skeleton (every project, same system as Nike):**
   - Contents on the left on every project: the project, then each part with its cards; the card being read is marked (one marker, text centred in its highlight). Below 1000px it becomes a strip of parts.
   - On the right, a stack of sheets on the studio:
-    - cover: the client, the title, one line saying what it is, then Role and Outcome, and "What this shows" chips that jump to their cards. Compact: it mustn't fill the first screen;
+    - cover: the client, the title, one line saying what it is, then Role and Outcome, and "What this shows": two or three capability labels on one line. Labels, not links: a capability usually spans several cards, so a jump to one of them misleads. Compact: the cover mustn't fill the first screen;
     - the work (the product itself);
     - then, for each part, an opener (big number, name, its cards) and one sheet per card;
     - then next project.
@@ -171,12 +171,12 @@ Rules:
 
   Built in `src/components/casefile/` (template `CaseFile.tsx`, blocks in `blocks.tsx`), styled by `src/app/case-file.css`, with per-project palettes in `src/app/case-palettes.css`. A project opts in with `template: "case-file"` in its content file.
 
-**Interaction and motion (every project):**
+**Interaction and motion:**
 
-- **Buttons do more than change colour.** Icon and text both take part in a hover, with a little randomness each time: letters jolt and spring back, icons act (a swoosh draws itself, a heart beats, squares trade places, an arrow loops or flies off and comes back), times run like a scoreboard before they settle. Built in Nike's `NikeClient.tsx` (`Wobble`, `Scramble`, `ChipIcon`); move them into the block library when a second project needs them.
-- **Tie each one to the content:** a voice message for a voice feature, a scoreboard for timestamps, the brand's mark round a play button.
+- **Playful micro-interactions belong to the site, not the case files.** Buttons that do more than change colour (letters knocked about, icons that act, a little randomness each time) are for the portfolio's own shell: the home page, navigation, the printer. Inside a case file they compete with the work.
+- **In a case file, controls are serious and well made:** they work fully (a recording can be scrubbed, paused, muted; one thing plays at a time), look finished (Nike: a lit orange gradient on the play buttons, a gradient progress fill, a ring that fills as a clip plays), and guide where needed (a small hint, "Tap to listen · 0:05", until the first play).
 - **Obvious affordances:** what can be pressed looks pressable (Nike's wireframe inset sits on the canvas's top-right corner and overhangs it).
-- **Restraint:** small, quick (0.7s at most), springy; nothing loops forever except a gentle ring inviting a first tap. Focus triggers the same as hover. Everything stands still with reduced motion.
+- **Restraint and access:** transitions short (0.35s or less for controls); focus behaves like hover; everything stands still with reduced motion.
 
 **Per project (its own character):** each project has its own palette, defined once with a light and a dark value for every token:
 

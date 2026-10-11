@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import type { Project, Section } from "@content";
-import { ChipIcon, Compare, Contents, GiftBox, Pip, RecordingPlayer, RecordingProvider, SeekButton, Switcher, VoiceTeaser, Wobble, type ContentsPart } from "./NikeClient";
+import { ChipIcon, Compare, Contents, GiftBox, Pip, RecordingPlayer, RecordingProvider, SeekButton, Switcher, VoiceTeaser, type ContentsPart } from "./NikeClient";
 import "./nike.css";
 
 /** Asset path. Every image is served at quality 90 (`Q`), so text in screenshots stays sharp. */
@@ -181,21 +181,24 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
                   <dd>{project.outcome}</dd>
                 </div>
               </dl>
-              <p className="nk-chips">
-                <span>What this shows</span>
-                <a className="nk-chip" href="#graphic-system">
-                  <ChipIcon kind="swoosh" />
-                  <Wobble text="Brand storytelling" />
-                </a>
-                <a className="nk-chip" href="#draw">
-                  <ChipIcon kind="heart" />
-                  <Wobble text="Motion and microinteractions" />
-                </a>
-                <a className="nk-chip" href="#components">
-                  <ChipIcon kind="grid" />
-                  <Wobble text="Design systems" />
-                </a>
-              </p>
+              {/* What this shows: labels, not links; a capability usually spans several cards. */}
+              <div className="nk-chips">
+                <p>What this shows</p>
+                <ul>
+                  <li>
+                    <ChipIcon kind="swoosh" />
+                    Brand storytelling
+                  </li>
+                  <li>
+                    <ChipIcon kind="heart" />
+                    Motion and microinteractions
+                  </li>
+                  <li>
+                    <ChipIcon kind="grid" />
+                    Design systems
+                  </li>
+                </ul>
+              </div>
             </header>
 
             {/* the recording */}
@@ -495,9 +498,7 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
 
             <nav className="nk-next" aria-label="Next case file">
               <span>Next case file</span>
-              <Link href={`/work/${next.slug}`}>
-                <Wobble text={next.title} />
-              </Link>
+              <Link href={`/work/${next.slug}`}>{next.title}</Link>
             </nav>
           </div>
         </div>

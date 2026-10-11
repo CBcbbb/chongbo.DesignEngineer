@@ -414,29 +414,33 @@
   font-weight: 500;
   line-height: 1.4;
 }
+/* what this shows: one quiet line of labels */
 .nk-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.5rem 0.9rem;
   align-items: center;
 }
-.nk-chips > span {
-  margin-right: 0.25rem;
-  font: 400 0.8125rem/1 var(--mono);
+.nk-chips p {
+  font: 400 0.75rem/1 var(--mono);
   color: var(--nk-on-orange-2);
 }
-.nk-chip {
-  padding: 0.55rem 0.95rem;
+.nk-chips ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.nk-chips li {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0.38rem 0.7rem 0.38rem 0.55rem;
   border-radius: 999px;
   background: var(--nk-on-orange);
-  color: var(--nk-orange) !important;
-  font-size: 0.9375rem;
+  color: var(--nk-orange);
+  font-size: 0.8125rem;
   font-weight: 500;
-  text-decoration: none;
-  transition: transform 0.2s var(--nk-ease);
-}
-.nk-chip:hover {
-  transform: translateY(-2px);
+  line-height: 1.2;
 }
 
 /* ---------- the recording ---------- */
@@ -498,19 +502,31 @@
   background: transparent;
   color: #fff;
 }
+/* Nike orange as a lit gradient, with a soft glow under it */
 .nk-bigplay {
   position: relative;
   display: grid;
   place-items: center;
-  width: 4.25rem;
-  height: 4.25rem;
+  width: 4.5rem;
+  height: 4.5rem;
   border-radius: 50%;
-  background: rgba(14, 13, 12, 0.5);
-  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(6px);
+  background: radial-gradient(120% 120% at 30% 20%, #ffb07a 0%, #ff7a35 38%, #f26522 62%, #c2410c 100%);
+  color: #111010;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 14px 34px -10px rgba(242, 101, 34, 0.85),
+    0 0 0 6px rgba(255, 255, 255, 0.14);
   transition:
     opacity 0.35s var(--nk-ease),
-    transform 0.45s var(--nk-ease);
+    transform 0.35s var(--nk-ease),
+    box-shadow 0.35s var(--nk-ease);
+}
+.nk-screen:hover .nk-bigplay,
+.nk-screen:focus-visible .nk-bigplay {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 18px 44px -10px rgba(242, 101, 34, 1),
+    0 0 0 9px rgba(255, 255, 255, 0.2);
 }
 .nk-bigplay .nk-morph {
   width: 1.15rem;
@@ -535,36 +551,6 @@
   opacity: 1;
   transform: scale(1);
 }
-/* the swoosh scribble: draws itself round the button on hover */
-.nk-scribble {
-  position: absolute;
-  inset: -0.85rem;
-  width: calc(100% + 1.7rem);
-  height: calc(100% + 1.7rem);
-  overflow: visible;
-  pointer-events: none;
-}
-.nk-scribble path {
-  fill: none;
-  stroke: var(--nk-orange-on-black);
-  stroke-width: 3.2;
-  stroke-linecap: round;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  opacity: 0;
-}
-.nk-screen:hover .nk-scribble path {
-  opacity: 1;
-  animation: nk-draw 0.65s var(--nk-ease) forwards;
-}
-.nk-phone.is-playing .nk-scribble {
-  display: none;
-}
-@keyframes nk-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
 
 /* play ↔ pause: two halves of the triangle that slide apart into bars */
 .nk-morph {
@@ -582,7 +568,7 @@
   transition: clip-path 0.3s var(--nk-ease);
 }
 .nk-morph::before {
-  clip-path: polygon(0 0, 50% 25%, 50% 75%, 0 100%);
+  clip-path: polygon(0 0, 51% 25.5%, 51% 74.5%, 0 100%);
 }
 .nk-morph::after {
   clip-path: polygon(50% 25%, 100% 50%, 100% 50%, 50% 75%);
@@ -608,18 +594,81 @@
 .nk-track {
   position: relative;
   flex: 1;
-  height: 3px;
-  border-radius: 3px;
+  display: grid;
+  align-items: center;
+  height: 1.75rem;
+}
+.nk-track-bar {
+  position: relative;
+  height: 4px;
+  border-radius: 4px;
   background: #3a3835;
+  transition: height 0.2s var(--nk-ease);
+}
+.nk-track:hover .nk-track-bar {
+  height: 6px;
 }
 .nk-track i {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: var(--nk-orange-on-black);
+  background: linear-gradient(90deg, #ffb07a, #ff7a35 45%, #f26522);
   transform-origin: left;
   transform: scaleX(0);
   transition: transform 0.25s linear;
+}
+/* the slider itself is invisible over the bar; only its thumb shows, on hover and focus */
+.nk-track input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.nk-track input::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+.nk-track input::-moz-range-track {
+  background: transparent;
+}
+.nk-track input::-webkit-slider-thumb {
+  width: 14px;
+  height: 14px;
+  margin-top: calc((1.75rem - 14px) / 2);
+  border: 0;
+  border-radius: 50%;
+  appearance: none;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.55);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.nk-track input::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.55);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.nk-track:hover input::-webkit-slider-thumb,
+.nk-track input:focus-visible::-webkit-slider-thumb {
+  opacity: 1;
+}
+.nk-track:hover input::-moz-range-thumb,
+.nk-track input:focus-visible::-moz-range-thumb {
+  opacity: 1;
+}
+.nk-track input:focus-visible {
+  outline: 2px solid var(--nk-orange-on-black);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 .nk-track b {
   position: absolute;
@@ -637,8 +686,12 @@
   background: #ffd2b8;
   transform: translate(-50%, -50%) scale(1.3);
 }
+.nk-clock i {
+  font-style: normal;
+  color: #6b6760;
+}
 .nk-clock {
-  min-width: 2.1rem;
+  min-width: 4.6rem;
   font: 500 0.6875rem/1 var(--mono);
   font-variant-numeric: tabular-nums;
   color: var(--nk-on-black-2);
@@ -1145,150 +1198,120 @@
   transform: scaleX(0);
   transition: transform 0.25s linear;
 }
-/* its length, under the button, as a voice message shows it */
-.nk-vt-len {
-  position: absolute;
-  top: 28.3%;
-  left: 86%;
-  font: 600 0.6875rem/1 var(--mono);
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-/* the play button sits on the bubble's record dot */
+/* the play button sits on the bubble's record dot: the same lit orange as the recording's */
 .nk-vt {
   position: absolute;
   top: 22.2%;
   left: 86%;
   display: grid;
   place-items: center;
-  width: 2.1rem;
-  height: 2.1rem;
+  width: 2.4rem;
+  height: 2.4rem;
   padding: 0;
   border: 0;
   border-radius: 50%;
   cursor: pointer;
-  background: var(--nk-orange);
-  color: var(--nk-on-orange) !important;
-  box-shadow: 0 6px 14px -4px rgba(0, 0, 0, 0.6);
+  background: radial-gradient(120% 120% at 30% 20%, #ffb07a 0%, #ff7a35 38%, #f26522 62%, #c2410c 100%);
+  color: #111010 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 8px 20px -6px rgba(242, 101, 34, 0.9);
   transform: translate(-50%, -50%);
-  transition: transform 0.2s var(--nk-ease);
+  transition:
+    transform 0.25s var(--nk-ease),
+    box-shadow 0.25s var(--nk-ease);
 }
-.nk-vt:hover {
-  transform: translate(-50%, -50%) scale(1.1);
+.nk-vt:hover,
+.nk-vt:focus-visible {
+  transform: translate(-50%, -50%) scale(1.08);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 10px 26px -6px rgba(242, 101, 34, 1);
 }
-.nk-vt .nk-tri {
+.nk-vt .nk-morph {
+  width: 0.62rem;
+  height: 0.72rem;
+}
+.nk-vt:not(.is-playing) .nk-morph {
   margin-left: 0.12rem;
-  border-width: 0.32rem 0 0.32rem 0.52rem;
 }
-/* until the first listen, a soft ring calls for a tap */
-.nk-vt::after {
+/* the ring round the button fills as the clip plays */
+.nk-vt svg {
+  position: absolute;
+  inset: -5px;
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+.nk-vt-track,
+.nk-vt-ring {
+  fill: none;
+  stroke-width: 3;
+}
+.nk-vt-track {
+  stroke: rgba(255, 255, 255, 0.28);
+}
+.nk-vt-ring {
+  stroke: #fff;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.25s linear;
+}
+.nk-vt:not(.is-playing) .nk-vt-ring {
+  opacity: 0;
+}
+/* until the first listen, a hint above the button says what it is and how long */
+.nk-vt-hint {
+  position: absolute;
+  top: calc(22.2% - 2.55rem);
+  left: 86%;
+  padding: 0.38rem 0.6rem;
+  border-radius: 6px;
+  background: rgba(14, 13, 12, 0.88);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translate(-72%, -50%);
+  pointer-events: none;
+  animation: nk-hint 2.4s ease-in-out infinite;
+}
+.nk-vt-hint::after {
   content: "";
   position: absolute;
-  inset: -3px;
-  border: 2px solid var(--nk-orange);
-  border-radius: 50%;
-  opacity: 0;
-  animation: nk-ping 2s var(--nk-ease) infinite;
-  pointer-events: none;
+  top: 100%;
+  left: 72%;
+  border: 5px solid transparent;
+  border-top-color: rgba(14, 13, 12, 0.88);
+  transform: translateX(-50%);
 }
-.nk-vt.is-heard::after {
-  animation: none;
-}
-@keyframes nk-ping {
-  0% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  70%,
+@keyframes nk-hint {
+  0%,
   100% {
-    opacity: 0;
-    transform: scale(1.7);
+    margin-top: 0;
   }
-}
-/* three bars that move with the voice (--b1..3 are set from the audio, 0..1) */
-.nk-eq {
-  display: flex;
-  gap: 2px;
-  align-items: center;
-  height: 0.85rem;
-}
-.nk-eq i {
-  display: block;
-  width: 3px;
-  height: 100%;
-  border-radius: 2px;
-  background: currentColor;
-  transform-origin: center;
-  transition: transform 0.08s linear;
-}
-.nk-eq i:nth-child(1) {
-  transform: scaleY(calc(0.3 + var(--b1, 0.4) * 0.7));
-}
-.nk-eq i:nth-child(2) {
-  transform: scaleY(calc(0.3 + var(--b2, 0.7) * 0.7));
-}
-.nk-eq i:nth-child(3) {
-  transform: scaleY(calc(0.3 + var(--b3, 0.5) * 0.7));
-}
-/* sound leaving the button on hover, three rings at a time */
-.nk-vt-rip {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-.nk-vt-rip i {
-  position: absolute;
-  inset: 0;
-  border: 1.5px solid #fff;
-  border-radius: 50%;
-  opacity: 0;
-}
-.nk-vt:hover .nk-vt-rip i {
-  animation: nk-ripple 1.3s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
-}
-.nk-vt:hover .nk-vt-rip i:nth-child(2) {
-  animation-delay: 0.27s;
-}
-.nk-vt:hover .nk-vt-rip i:nth-child(3) {
-  animation-delay: 0.61s;
-}
-@keyframes nk-ripple {
-  0% {
-    opacity: 0.75;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(2.3);
+  50% {
+    margin-top: -3px;
   }
 }
 
-/* ---------- micro-interactions: letters, digits and icons that take part in a hover ---------- */
-/* words never break inside; each letter moves on its own */
-.nk-word {
-  display: inline-block;
-  white-space: nowrap;
-}
-.nk-wob i {
-  display: inline-block;
-  font-style: normal;
-  transform: translateY(var(--y, 0)) rotate(var(--r, 0deg));
-  transition: transform 0.45s cubic-bezier(0.34, 1.8, 0.5, 1);
-}
-.nk-scr {
-  font-variant-numeric: tabular-nums;
+/* the shoebox's Replay icon */
+.nk-loop-ico {
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-/* cover chips: an icon that acts, beside letters that wobble */
-.nk-chip {
-  gap: 0.45rem;
-}
+/* small icons on the capability labels */
 .nk-ico {
   flex: none;
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 1rem;
+  height: 1rem;
   overflow: visible;
   fill: none;
   stroke: currentColor;
@@ -1298,171 +1321,23 @@
 }
 .nk-ico-swoosh path {
   stroke-width: 2.6;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
 }
-.nk-chip:hover .nk-ico-swoosh path,
-.nk-chip:focus-visible .nk-ico-swoosh path {
-  animation: nk-redraw 0.7s var(--nk-ease);
-}
-@keyframes nk-redraw {
-  0% {
-    stroke-dashoffset: 1;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
-.nk-ico-heart path {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-.nk-ico-heart .nk-h {
-  fill: currentColor;
-  stroke: none;
-}
-.nk-ico-heart .nk-h1,
-.nk-ico-heart .nk-h2 {
-  fill: currentColor;
-  stroke: none;
-  opacity: 0;
-}
-.nk-chip:hover .nk-ico-heart .nk-h,
-.nk-chip:focus-visible .nk-ico-heart .nk-h {
-  animation: nk-beat 0.6s cubic-bezier(0.34, 1.8, 0.5, 1);
-}
-.nk-chip:hover .nk-ico-heart .nk-h1,
-.nk-chip:focus-visible .nk-ico-heart .nk-h1 {
-  animation: nk-float 0.9s ease-out 0.1s;
-}
-.nk-chip:hover .nk-ico-heart .nk-h2,
-.nk-chip:focus-visible .nk-ico-heart .nk-h2 {
-  animation: nk-float 0.9s ease-out 0.25s;
-}
-@keyframes nk-beat {
-  30% {
-    transform: scale(1.35);
-  }
-  60% {
-    transform: scale(0.9);
-  }
-}
-@keyframes nk-float {
-  0% {
-    opacity: 1;
-    transform: translateY(4px) scale(0.6);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-9px) scale(1.1);
-  }
-}
+.nk-ico-heart .nk-h,
 .nk-ico-grid rect {
   fill: currentColor;
   stroke: none;
-  transition: transform 0.5s cubic-bezier(0.34, 1.6, 0.5, 1);
 }
-/* one square is hollow, so the swap reads */
 .nk-ico-grid .g1 {
   fill: none;
   stroke: currentColor;
   stroke-width: 1.8;
 }
-/* the four squares trade places, clockwise */
-.nk-chip:hover .nk-ico-grid .g1,
-.nk-chip:focus-visible .nk-ico-grid .g1 {
-  transform: translateX(9.5px);
-}
-.nk-chip:hover .nk-ico-grid .g2,
-.nk-chip:focus-visible .nk-ico-grid .g2 {
-  transform: translateY(9.5px);
-}
-.nk-chip:hover .nk-ico-grid .g3,
-.nk-chip:focus-visible .nk-ico-grid .g3 {
-  transform: translateX(-9.5px);
-}
-.nk-chip:hover .nk-ico-grid .g4,
-.nk-chip:focus-visible .nk-ico-grid .g4 {
-  transform: translateY(-9.5px);
-}
-
-/* "See it at": the triangle becomes fast-forward */
-.nk-ff {
-  position: relative;
-  display: inline-flex;
-  width: 0.95rem;
-}
-.nk-ff .nk-tri {
-  transition:
-    transform 0.35s var(--nk-ease),
-    opacity 0.25s;
-}
-.nk-ff .nk-tri + .nk-tri {
-  position: absolute;
-  left: 0;
-  opacity: 0;
-}
-.nk-seek:hover .nk-ff .nk-tri,
-.nk-seek:focus-visible .nk-ff .nk-tri {
-  transform: translateX(-2px);
-}
-.nk-seek:hover .nk-ff .nk-tri + .nk-tri,
-.nk-seek:focus-visible .nk-ff .nk-tri + .nk-tri {
-  opacity: 1;
-  transform: translateX(5px);
-}
-
-/* Replay: the arrow loops once on hover */
-.nk-loop-ico {
-  width: 1.05rem;
-  height: 1.05rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: transform 0.6s var(--nk-ease);
-}
-.nk-btn:hover .nk-loop-ico,
-.nk-btn:focus-visible .nk-loop-ico {
-  transform: rotate(360deg);
-}
-
-/* the YouTube arrow flies off and comes back round */
-.nk-outlink:hover .nk-launch,
-.nk-outlink:focus-visible .nk-launch {
-  animation: nk-launch 0.55s var(--nk-ease);
-}
-.nk-launch {
-  display: inline-block;
-}
-@keyframes nk-launch {
-  45% {
-    opacity: 0;
-    transform: translate(10px, -10px);
-  }
-  46% {
-    opacity: 0;
-    transform: translate(-10px, 10px);
-  }
-  100% {
-    opacity: 1;
-    transform: none;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
-  .nk-vt::after,
   .nk-snd.is-live .nk-w1,
   .nk-snd.is-live .nk-w2,
-  .nk-vt:hover .nk-vt-rip i,
-  .nk-chip .nk-ico *,
-  .nk-outlink .nk-launch,
-  .nk-screen:hover .nk-scribble path {
+  .nk-vt-hint {
     animation: none !important;
-  }
-  .nk-scribble {
-    display: none;
   }
 }
 .nk-sv-phone img {
@@ -1975,13 +1850,8 @@
 .nk-seek,
 .nk-chapters button,
 .nk-spec-list button,
-.nk-chip,
 .nk-btn {
   min-height: 44px;
-}
-.nk-chip {
-  display: inline-flex;
-  align-items: center;
 }
 .nk-toc-part > ol a {
   display: flex;

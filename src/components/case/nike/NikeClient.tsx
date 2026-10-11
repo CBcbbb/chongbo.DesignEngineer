@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 
 /* ---------------------------------------------------------------------------------------------
  * The recording: one shared player. Any card can jump to a moment with <SeekButton t={25} />.
@@ -51,110 +51,18 @@ function Speaker({ off = false }: { off?: boolean }) {
   );
 }
 
-/* ---------------------------------------------------------------------------------------------
- * Micro-interactions. Text and icons both take part in a hover, with a little randomness each
- * time, so no two hovers look the same. All of it stands still with reduced motion.
- * ------------------------------------------------------------------------------------------- */
-
-const still = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const rand = (min: number, max: number) => min + Math.random() * (max - min);
-
-/** Runs `on` when the nearest link or button is hovered or focused, and `off` when it is left. */
-function useHost(ref: RefObject<HTMLElement | null>, on: (host: HTMLElement) => void, off?: (host: HTMLElement) => void) {
-  useEffect(() => {
-    const host = ref.current?.closest<HTMLElement>("a, button");
-    if (!host || still()) return;
-    const enter = () => on(host);
-    const leave = () => off?.(host);
-    host.addEventListener("pointerenter", enter);
-    host.addEventListener("focus", enter);
-    host.addEventListener("pointerleave", leave);
-    host.addEventListener("blur", leave);
-    return () => {
-      host.removeEventListener("pointerenter", enter);
-      host.removeEventListener("focus", enter);
-      host.removeEventListener("pointerleave", leave);
-      host.removeEventListener("blur", leave);
-    };
-  }, [ref, on, off]);
-}
-
-/** Letters that get knocked about at random when their link or button is hovered, then spring back. */
-export function Wobble({ text }: { text: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const timer = useRef(0);
-  const set = (r: (i: number) => string, y: (i: number) => string) =>
-    ref.current?.querySelectorAll<HTMLElement>("i").forEach((l, i) => {
-      l.style.setProperty("--r", r(i));
-      l.style.setProperty("--y", y(i));
-    });
-  const on = useCallback(() => {
-    set(
-      () => `${rand(-16, 16).toFixed(1)}deg`,
-      () => `${rand(-4, 3).toFixed(1)}px`,
-    );
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => set(() => "0deg", () => "0px"), 240);
-  }, []);
-  useHost(ref, on);
-  return (
-    <span ref={ref} className="nk-wob">
-      <span className="sr-only">{text}</span>
-      <span aria-hidden="true">
-        {text.split(" ").map((word, w) => (
-          <span key={w}>
-            {w > 0 && " "}
-            <span className="nk-word">
-              {[...word].map((c, i) => (
-                <i key={i}>{c}</i>
-              ))}
-            </span>
-          </span>
-        ))}
-      </span>
-    </span>
-  );
-}
-
-/** A time that runs through random digits, like a stadium scoreboard, before it settles. */
-export function Scramble({ text }: { text: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const on = useCallback(() => {
-    const el = ref.current;
-    if (!el) return;
-    let n = 0;
-    const step = () => {
-      n += 1;
-      el.textContent = n > 7 ? text : text.replace(/\d/g, () => String(Math.floor(rand(0, 10))));
-      if (n <= 7) window.setTimeout(step, 45);
-    };
-    step();
-  }, [text]);
-  useHost(ref, on);
-  return (
-    <span className="nk-scr">
-      <span className="sr-only">{text}</span>
-      <span ref={ref} aria-hidden="true">
-        {text}
-      </span>
-    </span>
-  );
-}
-
-/** Hand-drawn icons for the cover chips; each one acts when its chip is hovered. */
+/** Small icons for the capability labels on the cover. */
 export function ChipIcon({ kind }: { kind: "swoosh" | "heart" | "grid" }) {
   if (kind === "swoosh")
     return (
       <svg className="nk-ico nk-ico-swoosh" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-        <path pathLength={1} d="M5.5 9.5c-3 4-1.5 7.5 3.5 6S18 10 22 6.5" />
+        <path d="M5.5 9.5c-3 4-1.5 7.5 3.5 6S18 10 22 6.5" />
       </svg>
     );
   if (kind === "heart")
     return (
       <svg className="nk-ico nk-ico-heart" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
         <path className="nk-h" d="M12 19.5s-7-4.3-7-9.3A3.8 3.8 0 0 1 12 8a3.8 3.8 0 0 1 7 2.2c0 5-7 9.3-7 9.3z" />
-        <path className="nk-h1" d="M5 6.5s-1.8-1.1-1.8-2.4a1 1 0 0 1 1.8-.6 1 1 0 0 1 1.8.6C6.8 5.4 5 6.5 5 6.5z" />
-        <path className="nk-h2" d="M19.5 5.5s-1.5-.9-1.5-2a.85.85 0 0 1 1.5-.5.85.85 0 0 1 1.5.5c0 1.1-1.5 2-1.5 2z" />
       </svg>
     );
   return (
@@ -188,7 +96,6 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [muted, setMuted] = useState(false);
-  const [scribble, setScribble] = useState(0);
   const times = chapters.flatMap((c) => c.items.map((i) => i.t)).sort((a, b) => a - b);
   let current: number | null = null;
   for (const s of times) if (time >= s - 0.05) current = s;
@@ -238,25 +145,41 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
           className="nk-screen"
           aria-label={playing ? "Pause recording" : "Play recording"}
           onClick={toggle}
-          onPointerEnter={() => setScribble((n) => n + 1)}
         >
           <span className="nk-bigplay">
-            {/* a hand-drawn swoosh that draws itself round the button, at a new angle each hover */}
-            <svg className="nk-scribble" viewBox="0 0 100 100" aria-hidden="true" focusable="false" style={{ rotate: `${(scribble * 137) % 360}deg` }}>
-              <path key={scribble} pathLength={1} d="M18 62c-6-22 10-44 34-46s42 16 38 38-26 34-48 30C24 81 14 70 16 56" />
-            </svg>
             <PlayMorph playing={playing} />
           </span>
         </button>
         {/* slim controls in the bezel under the screen */}
         <div className="nk-bezel">
-          <span className="nk-track" aria-hidden="true">
-            <i style={{ transform: `scaleX(${time / total})` }} />
-            {times.map((t) => (
-              <b key={t} style={{ left: `${(t / total) * 100}%` }} className={current !== null && t <= current ? "is-past" : undefined} />
-            ))}
+          <span className="nk-track">
+            <span className="nk-track-bar" aria-hidden="true">
+              <i style={{ transform: `scaleX(${time / total})` }} />
+              {times.map((t) => (
+                <b key={t} style={{ left: `${(t / total) * 100}%` }} className={current !== null && t <= current ? "is-past" : undefined} />
+              ))}
+            </span>
+            <input
+              type="range"
+              min={0}
+              max={total}
+              step={0.1}
+              value={time}
+              aria-label="Position in the recording"
+              aria-valuetext={`${clock(time)} of ${clock(total)}`}
+              style={{ ["--p" as string]: String(time / total) }}
+              onChange={(e) => {
+                const v = ref.current;
+                const t = Number(e.currentTarget.value);
+                setTime(t);
+                if (v) v.currentTime = t;
+              }}
+            />
           </span>
-          <span className="nk-clock">{clock(time)}</span>
+          <span className="nk-clock">
+            {clock(time)}
+            <i> / {clock(total)}</i>
+          </span>
           <button
             type="button"
             className={`nk-snd${playing && !muted ? " is-live" : ""}`}
@@ -271,10 +194,7 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
       <div className="nk-rec-side">
         <h2 id="rec-h">Screen recording</h2>
         <a className="nk-outlink" href={full} target="_blank" rel="noopener">
-          Full quality on YouTube<span className="sr-only"> (opens in a new tab)</span>{" "}
-          <span className="nk-launch" aria-hidden="true">
-            ↗
-          </span>
+          Full quality on YouTube<span className="sr-only"> (opens in a new tab)</span> <span aria-hidden="true">↗</span>
         </a>
         <div className="nk-chapters">
           {chapters.map((c) => (
@@ -289,9 +209,7 @@ export function RecordingPlayer({ chapters, full }: { chapters: { part: string; 
                       style={current === i.t ? { ["--cp" as string]: String(within) } : undefined}
                       onClick={() => seek(i.t)}
                     >
-                      <span className="nk-t">
-                        <Scramble text={clock(i.t)} />
-                      </span>
+                      <span className="nk-t">{clock(i.t)}</span>
                       {i.label}
                     </button>
                   </li>
@@ -310,11 +228,8 @@ export function SeekButton({ t }: { t: number }) {
   const label = `0:${String(Math.floor(t)).padStart(2, "0")}`;
   return (
     <button type="button" className="nk-seek" onClick={() => seek(t)}>
-      <span className="nk-ff" aria-hidden="true">
-        <span className="nk-tri" />
-        <span className="nk-tri" />
-      </span>
-      See it at <Scramble text={label} />
+      <span className="nk-tri" aria-hidden="true" />
+      See it at {label}
       <span className="sr-only"> in the recording</span>
     </button>
   );
@@ -413,94 +328,45 @@ export function Switcher({ options }: { options: { label: string; layer: string;
 }
 
 /* ---------------------------------------------------------------------------------------------
- * Voice teaser, played like a voice message: a round play button on the bubble's record dot, its
- * length beside it (5″), the screenshot's own waveform turning orange as it plays, and three bars
- * in the button that move with the voice (Web Audio; plain bars with reduced motion).
+ * Voice teaser, played like a voice message: a play button on the bubble's record dot, a hint
+ * beside it until the first listen, a ring that fills as it plays, and the screenshot's own
+ * waveform turning orange as it goes.
  * ------------------------------------------------------------------------------------------- */
-
-type Meter = { ctx: AudioContext; an: AnalyserNode; data: Uint8Array<ArrayBuffer> };
 
 export function VoiceTeaser({ src, label, seconds }: { src: string; label: string; seconds: number }) {
   const audio = useRef<HTMLAudioElement>(null);
-  const button = useRef<HTMLButtonElement>(null);
-  const meter = useRef<Meter | null>(null);
-  const frame = useRef(0);
   const [playing, setPlaying] = useState(false);
   const [heard, setHeard] = useState(false);
   const [progress, setProgress] = useState(0);
-
-  const listen = (a: HTMLAudioElement) => {
-    if (meter.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!AC) return;
-    const ctx = new AC();
-    const an = ctx.createAnalyser();
-    an.fftSize = 64;
-    ctx.createMediaElementSource(a).connect(an);
-    an.connect(ctx.destination);
-    meter.current = { ctx, an, data: new Uint8Array(an.frequencyBinCount) };
-  };
-
-  const tick = () => {
-    const m = meter.current;
-    const b = button.current;
-    if (m && b) {
-      m.an.getByteFrequencyData(m.data);
-      // Three voice bands: low, mid and high, each scaled to 0..1.
-      const band = (from: number, to: number) => {
-        let sum = 0;
-        for (let i = from; i < to; i++) sum += m.data[i] ?? 0;
-        return Math.min(1, Math.max(0, (sum / (to - from) - 40) / 170));
-      };
-      b.style.setProperty("--b1", band(1, 4).toFixed(2));
-      b.style.setProperty("--b2", band(4, 9).toFixed(2));
-      b.style.setProperty("--b3", band(9, 16).toFixed(2));
-    }
-    frame.current = requestAnimationFrame(tick);
-  };
-
-  useEffect(() => () => cancelAnimationFrame(frame.current), []);
-
+  const ring = 2 * Math.PI * 22;
   return (
     <>
       <span className="nk-vt-wave" aria-hidden="true">
         <i style={{ transform: `scaleX(${progress})` }} />
       </span>
-      <span className="nk-vt-len" aria-hidden="true">
-        {seconds}″
-      </span>
+      {!heard && (
+        <span className="nk-vt-hint" aria-hidden="true">
+          Tap to listen · 0:0{seconds}
+        </span>
+      )}
       <button
-        ref={button}
         type="button"
-        className={`nk-vt${playing ? " is-playing" : ""}${heard ? " is-heard" : ""}`}
-        aria-label={playing ? `Pause ${label}` : `Play ${label}`}
+        className={`nk-vt${playing ? " is-playing" : ""}`}
+        aria-label={playing ? `Pause ${label}` : `Play ${label}, ${seconds} seconds`}
         onClick={() => {
           const a = audio.current;
           if (!a) return;
           if (a.paused) {
-            listen(a);
-            void meter.current?.ctx.resume();
             if (a.ended) a.currentTime = 0;
             void a.play().catch(() => {});
           } else a.pause();
         }}
       >
-        <span className="nk-vt-rip" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </span>
-        <span className="nk-vt-ico" aria-hidden="true">
-          {playing ? (
-            <span className="nk-eq">
-              <i />
-              <i />
-              <i />
-            </span>
-          ) : (
-            <span className="nk-tri" />
-          )}
-        </span>
+        <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+          <circle cx="24" cy="24" r="22" className="nk-vt-track" />
+          <circle cx="24" cy="24" r="22" className="nk-vt-ring" strokeDasharray={ring} strokeDashoffset={ring * (1 - progress)} />
+        </svg>
+        <PlayMorph playing={playing} />
       </button>
       <audio
         ref={audio}
@@ -510,17 +376,11 @@ export function VoiceTeaser({ src, label, seconds }: { src: string; label: strin
           pauseOthers(e.currentTarget);
           setPlaying(true);
           setHeard(true);
-          cancelAnimationFrame(frame.current);
-          frame.current = requestAnimationFrame(tick);
         }}
-        onPause={() => {
-          setPlaying(false);
-          cancelAnimationFrame(frame.current);
-        }}
+        onPause={() => setPlaying(false)}
         onEnded={() => {
           setPlaying(false);
           setProgress(0);
-          cancelAnimationFrame(frame.current);
         }}
         onTimeUpdate={(e) => {
           const a = e.currentTarget;
@@ -657,7 +517,7 @@ export function GiftBox({ src, label }: { src: string; label: string }) {
           ) : (
             <span className="nk-tri" aria-hidden="true" />
           )}
-          <Wobble text={played ? "Replay" : "Play"} />
+          {played ? "Replay" : "Play"}
         </button>
       </div>
     </div>
