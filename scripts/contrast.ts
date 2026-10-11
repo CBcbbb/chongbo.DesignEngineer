@@ -91,6 +91,22 @@ function casePairs(t: Record<string, string>, theme: string): Pair[] {
     { fg: T("case-dim"), bg: T("case-inset"), where: `${theme}: labels on inset`, min: TEXT },
     { fg: T("case-dim"), bg: T("case-bg"), where: `${theme}: control borders (segmented control, buttons)`, min: LARGE },
     { fg: T("case-on-red"), bg: T("case-red"), where: `${theme}: primary action (open the live platform)`, min: TEXT },
+    ...surfacePairs(T, theme, "default"),
+  ];
+}
+
+/** The colour field (cover, part openers) and the project's dark (motion, results): every text on them. */
+function surfacePairs(T: (k: string) => string, theme: string, n: string): Pair[] {
+  return [
+    { fg: T("on-field"), bg: T("field"), where: `${theme} ${n}: text on the colour field (cover, openers)`, min: TEXT },
+    { fg: T("on-field-2"), bg: T("field"), where: `${theme} ${n}: labels on the colour field`, min: TEXT },
+    { fg: T("field"), bg: T("on-field"), where: `${theme} ${n}: chips and buttons on the field`, min: TEXT },
+    { fg: T("on-dark"), bg: T("dark"), where: `${theme} ${n}: headings on the dark sheet`, min: TEXT },
+    { fg: T("on-dark-body"), bg: T("dark"), where: `${theme} ${n}: body on the dark sheet`, min: TEXT },
+    { fg: T("on-dark-2"), bg: T("dark"), where: `${theme} ${n}: labels and captions on the dark sheet`, min: TEXT },
+    { fg: T("accent-on-dark"), bg: T("dark"), where: `${theme} ${n}: index, tags on the dark sheet`, min: TEXT },
+    { fg: T("on-dark"), bg: T("dark-inset"), where: `${theme} ${n}: keycaps on the dark sheet`, min: TEXT },
+    { fg: T("accent"), bg: T("studio"), where: `${theme} ${n}: part numbers and marker in the contents`, min: TEXT },
   ];
 }
 
@@ -127,6 +143,11 @@ function palettePairs(): Pair[] {
         { fg: P("case-dim"), bg: P("accent-2"), where: `${theme} ${n}: labels on the media field`, min: TEXT },
         { fg: P("case-ink"), bg: P("accent-2"), where: `${theme} ${n}: stepper text on the field`, min: TEXT },
       );
+      out.push(...surfacePairs(P, theme, n));
+      for (const t of ["people", "partners", "projects", "methods"]) {
+        if (pal[`type-${t}-on-dark`]) out.push({ fg: P(`type-${t}-on-dark`), bg: P("dark"), where: `${theme} ${n}: ${t} numbers on the dark sheet`, min: TEXT });
+      }
+      if (pal["mark-people-on-dark"]) out.push({ fg: P("mark-people-on-dark"), bg: P("dark"), where: `${theme} ${n}: people shape on the dark sheet`, min: LARGE });
       for (const t of ["people", "partners", "projects", "methods"]) {
         if (pal[`type-${t}`]) out.push({ fg: P(`type-${t}`), bg, where: `${theme} ${n}: ${t} numbers and labels`, min: TEXT });
         if (pal[`mark-${t}`]) out.push({ fg: P(`mark-${t}`), bg, where: `${theme} ${n}: ${t} shape`, min: LARGE });

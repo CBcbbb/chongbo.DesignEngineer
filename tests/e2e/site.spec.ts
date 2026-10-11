@@ -185,14 +185,17 @@ test.describe("layout", () => {
   test("case files deep-link to section anchors", async ({ page }) => {
     await page.goto("/work/hhcd-data-platform#dual-view");
     await expect(page.locator("section#dual-view h3")).toHaveText(/A table view beside the network/);
-    await expect(page.locator('.cf-rail a[aria-current="step"]')).toContainText("A table view beside the network");
     await expect(page.locator("section#dual-view")).toHaveClass(/is-current/);
-    if (await page.locator(".cf-rail").isVisible()) {
-      await page.locator('.cf-rail a[href="#arrangements"]').click();
-      await expect(page.locator('.cf-rail a[aria-current="step"] span')).toHaveText("08");
+    const cardLink = page.locator('.cf-toc a[href="#arrangements"]');
+    if (await cardLink.isVisible()) {
+      await expect(page.locator('.cf-toc a[aria-current="step"]')).toHaveText("Table view");
+      await cardLink.click();
+      await expect(page.locator('.cf-toc a[aria-current="step"]')).toHaveText("Two arrangements");
     } else {
-      await page.locator(".cf-rail-mobile summary").click();
-      await page.locator('.cf-rail-mobile a[href="#arrangements"]').click();
+      // Narrow screens: the contents is a strip of parts.
+      await page.locator('.cf-toc a[href="#hhcd"]').click();
+      await expect(page.locator('.cf-toc-part[data-active="true"] > a')).toContainText("Helen Hamlyn Centre");
+      await page.goto("/work/hhcd-data-platform#arrangements");
     }
     await expect(page.locator("section#arrangements")).toHaveClass(/is-current/);
   });

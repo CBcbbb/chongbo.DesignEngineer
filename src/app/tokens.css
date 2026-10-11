@@ -47,6 +47,18 @@
   --on-accent: #fbfaf7;
   --accent-2: #ecebe6;
   --accent-tint: #f2f0eb;
+  /* the project's colour field (cover, part openers, interactive evidence) and its dark (motion, results) */
+  --field: #1c1b19;
+  --on-field: #fbfaf7;
+  --on-field-2: #c9c5bc;
+  --dark: #141312;
+  --on-dark: #f2f0ec;
+  --on-dark-body: #cfcbc3;
+  --on-dark-2: #a8a49c;
+  --dark-rule: #2b2926;
+  --dark-line: #4d4a44;
+  --dark-inset: #23211f;
+  --accent-on-dark: #f2f0ec;
 
   --sans: var(--font-geist-sans), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: var(--font-geist-mono), "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;

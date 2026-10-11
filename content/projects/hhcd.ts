@@ -21,14 +21,21 @@ export const hhcd: Project = {
   tier: "main",
   tab: "moss",
   template: "case-file",
+  client: "Helen Hamlyn Centre for Design, Royal College of Art",
+  legend: [
+    { type: "projects", label: "Projects" },
+    { type: "methods", label: "Methods" },
+    { type: "people", label: "People" },
+    { type: "partners", label: "Partners" },
+  ],
   shows: [
     { capability: "E", label: "Accessibility", section: "keyboard" },
     { capability: "B", label: "Idea to production", section: "sample-data" },
     { capability: "D", label: "Craft and interaction", section: "arrangements" },
   ],
   parts: [
-    { id: "voice", label: "Part 1", title: "VOICE", intro: "The first version, for an EU-funded arts research project." },
-    { id: "hhcd", label: "Part 2", title: "Helen Hamlyn Centre", intro: "The same platform, with the Centre's own research." },
+    { id: "voice", label: "Part 1", title: "VOICE" },
+    { id: "hhcd", label: "Part 2", title: "Helen Hamlyn Centre" },
   ],
   cover: {
     kind: "image",
@@ -41,6 +48,8 @@ export const hhcd: Project = {
   sections: [
     {
       id: "brief",
+      nav: "Accessibility first",
+      eyebrow: "Context",
       part: "voice",
       kind: "problem",
       title: "Accessibility as the starting point",
@@ -62,6 +71,8 @@ export const hhcd: Project = {
     },
     {
       id: "no-borders",
+      nav: "Network map",
+      eyebrow: "Decision",
       part: "voice",
       kind: "decision",
       title: "A network instead of a geographical map",
@@ -95,6 +106,8 @@ export const hhcd: Project = {
     },
     {
       id: "sample-data",
+      nav: "Prototypes on sample data",
+      eyebrow: "Prototype",
       part: "voice",
       kind: "decision",
       title: "Working prototypes on sample data",
@@ -116,6 +129,8 @@ export const hhcd: Project = {
     },
     {
       id: "workshop",
+      nav: "Stakeholder workshop",
+      eyebrow: "Research",
       part: "voice",
       kind: "evidence",
       title: "A 75-minute workshop with 14 stakeholders",
@@ -157,6 +172,8 @@ export const hhcd: Project = {
     },
     {
       id: "four-types",
+      nav: "Collecting the data",
+      eyebrow: "Data model",
       part: "voice",
       kind: "decision",
       title: "Why the data is collected by person but mapped by type",
@@ -182,6 +199,8 @@ export const hhcd: Project = {
     },
     {
       id: "dual-view",
+      nav: "Table view",
+      eyebrow: "Decision",
       part: "voice",
       kind: "decision",
       title: "A table view beside the network",
@@ -204,6 +223,8 @@ export const hhcd: Project = {
     },
     {
       id: "taken-up",
+      nav: "The Centre's version",
+      eyebrow: "Rebuild",
       part: "hhcd",
       kind: "outcome",
       title: "Taken up by the Helen Hamlyn Centre",
@@ -227,6 +248,8 @@ export const hhcd: Project = {
     },
     {
       id: "arrangements",
+      nav: "Two arrangements",
+      eyebrow: "Interaction",
       part: "hhcd",
       kind: "decision",
       title: "Two arrangements of the same map",
@@ -257,6 +280,9 @@ export const hhcd: Project = {
     },
     {
       id: "guide",
+      nav: "Guide inside the map",
+      eyebrow: "Interaction",
+      surface: "dark",
       part: "hhcd",
       kind: "decision",
       title: "A guide inside the map",
@@ -279,6 +305,9 @@ export const hhcd: Project = {
     },
     {
       id: "keyboard",
+      nav: "Keyboard navigation",
+      eyebrow: "Evidence",
+      surface: "dark",
       part: "hhcd",
       kind: "evidence",
       title: "Accessibility – keyboard navigation",
@@ -302,6 +331,8 @@ export const hhcd: Project = {
     },
     {
       id: "narrow-screens",
+      nav: "Responsive design",
+      eyebrow: "Evidence",
       part: "hhcd",
       kind: "evidence",
       title: "Responsive design",
@@ -335,6 +366,8 @@ export const hhcd: Project = {
     },
     {
       id: "contrast",
+      nav: "Colour contrast",
+      eyebrow: "Evidence",
       part: "hhcd",
       kind: "evidence",
       title: "Accessibility – colour contrast",
@@ -358,6 +391,9 @@ export const hhcd: Project = {
     },
     {
       id: "results",
+      nav: "Results",
+      eyebrow: "Outcome",
+      surface: "dark",
       part: "hhcd",
       kind: "outcome",
       title: "Results",
@@ -380,6 +416,8 @@ export const hhcd: Project = {
     },
     {
       id: "role",
+      nav: "My role",
+      eyebrow: "Role",
       part: "hhcd",
       kind: "role",
       title: "Designed, specified and built alone",

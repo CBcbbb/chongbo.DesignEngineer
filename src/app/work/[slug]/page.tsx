@@ -52,10 +52,8 @@ export default async function CaseFile({ params }: Props) {
         <div className="wrap">
           <SiteHeader current="work" />
         </div>
-        <main id="main" tabIndex={-1} className="pt-2 sm:pt-4">
-          <div className="px-[clamp(8px,2vw,24px)]">
-            <CaseFileTemplate project={project} next={next} />
-          </div>
+        <main id="main" tabIndex={-1}>
+          <CaseFileTemplate project={project} next={next} />
         </main>
         <div className="wrap">
           <SiteFooter />

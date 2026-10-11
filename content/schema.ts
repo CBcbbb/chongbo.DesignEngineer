@@ -183,6 +183,13 @@ export type Section = {
   layout?: "stack" | "pair";
   /** Keys shown as keycaps under the body, e.g. ["Tab", "←", "→"]. */
   keys?: string[];
+  /** Case-file template: the card's short name in the contents. Defaults to the title. */
+  nav?: string;
+  /**
+   * Case-file template: the sheet's surface. `paper` for reading (default); `dark` for the work in motion
+   * and results, where the evidence runs to the sheet's edges.
+   */
+  surface?: "paper" | "dark";
 };
 
 export type ProjectLink = { label: string; href: string };
@@ -215,6 +222,10 @@ export type Project = {
   parts?: CasePart[];
   /** Case-file template: one line on the result, shown on the cover. */
   outcome?: string;
+  /** Case-file template: who the work was for, shown first on the cover (e.g. "Nike App, China"). */
+  client?: string;
+  /** Case-file template: the key to the cover image, e.g. a map's entity types. */
+  legend?: { type: EntityType; label: string }[];
   /** Case-file template: "What this shows", two or three capability chips that jump to their cards. */
   shows?: { capability: Capability; label: string; section: string }[];
   /** Questions the ask box suggests when this card is on the table. */

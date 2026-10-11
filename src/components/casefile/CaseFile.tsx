@@ -1,58 +1,64 @@
+import { Fragment } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import type { Project, Section } from "@content";
 import { pad2 } from "@/lib/printed";
 import { projectNumber, SIGNAL_SHORT } from "@/lib/site";
-import { CaseMedia, CardTitle, Caption, Keys, Shot, StepsRow } from "./blocks";
-import { CaseRail, type RailPart } from "./CaseRail";
+import { imageSize } from "@/lib/assets";
+import { CaseMedia, CardTitle, Keys, StepsRow } from "./blocks";
+import { CaseContents, type ContentsPart } from "./CaseContents";
 
 const External = () => <span aria-hidden="true">↗</span>;
 
-function Card({ section, n }: { section: Section; n: string }) {
-  const layout = section.layout ?? "stack";
-  const text = (
-    <div className="cf-text">
-      <div className="cf-body">
-        {section.body.map((p) => (
-          <p key={p.slice(0, 40)}>{p}</p>
-        ))}
-      </div>
-      {section.keys && <Keys keys={section.keys} />}
-      <ul className="cf-tags" aria-label="Shows">
-        {section.signals.map((s) => (
-          <li key={s}>{SIGNAL_SHORT[s]}</li>
-        ))}
-      </ul>
-    </div>
-  );
-  const media = section.media ? (
-    <div className="cf-media">
-      <CaseMedia media={section.media} index={n} />
-    </div>
-  ) : null;
+/** Interactive evidence and phone screens sit on the project's colour field. */
+function mountOf(section: Section): "field" | undefined {
+  const m = section.media;
+  if (!m) return undefined;
+  if (m.kind === "compare") return "field";
+  if (m.kind === "group" && m.ratio === "9:16") return "field";
+  return undefined;
+}
 
+/** One card = one sheet: index and claim on the left, the reasoning on the right, evidence underneath. */
+function Card({ section, idx }: { section: Section; idx: string }) {
+  const dark = section.surface === "dark";
+  const bleed = dark && section.media?.kind === "video";
   return (
-    <section id={section.id} className="cf-card" data-layout={layout} aria-labelledby={`${section.id}-title`}>
-      <div className="cf-card-head">
-        <span className="cf-num" aria-hidden="true">
-          {n}
-        </span>
-        <h3 id={`${section.id}-title`} className="cf-h3">
-          <CardTitle section={section} />
-          <a className="cf-anchor" href={`#${section.id}`} aria-label={`Link to “${section.title}”`}>
-            #
-          </a>
-        </h3>
-      </div>
-      {layout === "pair" && media ? (
-        <div className="cf-pair">
-          {text}
-          {media}
+    <section
+      id={section.id}
+      className={`cf-sheet${dark ? " is-dark" : ""}`}
+      data-mount={mountOf(section)}
+      aria-labelledby={`${section.id}-title`}
+    >
+      <div className="cf-head">
+        <div>
+          <p className="cf-meta">
+            <span className="cf-idx">{idx}</span>
+            {section.eyebrow && <span className="cf-kind">{section.eyebrow}</span>}
+          </p>
+          <h3 id={`${section.id}-title`} className="cf-h3">
+            <CardTitle section={section} />
+            <a className="cf-anchor" href={`#${section.id}`} aria-label={`Link to “${section.title}”`}>
+              #
+            </a>
+          </h3>
         </div>
-      ) : (
-        <>
-          {text}
-          {media}
-        </>
+        <div className="cf-body">
+          {section.body.map((p) => (
+            <p key={p.slice(0, 40)}>{p}</p>
+          ))}
+          {section.keys && <Keys keys={section.keys} />}
+          <ul className="cf-tags" aria-label="Shows">
+            {section.signals.slice(0, 2).map((s) => (
+              <li key={s}>{SIGNAL_SHORT[s]}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      {section.media && (
+        <div className={`cf-evidence${bleed ? " cf-bleed" : ""}`}>
+          <CaseMedia media={section.media} index={idx} />
+        </div>
       )}
       {section.steps && section.steps.length > 0 && <StepsRow steps={section.steps} />}
     </section>
@@ -60,162 +66,167 @@ function Card({ section, n }: { section: Section; n: string }) {
 }
 
 /**
- * The shared case-file template (playbook §7): cover → What this shows → cards in parts → next project.
+ * The shared case-file template (playbook §7), in the same system as the Nike case file:
+ * contents on the left; on the right a stack of sheets — cover, the work, then each part's opener and cards.
  * Projects opt in with `template: "case-file"`.
  */
 export function CaseFile({ project, next }: { project: Project; next: Project }) {
   const parts = project.parts ?? [{ id: "main", label: "", title: project.title }];
-  const numbered = project.sections.map((s, i) => ({ s, n: pad2(i + 1) }));
-  const inPart = (id: string) => numbered.filter(({ s }) => (s.part ?? parts[0]!.id) === id);
-  const rail: RailPart[] = parts.map((p) => ({
+  const inPart = (id: string) => project.sections.filter((s) => (s.part ?? parts[0]!.id) === id);
+  const contents: ContentsPart[] = parts.map((p, i) => ({
     id: p.id,
-    label: p.label,
-    title: p.title,
-    cards: inPart(p.id).map(({ s, n }) => ({ id: s.id, title: s.title, n })),
+    n: pad2(i + 1),
+    label: p.title,
+    cards: inPart(p.id).map((s) => ({ id: s.id, label: s.nav ?? s.title })),
   }));
   const live = project.links.find((l) => /live/i.test(l.label));
   const others = project.links.filter((l) => l !== live);
   const titleOf = (id: string) => project.sections.find((s) => s.id === id)?.title ?? id;
-  /** Chips show the card number they jump to, matching the rail; capability codes are internal. */
-  const numberOf = (id: string) => numbered.find((x) => x.s.id === id)?.n ?? "";
+  const cover = project.cover.kind === "image" ? project.cover : null;
+  const coverSize = cover ? imageSize(cover.asset) : undefined;
 
   return (
     <div className="cf" data-palette={project.slug === "hhcd-data-platform" ? "hhcd" : project.slug}>
-      <article className="cf-sheet" aria-labelledby="case-title">
-        <header className="cf-cover">
-          <Link href="/work" className="cf-back">
-            <span aria-hidden="true">←</span> All work
-          </Link>
-          <p className="cf-mono cf-cover-meta">
-            <span>Case file {projectNumber(project)}</span>
-            <span aria-hidden="true">·</span>
-            <span className="cf-live">{project.status}</span>
-          </p>
-          <h1 id="case-title" className="cf-h1">
-            {project.title}
-          </h1>
-          <p className="cf-lede">{project.oneLiner}</p>
+      <div className="cf-frame">
+        <CaseContents title={project.title} parts={contents} />
 
-          <dl className="cf-facts">
-            <div>
-              <dt className="cf-mono">Context</dt>
-              <dd>{project.context}</dd>
-            </div>
-            <div>
-              <dt className="cf-mono">Role</dt>
-              <dd>{project.role}</dd>
-            </div>
-            {project.outcome && (
-              <div>
-                <dt className="cf-mono">Outcome</dt>
-                <dd>{project.outcome}</dd>
-              </div>
-            )}
-          </dl>
-
-          {(live || others.length > 0) && (
-            <p className="cf-actions">
-              {live && (
-                <a className="cf-btn" href={live.href} target="_blank" rel="noopener">
-                  Open the {live.label.toLowerCase()} <External />
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
+        <article className="cf-sheets" aria-labelledby="case-title">
+          <header id="top" className="cf-sheet is-field cf-cover">
+            <p className="cf-client">
+              {project.legend && (
+                <span className="cf-marks" aria-hidden="true">
+                  {project.legend.map((l) => (
+                    <span key={l.type} className={`cf-mark cf-mark-${l.type}`} />
+                  ))}
+                </span>
               )}
-              {others.map((l) => (
-                <a key={l.href} className="cf-link" href={l.href} target="_blank" rel="noopener">
-                  {l.label} <External />
-                  <span className="sr-only"> (opens in a new tab)</span>
-                </a>
-              ))}
+              <span>{project.client ?? project.context}</span>
+              <span aria-hidden="true">·</span>
+              <span>{project.status}</span>
             </p>
-          )}
-
-          {project.cover.kind === "image" && (
-            <figure className="cf-figure cf-cover-figure">
-              <Shot asset={project.cover.asset} alt={project.cover.alt} need={project.cover.need} priority sizes="(min-width: 1320px) 1190px, 100vw" />
-              <Caption index="00" text={project.cover.caption} />
-            </figure>
-          )}
-
-          {project.shows && project.shows.length > 0 && (
-            <nav className="cf-shows" aria-labelledby="cf-shows-title">
-              <h2 id="cf-shows-title" className="cf-mono" style={{ margin: 0 }}>
-                What this shows
-              </h2>
-              <ul>
-                {project.shows.map((c) => (
-                  <li key={c.section}>
-                    <a className="cf-chip" href={`#${c.section}`}>
-                      <b aria-hidden="true">{numberOf(c.section)}</b>
-                      {c.label}
-                      <span className="sr-only">: {titleOf(c.section)}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
-        </header>
-
-        <div className="cf-grid">
-          <CaseRail parts={rail} />
-          <div>
-            <details className="cf-rail-mobile">
-              <summary>
-                <span className="cf-mono">Contents · {project.sections.length} parts</span>
-              </summary>
-              {rail.map((p) => (
-                <div key={p.id}>
-                  {p.label && (
-                    <span className="cf-mono">
-                      {p.label} · {p.title}
-                    </span>
-                  )}
-                  <ol>
-                    {p.cards.map((c) => (
-                      <li key={c.id}>
-                        <a href={`#${c.id}`}>
-                          <span>{c.n}</span>
-                          {c.title}
+            <h1 id="case-title" className="cf-h1">
+              {project.title}
+            </h1>
+            <p className="cf-lede">{project.oneLiner}</p>
+            <div className="cf-intro">
+              <p>{project.context}</p>
+              <dl className="cf-facts">
+                <div>
+                  <dt>Role</dt>
+                  <dd>{project.role}</dd>
+                </div>
+                {project.outcome && (
+                  <div>
+                    <dt>Outcome</dt>
+                    <dd>{project.outcome}</dd>
+                  </div>
+                )}
+              </dl>
+            </div>
+            <div className="cf-cover-foot">
+              {project.shows && project.shows.length > 0 && (
+                <nav aria-labelledby="cf-shows-title">
+                  <ul className="cf-chips">
+                    <li id="cf-shows-title" className="cf-chips-label">
+                      What this shows
+                    </li>
+                    {project.shows.map((c) => (
+                      <li key={c.section}>
+                        <a className="cf-chip" href={`#${c.section}`}>
+                          {c.label}
+                          <span className="sr-only">: {titleOf(c.section)}</span>
                         </a>
                       </li>
                     ))}
-                  </ol>
+                  </ul>
+                </nav>
+              )}
+              {(live || others.length > 0) && (
+                <p className="cf-actions">
+                  {live && (
+                    <a className="cf-btn" href={live.href} target="_blank" rel="noopener">
+                      Open the {live.label.toLowerCase()} <External />
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  )}
+                  {others.map((l) => (
+                    <a key={l.href} className="cf-link" href={l.href} target="_blank" rel="noopener">
+                      {l.label} <External />
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  ))}
+                </p>
+              )}
+            </div>
+          </header>
+
+          {cover && coverSize && (
+            <section className="cf-sheet is-dark cf-show" aria-labelledby="cf-show-title">
+              <div className="cf-show-head">
+                <div>
+                  <p className="cf-kind">The work</p>
+                  <h2 id="cf-show-title">The map today</h2>
+                  {cover.caption && <p>{cover.caption}</p>}
                 </div>
-              ))}
-            </details>
-
-            {parts.map((p) => (
-              <div key={p.id} className="cf-part-wrap">
-                {p.label && (
-                  <div className="cf-part" id={`part-${p.id}`}>
-                    <div className="cf-part-head">
-                      <div>
-                        <p className="cf-mono" style={{ margin: 0 }}>
-                          {p.label}
-                        </p>
-                        <h2>{p.title}</h2>
-                      </div>
-                      {p.intro && <p>{p.intro}</p>}
-                    </div>
-                  </div>
+                {project.legend && (
+                  <ul className="cf-legend" aria-label="Key">
+                    {project.legend.map((l) => (
+                      <li key={l.type}>
+                        <span className={`cf-mark cf-mark-${l.type}`} aria-hidden="true" />
+                        {l.label}
+                      </li>
+                    ))}
+                  </ul>
                 )}
-                {inPart(p.id).map(({ s, n }) => (
-                  <Card key={s.id} section={s} n={n} />
-                ))}
               </div>
-            ))}
+              <figure className="cf-shot-end">
+                <Image
+                  src={`/assets/${cover.asset}`}
+                  alt={cover.alt}
+                  width={coverSize.width}
+                  height={coverSize.height}
+                  sizes="(min-width: 1180px) 860px, 100vw"
+                  priority
+                />
+              </figure>
+            </section>
+          )}
 
-            <nav aria-label="Next case file">
-              <Link href={`/work/${next.slug}`} className="cf-next">
-                <span className="cf-mono">Next case file · {projectNumber(next)}</span>
-                <strong>{next.title}</strong>
-                <span>{next.oneLiner}</span>
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </article>
+          {parts.map((p, pi) => {
+            const cards = inPart(p.id);
+            const n = pad2(pi + 1);
+            return (
+              <Fragment key={p.id}>
+                {p.label && (
+                  <section id={p.id} className="cf-sheet is-field cf-opener" aria-labelledby={`${p.id}-h`}>
+                    <span className="cf-num" aria-hidden="true">
+                      {n}
+                    </span>
+                    <div>
+                      <h2 id={`${p.id}-h`}>
+                        <span className="sr-only">{p.label}: </span>
+                        {p.title}
+                      </h2>
+                      <p className="cf-cards">{cards.map((s) => s.nav ?? s.title).join(" · ")}</p>
+                    </div>
+                  </section>
+                )}
+                {cards.map((s, ci) => (
+                  <Card key={s.id} section={s} idx={`${n}.${ci + 1}`} />
+                ))}
+              </Fragment>
+            );
+          })}
+
+          <nav aria-label="Next case file">
+            <Link href={`/work/${next.slug}`} className="cf-sheet cf-next">
+              <span className="cf-kind">Next case file · {projectNumber(next)}</span>
+              <strong>{next.title}</strong>
+              <span>{next.oneLiner}</span>
+            </Link>
+          </nav>
+        </article>
+      </div>
     </div>
   );
 }

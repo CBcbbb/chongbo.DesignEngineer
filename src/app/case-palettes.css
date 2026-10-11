@@ -23,6 +23,24 @@
   --type-partners: #b01e68;
   --type-projects: #a8470f;
   --type-methods: #107052;
+  /* colour field: the platform's teal (#006D69, its text-safe accent), white type on it */
+  --field: #006d69;
+  --on-field: #ffffff;
+  --on-field-2: #d3ebe8;
+  /* the platform's ink, deepened, for the work in motion and the results */
+  --dark: #1b1a20;
+  --on-dark: #f2f1f4;
+  --on-dark-body: #d3d1da;
+  --on-dark-2: #aeacb8;
+  --dark-rule: #2f2e36;
+  --dark-line: #4a4853;
+  --dark-inset: #26252c;
+  --accent-on-dark: #6cc6bd;
+  --mark-people-on-dark: #8d89d6;
+  --type-people-on-dark: #aeaaea;
+  --type-partners-on-dark: #f283b9;
+  --type-projects-on-dark: #f4a06c;
+  --type-methods-on-dark: #6dcda6;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -37,6 +55,9 @@
     --type-partners: #f283b9;
     --type-projects: #f4a06c;
     --type-methods: #6dcda6;
+    --dark: #111015;
+    --dark-rule: #26252c;
+    --dark-inset: #1d1c22;
   }
 }
 
@@ -51,4 +72,7 @@
   --type-partners: #f283b9;
   --type-projects: #f4a06c;
   --type-methods: #6dcda6;
+  --dark: #111015;
+  --dark-rule: #26252c;
+  --dark-inset: #1d1c22;
 }

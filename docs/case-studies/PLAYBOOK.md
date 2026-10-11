@@ -121,7 +121,16 @@ Rules:
 - **Surfaces:** existing tokens in `src/app/tokens.css`: `--studio`, `--paper`, `--ink`, `--paper-body`, `--rule`. Red (`--red`) stays reserved for actions, as on the printer.
 - **Light and dark are both first-class.** Every page is designed and reviewed in both modes. Default to the system setting, and keep the manual override (`data-theme`). Photographed objects on the home page (the printer, the sheets it prints) keep their colours in both modes; reading surfaces, including the whole case file, follow the theme. A long page on bright paper is glaring in dark mode.
 - **Grid:** a reading column of about 65 characters. Media can break out to a wide column or full bleed. Generous, consistent vertical rhythm.
-- **Page skeleton:** cover → "What this shows" (two or three capability chips that jump to their cards) → cards in canonical order → outcome and role → next project. The parts rail (01…n) stays.
+- **Page skeleton (every project, same system as Nike):**
+  - Contents on the left: the project, then each part with its cards. Below 1000px it becomes a strip of parts.
+  - On the right, a stack of sheets on the studio:
+    - cover (title, lede, intro and facts, "What this shows" chips that jump to their cards);
+    - the work (the product itself);
+    - then, for each part, an opener (big number, name, its cards) and one sheet per card;
+    - then next project.
+  - Card anatomy: index (`01.2`) and kind; the claim on the left; body and tags on the right; evidence at full sheet width; caption.
+  - Three surfaces set the rhythm: paper for reading, the project's colour field for the cover, openers and interactive evidence, and the project's dark for the work in motion and results.
+  - A project changes only its two colours (`--field`, `--dark`), its cover and its signature module.
 - **Block library:** every project is built from the same blocks:
   - text (heading + body)
   - media (image / video / Lottie, with caption)
@@ -143,7 +152,7 @@ Rules:
 
 | Token | Use | Contrast rule (in its own mode) |
 |---|---|---|
-| `--accent` | links, chips, highlighted numbers, the parts rail marker | ≥ 4.5:1 on the paper surface |
+| `--accent` | links, tags, card indexes, the contents marker | ≥ 4.5:1 on the paper surface |
 | `--accent-strong` / `--on-accent` | filled chips and buttons, and the text on them | ≥ 4.5:1 between the two |
 | `--accent-2` | colour fields, cover band, media mounts | ≥ 3:1 against the paper where it marks a boundary |
 | `--accent-tint` | quiet backgrounds: highlighted cards ("Printed for…"), quotes | body text still ≥ 4.5:1 on it |
