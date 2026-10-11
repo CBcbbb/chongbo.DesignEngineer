@@ -1,21 +1,9 @@
-import fs from "node:fs";
-import path from "node:path";
 import Image from "next/image";
 import type { Media } from "@content";
+import { assetExists } from "@/lib/assets";
 import { CodeBlock } from "./CodeBlock";
 import { DataContractsDiagram } from "./DataContractsDiagram";
 import { TokenLayersDiagram } from "./TokenLayersDiagram";
-
-const ASSET_DIR = path.join(process.cwd(), "public", "assets");
-
-/** Checked at build time: pages are static, so a newly added asset appears on the next build. */
-function assetExists(asset: string): boolean {
-  try {
-    return fs.statSync(path.join(ASSET_DIR, asset)).isFile();
-  } catch {
-    return false;
-  }
-}
 
 const ratioCss = (ratio: string) => ratio.replace(":", " / ");
 
