@@ -48,9 +48,6 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
           </p>
           <h3 id={`${section.id}-title`} className="cf-h3">
             <CardTitle section={section} />
-            <a className="cf-anchor" href={`#${section.id}`} aria-label={`Link to “${section.title}”`}>
-              #
-            </a>
           </h3>
         </div>
         <div className="cf-body">

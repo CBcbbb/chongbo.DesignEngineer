@@ -35,6 +35,11 @@ The case file now follows the playbook of 11 October (the Nike review's standard
     - Capability labels have small still icons: a keycap, a ticked box and the four marks. They're labels, not links.
     - The live link and the switch change shade on hover, nothing more.
 
+## After your review (11 Oct, lunch)
+
+21. **The cover now matches Nike's:** the same box, padding, spacing, lede size, Role/Outcome row and labels, and the same height (740px at 1440 × 900). The title is a step smaller than Nike's because it's longer: three lines, with the live link beside "Platform". Like Nike's, the cover now fills the first screen at 1280 × 720 and 1366 × 768. The playbook asks for a compact cover; you chose matching Nike.
+22. **The # after each heading is gone.** It copied a link to the card on hover, and wasn't clear.
+
 ## Outside this repo
 
 20. **VoiceOver reads an entry's name twice** when the details panel opens (from the 11 Oct report). The testing card says it passed, as you asked. The fix belongs in the rebuild repo; the prompt for that conversation is in our chat.
