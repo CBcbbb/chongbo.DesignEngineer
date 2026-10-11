@@ -1,4 +1,4 @@
-# Helen Hamlyn Centre Data Platform: copy, draft 4
+# Helen Hamlyn Centre Data Platform: copy, draft 5
 
 Playbook §8 step 4, brought up to the playbook of 11 October 2026 (the Nike review's standards). Every fact traces to `inventory.md` → "Facts and their sources". Use "we" for VOICE team work and "I" for Chongbo's own work.
 
@@ -12,7 +12,7 @@ No captions under evidence. Labels inside the evidence are listed with each card
 - **Title:** Helen Hamlyn Centre Data Platform
 - **Button (beside the title):** Open the live platform
 - **One line:** A research repository that anyone can explore, with a mouse, a keyboard or on a phone.
-- **Role:** Data collection, analysis and modelling; design and build.
+- **Role:** Research Assistant: data collection, analysis and modelling; design and build.
 - **Outcome:** Live and in use. Used to teach the Centre's summer interns. Paper on its accessibility approach accepted at DRS 2026.
 - **What this shows** (labels, not links): Accessibility · Idea to production · Craft and interaction
 
@@ -22,7 +22,7 @@ No captions under evidence. Labels inside the evidence are listed with each card
 
 *Evidence:* the live map in a browser window (helen-hamlyn-centre-for-design-data.vercel.app). *Key:* Projects · Methods · People · Partners
 
-## Part 1 · VOICE
+## Part 1 · VOICE, the first version
 
 ### 01.1 `brief`: Accessibility as the starting point
 
@@ -44,7 +44,7 @@ I coded each prototype idea, so people could try it rather than imagine it. That
 
 ### 01.4 `workshop`: A 75-minute workshop with 14 stakeholders
 
-We ran the workshop with members of all seven organisations, and I designed its process. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view.
+I led the workshop with members of all seven organisations, and designed its process around the data the platform needed. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view.
 
 *Evidence:* the three walls, each photo whole.
 
@@ -118,8 +118,14 @@ Automated checks gave VOICE a near-perfect score, but missed that its map entrie
 
 I made the design files, wrote the specification and built the platform. Doing both, I could turn each design straight into working code, which made the work faster.
 
-- **Context:** Research assistant at Brunel University, on VOICE.
-- **Team:** VOICE's team ran the workshop and chose the network together.
+- **Context:** Brunel University, on the VOICE project.
+
+## Draft 5 (Chongbo's answers, 11 Oct afternoon)
+
+- Role adds the job title, Research Assistant.
+- The workshop: Chongbo led it (with one researcher) and designed its process around the data the platform needed. Only his part is told.
+- The closing card keeps Context only: "say what I did".
+- Part 1 is "VOICE, the first version".
 
 ## Cut in draft 4
 

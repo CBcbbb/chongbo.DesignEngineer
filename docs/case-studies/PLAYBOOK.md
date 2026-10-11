@@ -137,7 +137,10 @@ Rules:
 - **Page skeleton (every project, same system as Nike):**
   - Contents on the left on every project: the project, then each part with its cards; the card being read is marked (one marker, text centred in its highlight). Below 1000px it becomes a strip of parts.
   - On the right, a stack of sheets on the studio:
-    - cover: the client, the title, one line saying what it is, then Role and Outcome, and "What this shows": two or three capability labels on one line. Labels, not links: a capability usually spans several cards, so a jump to one of them misleads. Compact: the whole cover fits in the first screen, and every project uses the shared cover type scale (title `clamp(2.5rem, 6vw, 4.75rem)`, line under it `clamp(1.15rem, 2vw, 1.45rem)`), so covers match across projects;
+    - cover: the client, the title, one line saying what it is, then Role and Outcome, and "What this shows": two or three capability labels on one line. Labels, not links: a capability usually spans several cards, so a jump to one of them misleads. Compact: the whole cover fits in the first screen (1280 × 720 and up), and every project uses the shared cover design, so covers match across projects:
+      - type: title `clamp(2.25rem, 5vw, 4rem)`, weight 600, line-height 0.96, tracking −0.045em, at most 10em wide, broken where the name breaks; the line under it `clamp(1.0625rem, 1.6vw, 1.25rem)`, regular weight, in the field's secondary colour, at most 40ch; Role and Outcome at 0.9375rem;
+      - space, not more rules: three groups (client, title and live link · the line under it · Role, Outcome and labels), tight inside a group and open between them. Padding `clamp(1.75rem, 4.2vw, 3rem)` top and bottom; client → title `clamp(1rem, 2.2vw, 1.5rem)`; title → line `clamp(0.75rem, 1.6vw, 1.1rem)`; line → the rule over Role and Outcome `clamp(1.75rem, 4vw, 2.75rem)`; Role and Outcome → labels `clamp(1rem, 2vw, 1.4rem)`;
+      - a live link, where there is one, sits beside the title's last line, its foot on the baseline. Built in `case-file.css` (`.cf-cover`);
     - the work (the product itself);
     - then, for each part, an opener (big number, name, its cards) and one sheet per card;
     - then next project.
