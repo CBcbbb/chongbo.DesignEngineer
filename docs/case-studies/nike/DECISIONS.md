@@ -20,7 +20,15 @@ The case file is built into the site from the approved v3 prototype, with your t
 ## Shared files (proposed, not changed)
 
 10. `docs/case-studies/SHARED-CHANGES.md` has the layout proposal (contents on the left, sheets, colour roles, card types) and new blocks (chaptered video, swap, Lottie). Nothing in `src/app`, `src/lib`, `content/schema.ts` or the tokens was edited.
-11. **Card ids changed** for the AI pipeline's eval set: `brief`, `imagery`, `delight` and `retouching` are gone; `style`, `views`, `components`, `tags`, `ranking`, `draw` and `handoff` are new. `graphic-system`, `product-card`, `star-voice` and `outcome` are kept, so every id `src/lib/ask` names still exists.
+11. **Card ids changed** for the AI pipeline's eval set: `brief`, `imagery` and `delight` are gone; `style`, `views`, `components`, `tags`, `ranking`, `draw` and `handoff` are new. `graphic-system`, `retouching`, `product-card`, `star-voice` and `outcome` are kept, so every id `src/lib/ask` names still exists.
+
+## Changes after your review (11 Oct, morning)
+
+13. **One card, one screen.** On tablets and computers every card is the same height and fits the window; images scale into the space and keep their ratio. Phones scroll as before.
+14. **Retouching is its own card (01.3, "Retouched to one tone")**, with both pairs as sliders. The posters card is now "A unified visual style". Both headings are new: change them if you'd put it differently.
+15. **Captions under images are gone.** Labels inside the evidence stay (Before/After, layer names, Specified/Shipped).
+16. **Wireframe:** shown as an inset on the final screens; pressing it swaps them. The wireframe now has its white background.
+17. **The recording** sits uncropped in a device frame. "VOL.4" is gone from the recording line and the product-card labels; it stays in the cover, the creative-system card, the outcome and the role line, where it says when you joined. Fewer?
 
 ## Process
 

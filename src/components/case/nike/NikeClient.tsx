@@ -59,7 +59,7 @@ export function RecordingPlayer({ chapters }: { chapters: { part: string; items:
           muted
           playsInline
           preload="metadata"
-          aria-label="Screen recording of Athletes Closet VOL.4 in Nike's app"
+          aria-label="Screen recording of Athletes Closet in Nike's app"
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
           onEnded={() => setPlaying(false)}
@@ -94,7 +94,7 @@ export function RecordingPlayer({ chapters }: { chapters: { part: string; items:
       </div>
       <div className="nk-rec-side">
         <h2 id="rec-h">The feature in the app</h2>
-        <p className="nk-sub">A screen recording of VOL.4 as it shipped. Jump to any moment.</p>
+        <p className="nk-sub">A screen recording of the feature as it shipped. Jump to any moment.</p>
         <div className="nk-prog" aria-hidden="true">
           <i style={{ width: `${progress * 100}%` }} />
         </div>
@@ -115,7 +115,6 @@ export function RecordingPlayer({ chapters }: { chapters: { part: string; items:
             </section>
           ))}
         </div>
-        <p className="nk-note">The app is in Chinese. Captions translate what matters.</p>
       </div>
     </div>
   );
@@ -137,10 +136,23 @@ export function SeekButton({ t }: { t: number }) {
  * Compare slider: two images of the same size, the top one clipped at the handle.
  * ------------------------------------------------------------------------------------------- */
 
-export function Compare({ label, under, over, labels }: { label: string; under: ReactNode; over: ReactNode; labels: [string, string] }) {
+export function Compare({
+  label,
+  under,
+  over,
+  labels,
+  ratio,
+}: {
+  label: string;
+  under: ReactNode;
+  over: ReactNode;
+  labels: [string, string];
+  /** The images' own ratio, e.g. "333 / 500", so the slider can be sized by height without distorting them. */
+  ratio: string;
+}) {
   const [x, setX] = useState(50);
   return (
-    <div className="nk-compare" style={{ ["--x" as string]: `${x}%` }}>
+    <div className="nk-compare" style={{ ["--x" as string]: `${x}%`, aspectRatio: ratio }}>
       {under}
       <div className="nk-compare-top">{over}</div>
       <span className="nk-lab l" aria-hidden="true">
@@ -159,7 +171,7 @@ export function Compare({ label, under, over, labels }: { label: string; under: 
  * Framing device switcher: one configuration at a time, with its layer name.
  * ------------------------------------------------------------------------------------------- */
 
-export function Switcher({ options }: { options: { label: string; layer: string; image: ReactNode }[] }) {
+export function Switcher({ options }: { options: { label: string; layer: string; image: ReactNode; tall?: boolean }[] }) {
   const [i, setI] = useState(0);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const move = (d: number) => {
@@ -168,7 +180,7 @@ export function Switcher({ options }: { options: { label: string; layer: string;
     tabs.current[n]?.focus();
   };
   return (
-    <div className="nk-spec nk-grid">
+    <div className="nk-spec nk-grid nk-box">
       <div className="nk-spec-list" role="tablist" aria-label="Framing device configurations">
         {options.map((o, k) => (
           <button
@@ -203,7 +215,7 @@ export function Switcher({ options }: { options: { label: string; layer: string;
         <span className="nk-corner tl" aria-hidden="true" />
         <span className="nk-corner br" aria-hidden="true" />
         {options.map((o, k) => (
-          <div key={o.layer} className="nk-spec-img" hidden={i !== k}>
+          <div key={o.layer} className={`nk-spec-img${o.tall ? " is-tall" : ""}`} hidden={i !== k}>
             {o.image}
           </div>
         ))}
@@ -213,31 +225,33 @@ export function Switcher({ options }: { options: { label: string; layer: string;
 }
 
 /* ---------------------------------------------------------------------------------------------
- * Two states of one image (wireframe / final), cross-faded in place.
+ * Picture in picture: the shipped screen large, the wireframe as a labelled inset. Both are always
+ * visible; pressing the inset swaps which one is large.
  * ------------------------------------------------------------------------------------------- */
 
-export function Swap({ states, caption }: { states: { label: string; image: ReactNode }[]; caption: ReactNode }) {
-  const [i, setI] = useState(states.length - 1);
+type PipState = { label: string; image: ReactNode };
+
+export function Pip({ main, inset }: { main: PipState; inset: PipState }) {
+  const [swapped, setSwapped] = useState(false);
+  const big = swapped ? inset : main;
+  const small = swapped ? main : inset;
   return (
-    <>
-      <div className="nk-swap">
-        {states.map((s, k) => (
-          <div key={s.label} className="nk-swap-item" data-on={i === k} aria-hidden={i !== k}>
-            {s.image}
-          </div>
-        ))}
-      </div>
-      <div className="nk-capline">
-        <figcaption>{caption}</figcaption>
-        <div className="nk-seg" role="group" aria-label="Show">
-          {states.map((s, k) => (
-            <button key={s.label} type="button" aria-pressed={i === k} onClick={() => setI(k)}>
-              {s.label}
-            </button>
-          ))}
-        </div>
-      </div>
-    </>
+    <div className="nk-pip nk-box">
+      <div className="nk-pip-main">{big.image}</div>
+      <button
+        type="button"
+        className="nk-pip-inset"
+        aria-label={`Show the ${small.label.toLowerCase()} large`}
+        onClick={() => setSwapped((v) => !v)}
+      >
+        <span className="nk-pip-thumb" aria-hidden="true">
+          {small.image}
+        </span>
+        <span className="nk-pip-lbl" aria-hidden="true">
+          {small.label} <span className="nk-pip-ico">⤢</span>
+        </span>
+      </button>
+    </div>
   );
 }
 
@@ -297,7 +311,7 @@ export function GiftBox({ src, label }: { src: string; label: string }) {
   }, [load]);
 
   return (
-    <div className="nk-stage">
+    <div className="nk-stage nk-box">
       <div className={`nk-lottie${ready ? " is-ready" : ""}`}>
         <div ref={box} className="nk-lottie-box" role="img" aria-label={label} />
       </div>

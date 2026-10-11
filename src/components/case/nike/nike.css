@@ -282,6 +282,7 @@
   color: var(--nk-on-black-2);
 }
 .nk-tags {
+  margin-top: 0.9rem !important;
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
@@ -496,25 +497,38 @@
   margin-top: 0.6rem !important;
   color: var(--nk-on-black-2);
 }
+/* A device frame around the recording: the video keeps its own size and ratio, with nothing cropped. */
 .nk-phone {
   position: relative;
   width: min(17.5rem, 68vw);
-  padding: 0.5rem;
+  padding: 2.4rem 0.6rem 2.6rem;
   border-radius: 2.5rem;
   background: #1d1c1a;
   box-shadow:
     inset 0 0 0 1px #3a3835,
     0 40px 90px -40px var(--nk-orange);
 }
+.nk-phone::before {
+  content: "";
+  position: absolute;
+  top: 1.05rem;
+  left: 50%;
+  width: 3.2rem;
+  height: 0.32rem;
+  border-radius: 999px;
+  background: #3a3835;
+  transform: translateX(-50%);
+}
 .nk-phone video {
   width: 100%;
-  border-radius: 2.05rem;
+  height: auto;
   background: #000;
+  box-shadow: 0 0 0 1px #2b2926;
 }
 .nk-tog {
   position: absolute;
   right: -0.6rem;
-  bottom: 2rem;
+  bottom: 3.4rem;
   display: grid;
   place-items: center;
   width: 3.4rem;
@@ -586,11 +600,6 @@
 .nk-chapters button:hover {
   color: var(--nk-orange-on-black);
 }
-.nk-note {
-  margin-top: 1rem !important;
-  font: 400 0.75rem/1.5 var(--mono);
-  color: var(--nk-on-black-2);
-}
 
 /* ---------- part openers ---------- */
 .nk-opener {
@@ -647,19 +656,36 @@
   line-height: 1.3;
   color: var(--nk-dim);
 }
+.nk-spec-list button {
+  align-items: center;
+}
 .nk-spec-list .nk-n {
-  font: 400 0.75rem/1.3 var(--mono);
+  font: 400 0.75rem/1 var(--mono);
 }
 .nk-spec-list button[aria-selected="true"] {
   background: var(--nk-orange);
   color: var(--nk-on-orange);
 }
+/* one canvas size for every configuration: the images scale into it */
 .nk-spec-view {
   position: relative;
   display: grid;
+  grid-template-rows: minmax(0, 1fr);
   place-items: center;
-  min-height: 21rem;
-  padding: clamp(2.5rem, 5vw, 3.5rem) clamp(1rem, 4vw, 3rem);
+  height: clamp(17rem, 42vw, 24rem);
+  padding: clamp(2.5rem, 5vw, 3.25rem) clamp(1rem, 4vw, 3rem);
+}
+.nk-spec-img {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  place-items: center;
+  height: 100%;
+  min-height: 0;
+}
+.nk-spec-img img {
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
 }
 .nk-spec-img img {
   background: #fff;
@@ -667,10 +693,7 @@
     0 1px 0 var(--nk-rule),
     0 14px 34px -18px rgba(0, 0, 0, 0.35);
 }
-.nk-spec-img.is-tall img {
-  max-height: 26rem;
-  width: auto;
-}
+
 .nk-layer {
   position: absolute;
   top: 0.85rem;
@@ -714,11 +737,11 @@
   box-shadow: 0 12px 30px -18px rgba(0, 0, 0, 0.4);
 }
 .nk-comps figcaption {
-  overflow-wrap: anywhere;
   font-size: 0.6875rem;
   color: var(--nk-ink);
 }
 .nk-comps figcaption span {
+  display: block;
   color: var(--nk-accent);
 }
 
@@ -745,33 +768,10 @@
   background: var(--nk-orange);
   color: var(--nk-on-orange);
 }
-.nk-hint {
-  font: 500 0.75rem/1 var(--mono);
-  color: var(--nk-on-orange-2);
-}
 .nk-retouch {
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: clamp(1.25rem, 4vw, 2.75rem);
-  place-items: center start;
-}
-.nk-retouch dl {
-  display: grid;
-  gap: 0.6rem;
-  min-width: 12rem;
-  margin-top: 1rem;
-}
-.nk-retouch dl div {
-  display: grid;
-  grid-template-columns: 1.6rem minmax(0, 1fr);
-  gap: 0.4rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid var(--nk-on-orange);
-}
-.nk-retouch dt {
-  font: 500 0.75rem/1.5 var(--mono);
-}
-.nk-retouch dd {
-  font-weight: 500;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(0.75rem, 3vw, 2rem);
+  place-items: center;
 }
 .nk-compare {
   position: relative;
@@ -870,8 +870,6 @@
 }
 .nk-pair figcaption {
   display: flex;
-  gap: 0.5rem;
-  align-items: baseline;
   color: var(--nk-on-orange) !important;
   font-size: 0.75rem;
 }
@@ -888,39 +886,52 @@
 }
 
 /* ---------- swap (wireframe / final) ---------- */
-.nk-swap {
+
+/* ---------- picture in picture (wireframe inset) ---------- */
+.nk-pip {
+  position: relative;
   display: grid;
+  place-items: center;
+  background: var(--nk-black);
 }
-.nk-swap-item {
-  grid-area: 1 / 1;
-  transition: opacity 0.4s var(--nk-ease);
-}
-.nk-swap-item[data-on="false"] {
-  opacity: 0;
-  pointer-events: none;
-}
-.nk-swap-item img {
+.nk-pip-main img {
   width: 100%;
 }
-.nk-seg {
-  display: inline-flex;
-  gap: 3px;
-  padding: 3px;
-  border: 1px solid var(--nk-black-rule);
-  border-radius: 999px;
-}
-.nk-seg button {
-  padding: 0.4rem 0.9rem;
-  border: 0;
-  border-radius: 999px;
-  background: none;
+.nk-pip-inset {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: clamp(8.5rem, 26%, 15rem);
+  padding: 0;
+  overflow: hidden;
+  border: 2px solid var(--nk-on-black);
+  border-radius: 10px;
+  background: #fff;
   cursor: pointer;
-  font: 500 0.75rem/1 var(--mono);
-  color: var(--nk-on-black-2);
+  box-shadow: 0 16px 34px -12px rgba(0, 0, 0, 0.7);
+  transition: transform 0.2s var(--nk-ease);
 }
-.nk-seg button[aria-pressed="true"] {
+.nk-pip-inset:hover {
+  transform: translateY(-2px);
+}
+.nk-pip-thumb img {
+  width: 100%;
+}
+.nk-pip-lbl {
+  position: absolute;
+  left: 0.45rem;
+  bottom: 0.45rem;
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  padding: 0.32rem 0.5rem;
+  border-radius: 6px;
   background: var(--nk-orange-on-black);
   color: var(--nk-on-orange);
+  font: 500 0.6875rem/1 var(--mono);
+}
+.nk-pip-ico {
+  font-family: var(--sans);
 }
 
 /* ---------- motion stage ---------- */
@@ -998,11 +1009,6 @@
 .nk-loop li:last-child .nk-n {
   background: var(--nk-on-orange);
   color: var(--nk-orange);
-}
-.nk-back {
-  margin-top: 0.75rem !important;
-  font: 400 0.75rem/1.4 var(--mono);
-  color: var(--nk-dim);
 }
 
 /* ---------- ranking ---------- */
@@ -1089,7 +1095,7 @@
   font-weight: 500;
   color: var(--nk-orange-on-black);
 }
-.nk-vs figure > div:nth-child(2) {
+.nk-vs-img {
   display: grid;
   place-items: center;
 }
@@ -1127,6 +1133,297 @@
 }
 
 /* ---------- narrow ---------- */
+
+/* ---------- evidence that fills a card ---------- */
+.nk-ev {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.nk-solo {
+  display: grid;
+  place-items: center;
+}
+.nk-outcome-foot {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/*
+ * One card, one screen (tablets and up, when the window is tall enough): every card is the same height,
+ * and its evidence scales into the space left under the text. Images keep their own ratio: they are
+ * limited by max-height and max-width together, never given both a width and a height.
+ */
+@media (min-width: 761px) and (min-height: 620px) {
+  .nk {
+    --nk-card-h: min(calc(100svh - 3rem), 58rem);
+  }
+  .nk-sheet.is-card {
+    height: var(--nk-card-h);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .nk-outcome.is-card {
+    grid-template-rows: auto auto;
+    align-content: space-between;
+  }
+  .nk-ev {
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+  .nk-ev-one {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .nk-box {
+    height: 100%;
+    min-height: 0;
+  }
+
+  /* single images */
+  .nk-solo,
+  .nk-posters {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .nk-solo img,
+  .nk-posters img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  /* framing device switcher */
+  .nk-spec {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .nk-spec-list {
+    overflow-y: auto;
+  }
+  .nk-spec-view {
+    height: 100%;
+    min-height: 0;
+  }
+  .nk-spec-img {
+    display: grid;
+    place-items: center;
+    grid-template-rows: minmax(0, 1fr);
+    height: 100%;
+    min-height: 0;
+  }
+  .nk-spec-img img,
+  .nk-spec-img.is-tall img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  /* components */
+  .nk-comps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+    align-items: end;
+    justify-items: center;
+  }
+  .nk-comps figure {
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-items: end;
+    justify-items: center;
+  }
+  .nk-comps img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+
+  /* evidence that bleeds off the bottom edge sits on it */
+  .nk-bleed-end .nk-solo,
+  .nk-bleed-end .nk-pip-main {
+    align-items: end;
+  }
+
+  /* picture in picture */
+  .nk-pip {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .nk-pip-main {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr);
+    place-items: center;
+    height: 100%;
+    min-height: 0;
+  }
+  .nk-pip-main img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  /* side by side on the orange field */
+  .nk-field {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .nk-pair {
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .nk-pair figure {
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+  .nk-pair img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  /* retouching sliders: sized from the space with container units, so their ratio always matches the photos */
+  .nk-retouch {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .nk-cq {
+    container-type: size;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+  }
+  .nk-cq .nk-compare {
+    width: min(100cqw, calc(100cqh * var(--ar)));
+    height: auto;
+  }
+
+  /* motion stage, sized the same way */
+  .nk-stage {
+    container-type: size;
+    display: grid;
+    place-items: center;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .nk-lottie {
+    width: min(100cqw, calc(100cqh * 16 / 9));
+    height: auto;
+  }
+
+  /* ranking: one row, scaled to fit */
+  .nk-rank {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    align-items: center;
+  }
+  .nk-rank figure {
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr) auto;
+    align-items: center;
+    justify-items: center;
+  }
+  .nk-rank img {
+    width: auto;
+    max-width: 100%;
+    max-height: min(100%, 26rem);
+    align-self: end;
+  }
+
+  /* Star Voice */
+  .nk-sv {
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .nk-sv-screen {
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .nk-sv-screen img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  /* specified vs shipped */
+  .nk-vs {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .nk-vs figure {
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+  .nk-vs-img {
+    height: 100%;
+    min-height: 0;
+    grid-template-rows: minmax(0, 1fr);
+    padding-inline: 0.75rem;
+  }
+  .nk-vs-img img,
+  .nk-vs .is-shipped img {
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+@media (min-width: 1180px) and (min-height: 680px) {
+  /* side layout: text left, evidence right */
+  .nk-sheet.is-side {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+    grid-template-rows: minmax(0, 1fr);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .is-side .nk-head {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 1.1rem;
+  }
+  .is-side .nk-body {
+    padding-top: 0;
+  }
+  .is-side .nk-spec {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .is-side .nk-spec-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    border-right: 0;
+    border-bottom: 1px solid var(--nk-rule);
+    overflow: visible;
+  }
+  .is-side .nk-spec-list button {
+    width: auto;
+    grid-template-columns: auto auto;
+  }
+}
+/* short windows: tighter text so the evidence keeps its space */
+@media (min-width: 761px) and (min-height: 620px) and (max-height: 800px) {
+  .nk-sheet.is-card {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+  .nk-head h3 {
+    font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+  }
+  .nk-body {
+    gap: 0.6rem;
+    padding-top: 1.35rem;
+  }
+}
+@media (min-width: 761px) and (max-width: 1000px) and (min-height: 620px) {
+  .nk {
+    --nk-card-h: min(calc(100svh - 7rem), 58rem);
+  }
+}
+
 /* ---------- target sizes: 44px for controls outside running text, 32px in the contents list ---------- */
 .nk-seek,
 .nk-chapters button,
@@ -1138,9 +1435,6 @@
 .nk-chip {
   display: inline-flex;
   align-items: center;
-}
-.nk-seg button {
-  min-height: 36px;
 }
 .nk-toc-part > ol a {
   display: flex;
@@ -1244,6 +1538,11 @@
   }
   .nk-arrow {
     transform: rotate(90deg);
+  }
+  .nk-pip-inset {
+    top: 0.6rem;
+    right: 0.6rem;
+    width: 7rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {

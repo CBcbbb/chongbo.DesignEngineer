@@ -44,9 +44,9 @@ export const nike: Project = {
     {
       id: "style",
       kind: "evidence",
-      title: "A unified visual style and tone",
+      title: "A unified visual style",
       body: [
-        "Each influencer gets a hero visual and a poster card in the same style, so readers know whose volume they're in. I retouched the key photos with tone correction, blemish removal and a flash-photography look, so every volume shares one tone.",
+        "Each influencer gets a hero visual and a poster card in the same style, so readers know whose volume they're in.",
       ],
       signals: ["brand-storytelling", "typography"],
       media: {
@@ -55,6 +55,22 @@ export const nike: Project = {
         alt: "Six poster cards, one per influencer, in the same layout.",
         need: "The influencer poster cards.",
         ratio: "4:3",
+      },
+    },
+    {
+      id: "retouching",
+      kind: "evidence",
+      title: "Retouched to one tone",
+      body: [
+        "I retouched the key photos with tone correction, blemish removal and a flash-photography look, so every volume shares one tone.",
+      ],
+      signals: ["brand-storytelling"],
+      media: {
+        kind: "image",
+        asset: "nike/print/retouching.jpg",
+        alt: "Two photos, each shown as the original and retouched with a flash-photography look.",
+        need: "The retouching pairs.",
+        ratio: "16:10",
       },
     },
     {
