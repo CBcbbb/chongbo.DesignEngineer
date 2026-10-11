@@ -1,4 +1,4 @@
-# Components for Any Data: copy, draft 1
+# Components for Any Data: copy, draft 2 (approved 11 Oct)
 
 Playbook §8 step 4. Every line traces to the facts in `inventory.md`. Nothing states status or progress (Chongbo, 11 Oct).
 
@@ -68,12 +68,6 @@ Components never subscribe to streams. An adapter turns each producer's format i
 
 A new data format needs a new adapter, never a change to the components.
 
-### 02.4 One draft shared by every slot on a dataset
-
-A page often shows the same data twice: a table of orders and the totals beside it. Slots on one dataset share one page draft, so an edit in the table is what the totals read.
-
-*(Candidate to cut: see inventory.)*
-
 ---
 
 ## 03 Connecting
@@ -105,8 +99,6 @@ The panel suggests a field for each role, using aliases and industry terms ("ccy
 - **Role:** I designed the contract model, the store's interface and the preview, and built them, front end and server, with AI coding tools.
 - **Context:** Logistics infrastructure company. I'm its sole designer.
 
-`[What I'd do now, or nothing: Chongbo to decide]`
-
 ---
 
 ## Evidence notes
@@ -118,7 +110,6 @@ The panel suggests a field for each role, using aliases and industry terms ("ccy
 - 02.1: code, a short contract written for the site.
 - 02.2: one mapped dataset as bar, pie and treemap.
 - 02.3: diagram, producer → adapter → binding → contract → component.
-- 02.4: small demo, edit a row and the total changes.
 - 03.1: before / after picker, rebuilt.
 - 03.2: diagram, one endpoint with two phases behind it.
 - 03.3: the panel's role dropdowns with suggestions marked exact / known / close.

@@ -44,7 +44,6 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 | `contract` | A component promises a shape, not field names | C, B | in | lead | · | Code: a short contract written for the site (roles, types, required, key) | |
 | `one-per-dataset` | One contract per dataset | C | in | in | · | One mapped dataset drawn as bar, pie and treemap; the mapping stays when you switch | |
 | `binding-only` | Data comes through the binding, never through settings | B, C | · | in | · | Diagram: producer → adapter → binding → contract → component, with sample and page draft feeding in | |
-| `page-draft` | One draft shared by every slot on a dataset | B, D | · | in | · | Small demo: edit a row, the totals beside it change | Keep or cut (see below) |
 | | **Part 3 · Connecting your own data** | | | | | | |
 | `stream-fit` | Streams ranked by fit, not listed by size | D, B | lead | in | in | Before / after picker, rebuilt: one long list by row count → Fits · Partly fits ("3 of 5 fields") · Other, collapsed and searchable | |
 | `fit-on-server` | Fit judged on the server | B, C | · | in | · | Diagram: one endpoint, two phases behind it (the read the platform already makes → a stored field profile per stream) | |
@@ -52,7 +51,7 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 | | **Close** | | | | | | |
 | `role` | `[step 4]` | B | in | in | · | Facts: context, what was mine | |
 
-11 cards. Possible cut to 10: drop `page-draft` (strong engineering, but the furthest from the user thread).
+10 cards. `page-draft` cut (11 Oct): strong engineering, but the furthest from the user thread.
 
 ## Signature module
 
@@ -125,12 +124,13 @@ Copy may only use these, or what Chongbo adds later.
 - ECharts may be named as the model the contract follows.
 - Slug becomes `components-for-any-data`.
 - Merge only with Chongbo's approval.
+- Copy draft 2 approved: Outcome as written; 74 streams stays; no "what I'd do now".
 - Stream fit is Chongbo's own work, server included; never "proposed to the backend team".
 
 ## Gaps
 
 1. Reference screens: side panel, field dropdowns, stream picker (Chongbo to send).
-2. The closing card: "what I'd do now", or none (HHCD has none).
+2. ~~The closing card's "what I'd do now"~~: not for now (11 Oct).
 
 ## Slug
 
