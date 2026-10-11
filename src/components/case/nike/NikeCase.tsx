@@ -157,10 +157,6 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
                   <dt>Role</dt>
                   <dd>{project.role}</dd>
                 </div>
-                <div>
-                  <dt>Team</dt>
-                  <dd>Brief from Nike&apos;s marketing team; built by Nike&apos;s engineers.</dd>
-                </div>
                 {/* The printer links here for the outcome sheet. */}
                 <div id="outcome">
                   <dt>Outcome</dt>

@@ -32,8 +32,8 @@ The case file is built into the site from the approved v3 prototype, with your t
 
 ## Changes after your review (11 Oct, late morning): one thing said once
 
-18. **Cover.** The intro paragraph is gone; the line under the title says what the feature is, and three facts say the rest: Role, Team, Outcome (after HHCD's cover). Full text in `copy.md` (draft 8).
-19. **Outcome wording:** "Launched nationwide. Nike renewed the contract for the following seasons." I wrote "Launched" because the feature ran over several seasons; if it's still running today, "Live nationwide" is the HHCD-style alternative. Your call.
+18. **Cover.** The intro paragraph is gone; the line under the title says what the feature is, and two facts follow (after HHCD's cover): Role "UI Designer"; Outcome "Launched nationwide as a home-screen section of the official Nike App. Nike renewed the contract for the following seasons." The kicker is "Nike China". Team is off the cover (your call, 11:23); the brief and build credits stay on the printed outcome sheet. Full text in `copy.md` (draft 8).
+19. **"Launched"** is past tense because the feature ran over several seasons; if it's still running today, "Live nationwide" is the HHCD-style alternative.
 20. **The closing outcome card is gone**, because the cover now says the same thing. Part 04 is "Reflection", with one card (What I'd do now). The printer's outcome sheet links to the cover's Outcome line.
 21. **Card labels:** index only. The kind labels and capability pills repeated the evidence ("Before and after"), the heading ("Visual style") or each other ("Design system" + "Design systems"). The cover chips still map the three capabilities.
 22. **Copy:** every body sentence that restated its heading is cut or rewritten (full list in `copy.md`). One heading changed: 02.2 is now "Products as part of the story" (was "Larger product cards", which the body then repeated). Star Voice's four-step loop (Preview, Ask, Vote, Answered live) is gone: the heading and body already say it.
