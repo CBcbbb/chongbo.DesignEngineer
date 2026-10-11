@@ -47,11 +47,13 @@ describe("skills cards", () => {
 });
 
 describe("wording", () => {
-  it("titles the results like the prototype", () => {
-    expect(resultTitle({ count: 3, startHere: false, topicLabel: "Accessibility" })).toBe("Three projects show accessibility.");
-    expect(resultTitle({ count: 1, startHere: false, topicLabel: "Data" })).toBe("One project shows data.");
-    expect(resultTitle({ count: 4, startHere: false })).toBe("Four projects match your brief.");
-    expect(resultTitle({ count: 3, startHere: true })).toBe("Here are three places to start.");
+  it("titles the results with what was asked, never a count", () => {
+    expect(resultTitle({ asked: ["accessibility"], startHere: false })).toBe("Accessibility");
+    expect(resultTitle({ asked: ["brand-storytelling", "motion-interaction", "seo-performance", "data"], startHere: false })).toBe(
+      "Brand · Motion · SEO and performance",
+    );
+    expect(resultTitle({ asked: [], startHere: false })).toBe("Where to start.");
+    expect(resultTitle({ asked: ["accessibility"], startHere: true })).toBe("Where to start.");
   });
 
   it("names missing capabilities and quotes the brief", () => {

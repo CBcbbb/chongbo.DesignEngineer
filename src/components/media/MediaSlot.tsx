@@ -111,8 +111,8 @@ function GroupSlot({ media }: { media: Extract<Media, { kind: "group" }> }) {
 }
 
 /**
- * `compact` is for printed sheets (about 300px wide): diagrams render for real, images that exist render,
- * and missing images, videos and code samples become a small placeholder.
+ * `compact` is for printed sheets: diagrams render for real, images that exist render at sheet width,
+ * and missing images, videos and code samples become a small placeholder rather than the author's note.
  */
 export function MediaSlot({ media, priority = false, compact = false }: { media: Media; priority?: boolean; compact?: boolean }) {
   if (compact) {
@@ -152,7 +152,7 @@ export function MediaSlot({ media, priority = false, compact = false }: { media:
                 alt={media.alt}
                 fill
                 priority={priority}
-                sizes={compact ? "340px" : "(min-width: 900px) 720px, 100vw"}
+                sizes={compact ? "(min-width: 900px) 820px, 100vw" : "(min-width: 900px) 720px, 100vw"}
                 className="object-cover"
               />
             </div>

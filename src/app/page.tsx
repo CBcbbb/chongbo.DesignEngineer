@@ -7,7 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { buildCardIndex, cardKey } from "@/lib/cards";
 import { SITE_URL } from "@/lib/site";
 
-/** Each section's media, rendered on the server and handed to the deck. */
+/** Each section's media, rendered on the server and handed to the printed sheets. */
 function sheetMedia(): Record<string, ReactNode> {
   const out: Record<string, ReactNode> = {};
   for (const p of projects) for (const s of p.sections) if (s.media) out[cardKey(p.slug, s.id)] = <MediaSlot media={s.media} compact />;

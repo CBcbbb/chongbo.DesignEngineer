@@ -45,11 +45,11 @@ test.describe("printing", () => {
     await expect(page.getByRole("button", { name: "Remove Accessibility" })).toBeVisible();
     await page.getByRole("button", { name: "Print" }).click();
     const title = page.locator("#r-title");
-    await expect(title).toHaveText(/^(One|Two|Three|Four|Five) projects? shows? accessibility\.$/, { timeout: 10_000 });
+    await expect(title).toHaveText("Accessibility", { timeout: 10_000 });
     await expect(title).toBeFocused();
     await expect(page.getByRole("status")).toHaveText(await title.innerText());
-    await expect(page.locator(".deck .sheet").first()).toContainText("A table view beside the network");
-    await expect(page.locator(".sheet.cur .full")).toHaveAttribute("href", "/work/hhcd-data-platform#dual-view");
+    await expect(page.locator(".sheets .sheet").first()).toContainText("A table view beside the network");
+    await expect(page.locator(".sheets .sheet").first().locator(".full")).toHaveAttribute("href", "/work/hhcd-data-platform#dual-view");
     // The cards reset after printing.
     await expect(card).toHaveAttribute("aria-pressed", "false");
     await page.getByRole("button", { name: "New request" }).click();
@@ -63,10 +63,10 @@ test.describe("printing", () => {
     await page.getByRole("button", { name: "Design systems", exact: true }).click();
     await page.getByRole("button", { name: "Print" }).click();
     expect((await req).postDataJSON()).toEqual({ brief: "", topics: ["design-systems", "cross-platform"] });
-    await expect(page.locator("#r-title")).toHaveText(/projects? shows? design systems\.$/, { timeout: 10_000 });
+    await expect(page.locator("#r-title")).toHaveText(/^Design systems/, { timeout: 10_000 });
   });
 
-  test("keyboard only: type on the paper, Enter, results title focused, deck by arrow keys", async ({ page }) => {
+  test("keyboard only: type on the paper, Enter, results title focused, Tab reaches the first sheet's link", async ({ page }) => {
     await page.goto("/");
     for (let i = 0; i < 20; i++) {
       await page.keyboard.press("Tab");
@@ -78,19 +78,12 @@ test.describe("printing", () => {
     await expect(page.locator("#brief")).toHaveValue(/mobile\n$/);
     await page.keyboard.press("Enter");
     await expect(page.locator("#r-title")).toBeFocused({ timeout: 10_000 });
-    await expect(page.locator("#r-title")).toHaveText(/projects? match(es)? your brief\.$/);
-    // Tab reaches the deck, then only the top sheet's link.
+    await expect(page.locator("#r-title")).toHaveText(/Design systems/);
+    // Tab reaches the strip of sheets, then the first sheet's link.
     await page.keyboard.press("Tab");
-    await expect(page.locator(".deck")).toBeFocused();
-    await expect(page.locator(".deckbar span")).toHaveText(/^01 \/ 0\d$/);
-    await page.keyboard.press("ArrowRight");
-    await expect(page.locator(".deckbar span")).toHaveText(/^02 \/ 0\d$/);
-    await expect(page.locator(".sheet.cur")).toHaveAttribute("data-i", "1");
-    await expect(page.locator('.sheet[aria-hidden="true"] .full[tabindex="0"]')).toHaveCount(0);
-    await page.keyboard.press("ArrowLeft");
-    await expect(page.locator(".deckbar span")).toHaveText(/^01 \/ 0\d$/);
+    await expect(page.locator(".sheets")).toBeFocused();
     await page.keyboard.press("Tab");
-    await expect(page.locator(":focus")).toHaveText(/Full project/);
+    await expect(page.locator(":focus")).toHaveText(/Read it in context/);
     const href = await page.locator(":focus").getAttribute("href");
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(new RegExp(`${href!.replace(/[#/]/g, "\\$&")}$`));
@@ -107,15 +100,15 @@ test.describe("printing", () => {
     await expect(page.locator("#brief")).toHaveValue("");
   });
 
-  test("deck buttons and the counter", async ({ page }) => {
+  test("every sheet is readable in full, with its evidence and a link to the case file", async ({ page }) => {
     await page.goto("/");
     await printAccessibility(page);
-    const prev = page.getByRole("button", { name: "Previous sheet" });
-    const next = page.getByRole("button", { name: "Next sheet" });
-    await expect(prev).toBeDisabled();
-    await next.click();
-    await expect(page.locator(".deckbar span")).toHaveText(/^02 \//);
-    await expect(prev).toBeEnabled();
+    const sheets = page.locator(".sheets .sheet");
+    expect(await sheets.count()).toBeGreaterThan(1);
+    for (const sheet of await sheets.all()) {
+      await expect(sheet.locator(".sheet-title")).toBeVisible();
+      await expect(sheet.locator(".full")).toHaveAttribute("href", /^\/work\/[a-z-]+#[a-z-]+$/);
+    }
   });
 
   test("missing capabilities are named", async ({ page }) => {
@@ -149,8 +142,8 @@ test.describe("printing", () => {
     await page.press("#brief", "Enter");
     await expect(page.locator("#r-title")).toBeVisible({ timeout: 5_000 });
     expect(Date.now() - t0).toBeLessThan(1_500);
-    const transition = await page.locator(".deck .sheet").first().evaluate((el) => getComputedStyle(el).transitionDuration);
-    expect(parseFloat(transition)).toBeLessThan(0.05);
+    const animation = await page.locator(".sheets .sheet").first().evaluate((el) => getComputedStyle(el).animationName);
+    expect(animation).toBe("none");
     await context.close();
   });
 });
@@ -163,11 +156,11 @@ test.describe("without JavaScript", () => {
     await page.fill("#brief", "accessibility");
     await page.getByRole("button", { name: "Print" }).click();
     await expect(page).toHaveURL(/\/ask\?brief=accessibility/);
-    await expect(page.locator("h1")).toHaveText(/projects? (shows? accessibility|match(es)? your brief)\./);
+    await expect(page.locator("h1")).toHaveText(/Accessibility/);
     await expect(page.locator(".sheet-list .sheet").first()).toContainText("Accessibility – keyboard navigation");
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
     await page.goto("/ask?topics=accessibility");
-    await expect(page.locator("h1")).toHaveText(/projects? shows? accessibility\.$/);
+    await expect(page.locator("h1")).toHaveText("Accessibility");
     await context.close();
   });
 });

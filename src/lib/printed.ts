@@ -39,19 +39,38 @@ export const EXAMPLES = [
 export const PICKED_HINT = "Add a line about the role, or press the red button.";
 
 export const NUM = ["No", "One", "Two", "Three", "Four", "Five"];
-const num = (n: number) => NUM[n] ?? String(n);
+
+/** Short labels for signals, used in titles, stamps and chips. The long names live in content SIGNALS. */
+export const SIGNAL_SHORT: Record<Signal | "start-here", string> = {
+  "end-to-end": "End to end",
+  "design-systems": "Design systems",
+  "cross-platform": "Cross-platform",
+  "design-eng-gap": "Design–engineering",
+  accessibility: "Accessibility",
+  "seo-performance": "SEO and performance",
+  "publishing-workflow": "Publishing",
+  "reusable-components": "Reusable components",
+  "brand-storytelling": "Brand",
+  conversion: "Conversion",
+  "motion-interaction": "Motion",
+  typography: "Typography",
+  data: "Data",
+  "data-architecture": "Data architecture",
+  prototyping: "Prototyping",
+  "ai-tools": "AI tools",
+  research: "Research",
+  judgement: "Judgement",
+  "start-here": "Start here",
+};
 
 /**
- * The results title.
- *  - nothing matched, so the printer chose: "Here are three places to start."
- *  - one card and no words: "Three projects show accessibility."
- *  - anything else: "Four projects match your brief."
+ * The results title is what was asked for, never a count: the sheets underneath are the answer.
+ *  - nothing understood, so the machine chose: "Where to start."
+ *  - otherwise the asked signals, up to three, as short labels: "Accessibility", "Brand · Motion · SEO and performance".
  */
-export function resultTitle(opts: { count: number; startHere: boolean; topicLabel?: string }): string {
-  const { count, startHere, topicLabel } = opts;
-  if (startHere) return `Here are ${num(count).toLowerCase()} ${count === 1 ? "place" : "places"} to start.`;
-  if (topicLabel) return `${num(count)} ${count === 1 ? "project shows" : "projects show"} ${topicLabel.toLowerCase()}.`;
-  return `${num(count)} ${count === 1 ? "project matches" : "projects match"} your brief.`;
+export function resultTitle(opts: { asked: readonly Signal[]; startHere: boolean }): string {
+  if (opts.startHere || !opts.asked.length) return "Where to start.";
+  return opts.asked.slice(0, 3).map((k) => SIGNAL_SHORT[k]).join(" · ");
 }
 
 /** Under the results title: who chose the sheets, so the reader knows the words are mine. */
