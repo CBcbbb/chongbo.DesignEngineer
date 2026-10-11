@@ -157,7 +157,18 @@ function palettePairs(): Pair[] {
   return out;
 }
 
+/** HHCD's cover in dark mode (case-palettes.css: the cover turns ink; the network sits in a white screen). */
+const hhcdDarkCover: Pair[] = [
+  { fg: "#f2f1f4", bg: "#1c1b21", where: "dark hhcd: cover title and text", min: TEXT },
+  { fg: "#aeacb8", bg: "#1c1b21", where: "dark hhcd: cover labels", min: TEXT },
+  { fg: "#1c1b21", bg: "#f2f1f4", where: "dark hhcd: Open the live platform button", min: TEXT },
+  { fg: "#8d89d6", bg: "#1c1b21", where: "dark hhcd: people mark on the cover", min: LARGE },
+  { fg: "#dc2680", bg: "#1c1b21", where: "dark hhcd: partners mark on the cover", min: LARGE },
+  { fg: "#148d66", bg: "#1c1b21", where: "dark hhcd: methods mark on the cover", min: LARGE },
+];
+
 const all = [
+  ...hhcdDarkCover,
   ...pairs(light, "light"),
   ...pairs(dark, "dark"),
   ...casePairs(light, "light"),
