@@ -76,6 +76,8 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
   const live = project.links.find((l) => /live/i.test(l.label));
   const others = project.links.filter((l) => l !== live);
   const titleOf = (id: string) => project.sections.find((s) => s.id === id)?.title ?? id;
+  /** Chips show the card number they jump to, matching the rail; capability codes are internal. */
+  const numberOf = (id: string) => numbered.find((x) => x.s.id === id)?.n ?? "";
 
   return (
     <div className="cf" data-palette={project.slug === "hhcd-data-platform" ? "hhcd" : project.slug}>
@@ -144,7 +146,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                 {project.shows.map((c) => (
                   <li key={c.section}>
                     <a className="cf-chip" href={`#${c.section}`}>
-                      <b aria-hidden="true">{c.capability}</b>
+                      <b aria-hidden="true">{numberOf(c.section)}</b>
                       {c.label}
                       <span className="sr-only">: {titleOf(c.section)}</span>
                     </a>

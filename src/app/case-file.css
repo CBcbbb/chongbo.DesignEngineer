@@ -217,8 +217,9 @@
   background: var(--accent-strong);
   color: var(--on-accent);
   font-family: var(--mono);
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- body grid and rail ---------- */
