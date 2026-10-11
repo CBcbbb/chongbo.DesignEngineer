@@ -11,7 +11,8 @@ Every image or video the case files ask for. Until a file exists, the site shows
 | ✓ | Path (put it here) | Project · section | What to show | Ratio | Format | Recommended size | 中文说明 |
 |---|---|---|---|---|---|---|---|
 | ✓ | `public/assets/hhcd/*` | Helen Hamlyn Centre Data Platform · all cards | Done: map screenshots and recordings captured from the live rebuild; VOICE figures from Chongbo's DRS paper. See `docs/case-studies/hhcd/inventory.md` | — | PNG, JPG, MP4 + WebM | — | 已完成：截图和录屏来自重构版；VOICE 的图来自论文。 |
-| ☐ | `public/assets/hhcd/workshop-wall-*.jpg` | HHCD · workshop | **Optional:** higher-resolution photos of the three walls (current ones are 648×486, from the paper) | 4:3 | JPG | 1600×1200 | 可选：工作坊三面墙的高清原图（现在用的是论文里的小图）。 |
+| ✓ | `public/assets/hhcd/workshop-wall-*.jpg` | HHCD · workshop | Done (11 Oct): the three wall photos, whole, from Chongbo's originals (IMG_0941–0943), at 1600×1200 | 4:3 | JPG | 1600×1200 | 已完成：三面墙的原图（完整、不裁切）。 |
+| ☐ | `public/assets/hhcd/voice-graph.png`, `voice-simple-view.png` | HHCD · `brief`, `dual-view` | **Wanted:** larger originals of VOICE's graph view and Simple View. The current files (1386 and 1138px wide) come from the paper and are under twice their display size on a computer (playbook §6). Same names, same framing; never upscaled | as now | PNG | 2400px wide or more | 需要：VOICE 图谱页和 Simple View 的大图原件（现在的来自论文，偏小）。同名替换即可。 |
 | ☐ | `public/assets/component-store/mapping.png` | Component Store · Decision 02 (mapping) | **Optional, only with permission.** Anonymised field-mapping step, all company/customer names removed | 16:10 | PNG | 2560×1600 | 可选，须公司同意。字段映射界面的脱敏截图，去掉所有公司和客户名称。没有也可以，图表能撑住这张卡。 |
 | ☐ | `public/assets/nike/headline-frame.png` | Nike Athletes Closet · cover | The adaptive headline/text-framing system, ideally three or four screens side by side | 16:10 | PNG | 2560×1600 | 封面：自适应标题框系统，最好三到四个手机屏并排。 |
 | ☐ | `public/assets/nike/components.png` | Nike · Decision 01 (system) | Component overview from the old case study (logo lock-up, header, key message, image-text, poster card) | 16:10 | PNG | 2560×1600 | 旧案例里的组件总览图。 |
@@ -27,6 +28,6 @@ Every image or video the case files ask for. Until a file exists, the site shows
 
 ### Priority (if you only do three today)
 1. `nike/app-recording.mp4` + poster — the only motion evidence, and it shipped.
-2. `hhcd/workshop-wall-*.jpg` (optional) — sharper workshop photos.
+2. `hhcd/voice-graph.png` and `hhcd/voice-simple-view.png` — larger originals of the two VOICE screens.
 
-优先级：Nike 录屏；HHCD 的图已经齐了，工作坊高清照片可选。
+优先级：Nike 录屏；HHCD 需要两张 VOICE 截图的大图原件。

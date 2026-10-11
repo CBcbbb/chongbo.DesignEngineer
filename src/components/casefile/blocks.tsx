@@ -8,21 +8,15 @@ import { VideoPlate } from "./VideoPlate";
 
 /**
  * The block library (playbook §7): every case file is built from these.
- * text · media (plate, video) · decision pair (Section.layout "pair") · compare · code · diagram (stepper) ·
- * metric strip · steps · gallery (row, phones) · specimens.
+ * text · media (plate, recording in a browser frame) · decision pair (Section.layout "pair") · compare · code ·
+ * diagram (stepper) · metric strip · steps · gallery (row, phones) · specimens · facts.
+ * No captions under evidence (playbook §6): what it proves is in the card's heading or body; labels inside the
+ * evidence stay. Images keep their own ratio and are never cropped; a mount pads them where a frame needs room.
  */
 
 const src = (asset: string) => `/assets/${asset}`;
-
-export function Caption({ index, text }: { index: string; text?: string }) {
-  if (!text) return null;
-  return (
-    <figcaption className="cf-caption">
-      <b>{index}</b>
-      {text}
-    </figcaption>
-  );
-}
+/** Screenshots and photos are served at quality 90, so fine text stays sharp. */
+const Q = 90;
 
 function Missing({ asset, need }: { asset: string; need: string }) {
   return (
@@ -33,29 +27,26 @@ function Missing({ asset, need }: { asset: string; need: string }) {
   );
 }
 
-/** A screenshot or photo on the project's field, at its own proportions. */
+/** A screenshot or photo on the project's mount, whole and at its own proportions. */
 export function Shot({
   asset,
   alt,
   need,
-  sizes = "(min-width: 1100px) 840px, 100vw",
+  sizes = "(min-width: 1100px) 860px, 100vw",
   priority = false,
-  crop = false,
 }: {
   asset: string;
   alt: string;
   need?: string;
   sizes?: string;
   priority?: boolean;
-  /** Crop to 16:10 so plates in a row line up. */
-  crop?: boolean;
 }) {
   const dim = imageSize(asset);
   if (!dim || !assetExists(asset)) return <Missing asset={asset} need={need ?? alt} />;
   return (
-    <div className="cf-plate" data-crop={crop || undefined}>
+    <div className="cf-plate">
       <div className="cf-plate-shot">
-        <Image src={src(asset)} alt={alt} width={dim.width} height={dim.height} sizes={sizes} priority={priority} />
+        <Image src={src(asset)} alt={alt} width={dim.width} height={dim.height} sizes={sizes} priority={priority} quality={Q} />
       </div>
     </div>
   );
@@ -172,69 +163,94 @@ function Specimens({ items }: { items: Specimen[] }) {
 export function StepsRow({ steps }: { steps: Step[] }) {
   return (
     <ol className="cf-steps">
-      {steps.map((s) => (
+      {steps.map((s) => {
+        const dim = s.image ? imageSize(s.image.asset) : undefined;
+        return (
         <li key={s.text}>
-          {s.image && assetExists(s.image.asset) && (
+          {s.image && dim && assetExists(s.image.asset) && (
             <div className="cf-step-img">
-              <Image src={src(s.image.asset)} alt={s.image.alt} fill sizes="(min-width: 760px) 280px, 100vw" />
+              <Image src={src(s.image.asset)} alt={s.image.alt} width={dim.width} height={dim.height} quality={Q} sizes="(min-width: 760px) 300px, 100vw" />
             </div>
           )}
           {s.label && <p className="cf-mono cf-step-label">{s.label}</p>}
           {s.title && <h4>{s.title}</h4>}
           <p>{s.text}</p>
         </li>
-      ))}
+        );
+      })}
     </ol>
   );
 }
 
-/** Renders one card's media with the case-file blocks. `index` numbers the figure, e.g. "03". */
-export function CaseMedia({ media, index, priority = false }: { media: Media; index: string; priority?: boolean }) {
+/** Short labelled facts, e.g. the closing card's Context and Team. */
+export function Facts({ items }: { items: { label: string; text: string }[] }) {
+  return (
+    <dl className="cf-notes">
+      {items.map((f) => (
+        <div key={f.label}>
+          <dt>{f.label}</dt>
+          <dd>{f.text}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/**
+ * Renders one card's evidence with the case-file blocks. `index` keeps form controls unique, e.g. "02.2";
+ * `url` is the product's address, shown in browser frames.
+ */
+export function CaseMedia({ media, index, url, priority = false }: { media: Media; index: string; url: string; priority?: boolean }) {
   switch (media.kind) {
     case "image":
       return (
         <figure className="cf-figure">
           <Shot asset={media.asset} alt={media.alt} need={media.need} priority={priority} />
-          <Caption index={index} text={media.caption} />
         </figure>
       );
-    case "video":
+    case "video": {
+      const webm = media.asset.replace(/\.mp4$/, ".webm");
+      const poster = media.poster && assetExists(media.poster) ? media.poster : undefined;
+      const dim = poster ? imageSize(poster) : undefined;
       return (
         <VideoPlate
           src={src(media.asset)}
-          webm={assetExists(media.asset.replace(/\.mp4$/, ".webm")) ? src(media.asset.replace(/\.mp4$/, ".webm")) : undefined}
-          poster={media.poster && assetExists(media.poster) ? src(media.poster) : undefined}
+          webm={assetExists(webm) ? src(webm) : undefined}
+          poster={poster ? src(poster) : undefined}
           label={media.alt}
-          caption={media.caption}
-          index={index}
+          url={url}
+          ratio={dim ? dim.width / dim.height : 16 / 10}
         />
       );
+    }
     case "group": {
       const phones = media.ratio === "9:16";
       return (
         <figure className="cf-figure">
           {phones ? (
             <div className="cf-phones">
-              {media.items.map((it) => (
-                <div key={it.asset} className="cf-phone">
-                  <div className="cf-phone-screen">
-                    <Image src={src(it.asset)} alt={it.alt} fill sizes="(min-width: 1000px) 220px, 45vw" />
+              {media.items.map((it) => {
+                const dim = imageSize(it.asset);
+                return (
+                  <div key={it.asset} className="cf-phone">
+                    {dim && (
+                      <Image src={src(it.asset)} alt={it.alt} width={dim.width} height={dim.height} quality={Q} sizes="(min-width: 1000px) 260px, 45vw" />
+                    )}
+                    {it.label && <p className="cf-label">{it.label}</p>}
                   </div>
-                  {it.label && <p className="cf-label">{it.label}</p>}
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="cf-row">
               {media.items.map((it) => (
-                <div key={it.asset}>
-                  <Shot asset={it.asset} alt={it.alt} need={it.need} sizes="(min-width: 1100px) 420px, 100vw" crop />
+                <div key={it.asset} className="cf-row-item">
+                  <Shot asset={it.asset} alt={it.alt} need={it.need} sizes="(min-width: 1100px) 430px, 100vw" />
                   {it.label && <p className="cf-label">{it.label}</p>}
                 </div>
               ))}
             </div>
           )}
-          <Caption index={index} text={media.caption} />
         </figure>
       );
     }
@@ -245,8 +261,8 @@ export function CaseMedia({ media, index, priority = false }: { media: Media; in
       return (
         <ComparePlate
           legend={media.label}
+          url={url}
           index={index}
-          caption={media.caption}
           a={{ src: src(media.a.asset), width: da.width, height: da.height, alt: media.a.alt, label: media.a.label }}
           b={{ src: src(media.b.asset), width: db.width, height: db.height, alt: media.b.alt, label: media.b.label }}
           video={
@@ -262,26 +278,23 @@ export function CaseMedia({ media, index, priority = false }: { media: Media; in
       );
     }
     case "stepper":
-      return <DataStepper steps={media.steps} caption={media.caption} index={index} />;
+      return <DataStepper steps={media.steps} />;
     case "specimens":
       return (
         <figure className="cf-figure">
           <Specimens items={media.items} />
-          <Caption index={index} text={media.caption} />
         </figure>
       );
     case "metrics":
       return (
         <figure className="cf-figure">
           <Metrics items={media.items} />
-          <Caption index={index} text={media.caption} />
         </figure>
       );
     case "code":
       return (
         <figure className="cf-figure">
           <CodeBlock code={media.code} language={media.language} />
-          <Caption index={index} text={media.caption} />
         </figure>
       );
     case "diagram":

@@ -171,7 +171,7 @@ export type Section = {
   media?: Media;
   /** Numbered solutions or contributions, rendered under the body. */
   steps?: Step[];
-  /** Small label above the title, e.g. "Challenge 2" or "Feature focus". */
+  /** Small label above the title, e.g. "Challenge 2" or "Feature focus". Not shown by the case-file template (playbook §7: index only). */
   eyebrow?: string;
   /** Case-file template: which part of the story the card belongs to (an id in `Project.parts`). */
   part?: string;
@@ -179,7 +179,10 @@ export type Section = {
   capabilities?: Capability[];
   /** Lens roles for this card (playbook §3). */
   lenses?: Partial<Record<Lens, LensRole>>;
-  /** Case-file template: text above the media (`stack`), or text beside it (`pair`, media on the right). */
+  /**
+   * Case-file template: text above the evidence (`stack`), or beside it (`pair`, evidence on the right) on screens
+   * wide and tall enough that neither is cramped. Use `pair` for long copy or tall evidence.
+   */
   layout?: "stack" | "pair";
   /** Keys shown as keycaps under the body, e.g. ["Tab", "←", "→"]. */
   keys?: string[];
@@ -187,11 +190,10 @@ export type Section = {
   bodyStyle?: "list";
   /** Case-file template: the card's short name in the contents. Defaults to the title. */
   nav?: string;
-  /**
-   * Case-file template: the sheet's surface. `paper` for reading (default); `dark` for the work in motion
-   * and results, where the evidence runs to the sheet's edges.
-   */
+  /** Case-file template: the sheet's surface. `paper` for reading (default); `dark` for the work in motion and the ending. */
   surface?: "paper" | "dark";
+  /** Case-file template: short labelled facts under the body, e.g. the closing card's Context and Team (playbook §4). */
+  facts?: { label: string; text: string }[];
 };
 
 export type ProjectLink = { label: string; href: string };
@@ -227,10 +229,10 @@ export type Project = {
   /** Case-file template: who the work was for, shown first on the cover (e.g. "Nike App, China"). */
   client?: string;
   /**
-   * Case-file template: art for the cover sheet, running off its sides and bottom (e.g. the network itself).
-   * When set, the separate "the work" sheet after the cover is left out.
+   * Case-file template: the sheet straight after the cover that shows the product itself (playbook §4, "lead with
+   * the product"): `Project.cover` in a browser frame, with this heading and the address shown in the frame.
    */
-  coverArt?: { asset: string; alt: string };
+  work?: { title: string; url: string };
   /** Case-file template: part openers on the project's colour field (`field`, default) or on the studio (`ground`). */
   openers?: "field" | "ground";
   /** Case-file template: the key to the cover image, e.g. a map's entity types. */

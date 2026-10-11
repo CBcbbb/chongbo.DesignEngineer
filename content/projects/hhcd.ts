@@ -1,9 +1,10 @@
 import type { Project } from "../schema";
 
 /**
- * Copy: docs/case-studies/hhcd/copy.md (approved draft 3). Every fact traces to
+ * Copy: docs/case-studies/hhcd/copy.md (draft 4, brought up to the playbook of 11 October). Every fact traces to
  * docs/case-studies/hhcd/inventory.md → "Facts and their sources".
- * "We" is the VOICE team; "I" is Chongbo's own work.
+ * "We" is the VOICE team; "I" is Chongbo's own work. One term per thing: entries (never points or records);
+ * the four types are people, projects, methods and partners; VOICE's consortium is "seven organisations".
  */
 export const hhcd: Project = {
   slug: "hhcd-data-platform",
@@ -11,7 +12,7 @@ export const hhcd: Project = {
   oneLiner: "A research repository that anyone can explore, with a mouse, a keyboard or on a phone.",
   context: "First built for VOICE, an EU-funded arts research project. Now used by the Helen Hamlyn Centre for Design, Royal College of Art.",
   role: "Data collection, analysis and modelling; design and build.",
-  outcome: "Live and in use. Used to teach the Centre's summer interns. Paper accepted at DRS 2026.",
+  outcome: "Live and in use. Used to teach the Centre's summer interns. Paper on its accessibility approach accepted at DRS 2026.",
   status: "Live",
   stack: ["Next.js", "TypeScript", "D3", "Tailwind", "Playwright", "axe"],
   links: [
@@ -21,10 +22,7 @@ export const hhcd: Project = {
   tab: "moss",
   template: "case-file",
   client: "Helen Hamlyn Centre for Design, Royal College of Art",
-  coverArt: {
-    asset: "hhcd/cover-network.png",
-    alt: "The platform's map: 48 people, projects, partners and methods as a free network, each name in its type's colour and joined by fine lines.",
-  },
+  work: { title: "The map today", url: "helen-hamlyn-centre-for-design-data.vercel.app" },
   openers: "ground",
   legend: [
     { type: "projects", label: "Projects" },
@@ -45,7 +43,6 @@ export const hhcd: Project = {
     kind: "image",
     asset: "hhcd/cover.png",
     alt: "The platform's map: 48 people, projects, partners and methods as a free network, each name in its type's colour and joined by fine lines.",
-    caption: "The Centre's 48 entries and 104 connections, as a free network.",
     need: "Constellation at 1440px, no guide card.",
     ratio: "16:10",
   },
@@ -53,12 +50,11 @@ export const hhcd: Project = {
     {
       id: "brief",
       nav: "Accessibility first",
-      eyebrow: "Context",
       part: "voice",
       kind: "problem",
       title: "Accessibility as the starting point",
       body: [
-        "VOICE was an EU-funded arts research project with partners in several countries. Its platform was for artists, researchers, community groups and policy makers. With an audience that broad, accessibility was a goal from the first prototype.",
+        "VOICE was an EU-funded arts research project, run by seven organisations in several countries. Its audience was broad: artists, researchers, community groups and policy makers.",
       ],
       signals: ["judgement", "accessibility", "research"],
       capabilities: ["E"],
@@ -68,7 +64,6 @@ export const hhcd: Project = {
         kind: "image",
         asset: "hhcd/voice-graph.png",
         alt: "The VOICE Knowledge Platform: a network of people, institutions, projects and methods, with filters, a sidebar for introduction, accessibility and translation help, and a Simple View button.",
-        caption: "The VOICE platform at launch.",
         need: "VOICE graph view (paper).",
         ratio: "16:10",
       },
@@ -76,12 +71,11 @@ export const hhcd: Project = {
     {
       id: "no-borders",
       nav: "Network map",
-      eyebrow: "Decision",
       part: "voice",
       kind: "decision",
       title: "A network instead of a geographical map",
       body: [
-        "To show all the work together, we first placed communities and projects on a map of Europe, grouped by country. The work was diverse, and we didn't want geography to divide it. So we moved to a network, where people, projects, organisations and methods connect directly.",
+        "To show all the work together, we first placed communities and projects on a map of Europe, grouped by country. The work was diverse, and we didn't want geography to divide it. In the network, people, projects, partners and methods connect directly, whatever their country.",
       ],
       signals: ["judgement", "data", "research"],
       capabilities: ["D"],
@@ -91,18 +85,17 @@ export const hhcd: Project = {
         kind: "group",
         layout: "row",
         ratio: "4:3",
-        caption: "Grouped by country, the work looked divided by place.",
         items: [
           {
             asset: "hhcd/voice-geo-a.png",
             alt: "Prototype A: communities of practice as orange points on a map of Europe, with country filters.",
-            label: "Prototype A · by country",
+            label: "Prototype A",
             need: "Paper figure: prototype A.",
           },
           {
             asset: "hhcd/voice-geo-b.png",
             alt: "Prototype B: European countries shaded on a map, with a list of communities below.",
-            label: "Prototype B · by country and theme",
+            label: "Prototype B",
             need: "Paper figure: prototype B.",
           },
         ],
@@ -111,22 +104,20 @@ export const hhcd: Project = {
     {
       id: "sample-data",
       nav: "Prototypes on sample data",
-      eyebrow: "Prototype",
       part: "voice",
       kind: "decision",
       title: "Working prototypes on sample data",
       body: [
-        "I coded the prototype ideas with sample data, so people could try them rather than imagine them. That gave us a first round of testing before any real data existed. The workshop started from these prototypes.",
+        "I coded each prototype idea, so people could try it rather than imagine it. That gave us a first round of testing before any real data existed. The workshop started from these prototypes.",
       ],
       signals: ["prototyping", "end-to-end"],
       capabilities: ["B", "D"],
       lenses: { ux: "in", engineer: "in" },
-      layout: "pair",
+      layout: "stack",
       media: {
         kind: "image",
         asset: "hhcd/voice-sample-data.png",
         alt: "An early network prototype with placeholder entries such as Artist A and Organisation B, linked by shared tags, beside a panel of filters.",
-        caption: "An early prototype, running on sample entries.",
         need: "Paper figure: prototype C.",
         ratio: "16:10",
       },
@@ -134,55 +125,45 @@ export const hhcd: Project = {
     {
       id: "workshop",
       nav: "Stakeholder workshop",
-      eyebrow: "Research",
       part: "voice",
       kind: "evidence",
       title: "A 75-minute workshop with 14 stakeholders",
       body: [
-        "We ran the workshop with members of the seven partner organisations, and I designed its process. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view. Three walls collected their answers, with sticky notes and dot votes.",
+        "We ran the workshop with members of all seven organisations, and I designed its process. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view.",
       ],
       signals: ["research", "accessibility"],
       capabilities: ["E"],
       lenses: { ux: "in" },
-      layout: "pair",
-      media: {
-        kind: "image",
-        asset: "hhcd/workshop-cards.png",
-        alt: "Seven stakeholder cards, from the Eco-Social Artist to the EU Cluster Coordinator, each with a short motivation.",
-        caption: "Each participant judged the prototypes as one of these seven stakeholders.",
-        need: "Paper figure: stakeholder cards.",
-        ratio: "4:3",
-      },
+      layout: "stack",
       steps: [
         {
           label: "Wall 1",
           title: "Content",
-          text: "What each entry should contain. Every type got a consistent structure, and methods were linked to the projects and people that used them.",
-          image: { asset: "hhcd/workshop-wall-content.jpg", alt: "Wall One: sticky notes in four columns, one for each type of entry." },
+          text: "Every type got a consistent structure, and methods were linked to the projects and people that used them.",
+          image: { asset: "hhcd/workshop-wall-content.jpg", alt: "Wall 1, The Content: sticky notes in four columns headed People, Methods, Institutions and Projects." },
         },
         {
           label: "Wall 2",
           title: "Scope",
-          text: "What the platform should include. Entries should touch at least two of three themes: technology, community and environment. The scope went beyond Europe.",
-          image: { asset: "hhcd/workshop-wall-scope.jpg", alt: "Wall Two: a long paper sheet with notes and dot votes on what the platform should include." },
+          text: "Entries should touch at least two of three themes: technology, community and environment. The scope went beyond Europe.",
+          image: { asset: "hhcd/workshop-wall-scope.jpg", alt: "Wall 2, The Scope: a long sheet of circled statements, with sticky notes and dot votes beside them." },
         },
         {
           label: "Wall 3",
           title: "Functionality",
-          text: "Which features mattered most. Filters, search and visible connections ranked highest. Translation scored low, but participants argued it was essential for inclusion, so we kept it.",
-          image: { asset: "hhcd/workshop-wall-functionality.jpg", alt: "Wall Three: features written up and ranked with numbers and sticky notes." },
+          text: "Filters, search and visible connections ranked highest. Translation scored low, but participants argued it was essential for inclusion, so we kept it.",
+          image: { asset: "hhcd/workshop-wall-functionality.jpg", alt: "Wall 3, Functionality: features written up and ranked with numbers, with sticky notes beside them." },
         },
       ],
     },
     {
       id: "four-types",
       nav: "Collecting the data",
-      eyebrow: "Data model",
       part: "voice",
       kind: "decision",
       title: "Why the data is collected by person but mapped by type",
       body: [
-        "To make the survey easy to fill in, I started it from each person's own work: their projects, the methods they used and who supported them. Collecting was easy, but every row of the spreadsheet had a person at its centre. After a first round of cleaning, I split it into four linked types of equal weight and decided what each point on the map stands for.",
+        "To make the survey easy to fill in, I started it from each person's own work: their projects, the methods they used and who supported them. Collecting was easy, but every row of the spreadsheet had a person at its centre. So I gave the map four linked types of equal weight, and decided what each entry stands for.",
       ],
       signals: ["data", "judgement"],
       capabilities: ["B", "C"],
@@ -195,32 +176,29 @@ export const hhcd: Project = {
           "Decide what the platform needs to know.",
           "Survey each person about their own work.",
           "Clean the first round of answers.",
-          "Split each row into people, projects, organisations and methods.",
-          "Link the records and load them into the prototype.",
+          "Split each row into people, projects, methods and partners.",
+          "Link the entries and load them into the prototype.",
         ],
-        caption: "From a survey to a map of equals, step by step.",
       },
     },
     {
       id: "dual-view",
       nav: "Table view",
-      eyebrow: "Decision",
       part: "voice",
       kind: "decision",
       title: "A table view beside the network",
       body: [
-        "A network graph is hard to use without a mouse or without sight. So I added a table of the same data, with the same search and filters, and a shortcut to switch between them.",
+        "A network graph is hard to use without a mouse or without sight. The table holds the same data, with the same search and filters, and a shortcut switches between the two.",
       ],
       signals: ["accessibility", "data", "judgement"],
       capabilities: ["E"],
       lenses: { ux: "in", engineer: "in" },
-      layout: "pair",
+      layout: "stack",
       keys: ["Ctrl", "+", "E"],
       media: {
         kind: "image",
         asset: "hhcd/voice-simple-view.png",
         alt: "VOICE's Simple View: people, institutions, projects and methods in four columns of readable entries, with a Map View button.",
-        caption: "The same entries as a table, for screen readers and keyboards.",
         need: "Paper figure: Simple View.",
         ratio: "16:10",
       },
@@ -228,12 +206,11 @@ export const hhcd: Project = {
     {
       id: "taken-up",
       nav: "The Centre's version",
-      eyebrow: "Rebuild",
       part: "hhcd",
       kind: "outcome",
       title: "Taken up by the Helen Hamlyn Centre",
       body: [
-        "VOICE soft-launched in September 2025. The Helen Hamlyn Centre then took up the platform for its own research: 48 entries and 104 connections, in its fixed brand colours. I rebuilt it for the Centre in Next.js and TypeScript.",
+        "VOICE soft-launched in September 2025. The Centre brought its own research data and fixed brand colours, and I rebuilt the platform for it in Next.js and TypeScript.",
       ],
       signals: ["end-to-end", "reusable-components"],
       capabilities: ["B", "C"],
@@ -253,7 +230,6 @@ export const hhcd: Project = {
     {
       id: "arrangements",
       nav: "Two arrangements",
-      eyebrow: "Interaction",
       part: "hhcd",
       kind: "decision",
       title: "Two arrangements of the same map",
@@ -278,14 +254,12 @@ export const hhcd: Project = {
           label: "By type",
         },
         video: { asset: "hhcd/switch.mp4", split: 2.85 },
-        caption: "Try the switch: the same 48 entries, rearranged.",
         need: "Both arrangements at 1440px, and a recording of the move.",
       },
     },
     {
       id: "guide",
       nav: "Guide inside the map",
-      eyebrow: "Interaction",
       surface: "dark",
       part: "hhcd",
       kind: "decision",
@@ -302,7 +276,6 @@ export const hhcd: Project = {
         asset: "hhcd/guide.mp4",
         poster: "hhcd/guide-poster.jpg",
         alt: "A first visit: Design Bugs Out pulses, its card is followed, a connection to Hua Dong is opened, the path appears, and the map is sorted by type.",
-        caption: "Each step waits for the visitor to act.",
         need: "Recording of the four guide steps.",
         ratio: "16:10",
       },
@@ -310,13 +283,12 @@ export const hhcd: Project = {
     {
       id: "keyboard",
       nav: "Keyboard navigation",
-      eyebrow: "Evidence",
       surface: "dark",
       part: "hhcd",
       kind: "evidence",
       title: "Accessibility – keyboard navigation",
       body: [
-        "The map is a single stop in the tab order. Arrow keys move to the nearest entry in that direction, in either arrangement, and the view pans to keep it in sight. Each entry is announced with its name, type and number of connections.",
+        "The map is a single stop in the tab order. Arrow keys move to the nearest entry in that direction, in either arrangement, and the view pans to keep it in sight. Each entry is announced with its name, type and number of connections, shown on screen in this recording.",
       ],
       signals: ["accessibility", "motion-interaction"],
       capabilities: ["E", "D"],
@@ -328,7 +300,6 @@ export const hhcd: Project = {
         asset: "hhcd/keyboard.mp4",
         poster: "hhcd/keyboard-poster.jpg",
         alt: "Arrow keys move focus between entries on the map. For this recording, each entry's announced name is shown on screen, for example “Paul Chamberlain, person, 5 connections”.",
-        caption: "What each entry announces, shown on screen for this recording.",
         need: "Recording of arrow-key navigation.",
         ratio: "16:10",
       },
@@ -336,7 +307,6 @@ export const hhcd: Project = {
     {
       id: "narrow-screens",
       nav: "Responsive design",
-      eyebrow: "Evidence",
       part: "hhcd",
       kind: "evidence",
       title: "Responsive design",
@@ -346,23 +316,20 @@ export const hhcd: Project = {
       signals: ["accessibility", "typography"],
       capabilities: ["E", "D"],
       lenses: { ux: "in", engineer: "in", web: "lead" },
-      layout: "pair",
+      layout: "stack",
       media: {
         kind: "group",
         layout: "row",
         ratio: "9:16",
-        caption: "The map stays usable while details are open.",
         items: [
           {
             asset: "hhcd/phone-map.png",
             alt: "The map on a phone at a readable zoom, with the guide's first card at the bottom.",
-            label: "First visit",
             need: "Phone: map with the guide.",
           },
           {
             asset: "hhcd/phone-sheet.png",
             alt: "On a phone, Hua Dong's details in a sheet over the lower part of the map, with the path from Design Bugs Out above the name.",
-            label: "Details as a sheet",
             need: "Phone: details sheet.",
           },
         ],
@@ -371,7 +338,6 @@ export const hhcd: Project = {
     {
       id: "contrast",
       nav: "Colour contrast",
-      eyebrow: "Evidence",
       part: "hhcd",
       kind: "evidence",
       title: "Accessibility – colour contrast",
@@ -384,7 +350,6 @@ export const hhcd: Project = {
       layout: "stack",
       media: {
         kind: "specimens",
-        caption: "Orange passes as large text; small text uses the darker variant.",
         items: [
           { type: "people", label: "People", colour: "#5F5BA3", ratio: 5.98 },
           { type: "partners", label: "Partners", colour: "#DC2680", ratio: 4.53 },
@@ -396,7 +361,6 @@ export const hhcd: Project = {
     {
       id: "testing",
       nav: "Testing",
-      eyebrow: "Evidence",
       part: "hhcd",
       kind: "evidence",
       title: "Accessibility – testing",
@@ -412,37 +376,23 @@ export const hhcd: Project = {
         items: [
           { value: "99", label: "Lighthouse accessibility score", note: "VOICE" },
           { value: "0", label: "WAVE errors", note: "VOICE" },
-          { value: "0", label: "axe violations at 1440 and 390px", note: "Rebuild" },
+          { value: "0", label: "axe violations at 1440 and 390px", note: "Centre's version" },
         ],
       },
     },
     {
-      id: "results",
-      nav: "Results",
-      eyebrow: "Outcome",
-      surface: "dark",
-      part: "hhcd",
-      kind: "outcome",
-      title: "Results",
-      bodyStyle: "list",
-      body: [
-        "Live and in use at the Helen Hamlyn Centre.",
-        "Used to teach data visualisation to the Centre's summer interns.",
-        "A paper on the accessibility approach, accepted at DRS 2026.",
-      ],
-      signals: ["end-to-end", "research"],
-      capabilities: ["B", "E"],
-      lenses: { ux: "in", engineer: "in", web: "in" },
-    },
-    {
       id: "role",
       nav: "My role",
-      eyebrow: "Role",
       part: "hhcd",
       kind: "role",
+      surface: "dark",
       title: "Designed, specified and built alone",
       body: [
         "I made the design files, wrote the specification and built the platform. Doing both, I could turn each design straight into working code, which made the work faster.",
+      ],
+      facts: [
+        { label: "Context", text: "Research assistant at Brunel University, on VOICE." },
+        { label: "Team", text: "VOICE's team ran the workshop and chose the network together." },
       ],
       signals: ["end-to-end", "design-eng-gap"],
       capabilities: ["B"],

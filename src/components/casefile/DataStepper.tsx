@@ -13,8 +13,8 @@ const RECORDS: Rec[] = [
   { id: "j2", kind: "projects", label: "Project 2", col: [306, 284], net: [412, 268] },
   { id: "mw", kind: "methods", label: "Workshops", col: [492, 236], net: [632, 168] },
   { id: "mm", kind: "methods", label: "Mapping", col: [492, 284], net: [636, 352] },
-  { id: "ox", kind: "partners", label: "Organisation X", col: [678, 236], net: [292, 214] },
-  { id: "oy", kind: "partners", label: "Organisation Y", col: [678, 284], net: [404, 412] },
+  { id: "ox", kind: "partners", label: "Partner X", col: [678, 236], net: [292, 214] },
+  { id: "oy", kind: "partners", label: "Partner Y", col: [678, 284], net: [404, 412] },
 ];
 const LINKS: [string, string][] = [
   ["pa", "j1"],
@@ -32,14 +32,14 @@ const COLS: { kind: Kind; label: string; x: number }[] = [
   { kind: "people", label: "People", x: 120 },
   { kind: "projects", label: "Projects", x: 306 },
   { kind: "methods", label: "Methods", x: 492 },
-  { kind: "partners", label: "Organisations", x: 678 },
+  { kind: "partners", label: "Partners", x: 678 },
 ];
 const QUESTIONS = ["Who are you?", "What did you work on?", "Which methods did you use?", "Who supported it?"];
-const ANSWERS = ["Person A", "Project 1, Project 2", "Workshops", "Organisation X"];
+const ANSWERS = ["Person A", "Project 1, Project 2", "Workshops", "Partner X"];
 const SHEET = [
-  ["Person A", "Project 1, Project 2", "Workshops", "Organisation X"],
-  ["Person B", "Project 2", "Mapping, workshop", "Organisation Y"],
-  ["person a", "Project 1", "Workshops", "Organisation X"],
+  ["Person A", "Project 1, Project 2", "Workshops", "Partner X"],
+  ["Person B", "Project 2", "Mapping, workshop", "Partner Y"],
+  ["person a", "Project 1", "Workshops", "Partner X"],
 ];
 
 function Mark({ kind, x, y }: { kind: Kind; x: number; y: number }) {
@@ -57,7 +57,7 @@ const Arrow = ({ flip }: { flip?: boolean }) => (
 );
 
 /** A diagram the reader steps through: from a survey that starts from people to four linked types of equal weight. */
-export function DataStepper({ steps, caption, index }: { steps: string[]; caption?: string; index: string }) {
+export function DataStepper({ steps }: { steps: string[] }) {
   const [step, setStep] = useState(0);
   // On phones the diagram keeps its size and scrolls inside its frame, so the frame must take focus.
   const [scrolls, setScrolls] = useState(false);
@@ -91,6 +91,7 @@ export function DataStepper({ steps, caption, index }: { steps: string[]; captio
             </li>
           ))}
         </ol>
+        <div className="cf-cq">
         <div
           ref={stage}
           className="cf-stepper-stage"
@@ -182,10 +183,10 @@ export function DataStepper({ steps, caption, index }: { steps: string[]; captio
           </svg>
           <span className="cf-stepper-note">Sample labels{scrolls ? " · scroll ⟷" : ""}</span>
           <div className="cf-stepper-nav">
-            <button type="button" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0} aria-label="Previous step">
+            <button type="button" className="cf-nudge-l" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0} aria-label="Previous step">
               <Arrow flip />
             </button>
-            <button type="button" onClick={() => setStep((s) => Math.min(steps.length - 1, s + 1))} disabled={step === steps.length - 1} aria-label="Next step">
+            <button type="button" className="cf-nudge-r" onClick={() => setStep((s) => Math.min(steps.length - 1, s + 1))} disabled={step === steps.length - 1} aria-label="Next step">
               <Arrow />
             </button>
           </div>
@@ -193,13 +194,8 @@ export function DataStepper({ steps, caption, index }: { steps: string[]; captio
             Step {step + 1} of {steps.length}: {steps[step]}
           </p>
         </div>
+        </div>
       </div>
-      {caption && (
-        <figcaption className="cf-caption">
-          <b>{index}</b>
-          {caption}
-        </figcaption>
-      )}
     </figure>
   );
 }

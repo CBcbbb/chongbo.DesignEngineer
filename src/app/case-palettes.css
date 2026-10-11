@@ -7,8 +7,8 @@
 
 /* ---------- Helen Hamlyn Centre Data Platform ----------
  * No single brand colour: the platform's identity is four equal colours on white paper, so colour belongs
- * to the work and the four marks only. Cover: the product's own white sheet, with the network running off it
- * (white in both themes: it is the product's surface, like the printed sheets on the home page).
+ * to the work and the four marks only. Cover and the work: the product's own white sheets (the platform's ink in
+ * dark mode, with the product's white screen in a dark window).
  * Accent and markers: the platform's ink. Evidence sits on dot-grid paper, like a map or a chart.
  */
 [data-palette="hhcd"] {
@@ -80,8 +80,9 @@
   --dark-inset: #1d1c22;
 }
 
-/* the cover is the product's white sheet; its marks keep the brand colours */
-[data-palette="hhcd"] .cf-cover {
+/* the cover and the work are the product's white sheets; the cover's marks keep the brand colours */
+[data-palette="hhcd"] .cf-cover,
+[data-palette="hhcd"] .cf-work {
   --case-rule: #e4e3e8;
   border-color: #e4e3e8;
 }
@@ -98,9 +99,10 @@
   background: var(--mark-methods);
 }
 
-/* dark: the cover becomes the platform's ink, and the network sits in a white screen rising from its foot */
+/* dark: the cover and the work become the platform's ink; the product keeps its white screen, in a dark window */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-cover {
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-cover,
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-work {
     --field: #1c1b21;
     --on-field: #f2f1f4;
     --on-field-2: #aeacb8;
@@ -110,18 +112,27 @@
   :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-chip {
     box-shadow: inset 0 0 0 1px #4a4853;
   }
-  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-cover-art {
-    margin-inline: 0;
-    border-radius: 12px 12px 0 0;
-    background: #ffffff;
-    box-shadow: 0 -1px 0 rgb(255 255 255 / 0.08), 0 30px 80px -30px rgb(0 0 0 / 0.7);
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-browser {
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08), 0 24px 60px -24px rgb(0 0 0 / 0.8);
   }
-  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-cover-art img {
-    -webkit-mask-image: none;
-    mask-image: none;
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-browser-bar {
+    background: #2a2930;
+    border-bottom-color: #1c1b21;
+    color: #aeacb8;
+  }
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-dots i {
+    background: #4a4853;
+  }
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-url {
+    background: #1c1b21;
+    color: #aeacb8;
+  }
+  :root:not([data-theme="light"]) [data-palette="hhcd"] .cf-progress i {
+    background: #e9e7ef;
   }
 }
-:root[data-theme="dark"] [data-palette="hhcd"] .cf-cover {
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-cover,
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-work {
   --field: #1c1b21;
   --on-field: #f2f1f4;
   --on-field-2: #aeacb8;
@@ -131,15 +142,23 @@
 :root[data-theme="dark"] [data-palette="hhcd"] .cf-chip {
   box-shadow: inset 0 0 0 1px #4a4853;
 }
-:root[data-theme="dark"] [data-palette="hhcd"] .cf-cover-art {
-  margin-inline: 0;
-  border-radius: 12px 12px 0 0;
-  background: #ffffff;
-  box-shadow: 0 -1px 0 rgb(255 255 255 / 0.08), 0 30px 80px -30px rgb(0 0 0 / 0.7);
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-browser {
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08), 0 24px 60px -24px rgb(0 0 0 / 0.8);
 }
-:root[data-theme="dark"] [data-palette="hhcd"] .cf-cover-art img {
-  -webkit-mask-image: none;
-  mask-image: none;
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-browser-bar {
+  background: #2a2930;
+  border-bottom-color: #1c1b21;
+  color: #aeacb8;
+}
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-dots i {
+  background: #4a4853;
+}
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-url {
+  background: #1c1b21;
+  color: #aeacb8;
+}
+:root[data-theme="dark"] [data-palette="hhcd"] .cf-progress i {
+  background: #e9e7ef;
 }
 [data-palette="hhcd"] .cf-chip {
   background: transparent;
