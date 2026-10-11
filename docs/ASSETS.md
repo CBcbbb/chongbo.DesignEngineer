@@ -10,10 +10,8 @@ Every image or video the case files ask for. Until a file exists, the site shows
 
 | ✓ | Path (put it here) | Project · section | What to show | Ratio | Format | Recommended size | 中文说明 |
 |---|---|---|---|---|---|---|---|
-| ☐ | `public/assets/hhcd/cover.png` | HHCD Data Platform · cover | Rebuilt network map at 1440px (already in the rebuild repo: `docs/screenshots/explore-1440.png`) | 16:10 | PNG | 2560×1600 (min 1440×900) | 封面：重构版网络图截图，重构仓库里已有 `explore-1440.png`，裁成 16:10。 |
-| ☐ | `public/assets/hhcd/data-model.png` | HHCD · Decision 01 (data-model) | Before/after: one person-first spreadsheet row vs the same information as four linked profiles | 16:10 | PNG | 2560×1600 | 数据模型前后对比图：一行"以人为中心"的表格 vs 四类互相链接的档案。也可以让我用代码画。 |
-| ☐ | `public/assets/hhcd/table-view.png` | HHCD · Decision 02 (dual-view) | Screenshot of `/explore/table` from the rebuild at 1440px | 16:10 | PNG | 2560×1600 | 表格视图截图（重构版 `/explore/table`，1440 宽）。这是"无障碍"回答的主卡，优先补。 |
-| ☐ | `public/assets/hhcd/homepage.png` | HHCD · Decision 03 (one-example-first) | Rebuilt homepage (`docs/screenshots/home-1440.png` in the rebuild repo) | 4:3 | PNG | 2400×1800 (min 1440×1080) | 重构版首页截图，裁成 4:3。 |
+| ✓ | `public/assets/hhcd/*` | Helen Hamlyn Centre Data Platform · all cards | Done: map screenshots and recordings captured from the live rebuild; VOICE figures from Chongbo's DRS paper. See `docs/case-studies/hhcd/inventory.md` | — | PNG, JPG, MP4 + WebM | — | 已完成：截图和录屏来自重构版；VOICE 的图来自论文。 |
+| ☐ | `public/assets/hhcd/workshop-wall-*.jpg` | HHCD · workshop | **Optional:** higher-resolution photos of the three walls (current ones are 648×486, from the paper) | 4:3 | JPG | 1600×1200 | 可选：工作坊三面墙的高清原图（现在用的是论文里的小图）。 |
 | ☐ | `public/assets/component-store/mapping.png` | Component Store · Decision 02 (mapping) | **Optional, only with permission.** Anonymised field-mapping step, all company/customer names removed | 16:10 | PNG | 2560×1600 | 可选，须公司同意。字段映射界面的脱敏截图，去掉所有公司和客户名称。没有也可以，图表能撑住这张卡。 |
 | ☐ | `public/assets/nike/headline-frame.png` | Nike Athletes Closet · cover | The adaptive headline/text-framing system, ideally three or four screens side by side | 16:10 | PNG | 2560×1600 | 封面：自适应标题框系统，最好三到四个手机屏并排。 |
 | ☐ | `public/assets/nike/components.png` | Nike · Decision 01 (system) | Component overview from the old case study (logo lock-up, header, key message, image-text, poster card) | 16:10 | PNG | 2560×1600 | 旧案例里的组件总览图。 |
@@ -28,8 +26,7 @@ Every image or video the case files ask for. Until a file exists, the site shows
 **不需要文件的：** Component Store 的两张图（数据契约、token 分层）已经用代码画好；两段 CSS 代码片段也直接从内容文件渲染。
 
 ### Priority (if you only do three today)
-1. `hhcd/table-view.png` — the card every accessibility question lands on.
-2. `nike/app-recording.mp4` + poster — the only motion evidence, and it shipped.
-3. `hhcd/cover.png` — first thing on the strongest case file.
+1. `nike/app-recording.mp4` + poster — the only motion evidence, and it shipped.
+2. `hhcd/workshop-wall-*.jpg` (optional) — sharper workshop photos.
 
-优先级：先补表格视图截图、Nike 录屏和 HHCD 封面。
+优先级：Nike 录屏；HHCD 的图已经齐了，工作坊高清照片可选。

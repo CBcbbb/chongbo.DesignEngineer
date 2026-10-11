@@ -110,10 +110,10 @@ Copy may only use these, or what Chongbo adds later.
 
 1. VoiceOver test, run in a separate conversation (`PROMPT-voiceover.md`). Browsers are done: Chrome, Safari and Firefox.
 
-## Id changes (for `SHARED-CHANGES.md` at build)
+## Id changes
 
-| Old ids | New ids |
-|---|---|
-| `problem`, `data-model`, `dual-view`, `one-example-first`, `tokens-and-publishing`, `rebuild`, `origin` | the cards above |
+Recorded in `SHARED-CHANGES.md` (2026-10-11). The fallback default is now `hhcd-data-platform/arrangements`.
 
-The AI conversation's eval set and the fallback defaults reference `dual-view`.
+## Built
+
+`content/projects/hhcd.ts` follows `copy.md` draft 3 word for word. Card order in the build: Part 1 · VOICE (`brief`, `no-borders`, `sample-data`, `workshop`, `four-types`, `dual-view`), Part 2 · Helen Hamlyn Centre (`taken-up`, `arrangements`, `guide`, `keyboard`, `narrow-screens`, `contrast`, `results`, `role`).
