@@ -18,7 +18,24 @@ import {
 } from "./schema";
 
 export const MODEL = "claude-haiku-5-5";
-export const MODEL_TIMEOUT_MS = 6000;
+export const MODEL_TIMEOUT_MS = 10000;
+/**
+ * Room for the whole answer. 800 was too tight once the catalogue grew: answers were cut off mid-JSON and every
+ * request fell back. Billing is for tokens written, not this ceiling.
+ */
+export const MODEL_MAX_TOKENS = 2000;
+
+/**
+ * Why the model path gave up, as a short category for the server log. Never the brief, never the model's text.
+ */
+function failureKind(err: unknown): string {
+  if (!(err instanceof Error)) return "unknown";
+  const m = err.message ?? "";
+  if (m.startsWith("Failed to parse structured output as JSON")) return "parse-json (output cut off or not JSON)";
+  if (m.startsWith("Failed to parse structured output")) return "parse-schema (output did not match the schema)";
+  const status = (err as { status?: number }).status;
+  return status ? `${err.name} ${status}` : err.name;
+}
 
 /**
  * Deliberately loose: the API enforces the shape, and our own sanitising enforces the limits
@@ -109,7 +126,7 @@ export async function askModel(
   try {
     const params = {
       model: MODEL,
-      max_tokens: 800,
+      max_tokens: MODEL_MAX_TOKENS,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user" as const, content: userMessage(req) }],
       output_config: { format: zodOutputFormat(ModelOutput) },
@@ -119,22 +136,31 @@ export async function askModel(
       maxRetries: 0,
       signal: controller.signal,
     });
-    if (message.stop_reason === "refusal" || message.stop_reason === "max_tokens") return null;
+    if (message.stop_reason === "refusal" || message.stop_reason === "max_tokens") {
+      console.warn(`[ask] model gave up: stop_reason ${message.stop_reason}`);
+      return null;
+    }
     const parsed = ModelOutput.safeParse(message.parsed_output);
-    if (!parsed.success) return null;
+    if (!parsed.success) {
+      console.warn("[ask] model gave up: output did not match the schema");
+      return null;
+    }
 
     // Topics the visitor chose explicitly always count as asked, ahead of the model's reading.
     const modelAsked = sanitizeAsked(parsed.data.asked);
     let asked: Signal[] = [...new Set([...req.topics, ...modelAsked])].slice(0, ASKED_MAX);
     const sheets = sanitizeSheets(parsed.data.sheets, asked);
-    if (!sheets.length) return null;
+    if (!sheets.length) {
+      console.warn("[ask] model gave up: no valid sheets (unknown ids or signals)");
+      return null;
+    }
     if (!asked.length) asked = [...new Set(sheets.map((s) => s.signal))].slice(0, ASKED_MAX);
     const missing = sanitizeMissing(parsed.data.missing);
     const line = sanitizeLine(parsed.data.line) ?? lineFor(asked, sheets, missing);
     return withLegacy({ asked, sheets, missing, line, source: "model" });
   } catch (err) {
     // Log the failure type only, never the brief.
-    console.warn(`[ask] model unavailable: ${err instanceof Error ? err.name : "unknown"}`);
+    console.warn(`[ask] model unavailable: ${failureKind(err)}`);
     return null;
   } finally {
     clearTimeout(timer);
