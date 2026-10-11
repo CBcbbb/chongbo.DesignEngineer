@@ -24,7 +24,7 @@ The employer, its product names (including "Component Store", "Flow Lab", "FarPo
 | Title | Components for Any Data |
 | Line | `[step 4]` What it is: a component library that customers preview with their own data before building with it |
 | Role | Design Engineer (UX design and front end) |
-| roleSplit | one person: data model, interface and front end on my own · one person: the stream-fit proposal for the backend team |
+| roleSplit | one person: data model, interface, front end and server, on my own |
 | Outcome | `[step 4]` What the design achieves, not a status |
 | What this shows | Systems and reuse (C) · Idea to production (B) · Craft and interaction (D) |
 
@@ -125,6 +125,7 @@ Copy may only use these, or what Chongbo adds later.
 - ECharts may be named as the model the contract follows.
 - Slug becomes `components-for-any-data`.
 - Merge only with Chongbo's approval.
+- Stream fit is Chongbo's own work, server included; never "proposed to the backend team".
 
 ## Gaps
 

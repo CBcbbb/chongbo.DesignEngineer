@@ -17,8 +17,7 @@ Logistics infrastructure company
 A component library customers preview with their own data, before they build with it.
 
 - **Role:** Design Engineer
-  - (one person) UX design, front end and data model on my own
-  - (two people) Stream fit, proposed to the backend team
+  - (one person) Data model, interface, front end and server, on my own
 - **Outcome:** One library serves every customer. Each component declares the shape of data it needs, and customers connect their own streams by choosing fields.
 
 ## The work
@@ -87,7 +86,7 @@ I grouped streams by fit instead: every field the component needs first, then "P
 
 ### 03.2 Fit judged on the server
 
-The browser can't judge fit: a stream record has a name and a row count, but no field names. I proposed one endpoint to the backend team, built in two phases.
+The browser can't judge fit: a stream record has a name and a row count, but no field names. So I moved fit onto the server: one endpoint, in two phases.
 
 First, keep the field names from the entry the platform already reads, at no extra load. Later, a stored profile per stream, at the same cost for 50 streams or 5,000. The interface talks to the endpoint alone, so it doesn't change between phases.
 
@@ -103,7 +102,7 @@ The panel suggests a field for each role, using aliases and industry terms ("ccy
 
 ### 04.1 From the data model to the interface
 
-- **Role:** I designed the contract model, the store's interface and the preview, built the front end with AI coding tools, and wrote the stream-fit proposal for the backend team.
+- **Role:** I designed the contract model, the store's interface and the preview, and built them, front end and server, with AI coding tools.
 - **Context:** Logistics infrastructure company. I'm its sole designer.
 
 `[What I'd do now, or nothing: Chongbo to decide]`
