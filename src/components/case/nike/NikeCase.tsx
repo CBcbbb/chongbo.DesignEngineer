@@ -557,10 +557,6 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
                     </li>
                   ))}
                 </ul>
-                <p className="nk-orole">
-                  <span className="nk-olabel">Role</span>
-                  {outcome.body[0]}
-                </p>
               </div>
             </section>
 

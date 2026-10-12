@@ -87,7 +87,7 @@ To maintain interest between volumes and build anticipation for the next influen
 
 ### 04.1 Design that helped win Nike's next seasons
 
-- **Role:** As the agency's sole UI designer, I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
+- **Role** (printed sheet and Ask only; not shown on the page): As the agency's sole UI designer, I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
 
 - **Delivery:** One component system made each volume faster to deliver, and Nike's engineers were more satisfied with the handover.
 - **Conversion:** Product visibility significantly improved, with a clearer click-through path and positive feedback from the client on increased user interest and conversions.

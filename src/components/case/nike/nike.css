@@ -1632,14 +1632,14 @@
   background: var(--nk-grain), var(--nk-black);
 }
 .nk-big {
-  max-width: 15ch;
+  max-width: 16ch;
   font-size: clamp(2.4rem, 6vw, 4.6rem) !important;
   font-weight: 600;
-  line-height: 0.92;
-  letter-spacing: -0.06em;
+  line-height: 1;
+  letter-spacing: -0.035em;
   color: var(--nk-orange-on-black) !important;
 }
-/* the results: delivery, conversion, engagement; then the role */
+/* the results: delivery, conversion, engagement */
 .nk-ofoot {
   display: grid;
   gap: 1.25rem;
@@ -1653,17 +1653,6 @@
 /* on the items: the list reset would win over padding on the list itself */
 .nk-ogrid li {
   padding-top: 1.1rem;
-}
-.nk-orole {
-  display: grid;
-  grid-template-columns: 6rem minmax(0, 1fr);
-  gap: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--nk-black-rule);
-  color: var(--nk-on-black-2);
-}
-.nk-orole .nk-olabel {
-  margin: 0.2rem 0 0;
 }
 .nk-olabel {
   margin-bottom: 0.4rem;
@@ -2141,7 +2130,6 @@
   .nk-head,
   .nk-facts,
   .nk-ogrid,
-  .nk-orole,
   .nk-vs,
   .nk-retouch {
     grid-template-columns: minmax(0, 1fr);
