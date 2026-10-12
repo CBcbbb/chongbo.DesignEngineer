@@ -46,7 +46,7 @@ export const anyData: Project = {
       layout: "stack",
       title: "Every customer's data has a different shape",
       body: [
-        "Our platform carries customers' operational data as live streams, and customers build their own products on it, picking components from our store.",
+        "Our platform carries customers' operational data as live streams, and customers build their own products on it, picking components from our component store.",
         "But the components in the store only showed fixed values from their settings, so no customer could see what their own data would look like in one. One set of sample data couldn't cover every case either, as each customer names and formats the same data differently.",
         "So I started from two questions: can we connect live streams to the store's components, and what does a component need to know about its data?",
       ],
@@ -130,7 +130,7 @@ export const anyData: Project = {
       title: "Takeaway",
       body: [
         "The store couldn't preview a customer's data, which looked like an interface problem. The cause was in the data model, so I defined the shape each component needs before designing the panel.",
-        "A stream record carries no field names, so the browser can't tell which streams fit. Judging fit on the server lets users see what fits before they pick, however many streams there are.",
+        "Judging fit on the server lets users see which streams fit before they pick, however many there are.",
         "Every layer has one job, so a new source system needs a new adapter, and nothing else changes.",
       ],
       signals: ["end-to-end", "judgement", "design-eng-gap"],
