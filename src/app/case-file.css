@@ -1179,11 +1179,8 @@
   fill: var(--i-val);
   stroke: none;
 }
-.cf-ico-ad .i-spark {
-  stroke-width: 1.8;
-}
-.cf-ico-wide {
-  width: 1.4rem;
+.cf-ico .i-fill {
+  fill: currentColor;
 }
 .cf-ico-marks .m-people {
   fill: var(--mark-people);

@@ -52,13 +52,13 @@ function MergeIcon() {
  * (violet category, orange value), set solid against the outline of what carries it.
  */
 
-/** From the stream to the chart: a live stream comes in, and the roles it fills stand up as bars. */
+/** Architecture: three tiers, each with one job, the ground floor solid. */
 function PipelineIcon() {
   return (
-    <svg className="cf-ico cf-ico-ad" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="M2.5 12c1.4-3 2.8-3 4.2 0s2.8 3 4.2 0" />
-      <rect className="i-cat-dot" x="13.6" y="5" width="3.4" height="15" rx="1.2" />
-      <rect className="i-val-dot" x="18.6" y="11" width="3.4" height="9" rx="1.2" />
+    <svg className="cf-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 3.6 15.3 9H8.7z" />
+      <path d="M7.5 11h9l2.1 3.6H5.4z" />
+      <path className="i-fill" d="M4.3 16.6h15.4l1.9 3.4H2.4z" />
     </svg>
   );
 }
@@ -75,14 +75,13 @@ function ContractIcon() {
   );
 }
 
-/** A binding: a role's swatch, a spark of current, and the field it now drives. Wider, so the spark has room. */
+/** A binding: a live stream comes in, and the roles it fills stand up as bars. */
 function BindingIcon() {
   return (
-    <svg className="cf-ico cf-ico-ad cf-ico-wide" viewBox="0 0 32 24" aria-hidden="true" focusable="false">
-      <circle className="i-cat-dot" cx="4.5" cy="12" r="3" />
-      <path className="i-cat i-spark" d="M8.6 12h2.2l1.7-4.6 2.6 9.2 1.7-4.6h2.2" />
-      <rect x="21" y="7" width="9" height="10" rx="3" />
-      <path d="m23.9 11.2 1.6 1.6 1.6-1.6" />
+    <svg className="cf-ico cf-ico-ad" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M2.5 12c1.4-3 2.8-3 4.2 0s2.8 3 4.2 0" />
+      <rect className="i-cat-dot" x="13.6" y="5" width="3.4" height="15" rx="1.2" />
+      <rect className="i-val-dot" x="18.6" y="11" width="3.4" height="9" rx="1.2" />
     </svg>
   );
 }
