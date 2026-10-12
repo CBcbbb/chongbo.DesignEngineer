@@ -1158,6 +1158,31 @@
 .cf-ico-marks {
   stroke: none;
 }
+/* a role's colour, at its light-theme value: the label behind it stays white in both themes */
+.cf-ico-ad {
+  --i-cat: #6250d6;
+  --i-val: #eb6834;
+}
+.cf-ico-ad .i-cat {
+  stroke: var(--i-cat);
+  stroke-width: 2.2;
+}
+.cf-ico-ad .i-val {
+  stroke: var(--i-val);
+  stroke-width: 2.2;
+}
+.cf-ico-ad .i-cat-dot {
+  fill: var(--i-cat);
+  stroke: none;
+}
+.cf-ico-ad .i-val-dot {
+  fill: var(--i-val);
+  stroke: none;
+}
+/* a layer: solid like the label, so the lanes read as passing through it */
+.cf-ico-ad .i-layer {
+  fill: var(--on-field);
+}
 .cf-ico-marks .m-people {
   fill: var(--mark-people);
 }

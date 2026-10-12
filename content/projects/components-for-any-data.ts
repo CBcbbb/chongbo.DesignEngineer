@@ -27,9 +27,9 @@ export const anyData: Project = {
   work: { title: "The preview panel, rebuilt for this case study", module: "any-data/demo" },
   coverArt: "wires",
   shows: [
-    { capability: "B", label: "Front-end architecture", section: "pipeline", icon: "layers" },
-    { capability: "C", label: "Data contracts", section: "contract" },
-    { capability: "D", label: "Data-binding UX", section: "axis-pickers", icon: "picker" },
+    { capability: "B", label: "Front-end architecture", section: "pipeline", icon: "pipeline" },
+    { capability: "C", label: "Data contracts", section: "contract", icon: "contract" },
+    { capability: "D", label: "Data-binding UX", section: "axis-pickers", icon: "binding" },
   ],
   cover: { kind: "module", module: "any-data/demo" },
   parts: [

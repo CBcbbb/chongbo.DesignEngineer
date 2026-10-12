@@ -47,30 +47,51 @@ function MergeIcon() {
   );
 }
 
-/** A dropdown: a choice made in the interface. */
-function PickerIcon() {
+/*
+ * Components for Any Data draws its icons from its own pages, the way Nike's come from its brand: a role is a colour
+ * (violet category, orange value), set solid against the outline of what carries it.
+ */
+
+/** The pipeline: two role lanes run through its layers, from the stream to the chart. */
+function PipelineIcon() {
   return (
-    <svg className="cf-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <rect x="3.5" y="7" width="17" height="10" rx="2.5" />
-      <path d="m13.5 11 2 2 2-2" />
+    <svg className="cf-ico cf-ico-ad" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path className="i-cat" d="M2.5 9.3h19" />
+      <path className="i-val" d="M2.5 14.7h19" />
+      <rect className="i-layer" x="7" y="4.5" width="3.4" height="15" rx="1.4" />
+      <rect className="i-layer" x="13.6" y="4.5" width="3.4" height="15" rx="1.4" />
     </svg>
   );
 }
 
-/** Layers: an architecture of parts with one job each. */
-function LayersIcon() {
+/** A contract: a card that lists its roles, each a swatch and its type. */
+function ContractIcon() {
   return (
-    <svg className="cf-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path d="m12 4 8 4-8 4-8-4z" />
-      <path d="m4 12 8 4 8-4M4 16l8 4 8-4" />
+    <svg className="cf-ico cf-ico-ad" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <rect x="3.5" y="3.5" width="17" height="17" rx="3" />
+      <rect className="i-cat-dot" x="7" y="7.6" width="3.6" height="3.6" rx="0.9" />
+      <rect className="i-val-dot" x="7" y="12.8" width="3.6" height="3.6" rx="0.9" />
+      <path d="M13.5 9.4h3.5M13.5 14.6h3.5" />
+    </svg>
+  );
+}
+
+/** A binding: a role's swatch beside the field chosen for it. */
+function BindingIcon() {
+  return (
+    <svg className="cf-ico cf-ico-ad" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle className="i-cat-dot" cx="5" cy="12" r="3.3" />
+      <rect x="10.5" y="6.5" width="11" height="11" rx="3.2" />
+      <path d="m14 11 2 2 2-2" />
     </svg>
   );
 }
 
 /** One icon per capability (`icon` overrides it). Capabilities without one show none. */
 export function CapabilityIcon({ capability, icon }: { capability: Capability; icon?: CapabilityIconName }) {
-  if (icon === "picker") return <PickerIcon />;
-  if (icon === "layers") return <LayersIcon />;
+  if (icon === "pipeline") return <PipelineIcon />;
+  if (icon === "contract") return <ContractIcon />;
+  if (icon === "binding") return <BindingIcon />;
   if (capability === "C") return <MergeIcon />;
   if (capability === "E") return <KeyIcon />;
   if (capability === "B") return <BuiltIcon />;
