@@ -1,7 +1,4 @@
-"use client";
-
 import Image from "next/image";
-import { useState } from "react";
 
 type Side = { src: string; width: number; height: number; alt: string; label: string };
 type Mode = { label: string; a: "works" | "hard"; b: "works" | "hard" };
@@ -24,44 +21,34 @@ const Swap = () => (
 
 /**
  * The dual view as an accessibility decision: the two views of the same data side by side, joined by the shortcut
- * that switches between them, and a choice of how the reader is using the platform. Each view then says whether it
- * works or is hard to use that way, so the reader sees why the table exists. A view that is hard to use steps back.
+ * that switches between them. Under each view, how it works with a keyboard, a screen reader and a mouse, all shown
+ * at once, so the reader sees why both views exist without having to switch anything.
  */
-export function ViewToggle({ keys, a, b, modes, index }: { keys: string[]; a: Side; b: Side; modes: Mode[]; index: string }) {
-  const [m, setM] = useState(0);
-  const mode = modes[m]!;
-  const pane = (s: Side, state: "works" | "hard") => (
-    <div className="cf-dual-pane" data-state={state}>
-      <p className="cf-dual-head">
-        <span className="cf-dual-name">{s.label}</span>
-        <span className="cf-dual-state">
-          <span className="cf-dual-mark">{state === "works" ? <Tick /> : <Cross />}</span>
-          {state === "works" ? "Works" : "Hard to use"}
-        </span>
-      </p>
+export function ViewToggle({ keys, a, b, modes }: { keys: string[]; a: Side; b: Side; modes: Mode[] }) {
+  const pane = (s: Side, side: "a" | "b") => (
+    <div className="cf-dual-pane">
+      <p className="cf-dual-name">{s.label}</p>
       <div className="cf-dual-shot">
         <Image src={s.src} alt={s.alt} width={s.width} height={s.height} quality={90} sizes="(min-width: 1100px) 420px, 100vw" />
       </div>
+      <ul className="cf-dual-modes" aria-label={`${s.label} view, by how it is used`}>
+        {modes.map((md) => {
+          const state = md[side];
+          return (
+            <li key={md.label} data-state={state}>
+              <span className="cf-dual-mark">{state === "works" ? <Tick /> : <Cross />}</span>
+              {md.label}
+              <span className="sr-only">: {state === "works" ? "works" : "hard to use"}</span>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
   return (
     <figure className="cf-figure cf-dual">
-      <fieldset className="cf-dual-modes">
-        <legend>Using the platform with</legend>
-        <span className="cf-dual-modes-label" aria-hidden="true">
-          Using it with
-        </span>
-        <span className="cf-dual-seg">
-          {modes.map((md, i) => (
-            <label key={md.label}>
-              <input type="radio" name={`dual-${index}`} checked={m === i} onChange={() => setM(i)} />
-              {md.label}
-            </label>
-          ))}
-        </span>
-      </fieldset>
       <div className="cf-dual-panes">
-        {pane(a, mode.a)}
+        {pane(a, "a")}
         <div className="cf-dual-join">
           <span className="sr-only">{keys.join(" + ")} switches between the two views.</span>
           <span className="cf-dual-keys" aria-hidden="true">
@@ -74,12 +61,8 @@ export function ViewToggle({ keys, a, b, modes, index }: { keys: string[]; a: Si
           </span>
           <Swap />
         </div>
-        {pane(b, mode.b)}
+        {pane(b, "b")}
       </div>
-      <p className="sr-only" aria-live="polite">
-        With a {mode.label.toLowerCase()}: {a.label} {mode.a === "works" ? "works" : "is hard to use"}; {b.label}{" "}
-        {mode.b === "works" ? "works" : "is hard to use"}.
-      </p>
     </figure>
   );
 }

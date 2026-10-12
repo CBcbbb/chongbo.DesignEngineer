@@ -339,7 +339,6 @@ export function CaseMedia({
         <ViewToggle
           keys={media.keys}
           modes={media.modes}
-          index={index}
           a={{ src: src(media.a.asset), width: da.width, height: da.height, alt: media.a.alt, label: media.a.label }}
           b={{ src: src(media.b.asset), width: db.width, height: db.height, alt: media.b.alt, label: media.b.label }}
         />

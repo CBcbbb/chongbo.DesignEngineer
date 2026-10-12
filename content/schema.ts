@@ -118,9 +118,9 @@ export type Media =
     }
   | {
       /**
-       * Two views of the same data side by side, joined by the shortcut that switches between them (shown as keycaps),
-       * and a choice of how the reader is using it (`modes`): each view then says whether it works or is hard to use
-       * that way. The reader sees why both views exist.
+       * Two views of the same data side by side, joined by the shortcut that switches between them (shown as keycaps).
+       * Under each view, whether it works or is hard to use with each input in `modes`, all shown at once, so the reader
+       * sees why both views exist.
        */
       kind: "toggle";
       keys: string[];
