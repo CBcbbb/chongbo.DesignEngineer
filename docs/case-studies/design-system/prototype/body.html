@@ -1,0 +1,274 @@
+<div class="proto-bar" role="group" aria-label="Theme for review">
+  <button type="button" data-theme-set="system" aria-pressed="true">System</button>
+  <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
+  <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+</div>
+
+<div class="cf" data-palette="design-system">
+  <div class="cf-frame">
+    <nav class="cf-toc" aria-label="Contents">
+      <a class="cf-toc-proj" href="#top" aria-current="step">One Design System, Three Products</a>
+      <ol>
+        <li class="cf-toc-part" data-active="false">
+          <a href="#one-system"><span class="cf-n">01</span>One system for three products</a>
+          <ol>
+            <li><a href="#drift">Drifting apart</a></li>
+            <li><a href="#figma-to-code">Figma to code</a></li>
+            <li><a href="#three-layers">Three layers</a></li>
+          </ol>
+        </li>
+        <li class="cf-toc-part" data-active="false">
+          <a href="#accessibility"><span class="cf-n">02</span>Accessibility built into the colours</a>
+          <ol>
+            <li><a href="#roles">Roles, not colours</a></li>
+            <li><a href="#fixed-lightness">One lightness per step</a></li>
+            <li><a href="#dark">Dark mode</a></li>
+            <li><a href="#customer-colour">Customer colours</a></li>
+            <li><a href="#outcome">Outcome</a></li>
+          </ol>
+        </li>
+      </ol>
+    </nav>
+
+    <article class="cf-sheets" aria-labelledby="case-title">
+      <!-- ============ cover ============ -->
+      <header id="top" class="cf-sheet is-field cf-cover has-art-scales">
+        <div class="cf-cover-top">
+          <div class="ds-cover-scales" aria-hidden="true" id="cover-scales"></div>
+          <p class="cf-client"><span>Logistics infrastructure company</span></p>
+          <h1 id="case-title" class="cf-h1">One Design System, Three Products</h1>
+        </div>
+        <div class="cf-cover-line">
+          <p class="cf-lede">The shared colours and components behind three products, and every customer's brand on top.</p>
+        </div>
+        <dl class="cf-facts has-split">
+          <div>
+            <dt>Role</dt>
+            <dd>
+              <span class="cf-role-title">Design Engineer</span>
+              <ul class="cf-role-split">
+                <li>
+                  <svg class="cf-ico cf-ico-who" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="8.5" r="3.2"></circle><path d="M6 19.5c.6-3.4 3-5.3 6-5.3s5.4 1.9 6 5.3"></path></svg>
+                  <span>Figma library, colour scales and code <span class="cf-role-note">on my own</span></span>
+                </li>
+              </ul>
+            </dd>
+          </div>
+          <div>
+            <dt>Outcome</dt>
+            <dd>Three products that read as one company again, in any customer's brand.</dd>
+          </div>
+        </dl>
+        <div class="cf-cover-foot">
+          <div class="cf-shows">
+            <p id="cf-shows-title">What this shows</p>
+            <ul aria-labelledby="cf-shows-title">
+              <li><svg class="cf-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 6h5c3 0 3 6 6 6h5M4 12h16M4 18h5c3 0 3-6 6-6"></path></svg>Design system</li>
+              <li><svg class="cf-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="3.5" width="17" height="15.5" rx="3.2"></rect><path d="M12 15.5V7.5m0 0-3.2 3.2M12 7.5l3.2 3.2"></path><path d="M5.5 21h13"></path></svg>Accessibility in the colours</li>
+              <li><svg class="cf-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="2.5"></rect><path d="m8.6 12.2 2.4 2.4 4.6-5"></path></svg>Figma to code</li>
+            </ul>
+          </div>
+        </div>
+      </header>
+
+      <!-- ============ the work ============ -->
+      <section class="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
+        <div class="cf-work-head">
+          <h2 id="cf-work-title">The system, rebuilt on an invented brand</h2>
+        </div>
+        <div class="cf-plate">
+          <div class="tp" id="work-panel"></div>
+        </div>
+      </section>
+
+      <!-- ============ part 1 ============ -->
+      <section id="one-system" class="cf-sheet is-field cf-opener" aria-labelledby="one-system-h">
+        <span class="cf-num" aria-hidden="true">01</span>
+        <div>
+          <h2 id="one-system-h"><span class="sr-only">Part 01: </span>One system for three products</h2>
+          <p class="cf-cards">Drifting apart · Figma to code · Three layers</p>
+        </div>
+      </section>
+
+      <section id="drift" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="drift-title">
+        <div class="cf-head">
+          <div><p class="cf-meta"><span class="cf-idx">01.1</span></p><h3 id="drift-title" class="cf-h3">Three products, drifting from the first</h3></div>
+          <div class="cf-body">
+            <p>The company began with one product and its own colours and design tokens. New products took only those first tokens with them, and each needed things the first didn't have.</p>
+            <p>Built fast by different teams, much of it with AI coding tools, each product changed or dropped what didn't fit. With every release they looked less alike.</p>
+          </div>
+        </div>
+        <div class="cf-evidence" data-fit="fill">
+          <div class="ds-ev ds-drift" role="group" aria-label="The same screen in three products: same colours, different corners, buttons, type and spacing">
+            <figure>
+              <span class="ds-label">First product</span>
+              <div class="mp mp-1" aria-hidden="true">
+                <div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
+                <div class="mp-main">
+                  <div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
+                  <ul class="mp-list">
+                    <li><span>Run 4821</span><span class="mp-badge">On time</span></li>
+                    <li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li>
+                    <li><span>Run 4823</span><span class="mp-badge">On time</span></li>
+                  </ul>
+                </div>
+              </div>
+            </figure>
+            <figure>
+              <span class="ds-label">Second product</span>
+              <div class="mp mp-2" aria-hidden="true">
+                <div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
+                <div class="mp-main">
+                  <div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
+                  <ul class="mp-list">
+                    <li><span>Run 4821</span><span class="mp-badge">On time</span></li>
+                    <li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li>
+                    <li><span>Run 4823</span><span class="mp-badge">On time</span></li>
+                  </ul>
+                </div>
+              </div>
+            </figure>
+            <figure>
+              <span class="ds-label">Third product</span>
+              <div class="mp mp-3" aria-hidden="true">
+                <div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
+                <div class="mp-main">
+                  <div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
+                  <ul class="mp-list">
+                    <li><span>Run 4821</span><span class="mp-badge">On time</span></li>
+                    <li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li>
+                    <li><span>Run 4823</span><span class="mp-badge">On time</span></li>
+                  </ul>
+                </div>
+              </div>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section id="figma-to-code" class="cf-sheet is-card" data-canvas="" data-size="auto" data-layout="stack" aria-labelledby="figma-to-code-title">
+        <div class="cf-head">
+          <div><p class="cf-meta"><span class="cf-idx">01.2</span></p><h3 id="figma-to-code-title" class="cf-h3">From a Figma library to shared code</h3></div>
+          <div class="cf-body">
+            <p>I built the system in Figma first, from the main product's shadcn components: colour variables with Light and Dark modes, and components with their variants and states.</p>
+            <p>Then I shipped it as a code package, so teams build with its parts instead of redrawing them from a file. I've since moved to building directly in code with AI coding tools; the Figma library keeps the foundations for quick sketches.</p>
+          </div>
+        </div>
+        <div class="cf-evidence" data-fit="fill">
+          <div class="ds-ev ds-f2c">
+            <figure>
+              <span class="ds-label">Figma</span>
+              <div class="ds-shot" id="figma-shot"><p class="ds-missing">[Figma: component sets and variables, rebuilt on the invented brand. Screenshot to come from the Figma file.]</p></div>
+            </figure>
+            <figure>
+              <span class="ds-label">Code</span>
+              <div class="ds-code-side ui" id="code-side"></div>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section id="three-layers" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="three-layers-title">
+        <div class="cf-head">
+          <div><p class="cf-meta"><span class="cf-idx">01.3</span></p><h3 id="three-layers-title" class="cf-h3">Three layers: shared, product, customer</h3></div>
+          <div class="cf-body">
+            <p>The shared package holds the colours, roles and component styles, so a fix there reaches all three products. Each product overrides only what it needs, from tokens rather than new colours.</p>
+            <p>Customers add their own colour, font and button shape on top.</p>
+          </div>
+        </div>
+        <div class="cf-evidence" data-fit="foot">
+          <div class="ds-ev ds-layers" id="layers"></div>
+        </div>
+      </section>
+
+      <!-- ============ part 2 ============ -->
+      <section id="accessibility" class="cf-sheet is-field cf-opener" aria-labelledby="accessibility-h">
+        <span class="cf-num" aria-hidden="true">02</span>
+        <div>
+          <h2 id="accessibility-h"><span class="sr-only">Part 02: </span>Accessibility built into the colours</h2>
+          <p class="cf-cards">Roles, not colours · One lightness per step · Dark mode · Customer colours · Outcome</p>
+        </div>
+      </section>
+
+      <section id="roles" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="roles-title">
+        <div class="cf-head">
+          <div><p class="cf-meta"><span class="cf-idx">02.1</span></p><h3 id="roles-title" class="cf-h3">Components ask for a role, not a colour</h3></div>
+          <div class="cf-body">
+            <p>Every hue has five steps, each with one job: surfaces, borders, charts and icons, text on white, and text on a tint. Components ask for success or warning, never a hue and a step, so a hue can change without touching a component.</p>
+            <p>I kept amber for warnings only, so a warning never reads as a chart series.</p>
+          </div>
+        </div>
+        <div class="cf-evidence" data-fit="foot">
+          <div class="ds-ev ds-spec" id="spec"></div>
+        </div>
+      </section>
+
+      <section id="fixed-lightness" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="fixed-lightness-title">
+        <div class="cf-head">
+          <div><p class="cf-meta"><span class="cf-idx">02.2</span></p><h3 id="fixed-lightness-title" class="cf-h3">The same lightness on every hue</h3></div>
+          <div class="cf-body">
+            <p>I set the steps in OKLCH, where lightness is a number of its own, close to how bright a colour looks. The text steps sit within a few hundredths of each other on all six hues, so a role stays readable whichever hue it uses.</p>
+          </div>
+        </div>
+        <div class="cf-evidence" data-fit="foot">
+          <div class="ds-ev ds-light">
+            <div id="light-chart"></div>
+            <ul class="ds-metrics">
+              <li><b>30/30</b><span>text pairings pass WCAG AA</span></li>
+              <li><b>5.16:1</b><span>lowest: amber text on white</span></li>
+              <li><b>2</b><span>modes checked: light and dark</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="dark" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="dark-title">
+        <div class="cf-head">
+          <div><p class="cf-meta"><span class="cf-idx">02.3</span></p><h3 id="dark-title" class="cf-h3">Dark mode designed step by step</h3></div>
+          <div class="cf-body">
+            <p>In dark mode I lowered the borders' chroma so they don't glow, and lightened the text steps to hold their contrast.</p>
+            <p>Tinted surfaces turn deep, so text on a tint still sits on something darker than itself.</p>
+          </div>
+        </div>
+        <div class="cf-evidence" data-fit="foot">
+          <div class="ds-ev ds-modes" id="modes"></div>
+        </div>
+      </section>
+
+      <section id="customer-colour" class="cf-sheet is-card" data-canvas="" data-size="auto" data-layout="stack" aria-labelledby="customer-colour-title">
+        <div class="cf-head">
+          <div><p class="cf-meta"><span class="cf-idx">02.4</span></p><h3 id="customer-colour-title" class="cf-h3">Readable with any customer's colour</h3></div>
+          <div class="cf-body">
+            <p>Customers could pick any colour, and the first version passed it straight through. A pale yellow put white text on it at 1.07:1, and navy text on the dark background read at 2.99:1.</p>
+            <p>I applied the scales' own rule to the customer's colour. The fill stays theirs, and text on it turns dark or light. Used as text, their colour keeps its hue and moves in lightness until it reaches 4.5:1.</p>
+          </div>
+        </div>
+        <div class="cf-evidence" data-fit="fill">
+          <div class="ds-ev cc" id="cc"></div>
+        </div>
+      </section>
+
+      <section id="outcome" class="cf-sheet is-card is-dark" data-size="auto" data-layout="stack" aria-labelledby="outcome-title">
+        <div class="cf-head">
+          <div><p class="cf-meta"><span class="cf-idx">02.5</span></p><h3 id="outcome-title" class="cf-h3">Outcome</h3></div>
+          <div class="cf-body"><p class="ds-role">As the company's only designer, I designed the system in Figma and shipped it as code on my own.</p></div>
+        </div>
+        <div class="cf-evidence" data-fit="foot">
+          <ul class="ds-out">
+            <li><b>Consistency</b><span>Three products built from one set of colours, roles and components.</span></li>
+            <li><b>Delivery</b><span>Teams build new screens from shared code instead of redrawing them.</span></li>
+            <li><b>Accessibility</b><span>Every role passes AA in light and dark, under any customer's brand.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <nav aria-label="Next case file">
+        <a href="#top" class="cf-sheet cf-next">
+          <span class="cf-kind">Next case file</span>
+          <strong>Components for Any Data</strong>
+          <span>One component library that draws any customer's data, from the stream to the chart.</span>
+        </a>
+      </nav>
+    </article>
+  </div>
+</div>
