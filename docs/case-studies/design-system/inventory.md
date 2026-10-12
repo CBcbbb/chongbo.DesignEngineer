@@ -1,4 +1,4 @@
-# One Design System, Five Products: card inventory
+# One Design System, Three Products: card inventory
 
 Playbook §8 step 3. Draft 1, 12 October 2026. Chongbo's decisions of 12 October are under "Decisions". Headings are working claims, finished in step 4 (copy). Every fact traces to "Facts and their sources" below.
 
@@ -6,8 +6,8 @@ Capabilities: **C systems and reuse (lead)** · E accessible, fast, findable · 
 
 ## Framing
 
-- **One idea.** One company, five products, and customers who put their own brand on top. A colour system has to hold for all three, so the scales fix *lightness* per step and leave *hue* free: components ask for a role (success, warning), and the role stays readable whatever the hue.
-- **The tension.** The five products shared only the brand colour; everything else had drifted apart.
+- **One idea.** One company, three products, and customers who put their own brand on top. A colour system has to hold for all three, so the scales fix *lightness* per step and leave *hue* free: components ask for a role (success, warning), and the role stays readable whatever the hue.
+- **The tension.** The three products shared only the brand colour; everything else had drifted apart.
 - **The turn.** The customer layer first passed the chosen colour straight through. A pale yellow put white text on it at 1.07:1; a navy used as text on the dark background read at 2.99:1. The fix applies the scales' own rule to the customer's colour: their hue is kept, the system sets the lightness of anything used as text.
 - **Size.** A short main project: 9 cards. It is the only project that leads on C, and Granola's JD names "a design system in Figma and code" outright, so it earns more than the 4–6 of earlier work. Two cards are merge candidates if it reads long (see "Merge candidates").
 - **Evidence is rebuilt, never copied.** The company's files, screens and brand stay private. Every picture on the page is either code written for the site or a Figma file rebuilt on an invented brand (see "Rebuilt in Figma"). The work sheet says so once, in its title, as Components for Any Data does.
@@ -21,18 +21,18 @@ The employer, its products, customers, storage technology, package name, init sc
 | Field | Draft |
 |---|---|
 | Client | Logistics infrastructure company |
-| Title | One Design System, Five Products (alternatives below) |
-| Line | `[step 4]` What it is: the colours, components and themes behind five products and every customer's brand |
+| Title | One Design System, Three Products (alternatives below) |
+| Line | `[step 4]` What it is: the colours, components and themes behind three products and every customer's brand |
 | Role | Design Engineer |
 | roleSplit | one person: Figma library, colour scales and CSS, on my own (the package and init script are not claimed) |
-| Outcome | `[step 4]` Five products that look like one company; customers rebrand without losing contrast `[the second half only once the fix ships]` |
+| Outcome | `[step 4]` Three products that look like one company; customers rebrand without losing contrast `[the second half only once the fix ships]` |
 | What this shows | Systems and reuse (C) · Contrast by construction (E) · Figma to code (B) |
 
 **The work** (sheet after the cover): the signature module, titled "The system, rebuilt on an invented brand".
 
 ### Name
 
-1. **One Design System, Five Products**: plain, says the scale. Recommended.
+1. **One Design System, Three Products**: plain, says the scale. Recommended.
 2. **One Design System, Five Product Lines**: the prompt's version; longer, and "product lines" is less familiar to readers outside B2B.
 3. **Readable in Any Brand**: leads with the turn; undersells the systems work, which is the lead capability.
 
@@ -44,8 +44,8 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 
 | # | id | Heading (the claim) | Caps | ux | engineer | web | Evidence | Gaps |
 |---|---|---|---|---|---|---|---|---|
-| | | **Part 1 · One system for five products** | | | | | | |
-| 01.1 | `drift` | Five products, drifting from the first | C | in | in | · | Drawn: the first product, then the four later ones on the same tokens, each with its own radii, buttons, type and spacing | |
+| | | **Part 1 · One system for three products** | | | | | | |
+| 01.1 | `drift` | Three products, drifting from the first | C | in | in | · | Drawn: the first product, then the two later ones on the same tokens, each with its own radii, buttons, type and spacing | |
 | 01.2 | `figma-to-code` | From a Figma library to shared code | C B | in | in | lead | Rebuilt Figma (component sets, variables Light / Dark) beside the same components as code | |
 | 01.3 | `three-layers` | Three layers: shared, product, customer | C B | · | lead | in | Diagram: shared package → one product's overrides → a customer's colour, font and button shape | |
 | | | **Part 2 · Accessibility built into the colours** | | | | | | |
@@ -103,7 +103,7 @@ Chongbo reviews and edits it in Figma, so it's his file to walk through in an in
 | `tokens.css`, `globals.css` (Downloads) | **Cut** (reference only) | Names the company and package; the structure and rules are rebuilt |
 | `TokenLayersDiagram.tsx` (old) | **Redraw** → `three-layers` | Its per-app examples (density, accent, type scale) are invented; the redraw uses the kinds of override the real file makes |
 | Old CSS snippet (`--success: var(--green-500)` …) | **Redraw** → `extend-shadcn` code | Same idea, invented values, shadcn's tokens first |
-| Five-products picture | **Missing → draw** | `drift` needs it; abstract frames, no real screens |
+| Three-products picture | **Missing → draw** | `drift` needs it; abstract frames, no real screens |
 | Figma screenshots | **Missing → rebuild** (see above) | `figma-to-code` |
 | Colour specimens, dark switch | **Build** in code | `roles`, `dark` (media `specimens`, `toggle`) |
 | Contrast figures | **Build** (metric strip) | `fixed-lightness`; computed from the scales, re-checked by `npm run contrast` |
@@ -132,11 +132,11 @@ Copy may only use these, or what Chongbo adds later.
 
 **From Chongbo, in conversation (12 Oct):**
 - Three layers. Two internal: one shared by every product, one specific to each product. A third for customers, who apply their own colours; users within a customer can override it again.
-- Before: one company, five products; only the brand colour was shared, everything else did its own thing.
+- Before: one company, three products; only the brand colour was shared, everything else did its own thing.
 - The decision he'd defend: building on shadcn, because the products were already using it.
 - He designed the system in Figma (palettes, component library, light and dark) and wrote the CSS.
 - Outcome: the products finally look like one company; the system is easier to control and to design for.
-- Before, the colours were the same in every product, but corner radii, buttons, type and, most visibly, spacing differed: the same palette gave five different-looking products.
+- Before, the colours were the same in every product, but corner radii, buttons, type and, most visibly, spacing differed: the same palette gave different-looking products.
 - The original Figma file used variables.
 - No numbers to state.
 - He doesn't recall who wrote the package and the init script: not claimed.
@@ -158,7 +158,7 @@ Copy may only use these, or what Chongbo adds later.
 ## Gaps
 
 1. `[the fix ships]`: `customer-colour` and the Outcome's second half are written as done only once the derivation is live in the product. Until then, they're drafted both ways.
-Resolved 12 Oct: what differed (radii, buttons, type, spacing); variables (yes); numbers (none); package and init script (not claimed). The guess that the five products drifted because each edited its own shadcn copies is **not used** (Chongbo: not right, or not sure).
+Resolved 12 Oct: what differed (radii, buttons, type, spacing); variables (yes); numbers (none); package and init script (not claimed). The guess that the three products drifted because each edited its own shadcn copies is **not used** (Chongbo: not right, or not sure).
 
 ### What extending shadcn cost (from the CSS, for `extend-shadcn`)
 
@@ -173,12 +173,12 @@ Resolved 12 Oct: what differed (radii, buttons, type, spacing); variables (yes);
 - `figma-first` → `figma-library`: Figma is for sketching ideas in the system; he builds in code with AI tools. Show that he can build a design system in Figma, not that it's complete. No screen sizes.
 - Part 3 is accessibility.
 - 8 cards.
-- Five products in all: the main one and four later ones. AI coding tools may be named in 01.1.
+- Three products in all (Chongbo, 12 Oct; earlier "five"): the main one and two later ones. AI coding tools may be named in 01.1.
 - 02.1 is about delivery: he shipped the system as shared code everyone builds with and that stays up to date, not as a Figma file. Whether Figma and CSS names match doesn't matter.
 
 ## Decisions (12 October 2026)
 
-- **Name:** One Design System, Five Products. Slug `design-system`.
+- **Name:** One Design System, Three Products. Slug `design-system`.
 - **Colour:** ochre.
 - **Size:** 9 cards, kept apart (no merges), so each prints on its own.
 - **`extend-shadcn`:** the reason is that the products already used shadcn; its cost is the three points above, all from the CSS. No claim about why the products drifted.
