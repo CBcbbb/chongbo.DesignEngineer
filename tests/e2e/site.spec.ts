@@ -5,6 +5,16 @@ import { projects } from "../../content";
 const ROUTES = ["/", "/ask?topics=accessibility", "/work", "/about", ...projects.map((p) => `/work/${p.slug}`)];
 
 async function axe(page: Page) {
+  // Sheets deal in with a fade; mid-fade, axe blends text with the page and reports contrast that isn't there.
+  // A cancelled animation rejects `finished`; it's over all the same.
+  await page.evaluate(() =>
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+        .map((a) => a.finished.catch(() => undefined)),
+    ),
+  );
   const results = await new AxeBuilder({ page: page as never })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
     .analyze();
