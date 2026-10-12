@@ -76,9 +76,13 @@ export function resultTitle(opts: { asked: readonly Signal[]; startHere: boolean
   return opts.asked.slice(0, 3).map((k) => SIGNAL_SHORT[k]).join(" · ");
 }
 
-/** The skills cards a list of signal keys came from (the no-JavaScript page), in card order. */
+/**
+ * The skills cards a list of signal keys came from (the no-JavaScript page, shared links), in card order. A card counts
+ * when its lead signal is there, so `?topics=accessibility,design-systems` reads "Accessibility · Design systems"
+ * without also naming the card's supporting signals.
+ */
 export function topicsToLabels(signals: readonly string[]): string[] {
-  return TOPICS.filter((t) => t.signals.every((s) => signals.includes(s))).map((t) => t.label);
+  return TOPICS.filter((t) => signals.includes(t.signals[0]!)).map((t) => t.label);
 }
 
 /** Under the results title: who chose the sheets, so the reader knows the words are mine. */

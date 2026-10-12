@@ -123,8 +123,11 @@ function termRegex(term: string): RegExp {
 const KEY_REGEX = Object.fromEntries(
   (Object.keys(KEYS) as Signal[]).map((sig) => [sig, KEYS[sig].map(termRegex)]),
 ) as Record<Signal, RegExp[]>;
+/** Hints for shown projects only: a hidden project (content/index.ts) is never recognised from a brief's words. */
 const HINT_REGEX = Object.fromEntries(
-  Object.entries(PROJECT_HINTS).map(([slug, terms]) => [slug, terms.map(termRegex)]),
+  Object.entries(PROJECT_HINTS)
+    .filter(([slug]) => projects.some((p) => p.slug === slug))
+    .map(([slug, terms]) => [slug, terms.map(termRegex)]),
 ) as Record<string, RegExp[]>;
 
 function count(text: string, patterns: RegExp[]): number {
