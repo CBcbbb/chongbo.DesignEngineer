@@ -149,7 +149,7 @@
     --card-w: 836px;
     --card-h: 684px;
     /* what the home page puts round a printed card: the results title row, the sheet's top line and its foot */
-    --card-frame: 116px;
+    --card-frame: 140px;
   }
   .cf-sheet.is-card,
   .nk-sheet.is-card {

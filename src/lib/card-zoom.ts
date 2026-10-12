@@ -5,7 +5,7 @@
  * sheet's frame and into the room across; it never enlarges, and never goes below MIN, so text stays readable (on a
  * screen shorter than that the page scrolls a little instead).
  */
-export const ARTBOARD = { w: 836, h: 684, frame: 116, min: 0.8, max: 1, from: 761 } as const;
+export const ARTBOARD = { w: 836, h: 684, frame: 140, min: 0.8, max: 1, from: 761 } as const;
 
 export function cardZoom(viewHeight: number, room: number): number {
   const fit = Math.min((viewHeight - ARTBOARD.frame) / ARTBOARD.h, room / ARTBOARD.w, ARTBOARD.max);

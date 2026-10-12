@@ -608,7 +608,7 @@
      line is the case-file card on its artboard (--card-w x --card-h, tokens.css), scaled as on its case page. */
   .results {
     --rhead-h: 40px;
-    --sheet-band: 28px;
+    --sheet-band: 40px;
     margin-top: var(--s6);
     padding-top: 0;
     /* 8px from the top of the screen: the page's own scroll padding (24px, globals.css) less 16px */
@@ -706,7 +706,8 @@
     flex: none;
     height: var(--sheet-band);
     margin: 0;
-    padding: 0 4px;
+    /* 26px in from the paper's edge, with 12px of paper above and below the words */
+    padding: 0 12px;
     border-top: 0;
     align-items: center;
   }

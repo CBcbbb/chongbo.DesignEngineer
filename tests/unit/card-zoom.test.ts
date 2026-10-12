@@ -3,7 +3,7 @@ import { ARTBOARD, CARD_ZOOM_SCRIPT, cardZoom } from "@/lib/card-zoom";
 
 describe("card zoom", () => {
   it("is 1 when the artboard and the sheet's frame fit the screen", () => {
-    expect(cardZoom(800, 1200)).toBe(1);
+    expect(cardZoom(ARTBOARD.h + ARTBOARD.frame, 1200)).toBe(1);
     expect(cardZoom(1080, 1600)).toBe(1);
   });
   it("fits a shorter screen exactly", () => {
