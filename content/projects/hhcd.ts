@@ -54,12 +54,12 @@ export const hhcd: Project = {
   sections: [
     {
       id: "brief",
-      nav: "Accessibility first",
+      nav: "Audience and accessibility",
       part: "voice",
       kind: "problem",
       title: "Accessibility as the starting point",
       body: [
-        "VOICE was an EU-funded arts research project, run by seven organisations in several countries. I worked on it as a research assistant at Brunel University. Its audience was broad: artists, researchers, community groups and policy makers.",
+        "VOICE was an EU-funded arts research project, run by seven organisations in several countries. I worked on it as a research assistant at Brunel University. Its audience was broad: artists, researchers, community groups and policy makers. With an audience that broad, accessibility had to be part of the platform from the start.",
       ],
       signals: ["judgement", "accessibility", "research"],
       capabilities: ["E"],
@@ -75,12 +75,12 @@ export const hhcd: Project = {
     },
     {
       id: "no-borders",
-      nav: "Network map",
+      nav: "From map to network",
       part: "voice",
       kind: "decision",
       title: "A network instead of a geographical map",
       body: [
-        "To show all the work together, we first placed communities and projects on a map, grouped by country. But location wasn't what linked the work: people connected through shared projects, methods and partners, and grouping them by country set them apart. In the network, people, projects, partners and methods connect directly.",
+        "VOICE wanted to show its communities and projects together, as one connected body of work. Because the project spanned several countries, we started with the obvious approach: a geographic map. But VOICE was built around communities, and a community is held together by shared projects, methods and partners, not by borders. So we moved to a network with no hierarchy – a rhizomatic map – where people, projects, partners and methods connect directly, as equals.",
       ],
       signals: ["judgement", "data", "research"],
       capabilities: ["D"],
@@ -108,7 +108,7 @@ export const hhcd: Project = {
     },
     {
       id: "sample-data",
-      nav: "Prototypes on sample data",
+      nav: "First prototype",
       part: "voice",
       kind: "decision",
       title: "A first prototype in Obsidian's graph view",
@@ -170,7 +170,7 @@ export const hhcd: Project = {
     },
     {
       id: "four-types",
-      nav: "Collecting the data",
+      nav: "Data model",
       part: "voice",
       kind: "decision",
       title: "Why the data is collected by person but mapped by type",
@@ -283,7 +283,7 @@ export const hhcd: Project = {
     },
     {
       id: "guide",
-      nav: "Guide inside the map",
+      nav: "In-map guide",
       surface: "dark",
       part: "hhcd",
       kind: "decision",
