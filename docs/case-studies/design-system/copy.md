@@ -19,7 +19,7 @@ Logistics infrastructure company
 The shared colours and components behind three products, and every customer's brand on top.
 
 - **Role:** Design Engineer · Figma library, colour scales and code · on my own
-- **Outcome:** Three products that read as one company again, in any customer's brand. `[the last clause once the fix ships]`
+- **Outcome:** One design system across the company's products, which every client and user can customise on top.
 - **What this shows:** Design system (C) · Accessibility in the colours (E) · Figma to code (B)
 
 ## Part 1 · One system for every product and client
