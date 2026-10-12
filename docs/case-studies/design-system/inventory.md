@@ -24,7 +24,7 @@ The employer, its products, customers, storage technology, package name, init sc
 | Title | One Design System, Five Products (alternatives below) |
 | Line | `[step 4]` What it is: the colours, components and themes behind five products and every customer's brand |
 | Role | Design Engineer |
-| roleSplit | one person: Figma library, colour scales, CSS and the shared package, on my own `[confirm the package and init script]` |
+| roleSplit | one person: Figma library, colour scales and CSS, on my own (the package and init script are not claimed) |
 | Outcome | `[step 4]` Five products that look like one company; customers rebrand without losing contrast `[the second half only once the fix ships]` |
 | What this shows | Systems and reuse (C) · Contrast by construction (E) · Figma to code (B) |
 
@@ -45,10 +45,10 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 | # | id | Heading (the claim) | Caps | ux | engineer | web | Evidence | Gaps |
 |---|---|---|---|---|---|---|---|---|
 | | | **Part 1 · Five products** | | | | | | |
-| 01.1 | `drift` | Five products, one shared colour | C | in | in | · | Drawn: five product frames side by side, the same brand colour, everything else different | `[what differed most]` |
-| 01.2 | `extend-shadcn` | Extending shadcn instead of replacing it | C B | in | in | · | Code: shadcn's own tokens, then what the system adds on top (scales, roles, dark, customer layer) | `[what extending cost]` |
+| 01.1 | `drift` | The same colours, five different products | C | in | in | · | Drawn: one screen five times, the same palette in each, with different corner radii, buttons, type and spacing | |
+| 01.2 | `extend-shadcn` | Extending shadcn instead of replacing it | C B | in | in | · | Code: shadcn's own tokens, then what the system adds in shadcn's own naming (status roles, scales, dark, customer layer) | `[confirm: copies drifted]` |
 | | | **Part 2 · Figma to code** | | | | | | |
-| 02.1 | `figma-first` | Components and colours drawn in Figma first | C B D | in | in | lead | Rebuilt Figma: component sets with variants and states (button, input, select, pagination); a switch to the colour page | `[variables in the original?]` |
+| 02.1 | `figma-first` | Components and colours drawn in Figma first | C B D | in | in | lead | Rebuilt Figma: component sets with variants and states (button, input, select, pagination); a switch to the variables (Light / Dark modes) | |
 | 02.2 | `three-layers` | Three layers: shared, product, customer | C B | · | lead | in | Diagram, redrawn: the shared package → one product's overrides (real kinds: a dark-mode menu fix derived from tokens, no raw values) → a customer's colour, font and button shape | |
 | | | **Part 3 · Readable in any theme** | | | | | | |
 | 03.1 | `roles` | Components ask for a role, not a colour | C E | in | in | in | Colour specimens: six hues × five steps, each step labelled with its job (surface, border, charts, text on white, text on tint) | |
@@ -56,7 +56,7 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 | 03.3 | `dark` | Dark mode designed step by step | E D | in | · | in | The specimen with a Light / Dark switch: borders lose chroma so they don't glow, text steps get lighter | |
 | 03.4 | `customer-colour` | Readable with any customer's colour | D E B | lead | in | in | The signature module on one state: pale yellow, "Passed through" / "Derived" switch, ratios shown | `[the fix ships]` |
 | | | **Close** | | | | | | |
-| — | `outcome` | `[step 4]` | C | in | in | · | Statement card: results by part, role in full | `[a number, if any]` |
+| — | `outcome` | `[step 4]` | C | in | in | · | Statement card: results by part, role in full (no numbers: what happened) | |
 
 ### What each card proves on its own
 
@@ -93,7 +93,7 @@ Chongbo's real Figma file can't be shown, and the Figma connector can't open it 
 
 - **Colours page**: six hues × five steps with their roles; light and dark side by side.
 - **Components page**: component sets with variants and states, matching what the original has (buttons in six styles × three states, text input default / focus / error, select and multi-select, pagination item and set, header, breadcrumb).
-- **Variables**: one collection with Light and Dark modes, using the same role names as the CSS.
+- **Variables** (the original used them): one collection with Light and Dark modes, using the same role names as the CSS.
 
 Chongbo reviews and edits it in Figma, so it's his file to walk through in an interview. The page never presents it as the original; the work sheet's title says the system is rebuilt on an invented brand.
 
@@ -138,6 +138,10 @@ Copy may only use these, or what Chongbo adds later.
 - The decision he'd defend: building on shadcn, because the products were already using it.
 - He designed the system in Figma (palettes, component library, light and dark) and wrote the CSS.
 - Outcome: the products finally look like one company; the system is easier to control and to design for.
+- Before, the colours were the same in every product, but corner radii, buttons, type and, most visibly, spacing differed: the same palette gave five different-looking products.
+- The original Figma file used variables.
+- No numbers to state.
+- He doesn't recall who wrote the package and the init script: not claimed.
 - Responsive design was part of it (no specific evidence yet: body text only).
 - He will ship the contrast fix (`customer-colour`).
 - From Chongbo's check of the product code (12 Oct): both colour paths accept any colour; nothing checks contrast; the chosen colour is written straight into the primary tokens.
@@ -156,11 +160,15 @@ Copy may only use these, or what Chongbo adds later.
 ## Gaps
 
 1. `[the fix ships]`: `customer-colour` and the Outcome's second half are written as done only once the derivation is live in the product. Until then, they're drafted both ways.
-2. `[what differed most]` between the products before: greys, corner radii, type, spacing? One or two words; it sets the `drift` drawing.
-3. `[what extending cost]`: anything shadcn made harder (its token names, its neutral defaults)?
-4. `[variables in the original?]`: did the original Figma file use variables with Light and Dark modes? If not, the rebuild shows styles, not variables, so it matches what he did.
-5. `[confirm the package and init script]`: his too?
-6. `[a number, if any]`: all five products on the package? Components in the library? Customers who have rebranded?
+2. `[confirm: copies drifted]`: shadcn copies components into each app, so edits stay local and updates don't spread ([Vercel Academy](https://vercel.com/academy/shadcn-ui/updating-and-maintaining-components)). Was that why the five products drifted, and does the shared package ship the components as well as the tokens (the product's stylesheet scans the package's `dist` for classes)? If yes, it's the reason behind `extend-shadcn`.
+
+Resolved 12 Oct: what differed (radii, buttons, type, spacing); variables (yes); numbers (none); package and init script (not claimed).
+
+### What extending shadcn cost (from the CSS, for `extend-shadcn`)
+
+- shadcn's `--accent` is a quiet hover fill, not a brand accent. In dark mode a menu's highlight on `--secondary` was nearly invisible; the product layer re-derives it from the hover and active tokens.
+- shadcn's components carry their own radii (the select menu's `rounded-2xl`); matching them meant overrides per component through `data-slot` selectors, a few with `!important`.
+- shadcn has one status colour (`destructive`). Success, warning, info and categorical were added in its naming pattern (`-foreground`, plus `-container`, `-border`, `-text`), so the new roles read like shadcn's own.
 
 ## Shared files (proposed in `SHARED-CHANGES.md` at the build)
 
