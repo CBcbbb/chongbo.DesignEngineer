@@ -1460,7 +1460,8 @@
   display: block;
   width: 100%;
   height: auto;
-  border-radius: clamp(16px, 3vw, 28px);
+  /* small enough that the screen's own corners (the logo, the tabs) stay whole */
+  border-radius: clamp(6px, 1vw, 10px);
   box-shadow: 0 0 0 1px var(--cf-hair);
 }
 .cf-phone .cf-label {
