@@ -288,6 +288,8 @@ export function PrintedToOrder({ cards, media, whole = {}, labelledBy, topics = 
                 className="topic"
                 data-topic={t.id}
                 aria-pressed={picked.includes(t.id)}
+                // the name stays the button's name while its place in the rack is empty
+                aria-label={t.label}
                 onClick={(e) => toggle(t.id, e.currentTarget)}
               >
                 <small aria-hidden="true">{pad2(i + 1)}</small>

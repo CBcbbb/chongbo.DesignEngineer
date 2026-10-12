@@ -59,8 +59,8 @@
   list-style: none;
 }
 /* Each skill is a ticket: paper, a punched notch each side, a perforation line between the number and the name.
-   Picking one takes it out of the rack (a copy flies into the slot) and leaves its outline behind; the ticket itself
-   turns up on the paper as a chip with the same number. The rack never reflows. */
+   Picking one takes it out of the rack and leaves its outline behind; the ticket itself turns up on the paper with the
+   same number. The rack never reflows. */
 .topic {
   --focus: var(--ink);
   --notch: 7px;
@@ -123,14 +123,17 @@
   outline: 2px solid var(--focus);
   outline-offset: 3px;
 }
-/* taken: the ticket has gone into the machine; its place in the rack stays, drawn as an outline */
+/* taken: the ticket has gone onto the paper; its place in the rack stays, an empty dashed outline with the ticket's
+   number, so the rack never reflows. Pressing the empty place puts the ticket back. */
 .topic[aria-pressed="true"] {
   background: transparent;
   color: var(--ink-2);
   filter: none;
   transform: none;
-  box-shadow: 0 0 0 1.5px var(--rule) inset;
+  border: 1.5px dashed color-mix(in srgb, var(--ink-2) 55%, transparent);
+  padding: 7.5px 10.5px 8.5px;
   mask-image: none;
+  transition: border-color 0.2s;
 }
 .topic[aria-pressed="true"]::before {
   border-top-color: transparent;
@@ -139,10 +142,10 @@
   color: var(--ink-2);
 }
 .topic[aria-pressed="true"] b {
-  opacity: 0.55;
+  visibility: hidden;
 }
-.topic[aria-pressed="true"]:hover b {
-  opacity: 0.8;
+.topic[aria-pressed="true"]:hover {
+  border-color: var(--ink-2);
 }
 
 /* ---------- the printer ----------
