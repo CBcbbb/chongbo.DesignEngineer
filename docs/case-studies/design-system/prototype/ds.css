@@ -117,7 +117,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   .ds-fan { height: auto; display: grid; gap: 18px; }
   .ds-fan-card { position: static; width: 100%; transform: none !important; }
 }
-.mp { --mp-brand: #0b7a8f; --mp-ink: #18181b; --mp-dim: #6b6b74; --mp-rule: #e4e4e7; --mp-bg: #ffffff; --mp-tint: #e6f6f9;
+.mp { --mp-brand: #3453d3; --mp-ink: #18181b; --mp-dim: #6b6b74; --mp-rule: #e4e4e7; --mp-bg: #ffffff; --mp-tint: #f1f5ff;
   background: var(--mp-bg); color: var(--mp-ink); border-radius: 10px; overflow: hidden; font-family: var(--mp-font); font-size: 13px; min-width: 0; }
 .mp-bar { display: flex; align-items: center; gap: 8px; padding: var(--mp-pad); border-bottom: 1px solid var(--mp-rule); }
 .mp-logo { width: 14px; height: 14px; border-radius: var(--mp-logo-r); background: var(--mp-brand); flex: none; }
@@ -129,7 +129,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .mp-btn { font: inherit; font-weight: 600; font-size: 12px; padding: var(--mp-btn-pad); border-radius: var(--mp-r); background: var(--mp-btn-bg); color: var(--mp-btn-ink); border: 1px solid var(--mp-brand); text-transform: var(--mp-btn-case); letter-spacing: var(--mp-btn-track); white-space: nowrap; }
 .mp-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--mp-row-gap); }
 .mp-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: var(--mp-row-pad); border-radius: var(--mp-row-r); background: var(--mp-row-bg); border: var(--mp-row-border); }
-.mp-badge { font-size: 11px; font-weight: 600; padding: 3px 7px; border-radius: var(--mp-badge-r); background: var(--mp-tint); color: #0a5c6b; }
+.mp-badge { font-size: 11px; font-weight: 600; padding: 3px 7px; border-radius: var(--mp-badge-r); background: var(--mp-tint); color: #2c45ae; }
 .mp-badge.is-warn { background: #fdf3e0; color: #7a5200; }
 .mp-1 { --mp-font: "Geist", var(--sans); --mp-pad: 12px 14px; --mp-gap: 12px; --mp-logo-r: 4px; --mp-title: 600 15px/1.2 var(--mp-font); --mp-title-track: -0.01em;
   --mp-r: 8px; --mp-btn-pad: 6px 10px; --mp-btn-bg: var(--mp-brand); --mp-btn-ink: #fff; --mp-btn-case: none; --mp-btn-track: 0;
@@ -193,7 +193,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ui-alert { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; padding: 10px 12px; border-radius: var(--r); border: 1px solid var(--b-border); background: var(--b-bg); color: var(--b-fg); font: 400 12.5px/1.45 var(--font); }
 .ui-alert strong { font-weight: 600; }
 .ui-alert svg { width: 16px; height: 16px; margin-top: 1px; }
-.ui-link { color: var(--primary-text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.ui-link, .cf a.ui-link { color: var(--primary-text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .ui-pages { display: flex; gap: 4px; align-items: center; font: 500 12.5px/1 var(--font); }
 .ui-pages span { min-width: 28px; height: 28px; display: grid; place-items: center; border-radius: var(--r); color: var(--muted-fg); font-variant-numeric: tabular-nums; }
 .ui-pages span.is-on { background: var(--primary-container); color: var(--primary-container-fg); box-shadow: inset 0 0 0 1px var(--primary-border); }
