@@ -366,6 +366,20 @@
       <ul class="mp-list"><li><span>Run 4821</span><span class="mp-badge">On time</span></li><li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li><li><span>Run 4823</span><span class="mp-badge">On time</span></li><li><span>Run 4824</span><span class="mp-badge">On time</span></li></ul></div>`;
   });
 
+  /* ---------- 02.1: the library, shown in a design tool's window: layers, the review frame, variables with two modes ---------- */
+  const fx = document.getElementById("fx");
+  if (fx) {
+    const VARS = [["role/primary/fill", (m) => SCALES.light.brand["600"]], ["role/primary/text", (m) => SCALES[m].brand["600"]], ["role/success/text", (m) => SCALES[m].green["600"]], ["role/warning/text", (m) => SCALES[m].amber["700"]], ["role/destructive/text", (m) => SCALES[m].red["600"]]];
+    const list = fx.querySelector("#fx-vars"), img = fx.querySelector(".fx-img"), cap = fx.querySelector("#fx-cap"), pic = img.querySelector("img");
+    const show = (m) => {
+      list.innerHTML = VARS.map(([n, f]) => `<li><i style="background:${f(m)}"></i><span>${n}</span><code>${f(m).toUpperCase()}</code></li>`).join("");
+      img.dataset.mode = m; cap.textContent = `Review · ${m === "light" ? "Light" : "Dark"}`;
+      pic.alt = `The Figma library's components in the ${m} mode: buttons, inputs with focus and error, badges, alerts and pagination.`;
+    };
+    fx.addEventListener("change", (e) => { if (e.target.name === "fx-mode") show(e.target.value); });
+    show("light");
+  }
+
   /* ---------- 02.2: the system in code: the source (shared tokens, a product's globals, two components)
      beside what it renders, light and dark. Choosing a file lights up the parts it draws. ---------- */
   const codeSide = document.getElementById("code-side");
@@ -468,11 +482,14 @@ export const badgeVariants = cva(
         <div class="ds-f2c-row" data-part="badge"><span class="ui-badge r-success">Delivered</span><span class="ui-badge r-warning">Delayed</span><span class="ui-badge r-destructive">Failed</span><span class="ui-badge r-info">On the road</span><span class="ui-badge r-primary">Today</span></div>
       </div>`;
     const names = Object.keys(FILES);
-    codeSide.innerHTML = `<div class="ds-f2c-editor">
-        <div class="ds-f2c-tabs" role="tablist" aria-label="Source files">${names.map((n, i) => `<button type="button" role="tab" id="f2c-tab-${i}" aria-selected="${i === 0}" aria-controls="f2c-src" data-file="${n}">${n}</button>`).join("")}</div>
+    codeSide.innerHTML = `<div class="ds-f2c-editor fx-win is-dark">
+        <div class="fx-bar"><span class="fx-dots" aria-hidden="true"><i></i><i></i><i></i></span><div class="ds-f2c-tabs" role="tablist" aria-label="Source files">${names.map((n, i) => `<button type="button" role="tab" id="f2c-tab-${i}" aria-selected="${i === 0}" aria-controls="f2c-src" data-file="${n}">${n}</button>`).join("")}</div></div>
         <pre class="ds-f2c-src" id="f2c-src" role="tabpanel" tabindex="0"><code></code></pre>
       </div>
-      <div class="ds-f2c-out" aria-label="What this code renders"><span class="ds-f2c-cap">Rendered from this code</span>${pane("light")}${pane("dark")}</div>`;
+      <div class="ds-f2c-out fx-win" data-mode="light" aria-label="What this code renders">
+        <div class="fx-bar"><span class="fx-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="fx-file">Preview</span><span class="fx-seg" role="radiogroup" aria-label="Preview mode"><label><input type="radio" name="pv-mode" value="light" checked>Light</label><label><input type="radio" name="pv-mode" value="dark">Dark</label></span></div>
+        ${pane("light")}${pane("dark")}
+      </div>`;
     const brand = SCALES.light.brand["600"];
     codeSide.querySelectorAll(".ds-f2c-pane").forEach((p) => {
       const t = theme(brand, p.dataset.mode);
@@ -493,6 +510,7 @@ export const badgeVariants = cva(
       if (j >= 0) { e.preventDefault(); show(names[j]); codeSide.querySelector(`#f2c-tab-${j}`).focus(); }
     });
     show(names[0]);
+    codeSide.addEventListener("change", (e) => { if (e.target.name === "pv-mode") out.dataset.mode = e.target.value; });
     const stage = document.getElementById("f2c-stage");
     document.querySelectorAll('input[name="f2c"]').forEach((r) => r.addEventListener("change", () => { stage.dataset.show = r.value; }));
   }

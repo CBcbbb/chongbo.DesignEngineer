@@ -164,35 +164,78 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-f2c-stage[data-show="figma"] .ds-f2c-code { display: none; }
 .ds-f2c-stage[data-show="code"] .ds-f2c-figma { display: none; }
 @media (max-width: 760px) { .ds-f2c-stage[data-show="figma"] { overflow-x: auto; } .ds-f2c-figma { min-width: 760px; } }
-/* Code: the source beside what it renders */
-.ds-f2c-code { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); background: #0d1117; min-height: 420px; }
-.ds-f2c-editor { display: grid; grid-template-rows: auto 1fr; min-width: 0; border-right: 1px solid #222a35; }
-.ds-f2c-tabs { display: flex; gap: 2px; padding: 8px 10px 0; background: #0a0d12; border-bottom: 1px solid #222a35; overflow-x: auto; }
-.ds-f2c-tabs button { font: 500 12px/1 var(--mono); color: #8b949e; background: none; border: 0; padding: 9px 12px 10px; border-radius: 6px 6px 0 0; cursor: pointer; white-space: nowrap; }
-.ds-f2c-tabs button[aria-selected="true"] { color: #e6edf3; background: #0d1117; box-shadow: inset 0 2px 0 var(--ds-mark), 1px 0 0 #222a35, -1px 0 0 #222a35; }
+/* windows: one chrome for the design tool, the editor and the preview (light by default, .is-dark for the editor) */
+.fx-win { --w-bg: #ffffff; --w-bar: #f4f4f2; --w-line: #e4e4e0; --w-ink: #1c1c1a; --w-dim: #7a7a73; background: var(--w-bg); color: var(--w-ink); border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px rgb(0 0 0 / .08), 0 24px 50px -24px rgb(0 0 0 / .4); font: 400 12px/1.35 "Geist", var(--sans); }
+.fx-win.is-dark { --w-bg: #0d1117; --w-bar: #0a0d12; --w-line: #222a35; --w-ink: #e6edf3; --w-dim: #8b949e; box-shadow: 0 0 0 1px rgb(255 255 255 / .06), 0 24px 50px -24px rgb(0 0 0 / .6); }
+.fx-bar { display: flex; align-items: center; gap: 12px; height: 38px; padding: 0 12px; background: var(--w-bar); border-bottom: 1px solid var(--w-line); }
+.fx-dots { display: flex; gap: 6px; } .fx-dots i { width: 10px; height: 10px; border-radius: 50%; background: color-mix(in srgb, var(--w-dim) 40%, transparent); }
+.fx-file { font-weight: 500; color: var(--w-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fx-pages { margin-left: auto; display: flex; gap: 2px; background: color-mix(in srgb, var(--w-dim) 14%, transparent); border-radius: 7px; padding: 2px; }
+.fx-pages > * { padding: 3px 9px; border-radius: 5px; color: var(--w-dim); font-weight: 500; }
+.fx-pages b { background: var(--w-bg); color: var(--w-ink); box-shadow: 0 1px 2px rgb(0 0 0 / .08); }
+.fx-seg { margin-left: auto; display: inline-flex; gap: 2px; background: color-mix(in srgb, var(--w-dim) 14%, transparent); border-radius: 7px; padding: 2px; }
+.fx-seg label { position: relative; padding: 3px 9px; border-radius: 5px; color: var(--w-dim); font-weight: 500; cursor: pointer; }
+.fx-seg input, .fx-modes input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.fx-seg label:has(input:checked) { background: var(--w-bg); color: var(--w-ink); box-shadow: 0 1px 2px rgb(0 0 0 / .1); }
+.fx-seg label:has(input:focus-visible), .fx-modes label:has(input:focus-visible) { outline: 2px solid var(--ds-mark); outline-offset: 1px; }
+
+/* 02.1: the library in a design tool: layers | canvas with the review frame | variables with two modes */
+.fx-body { display: grid; grid-template-columns: 150px minmax(0, 1fr) 196px; min-height: 340px; }
+.fx-layers, .fx-vars { padding: 14px 12px; display: grid; align-content: start; gap: 8px; background: var(--w-bg); }
+.fx-layers { border-right: 1px solid var(--w-line); } .fx-vars { border-left: 1px solid var(--w-line); }
+.fx-layers > small, .fx-vars > small { font: 500 10px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--w-dim); }
+.fx-layers > small:last-child { text-transform: none; letter-spacing: 0; font: 400 11px/1.4 "Geist", var(--sans); margin-top: 6px; }
+.fx-layers ul, .fx-vars ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.fx-layers li { display: flex; align-items: center; gap: 8px; padding: 6px 6px; border-radius: 6px; }
+.fx-layers li:first-child { background: color-mix(in srgb, #3453d3 9%, #fff); color: #2c45ae; font-weight: 500; }
+.fx-layers li em { width: 9px; height: 9px; transform: rotate(45deg); border: 1.5px solid currentColor; border-radius: 1px; opacity: .8; }
+.fx-layers li span { margin-left: auto; font: 500 10.5px/1 var(--mono); color: var(--w-dim); }
+.fx-canvas { position: relative; display: grid; place-items: center; padding: 28px 22px; background: #ecebe7 radial-gradient(circle, #d6d5cf 1px, transparent 1.2px) 0 0 / 16px 16px; min-width: 0; }
+.fx-frame { margin: 0; width: 100%; display: grid; gap: 6px; }
+.fx-frame figcaption { font: 500 10.5px/1 "Geist", var(--sans); color: #6f6f68; }
+.fx-img { position: relative; overflow: hidden; aspect-ratio: 734 / 447; border-radius: 4px; box-shadow: 0 0 0 1px rgb(0 0 0 / .08), 0 10px 24px -14px rgb(0 0 0 / .35); outline: 1.5px solid #3453d3; outline-offset: 3px; }
+.fx-img img { position: absolute; top: 0; left: 0; width: 200%; height: 100%; max-width: none; transition: transform .45s var(--ease); }
+.fx-img[data-mode="dark"] img { transform: translateX(-50%); }
+.fx-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; background: color-mix(in srgb, var(--w-dim) 14%, transparent); border-radius: 7px; padding: 2px; }
+.fx-modes label { position: relative; text-align: center; padding: 5px 0; border-radius: 5px; color: var(--w-dim); font-weight: 500; cursor: pointer; }
+.fx-modes label:has(input:checked) { background: var(--w-bg); color: var(--w-ink); box-shadow: 0 1px 2px rgb(0 0 0 / .1); }
+.fx-vars li { display: grid; grid-template-columns: 14px minmax(0, 1fr); column-gap: 8px; padding: 5px 2px; border-bottom: 1px solid color-mix(in srgb, var(--w-line) 60%, transparent); }
+.fx-vars li i { grid-row: span 2; width: 14px; height: 14px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .1); align-self: center; transition: background-color .3s ease; }
+.fx-vars li span { font: 400 11px/1.3 var(--mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fx-vars li code { font: 500 10.5px/1.3 var(--mono); color: var(--w-dim); }
+.fx-coll { margin: 0; font: 400 11px/1.6 var(--mono); color: var(--w-ink); }
+@media (max-width: 760px) { .fx-body { grid-template-columns: minmax(0, 1fr); } .fx-layers { display: none; } .fx-vars { border-left: 0; border-top: 1px solid var(--w-line); } .fx-pages { display: none; } }
+
+/* 02.2: the editor, with a small preview window floating over its right edge */
+.ds-f2c-stage[data-show="code"] { overflow: visible; box-shadow: none; border-radius: 0; padding: 10px 0 18px; }
+.ds-f2c-code { position: relative; display: block; }
+.ds-f2c-editor { width: 60%; }
+.ds-f2c-tabs { display: flex; gap: 2px; align-self: stretch; align-items: flex-end; overflow-x: auto; }
+.ds-f2c-tabs button { font: 500 12px/1 var(--mono); color: #8b949e; background: none; border: 0; padding: 9px 11px 10px; border-radius: 6px 6px 0 0; cursor: pointer; white-space: nowrap; }
+.ds-f2c-tabs button[aria-selected="true"] { color: #e6edf3; background: #0d1117; box-shadow: inset 0 2px 0 var(--ds-mark); }
 .ds-f2c-tabs button:focus-visible { outline: 2px solid var(--ds-mark); outline-offset: -2px; }
-.ds-f2c-src { margin: 0; padding: 14px 0; overflow: auto; font: 400 12.5px/1.6 var(--mono); color: #e6edf3; counter-reset: ln; tab-size: 2; }
+.ds-f2c-src { margin: 0; padding: 14px 0; overflow: auto; font: 400 12.5px/1.6 var(--mono); color: #e6edf3; counter-reset: ln; tab-size: 2; min-height: 360px; }
 .ds-f2c-src:focus-visible { outline: 2px solid var(--ds-mark); outline-offset: -2px; }
 .ds-f2c-src .ln { display: block; padding: 0 16px 0 52px; position: relative; white-space: pre; }
 .ds-f2c-src .ln::before { counter-increment: ln; content: counter(ln); position: absolute; left: 0; width: 36px; text-align: right; color: #484f58; }
-.ds-f2c-src .c { color: #8b949e; font-style: italic; }
-.ds-f2c-src .s { color: #a5d6ff; }
-.ds-f2c-src .k { color: #ff7b72; }
-.ds-f2c-src .v { color: #d2a8ff; }
-.ds-f2c-src .p { color: #79c0ff; }
-.ds-f2c-src .t { color: #7ee787; }
-.ds-f2c-src .n { color: #ffa657; }
+.ds-f2c-src .c { color: #8b949e; font-style: italic; } .ds-f2c-src .s { color: #a5d6ff; } .ds-f2c-src .k { color: #ff7b72; } .ds-f2c-src .v { color: #d2a8ff; } .ds-f2c-src .p { color: #79c0ff; } .ds-f2c-src .t { color: #7ee787; } .ds-f2c-src .n { color: #ffa657; }
 .ds-f2c-src .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; box-shadow: 0 0 0 1px rgb(255 255 255 / .25); }
-.ds-f2c-out { display: grid; grid-template-rows: auto 1fr 1fr; min-width: 0; }
-.ds-f2c-cap { font: 500 11.5px/1 var(--mono); color: #8b949e; padding: 14px 16px 10px; background: #0a0d12; border-bottom: 1px solid #222a35; }
-.ds-f2c-pane { background: var(--bg); color: var(--fg); padding: 14px 16px; display: grid; align-content: center; gap: 10px; }
-.ds-f2c-mode { font: 500 11px/1 var(--mono); color: var(--muted-fg); }
+.ds-f2c-out { position: absolute; right: 0; top: 56px; width: 44%; }
+.ds-f2c-out .fx-file { font-weight: 600; }
+.ds-f2c-out[data-mode="light"] .ds-f2c-pane[data-mode="dark"], .ds-f2c-out[data-mode="dark"] .ds-f2c-pane[data-mode="light"] { display: none; }
+.ds-f2c-out[data-mode="dark"] { --w-bar: #18181b; --w-line: #2d2d31; --w-ink: #fafafa; --w-dim: #a1a1aa; --w-bg: #09090b; }
+.ds-f2c-pane { background: var(--bg); color: var(--fg); padding: 18px; display: grid; gap: 12px; }
+.ds-f2c-mode { display: none; }
 .ds-f2c-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; transition: opacity .2s ease; }
 .ds-f2c-pane .ui-btn { font-size: 12px; padding: 6px 10px; border-radius: 6px; }
-.ds-f2c-pane .ui-input { font-size: 12px; padding: 7px 9px; border-radius: 6px; width: min(100%, 220px); }
+.ds-f2c-pane .ui-input { font-size: 12px; padding: 7px 9px; border-radius: 6px; width: min(100%, 240px); }
 .ds-f2c-pane .ui-badge { font-size: 11px; padding: 2px 7px; }
-.ds-f2c-out[data-part="btn"] .ds-f2c-row:not([data-part="btn"]), .ds-f2c-out[data-part="badge"] .ds-f2c-row:not([data-part="badge"]) { opacity: .28; }
-@media (max-width: 760px) { .ds-f2c-code { grid-template-columns: minmax(0, 1fr); } .ds-f2c-editor { border-right: 0; border-bottom: 1px solid #222a35; } .ds-f2c-src { max-height: 320px; } }
+.ds-f2c-out[data-part="btn"] .ds-f2c-row:not([data-part="btn"]), .ds-f2c-out[data-part="badge"] .ds-f2c-row:not([data-part="badge"]) { opacity: .25; }
+@media (max-width: 760px) { .ds-f2c-editor { width: 100%; } .ds-f2c-out { position: relative; top: auto; width: auto; margin: -24px 12px 0; } .ds-f2c-src { max-height: 320px; min-height: 0; } }
+
+/* Problem / Solution, beside a card's index */
+.ds-kind { display: inline-block; margin-left: 8px; font: 500 10.5px/1 var(--mono); letter-spacing: .04em; padding: 4px 7px 3px; border-radius: 999px; box-shadow: inset 0 0 0 1px currentColor; color: var(--case-dim); vertical-align: 1px; }
+.ds-kind.is-solution { color: var(--on-accent, #fff); background: var(--accent, #1c1b19); box-shadow: none; }
 
 /* ---------- the invented product's components (01.2, the work, 01.3, 02.4) ---------- */
 .ui { --r: 0.5rem; --font: "Geist", var(--sans); font-family: var(--font); color: var(--fg); }
@@ -569,3 +612,4 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 /* the showcase near the end: say plainly that it is a rebuild with invented data */
 .ds-work-note { max-width: 62ch; margin: 10px 0 0; font: 400 15px/1.5 var(--sans); color: var(--on-field-2); }
 .cf-work-head:has(.ds-work-note) { display: block; }
+.ds-f2c > *, .ds-f2c-stage, .ds-f2c-code, .ds-fx > *, .fx-win { min-width: 0; max-width: 100%; }
