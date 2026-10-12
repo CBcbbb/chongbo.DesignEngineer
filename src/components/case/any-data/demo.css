@@ -430,31 +430,23 @@
   gap: var(--s3, 12px);
   width: 100%;
 }
+/* the confidentiality note is the title's subline: one quiet line, not a second framed box over the panel */
 .dm-flag {
   display: flex;
   gap: 8px;
   align-items: flex-start;
-  /* as wide as the panel under it, so the two share one right edge */
-  justify-self: stretch;
+  justify-self: start;
   max-width: 100%;
   margin: 0;
-  padding: 7px 12px 7px 10px;
-  border: 1px solid var(--ad-line);
-  border-radius: 8px;
-  background: var(--ad-bg);
-  font-size: 13px;
+  font-size: 13.5px;
   line-height: 1.45;
-  color: var(--ad-body);
-}
-.dm-flag strong {
-  font-weight: 600;
-  color: var(--ad-ink);
+  color: var(--case-dim);
 }
 .dm-flag svg {
   flex: none;
   width: 15px;
   height: 15px;
-  margin-top: 2px;
+  margin-top: 3px;
   fill: none;
   stroke: var(--ad-brand);
   stroke-width: 1.5;
@@ -489,8 +481,9 @@
 
 /* wide but short windows (1280 × 720): the work stays inside one screen */
 @media (min-width: 761px) and (max-height: 800px) {
-  .cf-work {
-    gap: 0.6rem;
+  [data-palette="components-for-any-data"] .cf-work {
+    --cf-pad-y: 1.25rem;
+    gap: 0.5rem;
   }
   .cf-work .dm-wrap {
     gap: 8px;

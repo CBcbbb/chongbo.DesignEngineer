@@ -272,6 +272,39 @@
   max-width: 60ch;
   color: var(--case-body);
 }
+/* a paragraph that asks questions (Section.asks): the lead, then each question numbered on its own rule */
+.cf-body p.cf-asks {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.55rem 1.5rem;
+  max-width: none;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.cf-asks-lead {
+  font-size: 0.9375rem;
+  color: var(--case-dim);
+}
+.cf-asks-q {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--case-ink);
+  font-size: clamp(1.05rem, 1.55vw, 1.2rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+  color: var(--case-ink);
+}
+.cf-asks-q::before {
+  content: attr(data-n);
+  font: 500 0.75rem/1 var(--mono);
+  letter-spacing: 0;
+  color: var(--accent);
+}
 .cf-evidence {
   display: grid;
   gap: 1.25rem;

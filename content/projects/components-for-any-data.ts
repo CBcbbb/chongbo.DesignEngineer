@@ -45,9 +45,10 @@ export const anyData: Project = {
       part: "model",
       layout: "stack",
       title: "Every customer's data has a different shape",
+      asks: 1,
       body: [
-        "Our platform carries customers' operational data as live streams, and customers build their own products on it, picking components from our component store. But the components in the store only showed fixed values from their settings, so no customer could see what their own data would look like in one. One set of sample data couldn't cover every case either, as each customer names and formats the same data differently.",
-        "So I started from two questions: can we connect live streams to the store's components, and what does a component need to know about its data?",
+        "Our platform carries customers' operational data as live streams, and customers build their own products on it, picking components from our component store. But the components only showed fixed values in their settings, so no customer could see what their own data would look like in one. One set of sample data couldn't cover every case either, as each customer names and formats the same data differently.",
+        "So I started from two questions: Can we connect live streams to the store's components? What does a component need to know about its data?",
       ],
       signals: ["data", "design-eng-gap", "judgement"],
       capabilities: ["C"],
@@ -95,8 +96,8 @@ export const anyData: Project = {
       layout: "stack",
       title: "Streams grouped by fit, judged on the server",
       body: [
-        "The first answer was to list every stream in the organisation by row count. A test organisation already had 74, most didn't fit, and users found out after reading a stream's rows.",
-        "I designed the list to group streams by fit: \"Fits\", then \"Partly fits · 1 of 2 fields\", then Other, searchable. The browser can't judge fit, because a stream record carries no field names, so I designed one endpoint on the server to judge it: first from the newest entry, later from a stored field profile, with the same interface either way.",
+        "The first answer listed every stream by row count. A test organisation already had 74, and most didn't fit: users only found out after reading the rows.",
+        "I grouped the list by fit instead. The browser can't judge fit, as a stream record carries no field names, so I designed one endpoint on the server to judge it.",
       ],
       signals: ["data-architecture", "judgement", "end-to-end"],
       capabilities: ["B", "D"],

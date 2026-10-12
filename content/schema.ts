@@ -249,6 +249,12 @@ export type Section = {
   keys?: string[];
   /** Case-file template: show the body as a numbered list of short points (e.g. results), set large. */
   bodyStyle?: "list";
+  /**
+   * Case-file template: the index of a body paragraph that asks questions, written as a lead ending in a colon and
+   * then the questions, each ending in "?". It is set as the lead and a numbered row of questions; the words are
+   * unchanged, so anything reading `body` still reads one paragraph.
+   */
+  asks?: number;
   /** Case-file template: the card's short name in the contents. Defaults to the title. */
   nav?: string;
   /** Case-file template: the sheet's surface. `paper` for reading (default); `dark` for the work in motion and the ending. */

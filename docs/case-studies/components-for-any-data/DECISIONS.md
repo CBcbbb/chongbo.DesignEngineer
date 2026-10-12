@@ -57,3 +57,12 @@ No words changed. At 1280 × 720 02.1 is 5px over one screen; every other card f
 - **Partly fits made usable.** A stream that partly fits has no field of the right type for a required role, so no choice can fix it. The chart now says so ("partner_carrier.feed has no number field for value") and offers the stream that fits; that role's select shows "No number field" and is locked; fields of the wrong type are listed but disabled, with their type. The same rules apply on 02.2.
 - **Panel tidied (Chongbo: alignment, spacing, fewer words).** One spacing scale (4/8/12/16), every control 32px and full width, section headings one height. Cut: the toolbar's stream name, "Totals by category", each role's "text · required" (only "optional" on period), the notes under selects, and the empty states' second sentence. A note above the panel: "Simplified rebuild. The product is confidential, so this uses mock data and is for demonstration only."
 - **Confidence tags** removed from the work panel (the defaults are already chosen); kept on 02.2, where they are the point, as a plain word tag (exact, known, close) without the dots.
+
+## 12 October 2026 · one screen after a contents jump
+
+A contents link lands a card 48px below the top of the window, so at 1280 × 720 each card has 672px. The work, 01.1 and 02.1 now fit it; every card does.
+
+- **01.2 Code view.** The code sits inside the pane (no bleed), set at 36 columns and sized to the pane's width, so no line is cut or scrolled. Contract and code share one cell, so switching views never moves the card. Role names carry their role colours; a file-name bar sits on top.
+- **The work.** The confidentiality line is the title's subline, not a framed box. "Simplified rebuild." cut (Chongbo): the title already says "rebuilt for this case study".
+- **01.1.** The claim on the left, the context beside it, the key over the strips. The two questions are their own row after the strips: the lead, then "1 Can we connect live streams to the store's components?" and "2 What does a component need to know about its data?" (Chongbo: capitals, no "and"). Body text is Chongbo's own wording. `Section.asks` sets a body paragraph this way without changing its words.
+- **02.1.** Copy cut (Chongbo approved): the group names and the two phases are no longer repeated in the text, as the list and the band already show them. Equal halves again; both paragraphs are three lines.

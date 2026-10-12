@@ -3,7 +3,7 @@
  * content"). The shared card puts the claim and the reasoning side by side over the evidence; here, on wide sheets,
  * the head is unwrapped (display: contents) and its parts placed on the card's own grid:
  *
- *   01.1 Different shapes      poster: the claim, its context in two columns, the strips running off the edge, the question as the turn
+ *   01.1 Different shapes      poster: the claim beside its context, the strips running off the edge, the two questions as the turn
  *   01.2 A shape, not names    split sheet: the reasoning on the left, the contract on a full-height datasheet pane
  *   01.3 One pipeline          schematic: the layers left to right across the card, the reasoning at its foot in two columns
  *   02.1 Ranked by fit         halves: under the claim, the card splits into before and after, each paragraph over its half
@@ -58,15 +58,9 @@
     order: 1;
     margin-top: 0.25rem;
   }
-  [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
+  [data-palette="components-for-any-data"] #shapes .cf-asks {
     order: 2;
     margin-top: 0.25rem;
-    padding-top: 0.9rem;
-    border-top: 2px solid var(--case-ink);
-    font-size: 1.125rem;
-    font-weight: 500;
-    line-height: 1.35;
-    color: var(--case-ink);
   }
 }
 
@@ -106,45 +100,41 @@
     padding: 0;
   }
 
-  /* ---------- 01.1 poster: the claim, its context set as a deck in two columns, the strips, then the two questions
-     as the turn ---------- */
+  /* ---------- 01.1 poster: the claim beside its context, the strips, then the two questions as the turn ---------- */
   [data-palette="components-for-any-data"] #shapes {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     grid-template-areas:
-      "meta"
-      "h3"
-      "p1"
-      "ev"
-      "p2";
+      "meta meta"
+      "h3   p1"
+      "ev   ev"
+      "p2   p2";
+    column-gap: clamp(1.75rem, 3.6vw, 3rem);
   }
   [data-palette="components-for-any-data"] #shapes .cf-h3 {
-    max-width: 11.5em;
     margin-top: 1.25rem;
-    font-size: clamp(2.25rem, 4.6vw, 3.5rem);
+    font-size: clamp(2rem, 3.6vw, 2.9rem);
     line-height: 0.98;
     letter-spacing: -0.05em;
   }
-  /* one paragraph, two columns that end together: the context reads as one block, not a wall down one side */
+  /* the context starts on the claim's first line */
   [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(1) {
-    margin-top: clamp(1.25rem, 2.6vw, 1.85rem);
-    columns: 2;
-    column-gap: clamp(2rem, 4.5vw, 3.75rem);
-    column-fill: balance;
+    align-self: start;
+    margin-top: 1.25rem;
+    font-size: 0.9375rem;
+    line-height: 1.55;
   }
   [data-palette="components-for-any-data"] #shapes .cf-evidence {
     margin-top: clamp(1.5rem, 3vw, 2.25rem);
   }
-  /* the question closes the card, after the strips that raise it, and leads into 01.2 */
-  [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
+  /* the turn: the lead beside the two questions, each on its own rule, so the pair costs one row */
+  [data-palette="components-for-any-data"] #shapes .cf-asks {
+    grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(1.25rem, 2.6vw, 2.25rem);
     margin-top: clamp(1.25rem, 2.6vw, 1.75rem);
-    padding-top: clamp(1rem, 2vw, 1.25rem);
-    border-top: 2px solid var(--case-ink);
-    font-size: clamp(1.2rem, 1.9vw, 1.35rem);
-    font-weight: 500;
-    line-height: 1.3;
-    letter-spacing: -0.02em;
-    text-wrap: balance;
-    color: var(--case-ink);
+  }
+  [data-palette="components-for-any-data"] #shapes .cf-asks-lead {
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--case-rule);
   }
   /* the strips run off the card's right edge, like streams that carry on */
   [data-palette="components-for-any-data"] #shapes .ac-strip {
@@ -156,6 +146,9 @@
      full width and padding */
   [data-palette="components-for-any-data"] #shapes .ac-strip dl {
     margin-right: var(--cf-pad);
+  }
+  [data-palette="components-for-any-data"] #shapes .ac-cell.is-missing dd {
+    white-space: nowrap;
   }
   [data-palette="components-for-any-data"] #shapes .cf-evidence::before {
     inset: -1.25rem calc(-1 * var(--cf-pad)) 0;
@@ -357,7 +350,19 @@
   }
 }
 
-/* short windows: the poster and the schematic step their type down so each card stays near one screen */
+/* tablets: the lead goes above the two questions, so each question keeps two full lines */
+@container ad-sheets (min-width: 640px) and (max-width: 760px) {
+  [data-palette="components-for-any-data"] #shapes .cf-asks {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  [data-palette="components-for-any-data"] #shapes .cf-asks-lead {
+    grid-column: 1 / -1;
+    padding-top: 0;
+    border-top: 0;
+  }
+}
+
+/* short windows: the poster and the schematic step their type down so each card stays inside one screen */
 @container ad-sheets (min-width: 640px) {
   @media (max-height: 920px) {
     [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(1) {
@@ -366,14 +371,19 @@
     [data-palette="components-for-any-data"] #shapes .cf-evidence {
       margin-top: 1.25rem;
     }
-    [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
+    [data-palette="components-for-any-data"] #shapes .cf-asks {
       margin-top: 1rem;
-      padding-top: 0.85rem;
     }
   }
   @media (max-height: 800px) {
-    [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
-      font-size: clamp(1.1rem, 1.7vw, 1.25rem);
+    [data-palette="components-for-any-data"] #shapes {
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    }
+    [data-palette="components-for-any-data"] #shapes .cf-asks-q {
+      font-size: 1.05rem;
+    }
+    [data-palette="components-for-any-data"] #shapes .ac-shapes {
+      gap: 7px;
     }
     [data-palette="components-for-any-data"] #pipeline .cf-h3 {
       font-size: clamp(1.6rem, 2.8vw, 2.1rem);
@@ -382,17 +392,18 @@
       font-size: clamp(3.5rem, 7vw, 5rem);
     }
     [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(1) {
-      margin-top: 0.85rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      line-height: 1.5;
     }
-    [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
+    [data-palette="components-for-any-data"] #shapes .cf-asks {
       margin-top: 0.75rem;
-      padding-top: 0.6rem;
     }
     [data-palette="components-for-any-data"] #shapes .cf-evidence {
-      margin-top: 1rem;
+      margin-top: 0.6rem;
     }
     [data-palette="components-for-any-data"] #shapes .cf-h3 {
-      font-size: clamp(2rem, 3.6vw, 2.5rem);
+      font-size: clamp(2rem, 3vw, 2.4rem);
     }
     [data-palette="components-for-any-data"] #shapes .ac-cell {
       padding: 8px 12px 7px;

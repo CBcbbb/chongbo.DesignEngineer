@@ -50,6 +50,29 @@ function fitOf(section: Section): "fill" | "foot" {
 }
 
 /**
+ * A paragraph that asks questions (Section.asks): the lead, then each question numbered. The words are the
+ * paragraph's own, split at the lead's colon and after each question mark.
+ */
+function Asks({ text }: { text: string }) {
+  const colon = text.indexOf(": ");
+  const lead = colon >= 0 ? text.slice(0, colon + 1) : "";
+  const questions = (colon >= 0 ? text.slice(colon + 2) : text).match(/[^?]+\?/g)?.map((q) => q.trim()) ?? [text];
+  return (
+    <p className="cf-asks">
+      {lead && <span className="cf-asks-lead">{lead}</span>}
+      {questions.map((q, i) => (
+        <Fragment key={q}>
+          {" "}
+          <span className="cf-asks-q" data-n={i + 1}>
+            {q}
+          </span>
+        </Fragment>
+      ))}
+    </p>
+  );
+}
+
+/**
  * One card = one sheet: the index above the claim on the left, the reasoning on the right, the evidence underneath
  * at full width (or beside the text, for `layout: "pair"`, where the screen is wide and tall enough).
  */
@@ -72,9 +95,7 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
         </div>
         <div className="cf-body">
           {section.bodyStyle !== "list" &&
-            section.body.map((p) => (
-              <p key={p.slice(0, 40)}>{p}</p>
-            ))}
+            section.body.map((p, i) => (i === section.asks ? <Asks key={p.slice(0, 40)} text={p} /> : <p key={p.slice(0, 40)}>{p}</p>))}
           {section.keys && <Keys keys={section.keys} />}
         </div>
       </div>

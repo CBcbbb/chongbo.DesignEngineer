@@ -99,7 +99,7 @@ export function Demo() {
           <path d="M8 7.25v3.5M8 5.1v.05" />
         </svg>
         <span>
-          <strong>Simplified rebuild.</strong> The product is confidential, so this uses mock data and is for demonstration only.
+          The product is confidential, so this uses mock data and is for demonstration only.
         </span>
       </p>
       <div className="ad dm">
