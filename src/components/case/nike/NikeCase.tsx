@@ -77,11 +77,11 @@ const SV_NOTES = [
     y: 0.22,
     side: "r",
     title: "Voice teaser",
-    text: "Each influencer introduces the next volume through a short voice clip, with an animated waveform to catch attention and add realism.",
+    text: "The next influencer previews their topic in a short voice clip, with an animated waveform to catch attention.",
   },
-  { y: 0.395, side: "l", title: "Livestream reveal", text: "Selected top questions are answered live during Nike's 618 livestream." },
-  { y: 0.72, side: "r", title: "Vote with likes", text: "Questions can be upvoted by others; the most liked are prioritised for an answer." },
-  { y: 0.895, side: "l", title: "Ask a question", text: "Readers submit questions in real time, shown in an interactive feed." },
+  { y: 0.395, side: "l", title: "Livestream reveal", text: "The top-voted questions are answered live in Nike's livestream." },
+  { y: 0.72, side: "r", title: "Vote with likes", text: "Readers upvote each other's questions." },
+  { y: 0.895, side: "l", title: "Ask a question", text: "Readers submit questions, shown in an interactive feed." },
 ] as const;
 
 /** An image placeholder: a box with a cross. */

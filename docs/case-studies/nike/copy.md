@@ -1,4 +1,4 @@
-# Nike Athletes Closet: copy, draft 9 (as live)
+# Nike Athletes Closet: copy, draft 10 (as live)
 
 Playbook §8 step 4. Every line traces to the Wix page or `notes.md`. The page shows the final result, written for the reader. The words live in `content/projects/nike.ts`; this file is the readable copy of them, regenerated from it.
 
@@ -35,15 +35,15 @@ Full quality on YouTube ↗ · moments grouped by part, each timed from the foot
 
 Three volumes had shipped when I took over at VOL.4. The redesign covered the logo lock-up, typography, colour, framing devices and motion.
 
-The framing device balances consistency with flexibility: it adds, removes or rearranges details to fit each headline, and takes its colour from each influencer's photos or products.
+The framing device balances consistency with flexibility: it adds, removes or rearranges details to fit each headline.
 
 ### 01.2 A unified visual style
 
-Each influencer gets a hero visual and a poster card, so readers know whose volume they're in.
+Each influencer gets a hero visual and a poster card in one shared style, which still highlights their own character.
 
 ### 01.3 Retouched to one tone
 
-I gave every key photo tone correction, blemish removal and a flash-photography look.
+To unify the visual tone and highlight the character of each featured influencer, I retouched key campaign images with tone correction, blemish removal, and flash-shooting vibe enhancement. These treatments aligned the visuals with Nike's core brand values of authenticity, energy, and youthfulness.
 
 ### 01.4 Several views of one outfit, swiped sideways
 
@@ -51,7 +51,7 @@ Before, every angle stacked into one long scroll. As pages, the views take less 
 
 ### 01.5 Reusable components, built for handover
 
-The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them. It cut the back-and-forth between design and engineering.
+The earlier designs had no standardised component system, so sizes were inconsistent and Nike's engineers had extra work. I audited every UI element, unified sizes, spacing and naming, then rebuilt the interfaces in Figma with Auto Layout and reusable components. It reduced the back-and-forth between design and development.
 
 ---
 
@@ -63,7 +63,7 @@ Readers engaged with the stories, but product click-through stayed low, because 
 
 ### 02.2 Products as part of the story
 
-The old product cards were small tiles under the photo. I redesigned the layout and enlarged the product visuals, to make each item more visible and give it a clear role in the content flow, so products are more noticeable and click-worthy.
+Redesigned the product card layout by enlarging product visuals to increase visibility and emphasise their role in the content flow, making items more noticeable and click-worthy.
 
 ### 02.3 A ranking that leads to similar outfits
 
@@ -75,11 +75,11 @@ The Star Ranking was a loose, inconsistent list. I rebuilt it as a leaderboard w
 
 ### 03.1 A reward for every like
 
-The stories were static, so readers had little reason to act. I made each like an entry in a prize draw, then designed and animated the microinteraction.
+The stories relied on static text and images, so readers stayed passive and nothing drew them back to the section. I designed a surprise prize draw triggered by a like, with a gift-box animation to reward the action.
 
 ### 03.2 Star Voice Q&A
 
-To maintain audience interest between volumes and build anticipation for the next influencer, I designed a new feature. It shipped, and was recommended for wider use in other campaigns.
+To maintain interest between volumes and build anticipation for the next influencer, I designed Star Voice Q&A: a loop of preview, participation and live response. It shipped, and was recommended for wider use in other campaigns.
 
 ---
 
@@ -90,8 +90,8 @@ To maintain audience interest between volumes and build anticipation for the nex
 - **Role:** As the agency's sole UI designer, I designed the creative system, every screen from VOL.4 on, the motion and the influencer posters, and retouched the photos. Nike's marketing team set the brief; Nike's engineers built it.
 
 - **Delivery:** One component system made each volume faster to deliver, and Nike's engineers were more satisfied with the handover.
-- **Conversion:** Product tags and larger product cards made the products easier to find in the stories and gave readers a clearer path from story to product. Nike's feedback was positive.
-- **Engagement:** Likes, the prize draw and Star Voice Q&A lifted engagement beyond what Nike expected.
+- **Conversion:** Product visibility significantly improved, with a clearer click-through path and positive feedback from the client on increased user interest and conversions.
+- **Engagement:** The layered interaction mechanisms significantly boosted user engagement across the board - from liking to question submission to livestream participation, completing a full engagement loop. The client reported higher-than-expected interaction performance.
 
 ---
 
