@@ -47,13 +47,13 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 | | | **Part 1 · One system for three products** | | | | | | |
 | 01.1 | `drift` | Three products, drifting from the first | C | in | in | · | Drawn: three invented products that share only the blue (a light sidebar workspace, a light network map, a dark builder); different layouts, type, density and corners | |
 | 01.2 | `client-looks` | Every client wants its own look | C | in | in | · | Drawn: one screen for three clients (Courier, Grocer, Bank); same layout, each client's colour, typeface and button shape | |
-| 01.3 | `figma-to-code` | From a Figma library to shared code | C B | in | in | lead | Rebuilt Figma (component sets, variables Light / Dark) beside the same components as code | |
-| 01.3 | `three-layers` | Three layers: shared, product, customer | C B | · | lead | in | Diagram: shared package → one product's overrides → a customer's colour, font and button shape | |
+| 01.3 | `three-layers` | Each level overrides only what it needs (the solution, after the two problems) | C B | · | lead | in | Diagram: shared package → one product's overrides → a customer's colour, font and button shape | |
+| 02.1 / 02.2 | `figma-library`, `in-code` | It started as a Figma library · Now it lives in code | C B | in | in | lead | Rebuilt Figma (component sets, variables Light / Dark) beside the same components as code | |
 | | | **Part 2 · Accessibility built into the colours** | | | | | | |
-| 02.1 | `roles` | Components ask for a role, not a colour | C E | in | in | in | Colour specimens: six hues × five steps, each step labelled with its job | |
-| 02.2 | `fixed-lightness` | The same lightness on every hue | E | in | in | in | Numbers set large: 30 of 30 · 5.16:1 lowest · 2 modes | |
-| 02.3 | `dark` | Dark mode designed step by step | E D | in | · | in | The specimens with a Light / Dark switch | |
-| 02.4 | `customer-colour` | Readable with any customer's colour | D E B | lead | in | in | The signature module on pale yellow, "Passed through" / "Derived" switch, ratios shown | `[the fix ships]` |
+| 03.1 | `roles` | Components ask for a role, not a colour | C E | in | in | in | Colour specimens: six hues × five steps, each step labelled with its job | |
+| 03.2 | `fixed-lightness` | The same lightness on every hue | E | in | in | in | Numbers set large: 30 of 30 · 5.16:1 lowest · 2 modes | |
+| 03.3 | `dark` | Dark mode designed step by step | E D | in | · | in | The specimens with a Light / Dark switch | |
+| 03.4 | `customer-colour` | Readable with any customer's colour | D E B | lead | in | in | The signature module on pale yellow, "Passed through" / "Derived" switch, ratios shown | `[the fix ships]` |
 | | | **Close** | | | | | | |
 | — | `outcome` | `[step 4]` | C | in | in | · | Statement card: results by part, role in full (no numbers: what happened) | |
 

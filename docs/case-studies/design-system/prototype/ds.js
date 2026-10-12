@@ -366,7 +366,7 @@
       <ul class="mp-list"><li><span>Run 4821</span><span class="mp-badge">On time</span></li><li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li><li><span>Run 4823</span><span class="mp-badge">On time</span></li><li><span>Run 4824</span><span class="mp-badge">On time</span></li></ul></div>`;
   });
 
-  /* ---------- 01.3: the same library in code. Figma shows the file; Code shows the source (tokens, two components)
+  /* ---------- 02.2: the system in code: the source (shared tokens, a product's globals, two components)
      beside what it renders, light and dark. Choosing a file lights up the parts it draws. ---------- */
   const codeSide = document.getElementById("code-side");
   if (codeSide) {
@@ -390,6 +390,19 @@
   /* text steps re-tuned, not inverted */
   --brand-600: oklch(0.76 0.122 268);
   --primary: oklch(0.5 0.2 268);
+}` },
+      "globals.css": { part: "all", src: `/* Manifest: this product's own layer */
+@import "@shared/tokens.css";
+
+:root {
+  /* only what this product needs */
+  --radius: 1rem;
+  --sidebar: oklch(0.985 0 0);
+  --menu-highlight: color-mix(in oklch, var(--primary) 12%, white);
+}
+
+.dark {
+  --sidebar: oklch(0.21 0.006 286);
 }` },
       "button.tsx": { part: "btn", src: `import { cva } from "class-variance-authority"
 

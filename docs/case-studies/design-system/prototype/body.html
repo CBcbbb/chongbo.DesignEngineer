@@ -11,19 +11,22 @@
       <a class="cf-toc-proj" href="#top" aria-current="step">One Design System, Three Products, Any Brand</a>
       <ol>
         <li class="cf-toc-part" data-active="false">
-          <a href="#three-layers"><span class="cf-n">00</span>Four levels</a>
-          <ol></ol>
-        </li>
-        <li class="cf-toc-part" data-active="false">
-          <a href="#one-system"><span class="cf-n">01</span>One system for three products</a>
+          <a href="#one-system"><span class="cf-n">01</span>One system for every product and client</a>
           <ol>
             <li><a href="#drift">Drifting apart</a></li>
             <li><a href="#client-looks">Client looks</a></li>
-            <li><a href="#figma-to-code">Figma to code</a></li>
+            <li><a href="#three-layers">Four levels</a></li>
           </ol>
         </li>
         <li class="cf-toc-part" data-active="false">
-          <a href="#accessibility"><span class="cf-n">02</span>Accessibility built into the colours</a>
+          <a href="#figma-code"><span class="cf-n">02</span>From Figma to code</a>
+          <ol>
+            <li><a href="#figma-library">A Figma library</a></li>
+            <li><a href="#in-code">Kept in code</a></li>
+          </ol>
+        </li>
+        <li class="cf-toc-part" data-active="false">
+          <a href="#accessibility"><span class="cf-n">03</span>Accessibility built into the colours</a>
           <ol>
             <li><a href="#roles">Roles, not colours</a></li>
             <li><a href="#fixed-lightness">One lightness per step</a></li>
@@ -77,19 +80,6 @@
         </div>
       </header>
 
-      <!-- ============ overview: the three layers ============ -->
-      <section id="three-layers" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="three-layers-title">
-        <div class="cf-head">
-          <div><p class="cf-meta"><span class="cf-idx">Overview</span></p><h3 id="three-layers-title" class="cf-h3">Each level overrides only what it needs</h3></div>
-          <div class="cf-body">
-            <p>The shared package sets every colour, role and component, so a fix there reaches all three products. Each product overrides only what it needs, from tokens rather than new colours.</p>
-            <p>Each client sets its own colour, font and button shape for all its users, and each user can adjust their own look again.</p>
-          </div>
-        </div>
-        <div class="cf-evidence" data-fit="foot">
-          <div class="ds-ev ds-layers2" id="layers"></div>
-        </div>
-      </section>
 
       <!-- ============ the work ============ -->
       <section class="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
@@ -105,8 +95,8 @@
       <section id="one-system" class="cf-sheet is-field cf-opener" aria-labelledby="one-system-h">
         <span class="cf-num" aria-hidden="true">01</span>
         <div>
-          <h2 id="one-system-h"><span class="sr-only">Part 01: </span>One system for three products</h2>
-          <p class="cf-cards">Drifting apart · Client looks · Figma to code</p>
+          <h2 id="one-system-h"><span class="sr-only">Part 01: </span>One system for every product and client</h2>
+          <p class="cf-cards">Drifting apart · Client looks · Four levels</p>
         </div>
       </section>
 
@@ -144,40 +134,75 @@
         </div>
       </section>
 
-      <section id="figma-to-code" class="cf-sheet is-card" data-canvas="" data-size="auto" data-layout="stack" aria-labelledby="figma-to-code-title">
+      <section id="three-layers" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="three-layers-title">
         <div class="cf-head">
-          <div><p class="cf-meta"><span class="cf-idx">01.3</span></p><h3 id="figma-to-code-title" class="cf-h3">From a Figma library to shared code</h3></div>
+          <div><p class="cf-meta"><span class="cf-idx">01.3</span></p><h3 id="three-layers-title" class="cf-h3">Each level overrides only what it needs</h3></div>
+          <div class="cf-body">
+            <p>I split the system into levels. The shared package sets every colour, role and component, so a fix there reaches all three products. Each product overrides only what it needs, from tokens rather than new colours.</p>
+            <p>Each client sets its own colour, font and button shape for all its users, and each user can adjust their own look again.</p>
+          </div>
+        </div>
+        <div class="cf-evidence" data-fit="foot">
+          <div class="ds-ev ds-layers2" id="layers"></div>
+        </div>
+      </section>
+
+
+      <!-- ============ part 2 ============ -->
+      <section id="figma-code" class="cf-sheet is-field cf-opener" aria-labelledby="figma-code-h">
+        <span class="cf-num" aria-hidden="true">02</span>
+        <div>
+          <h2 id="figma-code-h"><span class="sr-only">Part 02: </span>From Figma to code</h2>
+          <p class="cf-cards">A Figma library · Kept in code</p>
+        </div>
+      </section>
+
+      <section id="figma-library" class="cf-sheet is-card" data-canvas="" data-size="auto" data-layout="stack" aria-labelledby="figma-library-title">
+        <div class="cf-head">
+          <div><p class="cf-meta"><span class="cf-idx">02.1</span></p><h3 id="figma-library-title" class="cf-h3">It started as a Figma library</h3></div>
           <div class="cf-body">
             <p>I built the system in Figma first, from the main product's shadcn components: colour variables with Light and Dark modes, and components with their variants and states.</p>
-            <p>Then I shipped it as a code package, so teams build with its parts instead of redrawing them from a file. I've since moved to building directly in code with AI coding tools; the Figma library keeps the foundations for quick sketches.</p>
+            <p>It's still where I sketch new ideas quickly, on the same foundations.</p>
           </div>
         </div>
         <div class="cf-evidence" data-fit="fill">
           <div class="ds-ev ds-f2c">
-            <div class="ds-seg" role="radiogroup" aria-label="Show the library in">
-              <label><input type="radio" name="f2c" id="f2c-figma" value="figma" checked>Figma</label>
-              <label><input type="radio" name="f2c" id="f2c-code" value="code">Code</label>
-            </div>
-            <div class="ds-f2c-stage" id="f2c-stage" data-show="figma">
+            <div class="ds-f2c-stage" data-show="figma">
               <img class="ds-f2c-figma" src="{{FIGMA_COMPONENTS}}" width="1468" height="447" alt="The Figma library's components, light and dark: buttons, inputs with focus and error, badges, alerts and pagination.">
-              <div class="ds-f2c-code" id="code-side" aria-label="The library in code: its source files and what they render"></div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ============ part 2 ============ -->
+      <section id="in-code" class="cf-sheet is-card" data-canvas="" data-size="auto" data-layout="stack" aria-labelledby="in-code-title">
+        <div class="cf-head">
+          <div><p class="cf-meta"><span class="cf-idx">02.2</span></p><h3 id="in-code-title" class="cf-h3">Now it lives in code</h3></div>
+          <div class="cf-body">
+            <p>I shipped the system as a code package, so teams build with its parts instead of redrawing them from a file.</p>
+            <p>Now I build it directly in code with AI coding tools. One shared tokens file sets every colour and role, and each product's globals.css overrides only what that product needs.</p>
+          </div>
+        </div>
+        <div class="cf-evidence" data-fit="fill">
+          <div class="ds-ev ds-f2c">
+            <div class="ds-f2c-stage" id="f2c-stage" data-show="code">
+              <div class="ds-f2c-code" id="code-side" aria-label="The system in code: its source files and what they render"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ part 3 ============ -->
       <section id="accessibility" class="cf-sheet is-field cf-opener" aria-labelledby="accessibility-h">
-        <span class="cf-num" aria-hidden="true">02</span>
+        <span class="cf-num" aria-hidden="true">03</span>
         <div>
-          <h2 id="accessibility-h"><span class="sr-only">Part 02: </span>Accessibility built into the colours</h2>
+          <h2 id="accessibility-h"><span class="sr-only">Part 03: </span>Accessibility built into the colours</h2>
           <p class="cf-cards">Roles, not colours · One lightness per step · Dark mode · Customer colours · Outcome</p>
         </div>
       </section>
 
       <section id="roles" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="roles-title">
         <div class="cf-head">
-          <div><p class="cf-meta"><span class="cf-idx">02.1</span></p><h3 id="roles-title" class="cf-h3">Components ask for a role, not a colour</h3></div>
+          <div><p class="cf-meta"><span class="cf-idx">03.1</span></p><h3 id="roles-title" class="cf-h3">Components ask for a role, not a colour</h3></div>
           <div class="cf-body">
             <p>Every hue has five steps, each with one job: surfaces, borders, charts and icons, text on white, and text on a tint. Components ask for success or warning, never a hue and a step, so a hue can change without touching a component.</p>
             <p>I kept amber for warnings only, so a warning never reads as a chart series.</p>
@@ -190,7 +215,7 @@
 
       <section id="fixed-lightness" class="cf-sheet is-card is-dark" data-size="auto" data-layout="stack" aria-labelledby="fixed-lightness-title">
         <div class="cf-head">
-          <div><p class="cf-meta"><span class="cf-idx">02.2</span></p><h3 id="fixed-lightness-title" class="cf-h3">The same lightness on every hue</h3></div>
+          <div><p class="cf-meta"><span class="cf-idx">03.2</span></p><h3 id="fixed-lightness-title" class="cf-h3">The same lightness on every hue</h3></div>
           <div class="cf-body">
             <p>I set the steps in OKLCH, where lightness is a number of its own, close to how bright a colour looks. The text steps sit within a few hundredths of each other on all six hues, so a role stays readable whichever hue it uses.</p>
           </div>
@@ -209,7 +234,7 @@
 
       <section id="dark" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="dark-title">
         <div class="cf-head">
-          <div><p class="cf-meta"><span class="cf-idx">02.3</span></p><h3 id="dark-title" class="cf-h3">Dark mode designed step by step</h3></div>
+          <div><p class="cf-meta"><span class="cf-idx">03.3</span></p><h3 id="dark-title" class="cf-h3">Dark mode designed step by step</h3></div>
           <div class="cf-body">
             <p>In dark mode I lowered the borders' chroma so they don't glow, and lightened the text steps to hold their contrast.</p>
             <p>Tinted surfaces turn deep, so text on a tint still sits on something darker than itself.</p>
@@ -222,7 +247,7 @@
 
       <section id="customer-colour" class="cf-sheet is-card" data-canvas="" data-size="auto" data-layout="stack" aria-labelledby="customer-colour-title">
         <div class="cf-head">
-          <div><p class="cf-meta"><span class="cf-idx">02.4</span></p><h3 id="customer-colour-title" class="cf-h3">Readable with any customer's colour</h3></div>
+          <div><p class="cf-meta"><span class="cf-idx">03.4</span></p><h3 id="customer-colour-title" class="cf-h3">Readable with any customer's colour</h3></div>
           <div class="cf-body">
             <p>Customers could pick any colour, and the first version passed it straight through. A pale yellow put white text on it at 1.07:1, and navy text on the dark background read at 2.99:1.</p>
             <p>I applied the scales' own rule to the customer's colour. The fill stays theirs, and text on it turns dark or light. Used as text, their colour keeps its hue and moves in lightness until it reaches 4.5:1.</p>
@@ -235,7 +260,7 @@
 
       <section id="outcome" class="cf-sheet is-card is-dark" data-size="auto" data-layout="stack" aria-labelledby="outcome-title">
         <div class="cf-head">
-          <div><p class="cf-meta"><span class="cf-idx">02.5</span></p><h3 id="outcome-title" class="cf-h3">Outcome</h3></div>
+          <div><p class="cf-meta"><span class="cf-idx">03.5</span></p><h3 id="outcome-title" class="cf-h3">Outcome</h3></div>
           <div class="cf-body"><p class="ds-role">As the company's only designer, I designed the system in Figma and shipped it as code on my own.</p></div>
         </div>
         <div class="cf-evidence" data-fit="foot">

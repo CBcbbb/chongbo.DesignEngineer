@@ -22,19 +22,13 @@ The shared colours and components behind three products, and every customer's br
 - **Outcome:** Three products that read as one company again, in any customer's brand. `[the last clause once the fix ships]`
 - **What this shows:** Design system (C) · Accessibility in the colours (E) · Figma to code (B)
 
-### Overview · Each level overrides only what it needs
-
-The shared package sets every colour, role and component, so a fix there reaches all three products. Each product overrides only what it needs, from tokens rather than new colours.
-
-Each client sets its own colour, font and button shape for all its users, and each user can adjust their own look again.
-
 ## The work
 
 The system, rebuilt on an invented brand.
 
 ---
 
-## Part 1 · One system for three products
+## Part 1 · One system for every product and client
 
 ### 01.1 Three products, drifting from the first
 
@@ -48,31 +42,45 @@ Even within one product, our customers are companies with brands of their own, a
 
 So the system lets every client change those few things, and only those. The screens underneath stay the same for everyone.
 
-### 01.3 From a Figma library to shared code
+### 01.3 Each level overrides only what it needs
+
+I split the system into levels. The shared package sets every colour, role and component, so a fix there reaches all three products. Each product overrides only what it needs, from tokens rather than new colours.
+
+Each client sets its own colour, font and button shape for all its users, and each user can adjust their own look again.
+
+## Part 2 · From Figma to code
+
+### 02.1 It started as a Figma library
 
 I built the system in Figma first, from the main product's shadcn components: colour variables with Light and Dark modes, and components with their variants and states.
 
-Then I shipped it as a code package, so teams build with its parts instead of redrawing them from a file. I've since moved to building directly in code with AI coding tools; the Figma library keeps the foundations for quick sketches.
+It's still where I sketch new ideas quickly, on the same foundations.
 
-## Part 2 · Accessibility built into the colours
+### 02.2 Now it lives in code
 
-### 02.1 Components ask for a role, not a colour
+I shipped the system as a code package, so teams build with its parts instead of redrawing them from a file.
+
+Now I build it directly in code with AI coding tools. One shared tokens file sets every colour and role, and each product's globals.css overrides only what that product needs.
+
+## Part 3 · Accessibility built into the colours
+
+### 03.1 Components ask for a role, not a colour
 
 Every hue has five steps, each with one job: surfaces, borders, charts and icons, text on white, and text on a tint. Components ask for success or warning, never a hue and a step, so a hue can change without touching a component.
 
 I kept amber for warnings only, so a warning never reads as a chart series.
 
-### 02.2 The same lightness on every hue
+### 03.2 The same lightness on every hue
 
 I set the steps in OKLCH, where lightness is a number of its own, close to how bright a colour looks. The text steps sit within a few hundredths of each other on all six hues, so a role stays readable whichever hue it uses.
 
-### 02.3 Dark mode designed step by step
+### 03.3 Dark mode designed step by step
 
 In dark mode I lowered the borders' chroma so they don't glow, and lightened the text steps to hold their contrast.
 
 Tinted surfaces turn deep, so text on a tint still sits on something darker than itself.
 
-### 02.4 Readable with any customer's colour
+### 03.4 Readable with any customer's colour
 
 Customers could pick any colour, and the first version passed it straight through. A pale yellow put white text on it at 1.07:1, and navy text on the dark background read at 2.99:1.
 
