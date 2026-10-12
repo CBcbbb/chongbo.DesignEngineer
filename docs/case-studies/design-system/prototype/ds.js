@@ -111,10 +111,10 @@
       </div>
       <div class="tp-body">
         <section class="tp-card" aria-label="Today's runs">
-          <div class="tp-actions"><h4>Today's runs</h4><div><button type="button" class="ui-btn is-outline">Export</button><button type="button" class="ui-btn is-primary">New run<span data-r="btn"></span></button></div></div>
+          <div class="tp-actions"><h4>Today's runs</h4><div><span class="ui-btn is-outline">Export</span><span class="ui-btn is-primary">New run<span data-r="btn"></span></span></div></div>
           <div class="tp-filters">
-            <label class="ui-field"><span class="sr-only">Search runs</span><input class="ui-input" type="search" placeholder="Search runs" aria-label="Search runs"></label>
-            <label class="ui-field"><span class="sr-only">Depot</span><select class="ui-select" aria-label="Depot"><option>All depots</option><option>North depot</option><option>Harbour depot</option></select></label>
+            <div class="ui-field"><span class="ui-input is-placeholder">Search runs</span></div>
+            <div class="ui-field"><span class="ui-select is-static">All depots</span></div>
           </div>
           <ul class="tp-rows">
             <li><b>Run 4821</b><span class="ui-badge r-success">Delivered<span data-r="ok"></span></span><small>14 stops · North depot</small></li>
@@ -128,8 +128,8 @@
           <h4>Run 4822</h4>
           <p>Two stops are behind schedule.<span data-r="muted"></span></p>
           <div class="ui-alert r-warning" role="note">${ICON_WARN}<span><strong>Delayed</strong> by 25 minutes at Harbour depot.</span></div>
-          <label class="ui-field"><span>Note for the driver <b>*</b></span><small>Shown on their phone at the next stop.</small><input class="ui-input is-error" value="" placeholder="Write a note"><small class="ui-err">A note is required.</small></label>
-          <div class="tp-actions"><div><button type="button" class="ui-btn is-ghost">Cancel</button><button type="button" class="ui-btn is-primary">Send</button></div></div>
+          <div class="ui-field"><span>Note for the driver <b>*</b></span><small>Shown on their phone at the next stop.</small><span class="ui-input is-error is-placeholder">Write a note</span><small class="ui-err">A note is required.</small></div>
+          <div class="tp-actions"><div><span class="ui-btn is-ghost">Cancel</span><span class="ui-btn is-primary">Send</span></div></div>
         </section>
       </div>`;
   }
@@ -545,13 +545,7 @@ export const badgeVariants = cva(
       rows.forEach(([n, t, s2, [ax, ay]]) => {
         g += line([ax + 4, ay], [LX - 22, ay], "o-leader") + `<circle class="o-tick" cx="${f1(ax + 4)}" cy="${f1(ay)}" r="2.2"/>`;
         g += `<circle class="o-num" cx="${LX - 10}" cy="${f1(ay)}" r="10"/><text class="o-numt" x="${LX - 10}" y="${f1(ay + 4)}" text-anchor="middle">${n}</text>`;
-        // the override mark: a refresh arrow (each level rewrites what's below it); the base sets, so it has none
-        const cx = LX + 14, cy = ay + 11, r = 4.6, end = -70 * Math.PI / 180;
-        const ex = cx + r * Math.cos(end), ey = cy + r * Math.sin(end), dx = -Math.sin(end), dy = Math.cos(end);
-        const head = (rot) => { const c = Math.cos(rot), sn = Math.sin(rot); return [ex - 3.2 * (dx * c - dy * sn), ey - 3.2 * (dx * sn + dy * c)]; };
-        const [h1x, h1y] = head(0.6), [h2x, h2y] = head(-0.6);
-        const mark = n === 1 ? "" : `<path class="o-mk" d="M${f1(cx + r)} ${f1(cy)} A${r} ${r} 0 1 1 ${f1(ex)} ${f1(ey)} M${f1(h1x)} ${f1(h1y)} L${f1(ex)} ${f1(ey)} L${f1(h2x)} ${f1(h2y)}"/>`;
-        g += `<text class="o-ln" x="${LX + 8}" y="${f1(ay - 2)}">${t}</text><g aria-hidden="true">${mark}</g><text class="o-ls" x="${n === 1 ? LX + 8 : LX + 26}" y="${f1(ay + 15)}">${s2}</text>`;
+        g += `<text class="o-ln" x="${LX + 8}" y="${f1(ay - 2)}">${t}</text><text class="o-ls" x="${LX + 8}" y="${f1(ay + 15)}">${s2}</text>`;
       });
       g += `</svg>`;
       layers.innerHTML = g;
