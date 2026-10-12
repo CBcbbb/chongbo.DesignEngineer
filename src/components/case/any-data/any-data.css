@@ -646,6 +646,14 @@
   text-align: left;
   white-space: nowrap;
 }
+.ad-table .is-num {
+  text-align: right;
+}
+.ad-chart.is-table {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .ad-table tr:last-child td {
   border-bottom: 0;
 }

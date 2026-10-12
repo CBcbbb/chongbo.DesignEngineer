@@ -6,7 +6,6 @@ export const wildecho: Project = {
   oneLiner: "What if wildlife tourists listened instead of photographing?",
   context: "Royal College of Art × Stampede · 6-month team project",
   role: "Problem framing and research structure, in a team",
-  status: "Concept",
   stack: ["Figma", "Premiere Pro", "Canva", "Physical prototyping", "User testing"],
   links: [],
   tier: "earlier",

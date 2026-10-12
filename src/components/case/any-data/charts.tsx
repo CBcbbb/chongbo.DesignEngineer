@@ -195,6 +195,7 @@ export function Chart({
   min = 200,
   max = 300,
   label,
+  table = false,
 }: {
   kind: ChartKind;
   data: Datum[];
@@ -202,6 +203,8 @@ export function Chart({
   min?: number;
   max?: number;
   label?: string;
+  /** Show the values as a visible table instead of the drawing, for anyone who wants exact numbers without hovering. */
+  table?: boolean;
 }) {
   const [ref, w] = useWidth<HTMLDivElement>();
   const [tip, setTip] = useState<Tip>(null);
@@ -212,6 +215,32 @@ export function Chart({
     const r = ref.current!.getBoundingClientRect();
     setTip({ ...d, x: e.clientX - r.left, y: e.clientY - r.top });
   };
+  if (table)
+    return (
+      <div className="ad-chart is-table" ref={ref} style={{ minHeight: min }}>
+        <div className="ad-rows-wrap">
+          <table className="ad-table">
+            <caption className="sr-only">{label ?? "Totals by category"}</caption>
+            <thead>
+              <tr>
+                <th scope="col">Category</th>
+                <th scope="col" className="is-num">
+                  Value
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((d) => (
+                <tr key={d.k}>
+                  <td>{d.k}</td>
+                  <td className="is-num">{fmt(d.v)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
   return (
     <div className="ad-chart" ref={ref} onPointerLeave={() => setTip(null)}>
       {w > 0 && (

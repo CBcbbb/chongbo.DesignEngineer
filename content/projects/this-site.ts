@@ -6,7 +6,6 @@ export const thisSite: Project = {
   oneLiner: "Prints the work you ask to see.",
   context: "Personal project · 2026",
   role: "Designed and built, working with AI coding tools",
-  status: "Live",
   stack: ["Next.js", "TypeScript", "Tailwind", "CSS animation", "Claude API"],
   // Add { label: "Source", href: "https://github.com/CBcbbb/chongbo.DesignEngineer" } once the repo is public.
   links: [],

@@ -16,3 +16,7 @@ Things built on a best guess, or still open. Each says what was done and what to
 ## 12 October 2026
 
 - **AI tools (01.3).** Chongbo: "I used Claude Code and Cursor to write the front end and the server." One sentence on the pipeline card, which covers both, and the `ai-tools` signal. The home page's "AI tools" card is offered again.
+- **Status: none, on every project.** Chongbo: "不写状态，所有项目的状态都去掉" (no status on any project). The field is gone from the schema, the four content files, the case-file facts, the tray, the share image and the AI catalogue. Item 1 is closed.
+- **Old address (item 4).** Nothing on the site links to `/work/component-store`; only old docs mention it. No redirect unless Chongbo has sent that link out (CV, applications).
+- **"74" (item 2).** Kept; Chongbo will be ready to say where it comes from.
+- **Table view (item 8).** The work sheet's chart switch has a fourth option, Table: the same totals with exact values, visible without hovering.

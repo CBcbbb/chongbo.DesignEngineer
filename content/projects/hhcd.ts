@@ -17,7 +17,6 @@ export const hhcd: Project = {
     { with: "solo", what: "Data modelling, design and build", note: "on my own" },
   ],
   outcome: "Live and in use. Used to teach the Centre's summer interns. First-author paper on its accessibility approach accepted at DRS 2026.",
-  status: "Live",
   stack: ["Next.js", "TypeScript", "D3", "Tailwind", "Playwright", "axe"],
   links: [
     { label: "Live platform", href: "https://helen-hamlyn-centre-for-design-data.vercel.app/" },

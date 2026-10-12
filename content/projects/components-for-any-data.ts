@@ -6,7 +6,7 @@ import type { Project } from "../schema";
  *
  * Confidentiality (playbook §9): never name the employer, its products (the store's real name included), its
  * customers or its storage technology anywhere in this file, the case file's modules or the AI's knowledge. Every
- * stream, field and value on the page is invented. No status or progress: the copy says what the system does.
+ * stream, field and value on the page is invented. No progress: the copy says what the system does.
  * One term per thing: stream, field, role, contract, binding, adapter, store, template, component.
  */
 export const anyData: Project = {

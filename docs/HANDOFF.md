@@ -29,7 +29,7 @@ Recruiters don't ask for a portfolio; they ask to see work. You tell the machine
 
 ### Content model
 
-- `content/schema.ts` (SIGNALS = capability tags), `content/projects/*.ts`: `hhcd` (HHCD Data Platform), `component-store`, `nike` (Nike Athletes Closet), `this-site`, `wildecho` (earlier work, RCA team project).
+- `content/schema.ts` (SIGNALS = capability tags), `content/projects/*.ts`: `hhcd` (HHCD Data Platform), `components-for-any-data` (Components for Any Data), `nike` (Nike Athletes Closet), `this-site`, `wildecho` (earlier work, RCA team project).
 - Each project is a list of sections, each tagged with signals. That decomposition is what lets the machine pull, say, the accessibility part out of every project that has one.
 - Confidentiality: Component Store is from my current employer. Never name the employer, its products, customers or Redis anywhere (code, copy, prompts).
 - Open `[bracketed]` gaps for me to fill are listed in `docs/copy-changes.md`. Missing media is listed in `docs/ASSETS.md`.

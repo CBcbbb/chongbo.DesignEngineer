@@ -36,7 +36,7 @@ export function Demo() {
   const [extra, setExtra] = useState<Stream[]>([]);
   const [src, setSrc] = useState<"sample" | "stream">("stream");
   const [streamId, setStreamId] = useState("courier");
-  const [kind, setKind] = useState<ChartKind>("bar");
+  const [kind, setKind] = useState<ChartKind | "table">("bar");
   const [showOther, setShowOther] = useState(false);
   const [state, setState] = useState(() => start(STREAMS[0]!));
   const [drag, setDrag] = useState(false);
@@ -176,13 +176,13 @@ export function Demo() {
           <span className={`ad-tag ${src === "sample" ? "is-sample" : "is-live"}`}>{src === "sample" ? "Sample" : stream.name}</span>
         </div>
         <div className="ad-seg" role="group" aria-label="Chart">
-          {(["bar", "donut", "treemap"] as const).map((k) => (
+          {(["bar", "donut", "treemap", "table"] as const).map((k) => (
             <button key={k} type="button" aria-pressed={kind === k} onClick={() => setKind(k)}>
-              {k === "bar" ? "Bar" : k === "donut" ? "Donut" : "Treemap"}
+              {k === "bar" ? "Bar" : k === "donut" ? "Donut" : k === "treemap" ? "Treemap" : "Table"}
             </button>
           ))}
         </div>
-        <div aria-live="polite">{missing.length ? <Empty missing={missing} /> : <Chart kind={kind} data={totals(stream, mapping)} ratio={0.5} min={220} max={300} />}</div>
+        <div aria-live="polite">{missing.length ? <Empty missing={missing} /> : <Chart kind={kind === "table" ? "bar" : kind} table={kind === "table"} data={totals(stream, mapping)} ratio={0.5} min={220} max={300} />}</div>
       </section>
 
       <section className="ad-col is-fields" aria-labelledby="ad-d-fields">

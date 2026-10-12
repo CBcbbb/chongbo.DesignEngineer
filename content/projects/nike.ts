@@ -13,7 +13,6 @@ export const nike: Project = {
   role: "UI Designer",
   outcome: "Launched across China as a section of the Nike App's home screen. On the strength of the first season, Nike renewed the agency's contract for the seasons that followed.",
   client: "Nike China",
-  status: "Shipped",
   stack: ["Figma", "Photoshop", "Lottie"],
   links: [{ label: "Screen recording of the feature", href: "https://www.youtube.com/shorts/4cFA1T_9m8w" }],
   tier: "main",

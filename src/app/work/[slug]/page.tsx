@@ -82,7 +82,6 @@ export default async function CaseFile({ params }: Props) {
   const facts: [string, React.ReactNode][] = [
     ["Role", project.role],
     ["Context", project.context],
-    ...(project.status ? ([["Status", project.status]] as [string, React.ReactNode][]) : []),
     ["Stack", project.stack.join(" · ")],
   ];
 
@@ -97,7 +96,8 @@ export default async function CaseFile({ params }: Props) {
                 <span aria-hidden="true">←</span> All work
               </Link>
               <p className="meta mt-6 !text-ink-2">
-                Case file {projectNumber(project)} · {trayMeta(project)}
+                Case file {projectNumber(project)}
+                {trayMeta(project) && ` · ${trayMeta(project)}`}
               </p>
               <h1 id="case-title" className="case-h1">
                 {project.title}

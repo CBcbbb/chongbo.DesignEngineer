@@ -22,7 +22,7 @@ const TRAY_PLACE: Record<string, string> = {
 
 export function trayMeta(p: Project): string {
   const place = TRAY_PLACE[p.slug];
-  return [p.status, place].filter(Boolean).join(" · ");
+  return place ?? "";
 }
 
 /** "01".."04" for main work, "E1".. for earlier work. */

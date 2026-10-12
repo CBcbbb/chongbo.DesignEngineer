@@ -269,8 +269,6 @@ export type Project = {
   /** Where and when, e.g. "Helen Hamlyn Centre for Design · 2025". */
   context: string;
   role: string;
-  /** Left out where the case file shouldn't state progress or launch status. */
-  status?: "Live" | "In use" | "Shipped" | "Concept";
   stack: string[];
   links: ProjectLink[];
   /** Main cards are dealt on the table; earlier work sits in the archive drawer. */
