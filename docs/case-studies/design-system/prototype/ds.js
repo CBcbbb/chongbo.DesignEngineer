@@ -212,21 +212,21 @@
     const P = (x, y, z) => [OX + (x - y) * 0.433, OY + (x + y) * 0.25 - z * 0.5];
     const pts = (a) => a.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
     const quad = (cx, cy, hx, hy, z) => [P(cx - hx, cy - hy, z), P(cx + hx, cy - hy, z), P(cx + hx, cy + hy, z), P(cx - hx, cy + hy, z)];
-    const PC = [[36, 112], [196, 108], [318, 22]], H = 46; // as in the overview
+    const PC = [[15, 105], [225, 135], [375, 75]], H = 45; // as in the overview: 3 × 3 studs, one stud past the base
     const slots = [[0, 1], [0, -1], [1, 1], [1, -1], [2, 1], [2, -1]]; // back brick first
     const which = { courier: "0,1", grocer: "0,-1", bank: "1,1" };
     const draw = (c) => {
       const mine = which[c.id];
       let g = `<svg viewBox="-6 -10 304 270" role="img" aria-label="One shared package, three products above it, clients above each product">`;
-      g += `<polygon class="cl-base" points="${pts(quad(180, 75, 180, 75, 0))}"/>`;
+      g += `<polygon class="cl-base" points="${pts(quad(195, 75, 195, 75, 0))}"/>`;
       [0, 1, 2].sort((a, b) => PC[a][0] + PC[a][1] - (PC[b][0] + PC[b][1])).forEach((p) => {
         const [x, y] = PC[p];
         const a1 = P(x, y, 0), a2 = P(x, y, 108);
         g += `<line class="cl-pin" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/><polygon class="cl-prod${!mine && p === 0 ? " is-on" : ""}" points="${pts(quad(x, y, H, H, 108))}"/>`;
         slots.filter(([q]) => q === p).forEach(([, side]) => {
-          const cx = x - side * 20, cy = y, on = mine === `${p},${side}`;
+          const cx = x - side * 30, cy = y, on = mine === `${p},${side}`;
           const b1 = P(cx, cy, 108), b2 = P(cx, cy, 196);
-          g += `<line class="cl-pin${on ? " is-on" : ""}" x1="${b1[0]}" y1="${b1[1]}" x2="${b2[0]}" y2="${b2[1]}"/><polygon class="cl-cli${on ? " is-on" : ""}" points="${pts(quad(cx, cy, 14, 28, 196))}"/>`;
+          g += `<line class="cl-pin${on ? " is-on" : ""}" x1="${b1[0]}" y1="${b1[1]}" x2="${b2[0]}" y2="${b2[1]}"/><polygon class="cl-cli${on ? " is-on" : ""}" points="${pts(quad(cx, cy, 15, 45, 196))}"/>`;
         });
       });
       g += `</svg>`;
@@ -315,7 +315,7 @@
      dashed lines drop each part back into place. ---------- */
   const layers = document.getElementById("layers");
   if (layers) {
-    const C30 = 0.866, S30 = 0.5, OX = 214, OY = 272;
+    const C30 = 0.866, S30 = 0.5, OX = 250, OY = 300;
     const P = (x, y, z) => [OX + (x - y) * C30, OY + (x + y) * S30 - z];
     const f1 = (n) => n.toFixed(1);
     const pts = (a) => a.map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ");
@@ -363,30 +363,32 @@
       return s + `</g>`;
     };
 
-    // plan: a long base plate, and three products on different parts of it, each overhanging a different edge
-    const BASE = [0, 0, 360, 150];
-    const H = 46; // product half-size
+    // plan, on one stud grid (U = one stud): a 13 × 5 base plate; three 3 × 3 products, each on a different part of
+    // it and overhanging a different edge by exactly one stud; clients are 1 × 3 bricks on a product's outer columns
+    const U = 30;
+    const BASE = [0, 0, 13 * U, 5 * U];
     const PRODS = [
-      { c: [36, 112], name: "A" },   // the left corner, past the left end and the front edge
-      { c: [196, 108], name: "B" },  // the middle, past the front edge
-      { c: [318, 22], name: "C" },   // the right, past the back edge and the right end
-    ];
+      { at: [-1, 2] },  // the left corner, one stud past the left end
+      { at: [6, 3] },   // the middle, one stud past the front edge
+      { at: [11, 1] },  // the right, one stud past the right end
+    ].map((p) => ({ ...p, r: [p.at[0] * U, p.at[1] * U, (p.at[0] + 3) * U, (p.at[1] + 3) * U] }));
     const CLIENTS = [
-      { id: "courier", name: "Courier", colour: "#f2c94c", product: 0, side: 1 },
-      { id: "grocer", name: "Grocer", colour: "#3a9a4a", product: 0, side: -1 },
-      { id: "bank", name: "Bank", colour: "#3651b0", product: 1, side: 1 },
-      { id: "florist", name: "Florist", colour: "#e85d9a", product: 1, side: -1 },
-      { id: "bakery", name: "Bakery", colour: "#d06a33", product: 2, side: 1 },
-      { id: "studio", name: "Studio", colour: "#8a68f5", product: 2, side: -1 },
+      { id: "courier", name: "Courier", colour: "#f2c94c", product: 0, col: 0, user: "pawn" },
+      { id: "grocer", name: "Grocer", colour: "#3a9a4a", product: 0, col: 2 },
+      { id: "bank", name: "Bank", colour: "#3651b0", product: 1, col: 0, user: "rook" },
+      { id: "florist", name: "Florist", colour: "#e85d9a", product: 1, col: 2 },
+      { id: "bakery", name: "Bakery", colour: "#d06a33", product: 2, col: 0 },
+      { id: "studio", name: "Studio", colour: "#8a68f5", product: 2, col: 2, user: "bishop" },
     ];
-    const CX = 14, CY = 28; // a client brick: 1 × 2 studs, long side along y, inside its product
-    const Z = { base: 0, product: 108, client: 196, user: 258 };
-    const T = { base: 12, product: 9, client: 17 };
-    const cliC = (k) => { const [px, py] = PRODS[k.product].c; return [px - k.side * 20, py + k.side * 0]; };
-    const USERS = [-17, 0, 17]; // along the brick's long side, back to front
-    const order = [0, 1, 2].sort((a, b) => PRODS[a].c[0] + PRODS[a].c[1] - (PRODS[b].c[0] + PRODS[b].c[1]));
+    const CX = U / 2, CY = 1.5 * U;
+    const Z = { base: 0, product: 108, client: 196, user: 262 };
+    const T = { base: 12, product: 10, client: 18 };
+    const cliC = (k) => { const r = PRODS[k.product].r; return [r[0] + (k.col + 0.5) * U, r[1] + 1.5 * U]; };
+    const USERS = [-U, 0, U]; // one user over each stud of the brick, back to front
+    const TONE = { pawn: "is-brand", rook: "is-dark", bishop: "is-own" };
+    const order = [0, 1, 2].sort((a, b) => PRODS[a].r[0] + PRODS[a].r[1] - (PRODS[b].r[0] + PRODS[b].r[1]));
     // the part of a product past the base's edge: what it adds on its own
-    const own = ([x0, y0, x1, y1], z) => {
+    const own = ([x0, y0, x1, y1]) => {
       const [bx0, by0, bx1, by1] = BASE, out = [];
       if (x0 < bx0) out.push([x0, y0, bx0, y1]); if (x1 > bx1) out.push([bx1, y0, x1, y1]);
       const ax0 = Math.max(x0, bx0), ax1 = Math.min(x1, bx1);
@@ -397,52 +399,47 @@
     const draw = (c) => {
       const act = CLIENTS.find((k) => k.id === c.id);
       const aP = act ? act.product : 0;
-      const host = act || CLIENTS[0];
-      const hl = hexToLch(host.colour);
-      const mine = lchToHex({ ...hl, l: 0.62, c: 0.16, h: (hl.h + 150) % 360 });
-      let g = `<svg viewBox="0 0 900 570" role="img" aria-label="An exploded build. A long base plate, the shared package; three products lifted above it, each on a different part of the plate and overhanging its edge a little; two clients above each product and users above each client, inside their product. Each level overrides only what it needs.">`;
+      let g = `<svg viewBox="0 0 954 600" role="img" aria-label="An exploded build. A long base plate, the shared package; three products lifted above it, each on a different part of the plate and overhanging its edge a little; two clients above each product and users above each client, inside their product. Each level overrides only what it needs.">`;
       g += `<defs><pattern id="ov-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)"><line class="hx-l" x1="0" y1="0" x2="0" y2="5"/></pattern>
         <filter id="ov-blur" x="-10%" y="-10%" width="120%" height="140%"><feGaussianBlur stdDeviation="8"/></filter></defs>`;
       const [bx0, by0, bx1, by1] = BASE;
       g += `<polygon class="o-shadow" filter="url(#ov-blur)" points="${pts([P(bx0, by0, -T.base), P(bx1, by0, -T.base), P(bx1, by1, -T.base), P(bx0, by1, -T.base)].map(([x, y]) => [x + 4, y + 12]))}"/>`;
       // 1 · the base plate and its studs; the products' seats, which run past its edges
       g += box(bx0, by0, bx1, by1, Z.base, T.base, `o-base${act ? "" : " is-on"}`);
-      g += studs(bx0, by0, bx1, by1, Z.base, 30, 5.6, 3, "on-base");
-      order.forEach((p) => { const [x, y] = PRODS[p].c; g += seat(x - H, y - H, x + H, y + H, Z.base, p === aP); });
+      g += studs(bx0, by0, bx1, by1, Z.base, U, 5.6, 3, "on-base");
+      order.forEach((p) => { g += seat(...PRODS[p].r, Z.base, p === aP); });
       // back to front, one product at a time
       order.forEach((p) => {
-        const [x, y] = PRODS[p].c, on = p === aP, R = [x - H, y - H, x + H, y + H];
+        const on = p === aP, R = PRODS[p].r;
         g += guides(...R, Z.product - T.product, Z.base, on);
         g += box(...R, Z.product, T.product, `o-prod${on ? " is-on" : ""}`);
-        const ownR = own(R, Z.product);
+        const ownR = own(R);
         g += ownSvg(ownR, Z.product);
         const ks = CLIENTS.filter((k) => k.product === p).sort((a, b) => cliC(a)[0] + cliC(a)[1] - (cliC(b)[0] + cliC(b)[1]));
         ks.forEach((k) => { const [cx, cy] = cliC(k); g += seat(cx - CX, cy - CY, cx + CX, cy + CY, Z.product, k === act); });
-        g += studs(...R, Z.product, 30.7, 5, 2.6, "on-prod");
+        g += studs(...R, Z.product, U, 5, 2.6, "on-prod");
         ks.forEach((k) => {
           const [cx, cy] = cliC(k), kon = k === act;
           g += guides(cx - CX, cy - CY, cx + CX, cy + CY, Z.client - T.client, Z.product, kon, k.colour);
           g += box(cx - CX, cy - CY, cx + CX, cy + CY, Z.client, T.client, `o-cli${kon ? " is-on" : ""}`, k.colour);
-          [-1, 1].forEach((d) => { g += stud(cx, cy + d * 14, Z.client, 5, 3, "on-cli"); });
-          if (k === host) {
-            const kinds = [["bishop", "is-own"], ["rook", "is-dark"], ["pawn", "is-brand"]];
-            USERS.forEach((dy, i) => {
-              g += line(P(cx, cy + dy, Z.client + 3), P(cx, cy + dy, Z.user), `guide${kon ? " is-on" : ""}`, kon ? `stroke:${k.colour}` : "");
-              g += `<g style="--brand:${k.colour};--own:${mine}">${piece(kinds[i][0], cx, cy + dy, Z.user, kinds[i][1])}</g>`;
-            });
-          } else {
-            USERS.forEach((dy) => { const a = P(cx, cy + dy, Z.client + 3), b = P(cx, cy + dy, Z.user - 4); g += line(a, b, "guide is-user") + stud(cx, cy + dy, Z.user - 4, 5, 4, "o-user"); });
-          }
+          USERS.forEach((dy) => { g += stud(cx, cy + dy, Z.client, 5, 3, "on-cli"); });
+          // users: one stud each; on three clients, one user is drawn as a piece, each a different one
+          const kl = hexToLch(k.colour), mine = lchToHex({ ...kl, l: 0.62, c: 0.16, h: (kl.h + 150) % 360 });
+          USERS.forEach((dy, i) => {
+            const isPiece = k.user && i === 1, gs = `guide${kon ? " is-on" : isPiece ? "" : " is-user"}`;
+            g += line(P(cx, cy + dy, Z.client + 3), P(cx, cy + dy, isPiece ? Z.user : Z.user - 4), gs, kon ? `stroke:${k.colour}` : "");
+            g += isPiece ? `<g style="--brand:${k.colour};--own:${mine}">${piece(k.user, cx, cy + dy, Z.user, TONE[k.user])}</g>` : stud(cx, cy + dy, Z.user - 4, 5, 4, `o-user${kon ? " is-on" : ""}`);
+          });
         });
       });
-      if (act) { const [x, y] = cliC(act); const [X, Y] = P(x, y, Z.user + 60); g += `<text class="o-callname" x="${f1(X)}" y="${f1(Y)}" text-anchor="middle">${act.name}</text>`; }
+      if (act) { const [x, y] = cliC(act); const [X, Y] = P(x - CX, y + CY, Z.client - T.client / 2); g += line([X - 4, Y], [X - 24, Y], "o-leader") + `<circle class="o-tick" cx="${f1(X - 4)}" cy="${f1(Y)}" r="2"/><text class="o-callname" x="${f1(X - 30)}" y="${f1(Y + 5)}" text-anchor="end">${act.name}</text>`; }
       // callouts, numbered, to a legend on the right; anchored on the right-hand product
-      const LX = 672, kR = cliC(CLIENTS[5]), [pcx, pcy] = PRODS[2].c;
+      const LX = 726, kR = cliC(CLIENTS[5]), pr = PRODS[2].r;
       const rows = [
-        [4, "Users", "+ their own look", (() => { const [X, Y] = P(kR[0], kR[1] - 17, Z.user); return [X + 8, Y - 2]; })()],
+        [4, "Users", "+ their own look", (() => { const [X, Y] = P(kR[0], kR[1] - U, Z.user - 4); return [X + 8, Y - 4]; })()],
         [3, "Clients", "+ colour, font, button shape", P(kR[0] + CX, kR[1] - CY, Z.client - T.client / 2)],
-        [2, "Products", "+ their own parts, hatched", P(pcx + H, pcy - H, Z.product - T.product / 2)],
-        [1, "Shared package", "sets every token", P(bx1, by0 + 30, -T.base / 2)],
+        [2, "Products", "+ their own parts, hatched", P(pr[2], pr[1], Z.product - T.product / 2)],
+        [1, "Shared package", "sets every token", P(bx1, by1 - U / 2, -T.base / 2)],
       ];
       rows.forEach(([n, t, s2, [ax, ay]]) => {
         g += line([ax + 4, ay], [LX - 22, ay], "o-leader") + `<circle class="o-tick" cx="${f1(ax + 4)}" cy="${f1(ay)}" r="2.2"/>`;
