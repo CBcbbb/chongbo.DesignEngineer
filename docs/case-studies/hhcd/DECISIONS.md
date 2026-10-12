@@ -120,4 +120,4 @@ From the seven card originals you sent:
 - The cards have a soft shadow, since they overlap like real cards; everything else on the page keeps one edge.
 - The originals are 362 × 602, so the cards are shown at most about 140px wide, sharp on high-density screens; the live text carries the reading.
 - `workshop-cards.png` (the old composite) is no longer used; the file stays in `public/assets/hhcd`.
-
+- **01.5's sample data matches across all five steps** (your note at 11:02): Person A answers Project 1, Project 2 · Workshops, Interviews · Partner X; Person B answers Project 2 · Mapping, "workshop" · Partner Y; a repeat of Person A's row is removed in step 3. Step 4 has three methods (Workshops, Interviews, Mapping) and step 5 the same nine entries.

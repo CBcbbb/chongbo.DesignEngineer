@@ -628,7 +628,7 @@
 .cf-pipe-canvas {
   position: relative;
   height: 100%;
-  min-width: 620px;
+  min-width: 720px;
 }
 /* phones: the stage scrolls sideways; a hint says so */
 .cf-pipe-scroll {
@@ -711,8 +711,8 @@
 }
 .cf-pipe-strike {
   top: 78%;
-  left: 2%;
-  width: 93%;
+  left: 1.5%;
+  width: 95%;
   height: 1.5px;
   background: var(--miss, #b42318);
 }

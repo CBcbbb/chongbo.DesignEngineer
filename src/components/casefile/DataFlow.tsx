@@ -20,53 +20,76 @@ const QUESTIONS: { q: string; kind: Kind; type: string }[] = [
 ];
 const QY = [22, 41, 60, 79];
 
-/** Every cell of the survey, as a chip. `at` is its place at each of the five steps (null: not shown). */
+/**
+ * Every cell of the survey, as a chip. `at` is its place at each of the five steps (null: not shown). One set of
+ * sample answers runs through all five steps, so the data matches from start to finish:
+ *   Person A: Project 1, Project 2 · Workshops, Interviews · Partner X
+ *   Person B: Project 2 · Mapping, workshop (spelling unified to Workshops) · Partner Y
+ *   person a: a repeat of Person A's answers, removed in cleaning.
+ */
 type Chip = { id: string; kind: Kind; label: string; fixed?: string; dup?: boolean; at: At[] };
 const COLS = { people: 12.5, projects: 37.5, methods: 62.5, partners: 87.5 } as const;
+/** Survey answers (step 2) and table cells (step 3): the left edge of each chip. */
+const ANS = [54, 69.5];
+const CELL = { person: 2.5, project: [18, 31], method: [45, 60], partner: 78 } as const;
+const ROW = [34, 56, 78];
 const NET = {
-  pa: { x: 15, y: 27 },
-  pb: { x: 15, y: 65 },
-  p1: { x: 45, y: 27 },
-  p2: { x: 45, y: 65 },
-  w: { x: 79, y: 10 },
-  x: { x: 79, y: 33 },
-  m: { x: 79, y: 56 },
-  y: { x: 79, y: 79 },
+  pa: { x: 12, y: 30 },
+  pb: { x: 12, y: 68 },
+  p1: { x: 42, y: 30 },
+  p2: { x: 42, y: 68 },
+  w: { x: 79, y: 9 },
+  i: { x: 79, y: 27 },
+  m: { x: 79, y: 45 },
+  x: { x: 79, y: 63 },
+  y: { x: 79, y: 81 },
 };
-const col = (k: Kind, row: 0 | 1) => ({ x: COLS[k], y: row === 0 ? 40 : 64, c: true });
+const col = (k: Kind, row: 0 | 1 | 2) => ({ x: COLS[k], y: [36, 58, 80][row]!, c: true });
 const net = (e: keyof typeof NET) => ({ ...NET[e], c: true });
+const ans = (x: 0 | 1, q: 0 | 1 | 2 | 3) => ({ x: ANS[x]!, y: QY[q]! });
+const cell = (x: number, row: 0 | 1 | 2) => ({ x, y: ROW[row]! });
 
 const CHIPS: Chip[] = [
-  { id: "a-pa", kind: "people", label: "Person A", at: [null, { x: 54, y: QY[0]! }, { x: 3, y: 34 }, col("people", 0), net("pa")] },
-  { id: "a-p1", kind: "projects", label: "Project 1", at: [null, { x: 54, y: QY[1]! }, { x: 21, y: 34 }, col("projects", 0), net("p1")] },
-  { id: "a-p2", kind: "projects", label: "Project 2", at: [null, { x: 68, y: QY[1]! }, { x: 35.5, y: 34 }, col("projects", 1), net("p2")] },
-  { id: "a-w", kind: "methods", label: "Workshops", at: [null, { x: 54, y: QY[2]! }, { x: 51, y: 34 }, col("methods", 0), net("w")] },
-  { id: "a-x", kind: "partners", label: "Partner X", at: [null, { x: 54, y: QY[3]! }, { x: 80, y: 34 }, col("partners", 0), net("x")] },
-  { id: "b-pb", kind: "people", label: "Person B", at: [null, null, { x: 3, y: 56 }, col("people", 1), net("pb")] },
-  { id: "b-p2", kind: "projects", label: "Project 2", at: [null, null, { x: 21, y: 56 }, col("projects", 1), net("p2")] },
-  { id: "b-m", kind: "methods", label: "Mapping", at: [null, null, { x: 51, y: 56 }, col("methods", 1), net("m")] },
-  { id: "b-w", kind: "methods", label: "workshop", fixed: "Workshops", at: [null, null, { x: 64.5, y: 56 }, col("methods", 0), net("w")] },
-  { id: "b-y", kind: "partners", label: "Partner Y", at: [null, null, { x: 80, y: 56 }, col("partners", 1), net("y")] },
-  { id: "d-pa", kind: "people", label: "person a", dup: true, at: [null, null, { x: 3, y: 78 }, null, null] },
-  { id: "d-p1", kind: "projects", label: "Project 1", dup: true, at: [null, null, { x: 21, y: 78 }, null, null] },
-  { id: "d-w", kind: "methods", label: "Workshops", dup: true, at: [null, null, { x: 51, y: 78 }, null, null] },
-  { id: "d-x", kind: "partners", label: "Partner X", dup: true, at: [null, null, { x: 80, y: 78 }, null, null] },
+  // Person A
+  { id: "a-pa", kind: "people", label: "Person A", at: [null, ans(0, 0), cell(CELL.person, 0), col("people", 0), net("pa")] },
+  { id: "a-p1", kind: "projects", label: "Project 1", at: [null, ans(0, 1), cell(CELL.project[0], 0), col("projects", 0), net("p1")] },
+  { id: "a-p2", kind: "projects", label: "Project 2", at: [null, ans(1, 1), cell(CELL.project[1], 0), col("projects", 1), net("p2")] },
+  { id: "a-w", kind: "methods", label: "Workshops", at: [null, ans(0, 2), cell(CELL.method[0], 0), col("methods", 0), net("w")] },
+  { id: "a-i", kind: "methods", label: "Interviews", at: [null, ans(1, 2), cell(CELL.method[1], 0), col("methods", 1), net("i")] },
+  { id: "a-x", kind: "partners", label: "Partner X", at: [null, ans(0, 3), cell(CELL.partner, 0), col("partners", 0), net("x")] },
+  // Person B: Project 2 and Workshops merge with Person A's in step 4
+  { id: "b-pb", kind: "people", label: "Person B", at: [null, null, cell(CELL.person, 1), col("people", 1), net("pb")] },
+  { id: "b-p2", kind: "projects", label: "Project 2", at: [null, null, cell(CELL.project[0], 1), col("projects", 1), net("p2")] },
+  { id: "b-m", kind: "methods", label: "Mapping", at: [null, null, cell(CELL.method[0], 1), col("methods", 2), net("m")] },
+  { id: "b-w", kind: "methods", label: "workshop", fixed: "Workshops", at: [null, null, cell(CELL.method[1], 1), col("methods", 0), net("w")] },
+  { id: "b-y", kind: "partners", label: "Partner Y", at: [null, null, cell(CELL.partner, 1), col("partners", 1), net("y")] },
+  // a repeat of Person A's answers, struck out in step 3
+  { id: "d-pa", kind: "people", label: "person a", dup: true, at: [null, null, cell(CELL.person, 2), null, null] },
+  { id: "d-p1", kind: "projects", label: "Project 1", dup: true, at: [null, null, cell(CELL.project[0], 2), null, null] },
+  { id: "d-p2", kind: "projects", label: "Project 2", dup: true, at: [null, null, cell(CELL.project[1], 2), null, null] },
+  { id: "d-w", kind: "methods", label: "Workshops", dup: true, at: [null, null, cell(CELL.method[0], 2), null, null] },
+  { id: "d-i", kind: "methods", label: "Interviews", dup: true, at: [null, null, cell(CELL.method[1], 2), null, null] },
+  { id: "d-x", kind: "partners", label: "Partner X", dup: true, at: [null, null, cell(CELL.partner, 2), null, null] },
 ];
+/** Linked through the projects: each person to their projects; each project to the methods and partners its people gave. */
 const LINKS: [keyof typeof NET, keyof typeof NET][] = [
   ["pa", "p1"],
   ["pa", "p2"],
   ["pb", "p2"],
   ["p1", "w"],
+  ["p1", "i"],
   ["p1", "x"],
   ["p2", "w"],
+  ["p2", "i"],
   ["p2", "m"],
+  ["p2", "x"],
   ["p2", "y"],
 ];
 const TABLE_HEAD = [
-  { label: "Person", x: 3 },
-  { label: "Projects", x: 21 },
-  { label: "Methods", x: 51 },
-  { label: "Supported by", x: 80 },
+  { label: "Person", x: CELL.person },
+  { label: "Projects", x: CELL.project[0] },
+  { label: "Methods", x: CELL.method[0] },
+  { label: "Supported by", x: CELL.partner },
 ];
 /** What the reader is looking at, at each step (shown under the stage, and read out). */
 const NOTES = [
@@ -78,9 +101,9 @@ const NOTES = [
 ];
 const DESCRIBE = [
   "The four types, each turned into a question: people, who are you; projects, what did you work on; methods, which methods did you use; partners, who supported it.",
-  "Person A's answers: Project 1 and Project 2, Workshops, Partner X.",
-  "A table with one row per person. A repeated row for Person A is struck out, and 'workshop' becomes 'Workshops'.",
-  "Four columns, people, projects, methods and partners. Project 2 and Workshops, given by both people, become one entry each.",
+  "Person A's answers: Project 1 and Project 2; Workshops and Interviews; Partner X.",
+  "A table with one row per person: Person A, and Person B with Project 2; Mapping and workshop; Partner Y. A repeat of Person A's row is struck out, and Person B's 'workshop' becomes 'Workshops'.",
+  "Four columns: people, projects, methods and partners. Project 2 and Workshops, given by both people, become one entry each; methods are Workshops, Interviews and Mapping.",
   "The entries as a network: people link to projects, and projects to methods and partners.",
 ];
 

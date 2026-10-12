@@ -61,7 +61,7 @@ I led the workshop with members of all seven organisations, and designed its pro
 
 To make the survey easy to fill in, I started it from each person's own work: their projects, the methods they used and who supported them. Collecting was easy, but every row of the spreadsheet had a person at its centre. So I gave the map four linked types of equal weight, and decided what each entry stands for.
 
-*Evidence:* one stage the reader steps through (sample labels); the same entries move: questions (each → its type) → one person's answers → one row per person, cleaned → four typed columns, repeats merged → linked. *Tabs:* Decide · Survey · Clean · Split · Link. *Notes on the stage:* Each question becomes one type · One person's answers · One row per person · duplicate removed · spelling unified · Split by type · repeated entries merge into one · Linked through the projects · every entry the same weight
+*Evidence:* one stage the reader steps through (sample labels: Person A: Project 1, Project 2 · Workshops, Interviews · Partner X; Person B: Project 2 · Mapping, workshop · Partner Y; a repeat of Person A's row); the same entries move: questions (each → its type) → one person's answers → one row per person, cleaned → four typed columns, repeats merged → linked. *Tabs:* Decide · Survey · Clean · Split · Link. *Notes on the stage:* Each question becomes one type · One person's answers · One row per person · duplicate removed · spelling unified · Split by type · repeated entries merge into one · Linked through the projects · every entry the same weight
 
 1. Decide what the platform needs to know.
 2. Survey each person about their own work.
