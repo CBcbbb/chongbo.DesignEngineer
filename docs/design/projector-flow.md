@@ -7,11 +7,11 @@ How the home page plays, stage by stage, and the renders it needs. Built on `she
 | # | Stage | What happens | Camera | Material |
 |---|---|---|---|---|
 | 0 | Arrive | Light room. Headline left; a file of five index cards (four questions, one blank); the machine front-on at the right, lamp off. | Front, eye level, whole machine | `machine.webp` (V5 front, off), `paper.webp` |
-| 1 | Choose | A card lifts out of the file, flies and turns into a card above the magazine, drops into the front slot; lamp green, the red button breathes. Another card swaps it. Writing on the blank card opens it to ruled lines. | Front | same |
+| 1 | Choose | Up to three cards: each lifts out of the file and flies to the magazine, the first into the front slot, the next behind it; lamp green, the red button breathes. Pressing a card that is in takes it out. Writing on the blank card opens it to ruled lines; it goes in last when you press. | Front | same |
 | 2 | Press | The button goes in, the machine knocks, the card drops into the gate. The question is sent now. | Front | (optional) pressed-button crop |
 | 3 | Lights down, move in | The room goes dark; we move in and round the machine until it is a close, sharp foreground at the left, lens facing the wall on the right. The lens lights; the beam reaches the wall. | Front → **¾ view** (cross-fade during the move) | **A** and **B** (¾ renders), **C** (beam) |
 | 4 | Thinking | Top left, four steps: Reading your card → Finding the work that answers it → Choosing the sections to show → Projecting. The first two follow the request; the last two follow the answer. On the wall, the light is out of focus. At least about 2 s. | ¾, still | A, C, **D** (dust) |
-| 5 | Selected for you | A cut through the dark to behind the machine; the light comes into focus as a row of story cards; the one in the light faces us, the others turn away. Arrows, dots, keys, drag. | **behind**, still | rear render, rear beam, dust, v6 story panel |
+| 5 | Selected for you (each card in turn) | A cut through the dark to behind the machine; the light comes into focus as a row of story cards; the one in the light faces us, the others turn away. Arrows, dots, keys, drag. | **behind**, still | rear render, rear beam, dust, v6 story panel |
 | 6 | A story | The card grows into the full slide: claim, reasoning, evidence (full width for figures and diagrams), Open full project, Next story, Back to the selection. The machine darkens. | behind | `slide.webp` |
 | 7 | Change the card | The wall goes, we move back out to the front view, the lights come up, the card comes back to the file. | behind → front | front |
 

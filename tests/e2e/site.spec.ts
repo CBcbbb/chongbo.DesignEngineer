@@ -8,7 +8,7 @@ async function axe(page: Page) {
   const results = await new AxeBuilder({ page: page as never })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"])
     .analyze();
-  const summary = results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`);
+  const summary = results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => `${n.target.join(" ")} (${n.failureSummary ?? ""})`).join(", ")}`);
   expect(summary, summary.join("\n")).toEqual([]);
 }
 
@@ -39,7 +39,8 @@ test.describe("accessibility", () => {
   test("axe in the dark room, after projecting", async ({ page }) => {
     await page.goto("/");
     await projectCard(page);
-    await page.waitForTimeout(300);
+    // the answer and the controls rise in over about a second; check them once they are all in
+    await page.waitForTimeout(1300);
     await axe(page);
   });
 });
@@ -85,20 +86,51 @@ test.describe("the projector", () => {
     expect((await req).postDataJSON()).toEqual({ brief: "Have you built a design system?" });
   });
 
-  test("one card at a time: loading another puts the first back in the hand", async ({ page }) => {
+  test("the magazine holds three cards: another queues behind, pressing one in takes it out, a fourth is refused", async ({ page }) => {
     await page.goto("/");
-    const first = page.getByRole("button", { name: A11Y, exact: true });
-    const second = page.getByRole("button", { name: "Show me brand or marketing work.", exact: true });
+    const qs = [A11Y, "Have you built a design system?", "Show me brand or marketing work.", "Show me something you built end to end."];
+    const card = (q: string) => page.getByRole("button", { name: q, exact: true });
+    for (const q of qs.slice(0, 3)) {
+      await pickCard(page, q);
+      await expect(card(q)).toHaveAttribute("aria-pressed", "true");
+      await page.waitForTimeout(1200); // the card lands
+    }
+    await expect(page.locator(".pj-slotcard")).toHaveCount(3);
+    await expect(page.locator(".pj-status")).toHaveText("3 cards in. Ready to project");
+    // A fourth doesn't go in.
+    await pickCard(page, qs[3]!);
+    await expect(page.locator(".pj-status")).toHaveText("The magazine holds three cards. Take one out first.");
+    await expect(card(qs[3]!)).toHaveAttribute("aria-pressed", "false");
+    // Pressing a card that is in takes it back out; the others stay.
+    await card(qs[1]!).click({ position: { x: 48, y: 16 } });
+    await expect(card(qs[1]!)).toHaveAttribute("aria-pressed", "false");
+    await expect(page.locator(".pj-slotcard")).toHaveCount(2, { timeout: 5_000 });
+    await expect(card(A11Y)).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("two cards: one request each, the wall shows each card's answer in turn", async ({ page }) => {
+    await page.goto("/");
+    const briefs: unknown[] = [];
+    page.on("request", (r) => {
+      if (r.url().endsWith("/api/ask")) briefs.push(r.postDataJSON());
+    });
     await pickCard(page, A11Y);
-    await expect(first).toHaveAttribute("aria-pressed", "true");
-    await page.waitForTimeout(1200); // the card lands
+    await page.waitForTimeout(1200);
     await pickCard(page, "Show me brand or marketing work.");
-    await expect(second).toHaveAttribute("aria-pressed", "true");
-    await expect(first).toHaveAttribute("aria-pressed", "false");
-    await expect(page.locator(".pj-slotcard")).toContainText("Show me brand or marketing work.", { timeout: 5_000 });
-    // Writing on the blank card takes the printed one out.
-    await page.fill("#brief", "motion");
-    await expect(second).toHaveAttribute("aria-pressed", "false");
+    await page.waitForTimeout(1200);
+    await page.getByRole("button", { name: "Project", exact: true }).click();
+    await expect(page.locator("#r-title")).toBeFocused({ timeout: 10_000 });
+    expect(briefs).toEqual([{ brief: A11Y }, { brief: "Show me brand or marketing work." }]);
+    await expect(page.locator(".pj-eyebrow")).toHaveText(/^Card 1 of 2/);
+    await expect(page.locator("#r-title")).toHaveText("One project shows accessibility.");
+    const n = await page.locator(".pj-story").count();
+    for (let i = 1; i < n; i++) await page.keyboard.press("ArrowRight");
+    await expect(page.locator(".pj-eyebrow")).toHaveText(/^Card 2 of 2/);
+    await expect(page.getByRole("status")).toContainText("Card 2:");
+    // Change the card: both come back to the hand.
+    await page.getByRole("button", { name: "Change the card" }).click();
+    await expect(page.getByRole("button", { name: A11Y, exact: true })).toHaveAttribute("aria-pressed", "false", { timeout: 5_000 });
+    await expect(page.getByRole("button", { name: "Show me brand or marketing work.", exact: true })).toHaveAttribute("aria-pressed", "false");
   });
 
   test("keyboard only: write on the blank card, Enter, the answer is focused, Enter opens the story, Tab reaches its link", async ({ page }) => {

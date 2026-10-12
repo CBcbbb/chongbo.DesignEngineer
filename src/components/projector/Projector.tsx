@@ -18,17 +18,19 @@ import { flushSync } from "react-dom";
 import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, type AskResponse } from "@/lib/ask/schema";
 import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
 import { SIGNAL_SHORT, missingLine, pad2, provenanceLine } from "@/lib/printed";
-import { BEAM, BEAM_REAR, BLANK_HINT, ERRORS, STATUS, beamPlacement, firstSentence, quoteCard, storyPose } from "@/lib/projector";
+import { BEAM, BEAM_REAR, BLANK_HINT, ERRORS, MAGAZINE, STATUS, beamPlacement, firstSentence, joinReels, quoteCard, readyLine, stepsFor, storyPose } from "@/lib/projector";
 
 /*
  * The projector. Four stages, each a behaviour of the machine rather than a screen:
- *   1. Request  – a card from the hand flies into the magazine (or you write on the blank one); the lamp turns green.
+ *   1. Request  – cards from the hand fly into the magazine, up to three, each behind the last (or you write on the
+ *                 blank one); press one that is in to take it out. The lamp turns green.
  *   2. Thinking – the red button: the card drops into the gate, the room goes dark and we move in on the machine. The
  *                 lens lights, the beam finds the wall, and a list of steps follows the real request (never a fake
  *                 progress bar) while the light on the wall is still out of focus.
  *   3. Browsing – a cut through the dark to behind the machine, looking at the wall with it; the light comes into
  *                 focus as a row of story cards, one per section chosen: the one in the light is
- *                 sharp, the others turn away into the dark. Open a card and it becomes the full slide.
+ *                 sharp, the others turn away into the dark. Open a card and it becomes the full slide. With several
+ *                 cards, each card's stories follow the last's, and the heading changes to that card's answer.
  *   4. Again    – change the card: the lights come up, we step back, and the card comes back out.
  * Plain Web Animations API, no library. With reduced motion everything happens at once (the room still darkens).
  */
@@ -52,12 +54,13 @@ type Stage = "think" | "show";
 /** Which card is the request: a printed card by index, the blank card, or none. */
 type Choice = number | "blank" | null;
 
-type Slide = SheetCard & { why: string };
-type Result = { line: string; quote: string; slides: Slide[]; missing: string; provenance: string };
+/** A story on the wall: which card (reel) brought it up, and the later cards it also answers. */
+type Slide = SheetCard & { why: string; reel: number; also: number[] };
+/** One card's answer. */
+type Reel = { no: string; line: string; quote: string; missing: string; provenance: string };
+type Result = { reels: Reel[]; slides: Slide[] };
 type Outcome = { ok: true; data: AskResponse } | { ok: false; message: string };
 
-/** What the machine is doing while the room is dark, in order. The first two follow the request; the rest follow the answer. */
-const STEPS = ["Reading your card", "Finding the work that answers it", "Choosing the sections to show", "Projecting"];
 
 const OUT = "cubic-bezier(0.16, 1, 0.3, 1)";
 const INOUT = "cubic-bezier(0.65, 0, 0.35, 1)";
@@ -73,6 +76,13 @@ function cardInset(card: DOMRect, box: DOMRect): string {
   const r = box.right - card.right;
   const b = box.bottom - card.bottom;
   return `inset(${t}px ${r}px ${b}px ${l}px round 12px)`;
+}
+/** Said when turning the row takes you on to another card's stories: which card, and its answer. */
+function reelChange(r: Result, from: number, to: number): string {
+  const a = r.slides[from]?.reel;
+  const b = r.slides[to]?.reel;
+  if (b === undefined || a === b) return "";
+  return `Card ${b + 1}: ${r.reels[b]!.line} `;
 }
 /** Everything the dark room shows, fetched and decoded while you choose a card, so nothing pops in mid-move. */
 const DARK_ROOM = [
@@ -91,8 +101,13 @@ const DARK_ROOM = [
 ];
 /** The paper card's proportions (public/projector/card.webp). */
 const CARD_RATIO = 900 / 499;
-/** The magazine's card positions, as translateY of the slot card (anchored to the magazine's front lip). */
-const POS = { above: "-8%", seated: "52%", out: "-70%" } as const;
+/** The magazine's card positions, as translateY of a slot card (anchored to the magazine's front lip); each card
+ * further back stands DEPTH higher and a little smaller. */
+const POS = { above: -8, seated: 52, out: -70 } as const;
+const DEPTH = 17;
+const slotAt = (y: number, d: number) => `translateY(${y - d * DEPTH}%) scale(${1 - d * 0.04})`;
+/** A card's key, for the magazine and the hand. */
+const cardId = (c: Choice) => String(c);
 const reduced = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, reduced() ? 0 : ms));
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
@@ -198,11 +213,15 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   const [phase, setPhase] = useState<Phase>("light");
   const [stage, setStage] = useState<Stage>("think");
   const [step, setStep] = useState(0);
-  const [choice, setChoice] = useState<Choice>(null);
-  /** The card that is physically in the magazine (it can differ from `choice` while the blank one is being written). */
-  const [inMag, setInMag] = useState<Choice>(null);
-  /** The card whose place in the hand is empty: it is in the magazine, or on its way there. */
-  const [away, setAway] = useState<Choice>(null);
+  /** The cards in the magazine, front slot first: the order they are projected in. */
+  const [mag, setMag] = useState<Choice[]>([]);
+  /** The cards whose place in the hand is empty: in the magazine, or on their way there. */
+  const [away, setAway] = useState<Choice[]>([]);
+  /** The magazine as it is now, for a press that waited for a card to land (the render it came from is older). */
+  const magNow = useRef<Choice[]>([]);
+  useLayoutEffect(() => {
+    magNow.current = mag;
+  }, [mag]);
   const [brief, setBrief] = useState("");
   const [status, setStatus] = useState<string>(STATUS.idle);
   const [fault, setFault] = useState(false);
@@ -213,6 +232,8 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   const [drag, setDrag] = useState(0);
   const [beam, setBeam] = useState<CSSProperties | null>(null);
   const [live, setLive] = useState("");
+  /** How many cards went in this time (the steps' wording). */
+  const [count, setCount] = useState(1);
 
   const busy = useRef(false);
   /** While a slide is opening, changing or closing: resolves when it is done, so a press meanwhile waits, not drops. */
@@ -224,7 +245,8 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   const allRef = useRef<HTMLAnchorElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const machineRef = useRef<HTMLDivElement>(null);
-  const slotRef = useRef<HTMLDivElement>(null);
+  const slotRefs = useRef(new Map<string, HTMLDivElement>());
+  const slotOf = (c: Choice) => slotRefs.current.get(cardId(c)) ?? null;
   const magRef = useRef<HTMLDivElement>(null);
   const wallRef = useRef<HTMLElement>(null);
   const areaRef = useRef<HTMLDivElement>(null);
@@ -295,8 +317,8 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   }, []);
 
 
-  /** A card leaves the hand and flies to just above the magazine. */
-  const flyIn = useCallback(async (from: HTMLElement, text: string, no: string, typed: boolean) => {
+  /** A card leaves the hand and flies to just above its slot in the magazine (`depth`: how far back). */
+  const flyIn = useCallback(async (from: HTMLElement, text: string, no: string, typed: boolean, depth = 0) => {
     if (reduced()) return;
     // On a phone the machine can be out of view (above the hand): bring it in first, so the card is seen going in.
     const mag0 = machineRef.current?.getBoundingClientRect();
@@ -305,10 +327,12 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       await sleep(420);
     }
     const a = from.getBoundingClientRect();
-    // Just above the magazine: the end of every flight.
+    // Just above the magazine: the end of every flight. A card further back is a little smaller and higher.
     const m = magRef.current?.getBoundingClientRect();
-    const h = m ? m.width / CARD_RATIO : 0;
-    const b = m ? { left: m.left, top: m.bottom - h * 1.08, width: m.width } : null;
+    const k = 1 - depth * 0.04;
+    const w = m ? m.width * k : 0;
+    const h = w / CARD_RATIO;
+    const b = m ? { left: m.left + (m.width - w) / 2, top: m.bottom - h * 1.08 - (depth * DEPTH * h) / 100, width: w } : null;
     if (!b || !a.width) return;
     const fly = document.createElement("div");
     fly.className = "pj-card pj-fly";
@@ -346,24 +370,27 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     fly.remove();
   }, []);
 
-  /** The card shown in the magazine drops into its slot with a small knock. Call right after it is rendered. */
-  const seat = useCallback(async () => {
-    const slot = slotRef.current;
-    slot?.getAnimations().forEach((x) => x.cancel());
-    await play(slot, [{ transform: `translateY(${POS.above})` }, { transform: `translateY(${POS.seated})` }], {
-      duration: 240,
-      easing: "cubic-bezier(0.5, 0, 0.75, 0)",
-    });
-    knock(0.6);
-  }, [knock]);
+  /** A card just shown in the magazine drops into its slot with a small knock. Call right after it is rendered. */
+  const seat = useCallback(
+    async (c: Choice, depth: number) => {
+      const slot = slotOf(c);
+      slot?.getAnimations().forEach((x) => x.cancel());
+      await play(slot, [{ transform: slotAt(POS.above, depth) }, { transform: slotAt(POS.seated, depth) }], {
+        duration: 240,
+        easing: "cubic-bezier(0.5, 0, 0.75, 0)",
+      });
+      knock(0.6);
+    },
+    [knock],
+  );
 
-  /** The card in the magazine rises out of it. The state is cleared by the caller. */
-  const lift = useCallback(async () => {
+  /** A card rises out of the magazine. The state is cleared by the caller. */
+  const lift = useCallback(async (c: Choice, depth: number) => {
     await play(
-      slotRef.current,
+      slotOf(c),
       [
-        { transform: `translateY(${POS.seated})`, opacity: 1 },
-        { transform: `translateY(${POS.out})`, opacity: 0 },
+        { transform: slotAt(POS.seated, depth), opacity: 1 },
+        { transform: slotAt(POS.out, depth), opacity: 0 },
       ],
       { duration: 300, easing: OUT, fill: "forwards" },
     );
@@ -381,19 +408,30 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     [BLANK],
   );
 
-  /** Take the card out of the magazine and put it back in the hand. */
+  /** Take cards out of the magazine and put them back in the hand; the ones behind move up into the gaps. */
   const eject = useCallback(
-    async (c: Choice) => {
-      await lift();
+    async (out: Choice[], from: Choice[]) => {
+      if (!out.length) return;
+      await Promise.all(out.map((c) => lift(c, Math.max(0, from.indexOf(c)))));
       flushSync(() => {
-        setInMag(null);
-        setAway(null);
+        setMag((m) => m.filter((c) => !out.includes(c)));
+        setAway((a) => a.filter((c) => !out.includes(c)));
       });
-      slotRef.current?.getAnimations().forEach((x) => x.cancel());
-      dropBack(c);
+      out.forEach((c) => {
+        slotOf(c)?.getAnimations().forEach((x) => x.cancel());
+        dropBack(c);
+      });
     },
     [lift, dropBack],
   );
+
+  /** A card that can't go in: it gives a little shake where it is. */
+  const refuse = useCallback((el: Element | null | undefined) => {
+    void play(el, [{ translate: "0 0" }, { translate: "-5px 0" }, { translate: "4px 0" }, { translate: "0 0" }], {
+      duration: 320,
+      easing: "ease-in-out",
+    });
+  }, []);
 
   // ---------- 1. request ----------
   /** A card on its way into the magazine: pressing the button meanwhile waits for it to land. */
@@ -402,24 +440,35 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   const loadCard = useCallback(
     async (i: number) => {
       setFault(false);
-      const prev = inMag;
       const el = cardRefs.current[i];
-      setChoice(i);
-      setStatus(STATUS.ready);
-      setLive(`Card in the projector: ${questions[i]}`);
-      // The card leaves the hand at once (its place stays empty); the one in the magazine comes back out meanwhile.
-      const rising = prev !== null ? lift() : Promise.resolve();
-      flushSync(() => setAway(i));
-      if (prev !== null) dropBack(prev);
-      await Promise.all([el ? flyIn(el, questions[i] ?? "", pad2(i + 1), false) : Promise.resolve(), rising]);
-      flushSync(() => setInMag(i));
-      await seat();
+      // A card that is in already comes back out.
+      if (mag.includes(i)) {
+        setLive(`Taken out: ${questions[i]}`);
+        const left = mag.length - 1 + (brief.trim() ? 1 : 0);
+        setStatus(left ? readyLine(left) : STATUS.idle);
+        await eject([i], mag);
+        return;
+      }
+      if (mag.length >= MAGAZINE) {
+        setStatus(STATUS.full);
+        setLive(STATUS.full);
+        refuse(el);
+        return;
+      }
+      const depth = mag.length;
+      setStatus(readyLine(depth + 1 + (brief.trim() ? 1 : 0)));
+      setLive(`Card ${depth + 1} in the projector: ${questions[i]}`);
+      // The card leaves the hand at once (its place stays empty) and flies to its slot, behind any already in.
+      flushSync(() => setAway((a) => [...a, i]));
+      if (el) await flyIn(el, questions[i] ?? "", pad2(i + 1), false, depth);
+      flushSync(() => setMag((m) => [...m, i]));
+      await seat(i, depth);
     },
-    [inMag, questions, lift, dropBack, flyIn, seat],
+    [mag, brief, questions, eject, refuse, flyIn, seat],
   );
 
   const load = (i: number) => {
-    if (busy.current || phase !== "light" || inMag === i) return;
+    if (busy.current || phase !== "light") return;
     busy.current = true;
     landing.current = loadCard(i).finally(() => {
       busy.current = false;
@@ -430,16 +479,8 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   const onBrief = (v: string) => {
     setBrief(v);
     setFault(false);
-    if (v.trim()) {
-      if (typeof inMag === "number" && !busy.current) void eject(inMag);
-      if (choice !== "blank") {
-        setChoice("blank");
-        setStatus(STATUS.ready);
-      }
-    } else if (choice === "blank") {
-      setChoice(null);
-      setStatus(STATUS.idle);
-    }
+    const n = mag.length + (v.trim() ? 1 : 0);
+    setStatus(n > MAGAZINE ? STATUS.full : n ? readyLine(n) : STATUS.idle);
   };
 
   // ---------- the beam: the photograph of the light, from the lens to whatever is lit on the wall ----------
@@ -520,39 +561,47 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   const project = useCallback(async () => {
     if (landing.current) await landing.current;
     if (busy.current || phase !== "light") return;
-    let c: Choice = choice;
-    if (c === null && brief.trim()) c = "blank";
-    if (c === null) {
+    // The cards in the magazine, in order, and the blank card if it has been written on.
+    const inMag = magNow.current;
+    const list: Choice[] = [...inMag];
+    if (brief.trim() && !list.includes("blank")) list.push("blank");
+    if (!list.length) {
       setStatus(STATUS.idle);
       blankRef.current?.focus();
-      void play(cardRefs.current[BLANK], [{ translate: "0 0" }, { translate: "-5px 0" }, { translate: "4px 0" }, { translate: "0 0" }], {
-        duration: 320,
-        easing: "ease-in-out",
-      });
+      refuse(cardRefs.current[BLANK]);
       return;
     }
-    const text = textOf(c);
-    if (!text) return;
+    if (list.length > MAGAZINE) {
+      setStatus(STATUS.full);
+      setLive(STATUS.full);
+      refuse(cardRefs.current[BLANK]);
+      return;
+    }
+    const texts = list.map(textOf);
+    if (texts.some((t) => !t)) return;
     busy.current = true;
     setFault(false);
+    setCount(list.length);
 
-    // The blank card goes in now: it was written in the hand.
-    if (c === "blank" && inMag !== "blank") {
-      if (inMag !== null) await eject(inMag);
+    // The blank card goes in now, behind the others: it was written in the hand.
+    if (list.includes("blank") && !inMag.includes("blank")) {
       const el = cardRefs.current[BLANK];
-      flushSync(() => setAway("blank"));
-      if (el) await flyIn(el, text, pad2(BLANK + 1), true);
-      flushSync(() => setInMag("blank"));
-      await seat();
+      const depth = inMag.length;
+      flushSync(() => setAway((a) => [...a, "blank"]));
+      if (el) await flyIn(el, brief.trim(), pad2(BLANK + 1), true, depth);
+      flushSync(() => setMag((m) => [...m, "blank"]));
+      await seat("blank", depth);
       await sleep(100);
     }
 
     // The button goes in, the card drops into the gate, and the question is on its way.
     knock(1.3);
     const t0 = performance.now();
-    const pending = ask(text);
-    setLive(STEPS[0]!);
-    if (slotRef.current) slotRef.current.dataset.pos = "gate";
+    const pending = Promise.all(texts.map((t) => ask(t)));
+    const steps = stepsFor(list.length);
+    setLive(steps[0]!);
+    const gate = slotOf(list[0]!);
+    if (gate) gate.dataset.pos = "gate";
     await Promise.all(
       [introRef.current, handRef.current, allRef.current].map((el) =>
         play(el, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(-8px)" }], {
@@ -597,34 +646,47 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       setTimeout(() => rootRef.current?.removeAttribute("data-glide"), 650);
     });
 
-    const outcome = await pending;
+    const outcomes = await pending;
     const elapsed = performance.now() - t0;
     await sleep(Math.max(0, 1900 - elapsed));
     clearTimeout(second);
 
-    if (!outcome.ok) {
-      setLive(outcome.message);
+    // Each card's answer is a reel; a card that jammed is named, and the others are still shown.
+    const answered: { at: number; data: AskResponse; slides: Slide[] }[] = [];
+    outcomes.forEach((o, at) => {
+      if (!o.ok) return;
+      const slides = o.data.sheets
+        .map((sh) => {
+          const card = cards[cardKey(sh.project, sh.section)];
+          return card ? { ...card, why: SIGNAL_SHORT[sh.signal], reel: 0, also: [] as number[] } : null;
+        })
+        .filter((x): x is Slide => Boolean(x));
+      if (slides.length) answered.push({ at, data: o.data, slides });
+    });
+    if (!answered.length) {
+      const fail = outcomes.find((o): o is { ok: false; message: string } => !o.ok);
+      const message = fail?.message ?? ERRORS.jammed;
+      setLive(message);
       await lightsUp();
-      if (slotRef.current) slotRef.current.dataset.pos = "seated";
-      setStatus(outcome.message);
+      if (gate) gate.dataset.pos = "seated";
+      setStatus(message);
       setFault(true);
       busy.current = false;
       return;
     }
-    const slides: Slide[] = outcome.data.sheets
-      .map((s) => {
-        const card = cards[cardKey(s.project, s.section)];
-        return card ? { ...card, why: SIGNAL_SHORT[s.signal] } : null;
-      })
-      .filter((s): s is Slide => Boolean(s));
-    if (!slides.length) {
-      await lightsUp();
-      if (slotRef.current) slotRef.current.dataset.pos = "seated";
-      setStatus(ERRORS.jammed);
-      setFault(true);
-      busy.current = false;
-      return;
-    }
+    const jammed = outcomes.map((o, at) => (o.ok ? -1 : at)).filter((at) => at >= 0);
+    const reels: Reel[] = answered.map(({ at, data, slides }) => ({
+      no: pad2((list[at] === "blank" ? BLANK : (list[at] as number)) + 1),
+      line: data.line,
+      quote: quoteCard(texts[at]!),
+      missing: [missingLine(data.missing), jammed.length ? `${jammed.length === 1 ? "One card" : `${jammed.length} cards`} jammed; try ${jammed.length === 1 ? "it" : "them"} again on ${jammed.length === 1 ? "its" : "their"} own.` : ""].filter(Boolean).join(" "),
+      provenance: provenanceLine(data.source, slides.length),
+    }));
+    const joined = joinReels(
+      answered.map((a) => a.slides),
+      (x) => cardKey(x.project, x.section),
+    );
+    const slides: Slide[] = joined.map(({ item, reel, also }) => ({ ...item, reel, also }));
 
     // The answer: the last two steps, then the light comes into focus as the story cards.
     setStep(2);
@@ -637,13 +699,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     if (camRef.current) camRef.current.dataset.view = "cut";
     await sleep(280);
     viewRef.current = "rear";
-    const r: Result = {
-      line: outcome.data.line,
-      quote: quoteCard(text),
-      slides,
-      missing: missingLine(outcome.data.missing),
-      provenance: provenanceLine(outcome.data.source, slides.length),
-    };
+    const r: Result = { reels, slides };
     flushSync(() => {
       setResult(r);
       setActive(0);
@@ -662,9 +718,10 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     );
     titleRef.current?.focus({ preventScroll: true });
     const s0 = slides[0]!;
-    setLive(`${r.line} Story 1 of ${slides.length}: ${s0.title}, ${s0.projectTitle}.`);
+    const cardsSaid = reels.length > 1 ? `${reels.length} cards. Card 1: ` : "";
+    setLive(`${cardsSaid}${reels[0]!.line} Story 1 of ${slides.length}: ${s0.title}, ${s0.projectTitle}.`);
     busy.current = false;
-  }, [phase, choice, brief, BLANK, textOf, knock, inMag, eject, flyIn, seat, cards, aim, lightsUp]);
+  }, [phase, brief, BLANK, textOf, knock, refuse, flyIn, seat, cards, aim, lightsUp]);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -692,9 +749,10 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       if (j === active) return;
       setActive(j);
       const s = result.slides[j]!;
-      setLive(`Story ${j + 1} of ${n}: ${s.title}, ${s.projectTitle}.`);
+      setLive(`${reelChange(result, active, j)}Story ${j + 1} of ${n}: ${s.title}, ${s.projectTitle}.`);
+      if (s.reel !== result.slides[active]?.reel) knock(0.5);
     },
-    [result, n, active],
+    [result, n, active, knock],
   );
 
   // the beam follows the card in the light, and the open slide
@@ -775,6 +833,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       const j = Math.max(0, Math.min(n - 1, k));
       if (j === activeRef.current) return;
       const end = begin();
+      const from = activeRef.current;
       rootRef.current?.setAttribute("data-glide", "");
       const dir = j > activeRef.current ? 1 : -1;
       knock(0.4);
@@ -782,7 +841,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       flushSync(() => setActive(j));
       openRef.current?.getAnimations().forEach((x) => x.cancel());
       const s = result.slides[j]!;
-      setLive(`Story ${j + 1} of ${n}: ${s.title}, ${s.projectTitle}.`);
+      setLive(`${reelChange(result, from, j)}Story ${j + 1} of ${n}: ${s.title}, ${s.projectTitle}.`);
       await play(
         openRef.current,
         [
@@ -856,30 +915,36 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   const again = useCallback(async () => {
     if (busy.current || phase !== "dark") return;
     busy.current = true;
-    const back = inMag;
+    const back = mag;
     await lightsUp();
-    setChoice(null);
-    setStatus(STATUS.idle);
-    if (slotRef.current) slotRef.current.dataset.pos = "seated";
-    if (back !== null) await eject(back);
-    setLive("The lights are up. Choose a card.");
-    const focusEl = back === "blank" || back === null ? blankRef.current : (cardRefs.current[back] as HTMLElement | null);
+    setStatus(brief.trim() && !back.includes("blank") ? readyLine(1) : STATUS.idle);
+    back.forEach((c) => {
+      const el = slotOf(c);
+      if (el) el.dataset.pos = "seated";
+    });
+    await eject(back, back);
+    setLive(back.length > 1 ? "The lights are up. The cards are back in the hand." : "The lights are up. Choose a card.");
+    const f = back[0];
+    const focusEl = f === "blank" || f === undefined || f === null ? blankRef.current : (cardRefs.current[f] as HTMLElement | null);
     focusEl?.focus({ preventScroll: true });
     busy.current = false;
-  }, [phase, inMag, eject, lightsUp]);
+  }, [phase, mag, brief, eject, lightsUp]);
   useEffect(() => {
     againRef.current = () => void again();
   }, [again]);
 
   // ---------- render ----------
-  const loadedText = inMag === null ? "" : inMag === "blank" ? brief.trim() : (questions[inMag] ?? "");
-  const lamp = fault ? "fault" : phase === "dark" ? "on" : choice !== null ? "ready" : "off";
+  const ready = mag.length > 0 || brief.trim().length > 0;
+  const lamp = fault ? "fault" : phase === "dark" ? "on" : ready ? "ready" : "off";
   const cur = slides[active];
+  const reelNo = cur?.reel ?? 0;
+  const reel = result?.reels[reelNo];
+  const reels = result?.reels.length ?? 0;
   const curMedia = cur ? media[cardKey(cur.project, cur.section)] : undefined;
   const curTags = cur ? cur.tags.filter((t) => !t.toLowerCase().startsWith(cur.why.toLowerCase())) : [];
 
   return (
-    <div className="pj" ref={rootRef} data-phase={phase} data-stage={stage} data-ready={choice !== null || undefined}>
+    <div className="pj" ref={rootRef} data-phase={phase} data-stage={stage} data-ready={ready || undefined}>
       <div className="pj-bg" aria-hidden="true">
         <i className="pj-bg-light" />
         <i className="pj-bg-dark" />
@@ -894,7 +959,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
           <b>
             I&apos;m {name}, a design engineer in {location}.
           </b>{" "}
-          Put a card in the projector, or write your own, and the work that answers it is projected, one slide per project.
+          Put a card in the projector (up to three), or write your own, and the work that answers each is projected, one slide per project.
         </p>
       </div>
 
@@ -910,11 +975,11 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
         inert={phase !== "light"}
       >
         <p className="pj-hand-label" id="pj-hand-label">
-          Pick a card, or write on the blank one
+          Pick up to three cards, or write your own
         </p>
         <ol className="pj-stack">
           {questions.map((q, i) => (
-            <li key={q} style={{ ["--i" as string]: i }} data-out={away === i || undefined}>
+            <li key={q} style={{ ["--i" as string]: i }} data-out={away.includes(i) || undefined}>
               <button
                 ref={(el) => {
                   cardRefs.current[i] = el;
@@ -923,7 +988,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
                 name="brief"
                 value={q}
                 className="pj-card"
-                aria-pressed={choice === i}
+                aria-pressed={mag.includes(i)}
                 onClick={(e) => {
                   e.preventDefault();
                   load(i);
@@ -933,7 +998,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
               </button>
             </li>
           ))}
-          <li style={{ ["--i" as string]: questions.length }} data-out={away === "blank" || undefined}>
+          <li style={{ ["--i" as string]: questions.length }} data-out={away.includes("blank") || undefined}>
             <div
               className={`pj-card pj-blank${brief ? " has-text" : ""}`}
               ref={(el) => {
@@ -975,9 +1040,21 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       <div className="pj-stage" ref={stageRef}>
         <div className="pj-machine" ref={machineRef} data-lamp={lamp}>
           <div className="pj-mag" ref={magRef} aria-hidden="true">
-            <div className="pj-card pj-slotcard" ref={slotRef} data-pos="seated" hidden={inMag === null}>
-              <Face text={loadedText} no={noOf(inMag)} typed={inMag === "blank"} />
-            </div>
+            {/* the cards in the magazine: the first in the front slot, each one after it further back */}
+            {mag.map((c, d) => (
+              <div
+                key={cardId(c)}
+                className="pj-card pj-slotcard"
+                ref={(el) => {
+                  if (el) slotRefs.current.set(cardId(c), el);
+                  else slotRefs.current.delete(cardId(c));
+                }}
+                data-pos="seated"
+                style={{ ["--d" as string]: d, zIndex: MAGAZINE - d }}
+              >
+                <Face text={textOf(c)} no={noOf(c)} typed={c === "blank"} />
+              </div>
+            ))}
           </div>
           <Image
             className="pj-photo"
@@ -1051,29 +1128,31 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
           <section className="pj-wall" ref={wallRef} aria-labelledby={result ? "r-title" : undefined} aria-label={result ? undefined : "Projecting"} data-open={open || undefined}>
             <header className="pj-wallhead">
               <ol className="pj-steps" aria-hidden="true" data-done={stage === "show" || undefined}>
-                {STEPS.map((s, i) => (
+                {stepsFor(count).map((s, i) => (
                   <li key={s} data-state={i < step ? "done" : i === step ? "now" : "todo"}>
                     {s}
-                    {i === step && i < STEPS.length - 1 ? "…" : ""}
+                    {i === step && i < 3 ? "…" : ""}
                   </li>
                 ))}
               </ol>
-              {result && (
-                <div className="pj-answer">
-                  <p className="pj-eyebrow">Selected for your card</p>
+              {result && reel && (
+                // one card's answer at a time: it changes as the row turns on to the next card's stories
+                <div className="pj-answer" key={reelNo}>
+                  <p className="pj-eyebrow">{reels > 1 ? `Card ${reelNo + 1} of ${reels} · No. ${reel.no}` : "Selected for your card"}</p>
                   <h2 id="r-title" ref={titleRef} tabIndex={-1}>
-                    {result.line}
+                    {reel.line}
                   </h2>
                   <p className="pj-quote">
                     <span className="sr-only">You asked: </span>
-                    {result.quote}
+                    {reel.quote}
                   </p>
-                  {result.missing && <p className="pj-missing">{result.missing}</p>}
-                  {result.provenance && <p className="pj-prov">{result.provenance}</p>}
+                  {reel.missing && <p className="pj-missing">{reel.missing}</p>}
+                  {reel.provenance && <p className="pj-prov">{reel.provenance}</p>}
                 </div>
               )}
               {result && (
                 <p className="pj-count" aria-hidden="true">
+                  {reels > 1 ? `${reels} cards · ` : ""}
                   {n} {n === 1 ? "story" : "stories"}
                 </p>
               )}
@@ -1106,7 +1185,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
                     const pic = thumbs[cardKey(s.project, s.section)];
                     return (
                       <button
-                        key={`${s.project}#${s.section}`}
+                        key={`${s.project}#${s.section}#${s.reel}`}
                         ref={(el) => {
                           storyRefs.current[i] = el;
                         }}
@@ -1182,6 +1261,12 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
                         <p className="pj-why pj-why-open">
                           <span className="sr-only">Chosen for </span>
                           {cur.why}
+                          {reels > 1 && (
+                            <span className="pj-also">
+                              {" "}
+                              · card {[cur.reel, ...cur.also].map((r) => r + 1).sort().join(" and ")}
+                            </span>
+                          )}
                         </p>
                         <h3 className="pj-slide-title" id="pj-open-title" ref={openTitleRef} tabIndex={-1}>
                           {cur.title}
@@ -1224,10 +1309,11 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
                     </button>
                     <ol className="pj-dots" aria-label="Stories">
                       {slides.map((s, i) => (
-                        <li key={`${s.project}#${s.section}`}>
+                        <li key={`${s.project}#${s.section}#${s.reel}`} data-next-card={(i > 0 && slides[i - 1]!.reel !== s.reel) || undefined}>
                           <button type="button" aria-current={i === active || undefined} title={s.title} onClick={() => go(i)}>
                             <span className="sr-only">
                               {i + 1}: {s.title}
+                              {reels > 1 ? ` (card ${s.reel + 1})` : ""}
                             </span>
                           </button>
                         </li>

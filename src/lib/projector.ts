@@ -10,7 +10,20 @@ export const STATUS = {
   ready: "Ready to project",
   reading: "Reading your card…",
   finding: "Finding the work that answers it…",
+  full: "The magazine holds three cards. Take one out first.",
 } as const;
+
+/** The status line once cards are in: how many, when more than one. */
+export function readyLine(cards: number): string {
+  return cards > 1 ? `${cards} cards in. Ready to project` : STATUS.ready;
+}
+
+/** What the machine does in the dark, in order; the wording follows how many cards went in. */
+export function stepsFor(cards: number): string[] {
+  return cards > 1
+    ? ["Reading your cards", "Finding the work that answers them", "Choosing the sections to show", "Projecting"]
+    : ["Reading your card", "Finding the work that answers it", "Choosing the sections to show", "Projecting"];
+}
 
 /** Errors are said by the machine, in its own words, and never leave the room dark. */
 export const ERRORS = {
@@ -148,4 +161,39 @@ export function beamPlacement(lens: Point, target: Point, targetHeight: number, 
      * light from one place to another is a transform the compositor can run, with nothing re-laid out. */
     matrix: `translate(${lens.x}px, ${lens.y}px) ${turn} scale(${s}) translate(${-spec.apex.x}px, ${-spec.apex.y}px)`,
   };
+}
+
+/** How many cards the magazine holds. */
+export const MAGAZINE = 3;
+
+/**
+ * Several cards, one answer each ("reels"), joined into the one row of stories on the wall, in card order. A story
+ * that an earlier card already brought up is shown once, there, and remembers the later cards it also answers
+ * (`also`, card indexes). A card all of whose stories came up earlier keeps them, so every card has its own stories.
+ */
+export function joinReels<T>(reels: readonly (readonly T[])[], key: (item: T) => string) {
+  const first = new Map<string, number>();
+  const own = reels.map((items, r) =>
+    items.filter((it) => {
+      const k = key(it);
+      if (first.has(k)) return false;
+      first.set(k, r);
+      return true;
+    }),
+  );
+  const out: { item: T; reel: number; also: number[] }[] = [];
+  reels.forEach((items, r) => {
+    const mine = own[r]!.length ? own[r]! : items;
+    for (const item of mine) out.push({ item, reel: r, also: [] });
+  });
+  // the later cards each story also answers
+  reels.forEach((items, r) => {
+    for (const it of items) {
+      const k = key(it);
+      const shown = out.find((o) => key(o.item) === k && o.reel !== r);
+      const here = out.some((o) => key(o.item) === k && o.reel === r);
+      if (shown && !here && !shown.also.includes(r)) shown.also.push(r);
+    }
+  });
+  return out;
 }

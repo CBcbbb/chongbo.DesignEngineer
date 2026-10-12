@@ -3,7 +3,7 @@ import { projects, suggestedQuestions } from "@content";
 import { fallbackAnswer } from "@/lib/ask/fallback";
 import { AskRequestSchema } from "@/lib/ask/schema";
 import { buildCardIndex, cardKey } from "@/lib/cards";
-import { BEAM, BEAM_REAR, beamPlacement, beamPolygon, firstSentence, quoteCard, slideHasMedia, storyPose, thumbCandidates } from "@/lib/projector";
+import { BEAM, BEAM_REAR, beamPlacement, joinReels, beamPolygon, firstSentence, quoteCard, slideHasMedia, storyPose, thumbCandidates } from "@/lib/projector";
 
 describe("the cards in the hand", () => {
   it("are the four suggested questions, each short enough for one line on a card", () => {
@@ -128,5 +128,22 @@ describe("the beam as a single transform", () => {
     const e = apply(p.matrix, BEAM_REAR.end.x, BEAM_REAR.end.y);
     expect(e.x).toBeCloseTo(target.x);
     expect(e.y).toBeCloseTo(target.y);
+  });
+});
+
+describe("several cards on one wall", () => {
+  const k = (s: string) => s;
+  it("keeps card order and shows a story once, where it first came up", () => {
+    const out = joinReels([["a", "b"], ["b", "c"]], k);
+    expect(out.map((o) => `${o.item}${o.reel}`)).toEqual(["a0", "b0", "c1"]);
+    expect(out.find((o) => o.item === "b")!.also).toEqual([1]);
+  });
+  it("gives a card its stories back when they all came up earlier", () => {
+    const out = joinReels([["a", "b"], ["b"]], k);
+    expect(out.map((o) => `${o.item}${o.reel}`)).toEqual(["a0", "b0", "b1"]);
+    expect(out.find((o) => o.item === "b" && o.reel === 0)!.also).toEqual([]);
+  });
+  it("is the identity for a single card", () => {
+    expect(joinReels([["x", "y"]], k).map((o) => o.item)).toEqual(["x", "y"]);
   });
 });
