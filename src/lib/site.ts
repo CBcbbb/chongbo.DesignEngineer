@@ -1,6 +1,13 @@
 import { mainProjects, projects, type Project, type Section } from "@content";
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/+$/, "");
+/**
+ * Absolute base for canonical URLs, Open Graph images and the sitemap. On Vercel, falls back to the
+ * project's production domain, so shared links never point at localhost.
+ */
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000")
+).replace(/\/+$/, "");
 
 export { SIGNAL_SHORT } from "./printed";
 
@@ -15,7 +22,7 @@ const TRAY_PLACE: Record<string, string> = {
 
 export function trayMeta(p: Project): string {
   const place = TRAY_PLACE[p.slug];
-  return place ? `${p.status} · ${place}` : p.status;
+  return [p.status, place].filter(Boolean).join(" · ");
 }
 
 /** "01".."04" for main work, "E1".. for earlier work. */

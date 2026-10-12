@@ -82,7 +82,7 @@ export default async function CaseFile({ params }: Props) {
   const facts: [string, React.ReactNode][] = [
     ["Role", project.role],
     ["Context", project.context],
-    ["Status", project.status],
+    ...(project.status ? ([["Status", project.status]] as [string, React.ReactNode][]) : []),
     ["Stack", project.stack.join(" · ")],
   ];
 

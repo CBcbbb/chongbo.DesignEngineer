@@ -15,7 +15,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
   const p = getProject(slug) ?? projects[0]!;
   return ticketImage({
     head: "Case file · Chongbo Ning",
-    right: p.status,
+    right: p.status ?? "",
     big: projectNumber(p),
     title: p.title,
     line: p.oneLiner,

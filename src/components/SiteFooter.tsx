@@ -7,7 +7,7 @@ export function SiteFooter() {
         {profile.name} · {profile.title} · {profile.location} ·{" "}
         <a href={`mailto:${profile.contact.email}`}>{profile.contact.email}</a>
       </span>
-      <span className="note">Claude chooses which sections of my case files to print. It never writes them.</span>
+      <span className="note">AI helps you find the parts of my case files that match your question. Every word in them is mine.</span>
     </footer>
   );
 }

@@ -19,7 +19,6 @@ export const anyData: Project = {
   roleSplit: [{ with: "solo", what: "Data model, interface, front end and server", note: "on my own" }],
   outcome:
     "One library serves every customer. Each component declares the shape of data it needs, and customers connect their own streams by choosing fields.",
-  status: "In use",
   stack: ["React", "TypeScript", "Tailwind", "ECharts"],
   links: [],
   tier: "main",

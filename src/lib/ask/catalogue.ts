@@ -37,7 +37,7 @@ export function fullText(section: Section): string {
 export function catalogueForPrompt(): string {
   const lines: string[] = [];
   for (const p of projects) {
-    lines.push(`## project: ${p.slug} — ${p.title} (${p.status}; ${p.context}; built with ${p.stack.join(", ")})`);
+    lines.push(`## project: ${p.slug} — ${p.title} (${[p.status, p.context].filter(Boolean).join("; ")}; built with ${p.stack.join(", ")})`);
     for (const s of p.sections) {
       // The whole body, not its first sentence: cards are short, and the model judges fit far better on the full text.
       lines.push(`- section: ${s.id} | kind: ${s.kind} | title: ${s.title} | signals: ${s.signals.join(", ")} | ${fullText(s)}`);
