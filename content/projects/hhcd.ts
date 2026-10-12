@@ -201,12 +201,12 @@ export const hhcd: Project = {
     },
     {
       id: "dual-view",
-      nav: "Table view",
+      nav: "Dual view",
       part: "voice",
       kind: "decision",
-      title: "A table view beside the network",
+      title: "A dual view: the network and a list",
       body: [
-        "A network graph is hard to use without a mouse or without sight. The table holds the same data, with the same search and filters, and a shortcut switches between the two.",
+        "A network graph is hard to use by keyboard or with a screen reader. So, with accessibility in mind, we chose a dual view, which the workshop also called for: the same entries as a list in four columns, with the same search and filters. Ctrl + E switches between the two.",
       ],
       signals: ["accessibility", "data", "judgement"],
       capabilities: ["E"],
@@ -223,7 +223,7 @@ export const hhcd: Project = {
         b: {
           asset: "hhcd/voice-simple-view.png",
           alt: "VOICE's Simple View: the same entries in four columns of readable entries, with a Map View button.",
-          label: "Table",
+          label: "List",
         },
         modes: [
           { label: "Keyboard", a: "hard", b: "works" },
@@ -264,7 +264,7 @@ export const hhcd: Project = {
       kind: "decision",
       title: "Two arrangements of the same map",
       body: [
-        "The map opens as a free network, with every entry the same size. One switch moves the same entries into four columns by type, which are easier to scan and to follow by keyboard. Both layouts are calculated in advance, so the switch is a single animated move. A table view of the same entries sits alongside both, for screen readers and anyone who prefers a list.",
+        "The map opens as a free network, with every entry the same size. One switch moves the same entries into four columns by type, which are easier to scan and to follow by keyboard. Both layouts are calculated in advance, so the switch is a single animated move. A list view of the same entries sits alongside both, for screen readers and anyone who would rather read than explore.",
       ],
       signals: ["motion-interaction", "data", "accessibility"],
       capabilities: ["D", "E"],
@@ -425,7 +425,7 @@ export const hhcd: Project = {
       title: "One person, two points of view",
       body: [
         "Accessibility was part of the data model from day one.",
-        "I helped collect the data, then designed and built the platform myself. Working as both designer and developer, I could plan accessibility into the data and the layout from the start: the table view, keyboard navigation and both arrangements all run on the same data.",
+        "I helped collect the data, then designed and built the platform myself. Working as both designer and developer, I could plan accessibility into the data and the layout from the start: the list view, keyboard navigation and both arrangements all run on the same data.",
       ],
       facts: [{ label: "Context", text: "VOICE at Brunel University, then the Helen Hamlyn Centre, RCA." }],
       signals: ["end-to-end", "design-eng-gap"],
