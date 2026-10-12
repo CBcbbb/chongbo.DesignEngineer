@@ -24,7 +24,7 @@ The shared colours and components behind three products, and every customer's br
 
 ## Part 1 · One system for every product and client
 
-### 01.1 Three products, drifting from the first
+### 01.1 Three products from one company, drifting apart
 
 The company began with one product and its own colours and design tokens. New products took only those first tokens with them, and each needed things the first didn't have.
 

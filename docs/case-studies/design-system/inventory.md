@@ -45,7 +45,7 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 | # | id | Heading (the claim) | Caps | ux | engineer | web | Evidence | Gaps |
 |---|---|---|---|---|---|---|---|---|
 | | | **Part 1 · One system for three products** | | | | | | |
-| 01.1 | `drift` | Three products, drifting from the first | C | in | in | · | Drawn: three invented products that share only the blue (a light sidebar workspace, a light network map, a dark builder); different layouts, type, density and corners | |
+| 01.1 | `drift` | Three products from one company, drifting apart | C | in | in | · | Drawn: three invented products that share only the blue (a light sidebar workspace, a light network map, a dark builder); different layouts, type, density and corners | |
 | 01.2 | `client-looks` | Every client wants its own look | C | in | in | · | Drawn: one screen for three clients (Courier, Grocer, Bank); same layout, each client's colour, typeface and button shape | |
 | 01.3 | `three-layers` | Each level overrides only what it needs (the solution, after the two problems) | C B | · | lead | in | Diagram: shared package → one product's overrides → a customer's colour, font and button shape | |
 | 02.1 / 02.2 | `figma-library`, `in-code` | It started as a Figma library · Now it lives in code | C B | in | in | lead | Rebuilt Figma (component sets, variables Light / Dark) beside the same components as code | |
