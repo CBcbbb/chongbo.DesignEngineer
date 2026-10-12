@@ -482,13 +482,18 @@ export const badgeVariants = cva(
         <div class="ds-f2c-row" data-part="badge"><span class="ui-badge r-success">Delivered</span><span class="ui-badge r-warning">Delayed</span><span class="ui-badge r-destructive">Failed</span><span class="ui-badge r-info">On the road</span><span class="ui-badge r-primary">Today</span></div>
       </div>`;
     const names = Object.keys(FILES);
-    codeSide.innerHTML = `<div class="ds-f2c-editor fx-win is-dark">
-        <div class="fx-bar"><span class="fx-dots" aria-hidden="true"><i></i><i></i><i></i></span><div class="ds-f2c-tabs" role="tablist" aria-label="Source files">${names.map((n, i) => `<button type="button" role="tab" id="f2c-tab-${i}" aria-selected="${i === 0}" aria-controls="f2c-src" data-file="${n}">${n}</button>`).join("")}</div></div>
-        <pre class="ds-f2c-src" id="f2c-src" role="tabpanel" tabindex="0"><code></code></pre>
-      </div>
-      <div class="ds-f2c-out fx-win" data-mode="light" aria-label="What this code renders">
-        <div class="fx-bar"><span class="fx-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="fx-file">Preview</span><span class="fx-seg" role="radiogroup" aria-label="Preview mode"><label><input type="radio" name="pv-mode" value="light" checked>Light</label><label><input type="radio" name="pv-mode" value="dark">Dark</label></span></div>
-        ${pane("light")}${pane("dark")}
+    codeSide.innerHTML = `<div class="ide fx-win is-dark">
+        <div class="fx-bar"><span class="fx-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="fx-file">design-system</span></div>
+        <div class="ide-body">
+          <div class="ds-f2c-editor">
+            <div class="ds-f2c-tabs" role="tablist" aria-label="Source files">${names.map((n, i) => `<button type="button" role="tab" id="f2c-tab-${i}" aria-selected="${i === 0}" aria-controls="f2c-src" data-file="${n}">${n}</button>`).join("")}</div>
+            <pre class="ds-f2c-src" id="f2c-src" role="tabpanel" tabindex="0"><code></code></pre>
+          </div>
+          <div class="ds-f2c-out ide-browser" data-mode="light" aria-label="What this code renders, in a browser">
+            <div class="ide-url"><span class="ide-nav" aria-hidden="true">${pi("chev")}${pi("chev")}<svg class="pi" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></span><span class="ide-addr">localhost:3000/preview</span><span class="fx-seg" role="radiogroup" aria-label="Preview mode"><label><input type="radio" name="pv-mode" value="light" checked>Light</label><label><input type="radio" name="pv-mode" value="dark">Dark</label></span></div>
+            ${pane("light")}${pane("dark")}
+          </div>
+        </div>
       </div>`;
     const brand = SCALES.light.brand["600"];
     codeSide.querySelectorAll(".ds-f2c-pane").forEach((p) => {

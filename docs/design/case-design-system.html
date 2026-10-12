@@ -3080,32 +3080,38 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .fx-coll { margin: 0; font: 400 11px/1.6 var(--mono); color: var(--w-ink); }
 @media (max-width: 760px) { .fx-body { grid-template-columns: minmax(0, 1fr); } .fx-layers { display: none; } .fx-vars { border-left: 0; border-top: 1px solid var(--w-line); } .fx-pages { display: none; } }
 
-/* 02.2: the editor, with a small preview window floating over its right edge */
-.ds-f2c-stage[data-show="code"] { overflow: visible; box-shadow: none; border-radius: 0; padding: 10px 0 18px; }
-.ds-f2c-code { position: relative; display: block; }
-.ds-f2c-editor { width: 60%; }
-.ds-f2c-tabs { display: flex; gap: 2px; align-self: stretch; align-items: flex-end; overflow-x: auto; }
-.ds-f2c-tabs button { font: 500 12px/1 var(--mono); color: #8b949e; background: none; border: 0; padding: 9px 11px 10px; border-radius: 6px 6px 0 0; cursor: pointer; white-space: nowrap; }
-.ds-f2c-tabs button[aria-selected="true"] { color: #e6edf3; background: #0d1117; box-shadow: inset 0 2px 0 var(--ds-mark); }
+/* 02.2: one editor window, code on the left and a browser pane on the right, like an AI code editor */
+.ds-f2c-stage[data-show="code"] { overflow: visible; box-shadow: none; border-radius: 0; padding: 4px 0 8px; }
+.ds-f2c-code { display: block; }
+.ide-body { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); }
+.ds-f2c-editor { min-width: 0; display: grid; grid-template-rows: auto 1fr; }
+.ds-f2c-tabs { display: flex; gap: 1px; background: var(--w-bar); border-bottom: 1px solid var(--w-line); overflow-x: auto; }
+.ds-f2c-tabs button { font: 500 12px/1 var(--mono); color: #8b949e; background: none; border: 0; padding: 10px 12px; cursor: pointer; white-space: nowrap; border-right: 1px solid var(--w-line); }
+.ds-f2c-tabs button[aria-selected="true"] { color: #e6edf3; background: var(--w-bg); box-shadow: inset 0 2px 0 var(--ds-mark); }
 .ds-f2c-tabs button:focus-visible { outline: 2px solid var(--ds-mark); outline-offset: -2px; }
-.ds-f2c-src { margin: 0; padding: 14px 0; overflow: auto; font: 400 12.5px/1.6 var(--mono); color: #e6edf3; counter-reset: ln; tab-size: 2; min-height: 360px; }
+.ds-f2c-src { margin: 0; padding: 14px 0; overflow: auto; font: 400 12.5px/1.6 var(--mono); color: #e6edf3; counter-reset: ln; tab-size: 2; min-height: 380px; }
 .ds-f2c-src:focus-visible { outline: 2px solid var(--ds-mark); outline-offset: -2px; }
 .ds-f2c-src .ln { display: block; padding: 0 16px 0 52px; position: relative; white-space: pre; }
 .ds-f2c-src .ln::before { counter-increment: ln; content: counter(ln); position: absolute; left: 0; width: 36px; text-align: right; color: #484f58; }
 .ds-f2c-src .c { color: #8b949e; font-style: italic; } .ds-f2c-src .s { color: #a5d6ff; } .ds-f2c-src .k { color: #ff7b72; } .ds-f2c-src .v { color: #d2a8ff; } .ds-f2c-src .p { color: #79c0ff; } .ds-f2c-src .t { color: #7ee787; } .ds-f2c-src .n { color: #ffa657; }
 .ds-f2c-src .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; box-shadow: 0 0 0 1px rgb(255 255 255 / .25); }
-.ds-f2c-out { position: absolute; right: 0; top: 56px; width: 44%; }
-.ds-f2c-out .fx-file { font-weight: 600; }
-.ds-f2c-out[data-mode="light"] .ds-f2c-pane[data-mode="dark"], .ds-f2c-out[data-mode="dark"] .ds-f2c-pane[data-mode="light"] { display: none; }
-.ds-f2c-out[data-mode="dark"] { --w-bar: #18181b; --w-line: #2d2d31; --w-ink: #fafafa; --w-dim: #a1a1aa; --w-bg: #09090b; }
-.ds-f2c-pane { background: var(--bg); color: var(--fg); padding: 18px; display: grid; gap: 12px; }
+.ide-browser { min-width: 0; display: grid; grid-template-rows: auto 1fr; border-left: 1px solid var(--w-line); background: #fff; }
+.ide-browser[data-mode="dark"] { background: #09090b; }
+.ide-url { display: flex; align-items: center; gap: 8px; padding: 6px 8px; background: var(--w-bar); border-bottom: 1px solid var(--w-line); }
+.ide-nav { display: flex; gap: 2px; color: #6e7681; }
+.ide-nav .pi { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ide-nav .pi:nth-child(1) { transform: rotate(90deg); } .ide-nav .pi:nth-child(2) { transform: rotate(-90deg); }
+.ide-addr { flex: 1; min-width: 0; font: 400 11.5px/1 var(--mono); color: #c9d1d9; background: #161b22; border: 1px solid var(--w-line); border-radius: 999px; padding: 6px 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ide-browser .fx-seg { margin-left: 0; }
+.ide-browser[data-mode="light"] .ds-f2c-pane[data-mode="dark"], .ide-browser[data-mode="dark"] .ds-f2c-pane[data-mode="light"] { display: none; }
+.ds-f2c-pane { background: var(--bg); color: var(--fg); padding: 22px 20px; display: grid; align-content: start; gap: 14px; }
 .ds-f2c-mode { display: none; }
 .ds-f2c-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; transition: opacity .2s ease; }
 .ds-f2c-pane .ui-btn { font-size: 12px; padding: 6px 10px; border-radius: 6px; }
 .ds-f2c-pane .ui-input { font-size: 12px; padding: 7px 9px; border-radius: 6px; width: min(100%, 240px); }
 .ds-f2c-pane .ui-badge { font-size: 11px; padding: 2px 7px; }
 .ds-f2c-out[data-part="btn"] .ds-f2c-row:not([data-part="btn"]), .ds-f2c-out[data-part="badge"] .ds-f2c-row:not([data-part="badge"]) { opacity: .25; }
-@media (max-width: 760px) { .ds-f2c-editor { width: 100%; } .ds-f2c-out { position: relative; top: auto; width: auto; margin: -24px 12px 0; } .ds-f2c-src { max-height: 320px; min-height: 0; } }
+@media (max-width: 760px) { .ide-body { grid-template-columns: minmax(0, 1fr); } .ide-browser { border-left: 0; border-top: 1px solid var(--w-line); } .ds-f2c-src { max-height: 300px; min-height: 0; } }
 
 /* Problem / Solution, beside a card's index */
 .ds-kind { display: inline-block; margin-left: 8px; font: 500 10.5px/1 var(--mono); letter-spacing: .04em; padding: 4px 7px 3px; border-radius: 999px; box-shadow: inset 0 0 0 1px currentColor; color: var(--case-dim); vertical-align: 1px; }
@@ -3487,6 +3493,9 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-work-note { max-width: 62ch; margin: 10px 0 0; font: 400 15px/1.5 var(--sans); color: var(--on-field-2); }
 .cf-work-head:has(.ds-work-note) { display: block; }
 .ds-f2c > *, .ds-f2c-stage, .ds-f2c-code, .ds-fx > *, .fx-win { min-width: 0; max-width: 100%; }
+.ds-f2c-editor, .ide-browser, .ide { grid-template-columns: minmax(0, 1fr); }
+.ide { display: block; }
+@media (max-width: 760px) { .ide-nav { display: none; } }
 
 </style>
 <style id="ds-palette"></style>
@@ -4271,13 +4280,18 @@ export const badgeVariants = cva(
         <div class="ds-f2c-row" data-part="badge"><span class="ui-badge r-success">Delivered</span><span class="ui-badge r-warning">Delayed</span><span class="ui-badge r-destructive">Failed</span><span class="ui-badge r-info">On the road</span><span class="ui-badge r-primary">Today</span></div>
       </div>`;
     const names = Object.keys(FILES);
-    codeSide.innerHTML = `<div class="ds-f2c-editor fx-win is-dark">
-        <div class="fx-bar"><span class="fx-dots" aria-hidden="true"><i></i><i></i><i></i></span><div class="ds-f2c-tabs" role="tablist" aria-label="Source files">${names.map((n, i) => `<button type="button" role="tab" id="f2c-tab-${i}" aria-selected="${i === 0}" aria-controls="f2c-src" data-file="${n}">${n}</button>`).join("")}</div></div>
-        <pre class="ds-f2c-src" id="f2c-src" role="tabpanel" tabindex="0"><code></code></pre>
-      </div>
-      <div class="ds-f2c-out fx-win" data-mode="light" aria-label="What this code renders">
-        <div class="fx-bar"><span class="fx-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="fx-file">Preview</span><span class="fx-seg" role="radiogroup" aria-label="Preview mode"><label><input type="radio" name="pv-mode" value="light" checked>Light</label><label><input type="radio" name="pv-mode" value="dark">Dark</label></span></div>
-        ${pane("light")}${pane("dark")}
+    codeSide.innerHTML = `<div class="ide fx-win is-dark">
+        <div class="fx-bar"><span class="fx-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="fx-file">design-system</span></div>
+        <div class="ide-body">
+          <div class="ds-f2c-editor">
+            <div class="ds-f2c-tabs" role="tablist" aria-label="Source files">${names.map((n, i) => `<button type="button" role="tab" id="f2c-tab-${i}" aria-selected="${i === 0}" aria-controls="f2c-src" data-file="${n}">${n}</button>`).join("")}</div>
+            <pre class="ds-f2c-src" id="f2c-src" role="tabpanel" tabindex="0"><code></code></pre>
+          </div>
+          <div class="ds-f2c-out ide-browser" data-mode="light" aria-label="What this code renders, in a browser">
+            <div class="ide-url"><span class="ide-nav" aria-hidden="true">${pi("chev")}${pi("chev")}<svg class="pi" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/></svg></span><span class="ide-addr">localhost:3000/preview</span><span class="fx-seg" role="radiogroup" aria-label="Preview mode"><label><input type="radio" name="pv-mode" value="light" checked>Light</label><label><input type="radio" name="pv-mode" value="dark">Dark</label></span></div>
+            ${pane("light")}${pane("dark")}
+          </div>
+        </div>
       </div>`;
     const brand = SCALES.light.brand["600"];
     codeSide.querySelectorAll(".ds-f2c-pane").forEach((p) => {
