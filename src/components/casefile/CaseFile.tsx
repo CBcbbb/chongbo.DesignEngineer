@@ -57,7 +57,7 @@ export function Card({ section, idx, url, titleId, as: H = "h3" }: { section: Se
   const hasEvidence = !!section.media || !!section.steps?.length;
   const cls = ["cf-sheet", "is-card", dark && "is-dark", side && "is-side", !hasEvidence && "is-text"].filter(Boolean).join(" ");
   return (
-    <section id={titleId ? undefined : section.id} className={cls} data-canvas={canvasOf(section)} data-size={sizeOf(section)} data-layout={section.layout ?? "stack"} aria-labelledby={titleId ?? `${section.id}-title`}>
+    <section id={titleId ? undefined : section.id} data-card={section.id} className={cls} data-canvas={canvasOf(section)} data-size={sizeOf(section)} data-layout={section.layout ?? "stack"} aria-labelledby={titleId ?? `${section.id}-title`}>
       <div className="cf-head">
         <div>
           <p className="cf-meta">

@@ -13,12 +13,14 @@
  * out of reading order: only placed.
  */
 
+/* the case page's list of cards, or a card printed on its own sheet on the home page */
+[data-palette="components-for-any-data"].cf-print,
 [data-palette="components-for-any-data"] .cf-sheets {
   container: ad-sheets / inline-size;
 }
 
 /* ---------- 02.2 the whole card on the field, at every width ---------- */
-[data-palette="components-for-any-data"] #axis-pickers {
+[data-palette="components-for-any-data"] [data-card="axis-pickers"] {
   --case-bg: var(--field);
   --case-ink: var(--on-field);
   --case-body: var(--on-field);
@@ -33,46 +35,46 @@
   background-position: -1px -1px;
   border-color: var(--field);
 }
-[data-palette="components-for-any-data"] #axis-pickers .cf-evidence::before {
+[data-palette="components-for-any-data"] [data-card="axis-pickers"] .cf-evidence::before {
   display: none;
 }
-[data-palette="components-for-any-data"] #axis-pickers .cf-evidence {
+[data-palette="components-for-any-data"] [data-card="axis-pickers"] .cf-evidence {
   padding-top: 0;
 }
-[data-palette="components-for-any-data"] #axis-pickers :focus-visible {
+[data-palette="components-for-any-data"] [data-card="axis-pickers"] :focus-visible {
   outline-color: currentColor;
 }
 
 @container ad-sheets (min-width: 640px) {
   /* the head's boxes give way, so the index, the claim and each paragraph can be placed on the card's grid */
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], [data-card="contract"], [data-card="pipeline"], [data-card="stream-fit"], [data-card="axis-pickers"]) {
     gap: 0;
     align-content: start;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) :is(.cf-head, .cf-head > div, .cf-body) {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], [data-card="contract"], [data-card="pipeline"], [data-card="stream-fit"], [data-card="axis-pickers"]) :is(.cf-head, .cf-head > div, .cf-body) {
     display: contents;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-meta {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], [data-card="contract"], [data-card="pipeline"], [data-card="stream-fit"], [data-card="axis-pickers"]) .cf-meta {
     grid-area: meta;
     margin: 0 !important;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-h3 {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], [data-card="contract"], [data-card="pipeline"], [data-card="stream-fit"], [data-card="axis-pickers"]) .cf-h3 {
     grid-area: h3;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-body > p {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], [data-card="contract"], [data-card="pipeline"], [data-card="stream-fit"], [data-card="axis-pickers"]) .cf-body > p {
     max-width: none;
     margin: 0;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-body > p:nth-of-type(1) {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], [data-card="contract"], [data-card="pipeline"], [data-card="stream-fit"], [data-card="axis-pickers"]) .cf-body > p:nth-of-type(1) {
     grid-area: p1;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-body > p:nth-of-type(2) {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], [data-card="contract"], [data-card="pipeline"], [data-card="stream-fit"], [data-card="axis-pickers"]) .cf-body > p:nth-of-type(2) {
     grid-area: p2;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-body > p:nth-of-type(3) {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], [data-card="contract"], [data-card="pipeline"], [data-card="stream-fit"], [data-card="axis-pickers"]) .cf-body > p:nth-of-type(3) {
     grid-area: p3;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-evidence {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], [data-card="contract"], [data-card="pipeline"], [data-card="stream-fit"], [data-card="axis-pickers"]) .cf-evidence {
     grid-area: ev;
     height: auto;
     margin: 0;
@@ -80,7 +82,7 @@
   }
 
   /* ---------- 01.1 poster ---------- */
-  [data-palette="components-for-any-data"] #shapes {
+  [data-palette="components-for-any-data"] [data-card="shapes"] {
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
     grid-template-areas:
       "meta meta"
@@ -89,18 +91,18 @@
       "ev   ev";
     column-gap: clamp(2rem, 4.5vw, 3.75rem);
   }
-  [data-palette="components-for-any-data"] #shapes .cf-h3 {
+  [data-palette="components-for-any-data"] [data-card="shapes"] .cf-h3 {
     max-width: 11.5em;
     margin-top: 1.25rem;
     font-size: clamp(2.25rem, 4.6vw, 3.5rem);
     line-height: 0.98;
     letter-spacing: -0.05em;
   }
-  [data-palette="components-for-any-data"] #shapes .cf-body > p {
+  [data-palette="components-for-any-data"] [data-card="shapes"] .cf-body > p {
     margin-top: clamp(1.25rem, 2.6vw, 1.85rem);
   }
   /* the question is the turn of the story: set as the line the reader carries into the strips */
-  [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
+  [data-palette="components-for-any-data"] [data-card="shapes"] .cf-body > p:nth-of-type(2) {
     align-self: start;
     padding-left: 1.1rem;
     border-left: 2px solid var(--case-ink);
@@ -110,23 +112,23 @@
     letter-spacing: -0.015em;
     color: var(--case-ink);
   }
-  [data-palette="components-for-any-data"] #shapes .cf-evidence {
+  [data-palette="components-for-any-data"] [data-card="shapes"] .cf-evidence {
     margin-top: clamp(1.75rem, 3.4vw, 2.5rem);
   }
   /* the strips run off the card's right edge, like streams that carry on */
-  [data-palette="components-for-any-data"] #shapes .ac-strip {
+  [data-palette="components-for-any-data"] [data-card="shapes"] .ac-strip {
     margin-right: calc(-1 * var(--cf-pad));
     border-right: 0;
     border-radius: 12px 0 0 12px;
   }
-  [data-palette="components-for-any-data"] #shapes .cf-evidence::before {
+  [data-palette="components-for-any-data"] [data-card="shapes"] .cf-evidence::before {
     inset: -1.25rem calc(-1 * var(--cf-pad)) calc(-1 * var(--cf-pad-y));
     -webkit-mask-image: linear-gradient(transparent, #000 2.5rem);
     mask-image: linear-gradient(transparent, #000 2.5rem);
   }
 
   /* ---------- 01.2 split sheet: a datasheet pane, full height, on the right ---------- */
-  [data-palette="components-for-any-data"] #contract {
+  [data-palette="components-for-any-data"] [data-card="contract"] {
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
     grid-template-rows: auto auto auto 1fr;
     grid-template-areas:
@@ -136,33 +138,33 @@
       "p2   ev";
     column-gap: calc(2 * var(--cf-pad));
   }
-  [data-palette="components-for-any-data"] #contract .cf-h3 {
+  [data-palette="components-for-any-data"] [data-card="contract"] .cf-h3 {
     margin-top: 1.1rem;
   }
-  [data-palette="components-for-any-data"] #contract .cf-body > p {
+  [data-palette="components-for-any-data"] [data-card="contract"] .cf-body > p {
     margin-top: 1rem;
   }
-  [data-palette="components-for-any-data"] #contract .cf-body > p:nth-of-type(1) {
+  [data-palette="components-for-any-data"] [data-card="contract"] .cf-body > p:nth-of-type(1) {
     margin-top: 1.6rem;
   }
-  [data-palette="components-for-any-data"] #contract .cf-evidence {
+  [data-palette="components-for-any-data"] [data-card="contract"] .cf-evidence {
     align-self: stretch;
     align-content: start;
   }
-  [data-palette="components-for-any-data"] #contract .cf-evidence::before {
+  [data-palette="components-for-any-data"] [data-card="contract"] .cf-evidence::before {
     inset: calc(-1 * var(--cf-pad-y)) calc(-1 * var(--cf-pad)) calc(-1 * var(--cf-pad-y)) calc(-1 * var(--cf-pad));
     border-left: 1px solid var(--ad-rule);
     background-color: var(--ad-inset);
     -webkit-mask-image: none;
     mask-image: none;
   }
-  [data-palette="components-for-any-data"] #contract .ac-code {
+  [data-palette="components-for-any-data"] [data-card="contract"] .ac-code {
     margin-right: calc(-1 * var(--cf-pad));
     border-radius: 12px 0 0 12px;
   }
 
   /* ---------- 01.3 schematic: the flow across the card, the reasoning under it ---------- */
-  [data-palette="components-for-any-data"] #pipeline {
+  [data-palette="components-for-any-data"] [data-card="pipeline"] {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
       "meta meta"
@@ -171,7 +173,7 @@
       "p1   p2";
     column-gap: clamp(1.5rem, 3.4vw, 2.75rem);
   }
-  [data-palette="components-for-any-data"] #pipeline .cf-h3 {
+  [data-palette="components-for-any-data"] [data-card="pipeline"] .cf-h3 {
     max-width: 12em;
     margin-top: 1.1rem;
     font-size: clamp(1.75rem, 3.4vw, 2.6rem);
@@ -179,7 +181,7 @@
     letter-spacing: -0.045em;
   }
   /* the tools: a note beside the claim, aligned to its last line */
-  [data-palette="components-for-any-data"] #pipeline .cf-body > p:nth-of-type(3) {
+  [data-palette="components-for-any-data"] [data-card="pipeline"] .cf-body > p:nth-of-type(3) {
     align-self: end;
     justify-self: start;
     max-width: 24ch;
@@ -190,12 +192,12 @@
     color: var(--case-dim);
   }
   /* the flow is a band across the card, edge to edge */
-  [data-palette="components-for-any-data"] #pipeline .cf-evidence {
+  [data-palette="components-for-any-data"] [data-card="pipeline"] .cf-evidence {
     position: relative;
     margin: clamp(1.75rem, 3.4vw, 2.5rem) 0 0;
     padding: clamp(1.25rem, 2.6vw, 1.75rem) 0;
   }
-  [data-palette="components-for-any-data"] #pipeline .cf-evidence::before {
+  [data-palette="components-for-any-data"] [data-card="pipeline"] .cf-evidence::before {
     display: block;
     inset: 0 calc(-1 * var(--cf-pad));
     border-block: 1px solid var(--dark-line);
@@ -203,7 +205,7 @@
     -webkit-mask-image: none;
     mask-image: none;
   }
-  [data-palette="components-for-any-data"] #pipeline .cf-body > p:is(:nth-of-type(1), :nth-of-type(2)) {
+  [data-palette="components-for-any-data"] [data-card="pipeline"] .cf-body > p:is(:nth-of-type(1), :nth-of-type(2)) {
     max-width: 44ch;
     margin-top: clamp(1.5rem, 3vw, 2.25rem);
     font-size: 0.9375rem;
@@ -211,7 +213,7 @@
   }
 
   /* ---------- 02.1 halves: before on the left, after on the right, to the card's edges ---------- */
-  [data-palette="components-for-any-data"] #stream-fit {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] {
     --gap: 2.2rem;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
@@ -222,43 +224,43 @@
     column-gap: var(--gap);
     background-image: linear-gradient(90deg, var(--ad-inset) 50%, transparent 50%);
   }
-  [data-palette="components-for-any-data"] #stream-fit .cf-h3 {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] .cf-h3 {
     margin-top: 1.1rem;
   }
-  [data-palette="components-for-any-data"] #stream-fit .cf-body > p {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] .cf-body > p {
     margin-top: 1.25rem;
     font-size: 0.9375rem;
     line-height: 1.6;
   }
-  [data-palette="components-for-any-data"] #stream-fit .cf-evidence {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] .cf-evidence {
     margin-top: 1.5rem;
   }
-  [data-palette="components-for-any-data"] #stream-fit .cf-evidence::before {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] .cf-evidence::before {
     display: none;
   }
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-cols {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] .ac-fit-cols {
     grid-template-columns: minmax(0, 1fr) var(--gap) minmax(0, 1fr);
   }
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-col {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] .ac-fit-col {
     padding: 0;
     border: 0;
     border-radius: 0;
     background: none;
   }
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-col header {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] .ac-fit-col header {
     min-height: 0;
   }
   /* the number is the picture */
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-big {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] .ac-fit-big {
     font-size: clamp(4.5rem, 9vw, 7rem);
     line-height: 0.82;
     letter-spacing: -0.07em;
     padding-block: 0.25rem 0.5rem;
   }
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-big span {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] .ac-fit-big span {
     letter-spacing: 0;
   }
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-turn {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] .ac-fit-turn {
     display: grid;
     place-items: center;
     width: 1.5rem;
@@ -271,7 +273,7 @@
     font-size: 12px;
   }
   /* the server closes the card: a band on paper across both halves */
-  [data-palette="components-for-any-data"] #stream-fit .ac-srv {
+  [data-palette="components-for-any-data"] [data-card="stream-fit"] .ac-srv {
     margin: 0.5rem calc(-1 * var(--cf-pad)) calc(-1 * var(--cf-pad-y));
     padding: 0.9rem var(--cf-pad) var(--cf-pad-y);
     border-top: 1px solid var(--case-ink);
@@ -279,7 +281,7 @@
   }
 
   /* ---------- 02.2 field: the chart opens the card, the words under it in three columns ---------- */
-  [data-palette="components-for-any-data"] #axis-pickers {
+  [data-palette="components-for-any-data"] [data-card="axis-pickers"] {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
       "ev   ev ev"
@@ -288,16 +290,16 @@
     grid-template-rows: auto auto 1fr;
     column-gap: clamp(1.5rem, 3vw, 2.5rem);
   }
-  [data-palette="components-for-any-data"] #axis-pickers .cf-meta {
+  [data-palette="components-for-any-data"] [data-card="axis-pickers"] .cf-meta {
     margin-top: clamp(1.75rem, 3.4vw, 2.5rem) !important;
   }
-  [data-palette="components-for-any-data"] #axis-pickers .cf-h3 {
+  [data-palette="components-for-any-data"] [data-card="axis-pickers"] .cf-h3 {
     margin-top: 0.9rem;
     font-size: clamp(1.6rem, 2.9vw, 2.2rem);
     line-height: 1.04;
     letter-spacing: -0.04em;
   }
-  [data-palette="components-for-any-data"] #axis-pickers .cf-body > p {
+  [data-palette="components-for-any-data"] [data-card="axis-pickers"] .cf-body > p {
     align-self: start;
     margin-top: clamp(1.75rem, 3.4vw, 2.5rem);
     padding-top: 0.9rem;
@@ -305,11 +307,11 @@
     font-size: 0.9375rem;
     line-height: 1.6;
   }
-  [data-palette="components-for-any-data"] #axis-pickers .cf-meta,
-  [data-palette="components-for-any-data"] #axis-pickers .cf-h3 {
+  [data-palette="components-for-any-data"] [data-card="axis-pickers"] .cf-meta,
+  [data-palette="components-for-any-data"] [data-card="axis-pickers"] .cf-h3 {
     border-top: 0;
   }
-  [data-palette="components-for-any-data"] #axis-pickers .cf-meta {
+  [data-palette="components-for-any-data"] [data-card="axis-pickers"] .cf-meta {
     padding-top: calc(0.9rem + 1px);
     border-top: 1px solid var(--case-rule);
   }
@@ -318,38 +320,38 @@
 /* short windows: the poster and the schematic step their type down so each card stays near one screen */
 @container ad-sheets (min-width: 640px) {
   @media (max-height: 800px) {
-    [data-palette="components-for-any-data"] #shapes .cf-h3 {
+    [data-palette="components-for-any-data"] [data-card="shapes"] .cf-h3 {
       font-size: clamp(2rem, 3.8vw, 2.75rem);
     }
-    [data-palette="components-for-any-data"] #pipeline .cf-h3 {
+    [data-palette="components-for-any-data"] [data-card="pipeline"] .cf-h3 {
       font-size: clamp(1.6rem, 2.8vw, 2.1rem);
     }
-    [data-palette="components-for-any-data"] #stream-fit .ac-fit-big {
+    [data-palette="components-for-any-data"] [data-card="stream-fit"] .ac-fit-big {
       font-size: clamp(3.5rem, 7vw, 5rem);
     }
-    [data-palette="components-for-any-data"] #shapes .cf-body > p {
+    [data-palette="components-for-any-data"] [data-card="shapes"] .cf-body > p {
       margin-top: 1rem;
     }
-    [data-palette="components-for-any-data"] #shapes .cf-evidence {
+    [data-palette="components-for-any-data"] [data-card="shapes"] .cf-evidence {
       margin-top: 1.25rem;
     }
-    [data-palette="components-for-any-data"] #pipeline .cf-evidence {
+    [data-palette="components-for-any-data"] [data-card="pipeline"] .cf-evidence {
       margin-top: 1.25rem;
       padding-block: 1rem;
     }
-    [data-palette="components-for-any-data"] #pipeline .cf-body > p:is(:nth-of-type(1), :nth-of-type(2)) {
+    [data-palette="components-for-any-data"] [data-card="pipeline"] .cf-body > p:is(:nth-of-type(1), :nth-of-type(2)) {
       margin-top: 1.1rem;
     }
-    [data-palette="components-for-any-data"] #stream-fit .cf-body > p {
+    [data-palette="components-for-any-data"] [data-card="stream-fit"] .cf-body > p {
       margin-top: 0.9rem;
     }
-    [data-palette="components-for-any-data"] #stream-fit .cf-evidence {
+    [data-palette="components-for-any-data"] [data-card="stream-fit"] .cf-evidence {
       margin-top: 1rem;
     }
-    [data-palette="components-for-any-data"] :is(#shapes, #stream-fit) .cf-h3 {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], [data-card="stream-fit"]) .cf-h3 {
       margin-top: 0.8rem;
     }
-    [data-palette="components-for-any-data"] #stream-fit .ac-srv {
+    [data-palette="components-for-any-data"] [data-card="stream-fit"] .ac-srv {
       padding-top: 0.7rem;
     }
   }
