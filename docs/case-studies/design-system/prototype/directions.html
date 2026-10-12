@@ -1,0 +1,131 @@
+<style>
+/* directions: three covers on the shared cover template */
+:root { --font-geist-sans: "Geist"; --font-geist-mono: "Geist Mono"; }
+html, body { background: var(--studio); }
+body { margin: 0; font-family: var(--sans); color: var(--ink); }
+.wrap { max-width: 1000px; margin: 0 auto; padding: 40px 16px 80px; display: grid; gap: 56px; }
+.dir-h { display: grid; gap: 6px; margin-bottom: 14px; }
+.dir-h b { font: 600 13px/1 var(--mono); color: var(--ink-2); letter-spacing: 0.02em; }
+.dir-h h2 { margin: 0; font: 600 26px/1.15 var(--sans); letter-spacing: -0.02em; color: var(--ink); }
+.dir-h p { margin: 0; max-width: 68ch; font: 400 15px/1.5 var(--sans); color: var(--ink-2); }
+.dir .cf-sheets { display: grid; gap: 16px; }
+.cf-cover-top > .art { position: absolute; z-index: 0; pointer-events: none; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 860px) { .pair { grid-template-columns: 1fr; } }
+
+/* ---------- A. Zinc: the system's own neutral, the scales lit like a variables panel ---------- */
+.dir-a { --field: #0c0c0e; --on-field: #fafafa; --on-field-2: #a1a1aa; --accent: #fafafa; }
+.dir-a .cf-shows li { background: #fafafa; color: #0c0c0e; }
+.dir-a .art { top: -24px; right: -48px; width: 430px; display: grid; gap: 7px; -webkit-mask-image: linear-gradient(240deg, #000 30%, transparent 80%); mask-image: linear-gradient(240deg, #000 30%, transparent 80%); }
+.dir-a .art .r { display: grid; grid-template-columns: 92px repeat(5, 1fr); gap: 5px; align-items: center; font: 500 10.5px/1 var(--mono); color: #71717a; }
+.dir-a .art .r i { height: 22px; border-radius: 5px; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06); }
+@media (max-width: 860px) { .dir-a .art { display: none; } }
+
+/* ---------- B. Swatch book: white cover, the six roles fanned like paint chips ---------- */
+.dir-b { --field: #ffffff; --on-field: #18181b; --on-field-2: #52525b; --accent: #18181b; }
+.dir-b .cf-cover { box-shadow: inset 0 0 0 1px #e4e4e7; }
+.dir-b .cf-shows li { background: #18181b; color: #fff; }
+.dir-b .art { top: -10px; right: 10px; width: 360px; height: 300px; }
+.dir-b .chip { position: absolute; left: 150px; top: 0; width: 92px; height: 250px; border-radius: 8px; overflow: hidden; display: grid; grid-template-rows: repeat(5, 1fr) 46px; box-shadow: 0 1px 2px rgb(0 0 0 / .08), 0 10px 26px -12px rgb(0 0 0 / .35); transform-origin: 50% 105%; background: #fff; }
+.dir-b .chip i { display: block; }
+.dir-b .chip span { display: grid; align-content: center; padding: 0 8px; font: 600 11px/1.2 "Geist", sans-serif; color: #18181b; }
+.dir-b .chip span small { font: 500 10px/1.2 var(--mono); color: #71717a; }
+@media (max-width: 860px) { .dir-b .art { display: none; } }
+
+/* ---------- C. The page re-themes: the field is the customer's colour, readable by the system's rule ---------- */
+.dir-c .cf-cover { transition: background-color .35s var(--ease), color .35s var(--ease); }
+.dir-c .cf-shows li { background: var(--on-field); color: var(--field); }
+.dir-c .seen { display: inline-flex; flex-wrap: wrap; gap: 2px; padding: 3px; border-radius: 999px; background: color-mix(in srgb, var(--on-field) 12%, transparent); margin-top: 6px; }
+.dir-c .seen button { font: 500 12.5px/1 var(--sans); padding: 7px 11px; border-radius: 999px; border: 0; background: transparent; color: var(--on-field); cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+.dir-c .seen button[aria-pressed="true"] { background: var(--on-field); color: var(--field); }
+.dir-c .seen button i { width: 9px; height: 9px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .2); }
+.dir-c .art { top: 0; right: -6px; width: 220px; display: grid; justify-items: end; gap: 12px; }
+.dir-c .art .b { font: 600 15px/1 var(--btnfont, "Geist"), sans-serif; padding: 13px 22px; background: var(--on-field); color: var(--field); border-radius: var(--btnr, 10px); transition: border-radius .35s var(--ease); }
+.dir-c .art .b.o { background: transparent; color: var(--on-field); box-shadow: inset 0 0 0 1.5px var(--on-field); }
+.dir-c .art .ratio { font: 500 11.5px/1 var(--mono); color: var(--on-field-2); }
+.dir-c .cf-h1 { font-family: var(--titlefont, var(--sans)); transition: font-family .2s; }
+@media (max-width: 860px) { .dir-c .art { display: none; } }
+</style>
+
+<div class="wrap">
+  <header class="dir-h">
+    <b>One Design System, Three Products · cover directions</b>
+    <p>Same template as the other case files: client, title, line, Role and Outcome, labels. Only the field, the cover art and the parts' treatment change.</p>
+  </header>
+
+  <!-- A -->
+  <section class="dir dir-a" data-palette="x">
+    <div class="dir-h"><b>A · Zinc</b><h2>The system's own neutral, with the scales lit like a variables panel</h2>
+      <p>The field is zinc, the shadcn neutral the system was built on, in both modes. Colour only comes from the six scales, five steps each, shown with their names like Figma's variables. Openers are on zinc; evidence sits on white or zinc as each mode needs. Cool and precise, a long way from Nike's warm black and orange.</p></div>
+    <div class="cf"><div class="cf-sheets">
+      <header class="cf-sheet is-field cf-cover"><div class="cf-cover-top"><div class="art" data-art="a"></div>
+        <p class="cf-client"><span>Logistics infrastructure company</span></p><h1 class="cf-h1">One Design System, Three Products</h1></div>
+        <div class="cf-cover-line"><p class="cf-lede">The shared colours and components behind three products, and every customer's brand on top.</p></div>
+        <dl class="cf-facts"><div><dt>Role</dt><dd>Design Engineer</dd></div><div><dt>Outcome</dt><dd>Three products that read as one company again, in any customer's brand.</dd></div></dl>
+        <div class="cf-cover-foot"><div class="cf-shows"><p>What this shows</p><ul><li>Design system</li><li>Accessibility in the colours</li><li>Figma to code</li></ul></div></div>
+      </header>
+    </div></div>
+  </section>
+
+  <!-- B -->
+  <section class="dir dir-b">
+    <div class="dir-h"><b>B · Swatch book</b><h2>White cover, the six roles fanned out like paint chips</h2>
+      <p>Colour lives in the roles, the way HHCD's lives in its four marks. Each chip is one role's five steps with its name and its lowest text contrast. Openers sit on the grey ground with a small fan. Quiet and editorial, but the closest of the three to HHCD's white.</p></div>
+    <div class="cf"><div class="cf-sheets">
+      <header class="cf-sheet is-field cf-cover"><div class="cf-cover-top"><div class="art" data-art="b"></div>
+        <p class="cf-client"><span>Logistics infrastructure company</span></p><h1 class="cf-h1">One Design System, Three Products</h1></div>
+        <div class="cf-cover-line"><p class="cf-lede">The shared colours and components behind three products, and every customer's brand on top.</p></div>
+        <dl class="cf-facts"><div><dt>Role</dt><dd>Design Engineer</dd></div><div><dt>Outcome</dt><dd>Three products that read as one company again, in any customer's brand.</dd></div></dl>
+        <div class="cf-cover-foot"><div class="cf-shows"><p>What this shows</p><ul><li>Design system</li><li>Accessibility in the colours</li><li>Figma to code</li></ul></div></div>
+      </header>
+    </div></div>
+  </section>
+
+  <!-- C -->
+  <section class="dir dir-c">
+    <div class="dir-h"><b>C · The page wears the customer's brand (recommended)</b><h2>The cover takes a customer's colour, font and button shape, and stays readable</h2>
+      <p>The project's thesis becomes its identity: the field is a brand colour, and "Seen as" switches the whole case file between the platform default and three invented customers. Text on the field turns dark or light by the system's own rule, so a pale yellow customer still reads. The default is a deep teal, apart from Components for Any Data's blue and HHCD's green. Try the switch: the courier is the pale yellow that broke the first version.</p></div>
+    <div class="cf"><div class="cf-sheets">
+        <header class="cf-sheet is-field cf-cover" data-c="live"><div class="cf-cover-top"><div class="art"><span class="b">New run</span><span class="b o">Export</span><span class="ratio" data-ratio></span></div>
+          <p class="cf-client"><span>Logistics infrastructure company</span></p><h1 class="cf-h1">One Design System, Three Products</h1></div>
+          <div class="cf-cover-line"><p class="cf-lede">The shared colours and components behind three products, and every customer's brand on top.</p></div>
+          <div class="seen" role="group" aria-label="Seen as"></div>
+          <dl class="cf-facts"><div><dt>Role</dt><dd>Design Engineer</dd></div><div><dt>Outcome</dt><dd>Three products that read as one company again, in any customer's brand.</dd></div></dl>
+        </header>
+      </div></div>
+  </section>
+</div>
+
+<script>
+(() => {
+  const S = {"brand": {"50": "#dffcfd", "200": "#5ddae0", "500": "#00a0a6", "600": "#007176", "700": "#005f63"}, "blue": {"50": "#eff6ff", "200": "#9cc7ff", "500": "#1f8aff", "600": "#0061be", "700": "#0051a0"}, "green": {"50": "#e8fbea", "200": "#92d89c", "500": "#00a943", "600": "#00782d", "700": "#006425"}, "red": {"50": "#fff2f0", "200": "#ffaba3", "500": "#ed4a49", "600": "#bb061e", "700": "#9b0f1b"}, "purple": {"50": "#f9f2ff", "200": "#dab0fa", "500": "#b161e5", "600": "#8632b6", "700": "#6f2c96"}, "amber": {"50": "#fff3e4", "200": "#ffce8a", "500": "#eba000", "600": "#956300", "700": "#7e5400"}};
+  const ROLES = [["brand","primary"],["green","success"],["amber","warning"],["red","destructive"],["blue","info"],["purple","categorical"]];
+  const steps = ["50","200","500","600","700"];
+  const lum = (h) => { const c = [1,3,5].map(i => parseInt(h.slice(i,i+2),16)/255).map(v => v <= .04045 ? v/12.92 : ((v+.055)/1.055)**2.4); return .2126*c[0]+.7152*c[1]+.0722*c[2]; };
+  const ratio = (a,b) => { const [x,y] = [lum(a),lum(b)].sort((p,q)=>q-p); return (x+.05)/(y+.05); };
+  // A
+  document.querySelectorAll('[data-art="a"]').forEach(el => { el.innerHTML = ROLES.map(([h, r]) => `<div class="r"><span>${r}</span>${steps.map(s => `<i style="background:${S[h][s]}"></i>`).join("")}</div>`).join(""); });
+  // B
+  document.querySelectorAll('[data-art="b"]').forEach(el => {
+    el.innerHTML = ROLES.map(([h, r], i) => { const low = Math.min(ratio(S[h]["600"], "#ffffff"), ratio(S[h]["700"], S[h]["50"])); const rot = (i - 2.5) * 9; return `<div class="chip" style="transform:rotate(${rot}deg)">${steps.map(s => `<i style="background:${S[h][s]}"></i>`).join("")}<span>${r}<small>${low.toFixed(1)}:1</small></span></div>`; }).join("");
+  });
+  // C
+  const NEAR_W = "#fafafa", NEAR_B = "#111113";
+  const on = (f) => ratio(NEAR_W, f) >= 4.6 ? NEAR_W : NEAR_B;
+  const CUST = { platform: ["Platform", "#0c5c63", "Geist", "10px"], grocer: ["Grocer", "#2e7d3a", "Fraunces", "999px"], courier: ["Courier", "#f2c94c", "Archivo", "0px"], bank: ["Bank", "#1d2b5c", "IBM Plex Sans", "6px"] };
+  const apply = (cover, key) => {
+    const [, f, font, r] = CUST[key]; const o = on(f);
+    cover.style.setProperty("--field", f); cover.style.setProperty("--on-field", o);
+    cover.style.setProperty("--on-field-2", o === NEAR_W ? "rgb(250 250 250 / .78)" : "rgb(17 17 19 / .72)");
+    cover.style.setProperty("--accent", o);
+    cover.style.setProperty("--btnfont", `"${font}"`); cover.style.setProperty("--btnr", r);
+    cover.style.setProperty("--titlefont", `"${font}", var(--sans)`);
+    cover.querySelector("[data-ratio]").textContent = `text on field ${ratio(o, f).toFixed(1)}:1 ✓`;
+  };
+  const live = document.querySelector('[data-c="live"]');
+  const seen = live.querySelector(".seen");
+  seen.innerHTML = '<span style="font:500 12px/1 var(--mono);padding:7px 6px 7px 10px;color:var(--on-field-2)">Seen as</span>' + Object.entries(CUST).map(([k, [n, f]], i) => `<button type="button" data-k="${k}" aria-pressed="${i === 0}"><i style="background:${f}"></i>${n}</button>`).join("");
+  seen.addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; seen.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); apply(live, b.dataset.k); });
+  apply(live, "platform");
+})();
+</script>
