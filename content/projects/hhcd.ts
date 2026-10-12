@@ -295,7 +295,7 @@ export const hhcd: Project = {
       kind: "decision",
       title: "Onboarding inside the map",
       body: [
-        "Rather than a tour to click through, the onboarding teaches by doing. On a first visit, one project pulses, and four short cards walk you through the map: open it, follow a connection, step back, switch arrangement. Each card waits until you've done what it asks, never takes focus, so the keyboard stays where you are, and can be skipped. The whole onboarding works by keyboard alone.",
+        "On a first visit, one project pulses, and four short cards walk you through the map: open it, follow a connection, step back, switch arrangement. Each card waits until you've done what it asks, can be skipped and never moves the keyboard focus. It all works by keyboard alone.",
       ],
       signals: ["motion-interaction", "prototyping", "accessibility"],
       capabilities: ["D", "E"],
@@ -318,7 +318,7 @@ export const hhcd: Project = {
       kind: "evidence",
       title: "Accessibility – keyboard navigation",
       body: [
-        "The map is a single stop in the tab order: one press of Tab moves in or out, without stepping through all 48 entries. Inside, arrow keys move to the nearest entry in that direction, in either arrangement, and the view pans to keep it in sight. A screen reader announces each entry's name, type and number of connections; this recording shows that text on screen.",
+        "The map is a single stop in the tab order. Arrow keys move to the nearest entry in that direction, in either arrangement, and the view pans to keep it in sight. Each entry is announced with its name, type and number of connections, shown on screen in this recording.",
       ],
       signals: ["accessibility", "motion-interaction"],
       capabilities: ["E", "D"],
