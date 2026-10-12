@@ -2949,6 +2949,22 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-seen input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
 .ds-seen label:has(input:checked) { background: var(--on-field); color: var(--field); }
 .ds-seen label:has(input:focus-visible) { outline: 2px solid var(--on-field); outline-offset: 2px; }
+/* "Or your own": a rainbow well that becomes your colour, ringed by the rainbow, once chosen */
+.ds-seen .ds-or { width: 1px; height: 18px; margin: 0 5px 0 4px; background: color-mix(in srgb, var(--on-field) 28%, transparent); }
+.ds-seen-own { font-family: "Geist", var(--sans) !important; }
+@media (max-width: 560px) { .ds-seen .ds-or { display: none; } }
+.ds-seen-own input[type="color"] { z-index: 1; width: 100%; height: 100%; padding: 0; border: 0; }
+.ds-rainbow { position: relative; width: 16px; height: 16px; border-radius: 50%; flex: none;
+  background: conic-gradient(from 200deg, #ff5f6d, #ffb347, #ffe259, #5ee07c, #36c9f0, #7b6cf6, #ef5fc4, #ff5f6d);
+  box-shadow: 0 0 0 1.5px rgb(255 255 255 / .55), inset 0 0 0 1px rgb(0 0 0 / .12); transition: transform .25s ease; }
+.ds-rainbow::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--own); box-shadow: 0 0 0 1.5px rgb(255 255 255 / .9); transform: scale(0); transition: transform .25s ease; }
+.ds-seen-own:hover .ds-rainbow { transform: rotate(60deg); }
+.ds-seen-own:has(input[type="radio"]:checked) .ds-rainbow::after { transform: scale(1); }
+.ds-own-hex { display: none; font: 500 11.5px/1 var(--mono); opacity: .7; letter-spacing: .02em; }
+.ds-seen-own:has(input[type="radio"]:checked) .ds-own-hex { display: inline; }
+.ds-seen-own:has(input[type="radio"]:checked) .ds-own-t { font-size: 0; }
+.ds-seen-own:has(input[type="radio"]:checked) .ds-own-t::before { content: "Your own"; font-size: 13.5px; }
+.ds-seen-own:has(input[type="color"]:focus-visible) { outline: 2px solid var(--on-field); outline-offset: 2px; }
 .ds-dot { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.18), 0 0 0 1.5px rgb(255 255 255 / 0.5); flex: none; }
 
 /* ---------- shared evidence pieces ---------- */
@@ -3070,11 +3086,6 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .tp-controls .ds-check { color: var(--on-field); }
 .tp-controls .ds-check input { accent-color: var(--on-field); }
 .tp-left, .tp-right { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.tp-own input[type="color"] { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
-.tp-own input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-.tp-own input[type="color"]::-webkit-color-swatch { border: 2px solid var(--on-field); border-radius: 50%; }
-.tp-own input[type="color"]::-moz-color-swatch { border: 2px solid var(--on-field); border-radius: 50%; }
-.tp-own input:focus-visible { outline: 2px solid var(--on-field); outline-offset: 2px; }
 .tp-app { background: var(--bg); color: var(--fg); border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.12), 0 18px 50px -20px rgb(0 0 0 / 0.35); min-width: 0; transition: background-color 0.2s var(--ease); }
 .tp-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--card); }
 .tp-logo { width: 22px; height: 22px; border-radius: calc(var(--r) * 0.75); background: var(--primary); display: grid; place-items: center; color: var(--primary-fg); font: 700 12px/1 var(--font); flex: none; }
@@ -3684,7 +3695,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     { id: "bank", name: "Bank", colour: "#1d2b5c", font: '"IBM Plex Sans", var(--sans)', weight: 600, track: "-0.035em", r: "0.375rem", btn: "0.75rem", mark: "B" },
   ];
   const state = { id: "courier", own: "#e85d9a", mode: "light", ratios: false };
-  const current = () => (state.id === "own" ? { ...CUSTOMERS[1], id: "own", name: "Your colour", colour: state.own, mark: "Y" } : CUSTOMERS.find((c) => c.id === state.id));
+  const current = () => (state.id === "own" ? { ...CUSTOMERS[1], id: "own", name: "Your own", colour: state.own, mark: "Y" } : CUSTOMERS.find((c) => c.id === state.id));
   const listeners = [];
   function setCustomer(id) {
     state.id = id;
@@ -3703,6 +3714,18 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   const seen = document.getElementById("seen-as");
   if (seen) {
     seen.innerHTML = `<span>Seen as</span>` + CUSTOMERS.map((c) => `<label style="font-family:${c.font.replace(/"/g, "&quot;")};font-weight:${c.weight === 700 ? 600 : 500}"><input type="radio" name="seen" data-cust value="${c.id}" id="seen-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${c.name}</label>`).join("");
+    // the last option: any colour of your own. The radio keeps it in the keyboard's arrow order; the colour well over the
+    // chip opens the picker on click, and choosing a colour runs the same rule as the four brands.
+    seen.innerHTML += `<i class="ds-or" aria-hidden="true"></i><label class="ds-seen-own" style="--own:${state.own}">
+      <input type="radio" name="seen" data-cust value="own" id="seen-own" aria-label="Or your own colour">
+      <i class="ds-rainbow" aria-hidden="true"></i><span class="ds-own-t">Or your own</span><span class="ds-own-hex"></span>
+      <input type="color" id="seen-own-colour" value="${state.own}" aria-label="Pick your own brand colour"></label>`;
+    const ownChip = seen.querySelector(".ds-seen-own"), ownHex = seen.querySelector(".ds-own-hex");
+    const ownWell = seen.querySelector("#seen-own-colour");
+    const showOwn = () => { ownChip.style.setProperty("--own", state.own); ownHex.textContent = state.own.toUpperCase(); };
+    showOwn();
+    ownWell.addEventListener("click", () => { if (state.id !== "own") setCustomer("own"); });
+    ownWell.addEventListener("input", (e) => { state.own = e.target.value; showOwn(); setCustomer("own"); });
     seen.addEventListener("change", (e) => { if (e.target.name === "seen") setCustomer(e.target.value); });
   }
   const layersArt = document.getElementById("cover-layers");
@@ -3743,9 +3766,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
         <div class="tp-left">
           <div class="ds-seg" role="radiogroup" aria-label="Customer">
             ${CUSTOMERS.map((c) => `<label><input type="radio" name="tp-customer" data-cust value="${c.id}" id="tp-c-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${esc(c.name)}</label>`).join("")}
-            <label class="tp-own"><input type="radio" name="tp-customer" data-cust value="own" id="tp-c-own"><span>Your colour</span></label>
           </div>
-          <span class="tp-own"><input type="color" id="tp-own-colour" value="${state.own}" aria-label="Pick your own brand colour"></span>
         </div>
         <div class="tp-right">
           <div class="ds-seg" role="radiogroup" aria-label="Mode">
@@ -3773,7 +3794,6 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
       if (e.target.id === "tp-ratios") state.ratios = e.target.checked;
       render(current());
     });
-    work.querySelector("#tp-own-colour").addEventListener("input", (e) => { state.own = e.target.value; setCustomer("own"); });
   }
 
   /* ---------- 01.1: the same screen, three products ---------- */

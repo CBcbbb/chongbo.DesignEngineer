@@ -184,7 +184,7 @@
     { id: "bank", name: "Bank", colour: "#1d2b5c", font: '"IBM Plex Sans", var(--sans)', weight: 600, track: "-0.035em", r: "0.375rem", btn: "0.75rem", mark: "B" },
   ];
   const state = { id: "courier", own: "#e85d9a", mode: "light", ratios: false };
-  const current = () => (state.id === "own" ? { ...CUSTOMERS[1], id: "own", name: "Your colour", colour: state.own, mark: "Y" } : CUSTOMERS.find((c) => c.id === state.id));
+  const current = () => (state.id === "own" ? { ...CUSTOMERS[1], id: "own", name: "Your own", colour: state.own, mark: "Y" } : CUSTOMERS.find((c) => c.id === state.id));
   const listeners = [];
   function setCustomer(id) {
     state.id = id;
@@ -203,6 +203,18 @@
   const seen = document.getElementById("seen-as");
   if (seen) {
     seen.innerHTML = `<span>Seen as</span>` + CUSTOMERS.map((c) => `<label style="font-family:${c.font.replace(/"/g, "&quot;")};font-weight:${c.weight === 700 ? 600 : 500}"><input type="radio" name="seen" data-cust value="${c.id}" id="seen-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${c.name}</label>`).join("");
+    // the last option: any colour of your own. The radio keeps it in the keyboard's arrow order; the colour well over the
+    // chip opens the picker on click, and choosing a colour runs the same rule as the four brands.
+    seen.innerHTML += `<i class="ds-or" aria-hidden="true"></i><label class="ds-seen-own" style="--own:${state.own}">
+      <input type="radio" name="seen" data-cust value="own" id="seen-own" aria-label="Or your own colour">
+      <i class="ds-rainbow" aria-hidden="true"></i><span class="ds-own-t">Or your own</span><span class="ds-own-hex"></span>
+      <input type="color" id="seen-own-colour" value="${state.own}" aria-label="Pick your own brand colour"></label>`;
+    const ownChip = seen.querySelector(".ds-seen-own"), ownHex = seen.querySelector(".ds-own-hex");
+    const ownWell = seen.querySelector("#seen-own-colour");
+    const showOwn = () => { ownChip.style.setProperty("--own", state.own); ownHex.textContent = state.own.toUpperCase(); };
+    showOwn();
+    ownWell.addEventListener("click", () => { if (state.id !== "own") setCustomer("own"); });
+    ownWell.addEventListener("input", (e) => { state.own = e.target.value; showOwn(); setCustomer("own"); });
     seen.addEventListener("change", (e) => { if (e.target.name === "seen") setCustomer(e.target.value); });
   }
   const layersArt = document.getElementById("cover-layers");
@@ -243,9 +255,7 @@
         <div class="tp-left">
           <div class="ds-seg" role="radiogroup" aria-label="Customer">
             ${CUSTOMERS.map((c) => `<label><input type="radio" name="tp-customer" data-cust value="${c.id}" id="tp-c-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${esc(c.name)}</label>`).join("")}
-            <label class="tp-own"><input type="radio" name="tp-customer" data-cust value="own" id="tp-c-own"><span>Your colour</span></label>
           </div>
-          <span class="tp-own"><input type="color" id="tp-own-colour" value="${state.own}" aria-label="Pick your own brand colour"></span>
         </div>
         <div class="tp-right">
           <div class="ds-seg" role="radiogroup" aria-label="Mode">
@@ -273,7 +283,6 @@
       if (e.target.id === "tp-ratios") state.ratios = e.target.checked;
       render(current());
     });
-    work.querySelector("#tp-own-colour").addEventListener("input", (e) => { state.own = e.target.value; setCustomer("own"); });
   }
 
   /* ---------- 01.1: the same screen, three products ---------- */

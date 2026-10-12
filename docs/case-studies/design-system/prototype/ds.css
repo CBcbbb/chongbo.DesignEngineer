@@ -76,6 +76,22 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-seen input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
 .ds-seen label:has(input:checked) { background: var(--on-field); color: var(--field); }
 .ds-seen label:has(input:focus-visible) { outline: 2px solid var(--on-field); outline-offset: 2px; }
+/* "Or your own": a rainbow well that becomes your colour, ringed by the rainbow, once chosen */
+.ds-seen .ds-or { width: 1px; height: 18px; margin: 0 5px 0 4px; background: color-mix(in srgb, var(--on-field) 28%, transparent); }
+.ds-seen-own { font-family: "Geist", var(--sans) !important; }
+@media (max-width: 560px) { .ds-seen .ds-or { display: none; } }
+.ds-seen-own input[type="color"] { z-index: 1; width: 100%; height: 100%; padding: 0; border: 0; }
+.ds-rainbow { position: relative; width: 16px; height: 16px; border-radius: 50%; flex: none;
+  background: conic-gradient(from 200deg, #ff5f6d, #ffb347, #ffe259, #5ee07c, #36c9f0, #7b6cf6, #ef5fc4, #ff5f6d);
+  box-shadow: 0 0 0 1.5px rgb(255 255 255 / .55), inset 0 0 0 1px rgb(0 0 0 / .12); transition: transform .25s ease; }
+.ds-rainbow::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; background: var(--own); box-shadow: 0 0 0 1.5px rgb(255 255 255 / .9); transform: scale(0); transition: transform .25s ease; }
+.ds-seen-own:hover .ds-rainbow { transform: rotate(60deg); }
+.ds-seen-own:has(input[type="radio"]:checked) .ds-rainbow::after { transform: scale(1); }
+.ds-own-hex { display: none; font: 500 11.5px/1 var(--mono); opacity: .7; letter-spacing: .02em; }
+.ds-seen-own:has(input[type="radio"]:checked) .ds-own-hex { display: inline; }
+.ds-seen-own:has(input[type="radio"]:checked) .ds-own-t { font-size: 0; }
+.ds-seen-own:has(input[type="radio"]:checked) .ds-own-t::before { content: "Your own"; font-size: 13.5px; }
+.ds-seen-own:has(input[type="color"]:focus-visible) { outline: 2px solid var(--on-field); outline-offset: 2px; }
 .ds-dot { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.18), 0 0 0 1.5px rgb(255 255 255 / 0.5); flex: none; }
 
 /* ---------- shared evidence pieces ---------- */
@@ -197,11 +213,6 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .tp-controls .ds-check { color: var(--on-field); }
 .tp-controls .ds-check input { accent-color: var(--on-field); }
 .tp-left, .tp-right { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.tp-own input[type="color"] { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
-.tp-own input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-.tp-own input[type="color"]::-webkit-color-swatch { border: 2px solid var(--on-field); border-radius: 50%; }
-.tp-own input[type="color"]::-moz-color-swatch { border: 2px solid var(--on-field); border-radius: 50%; }
-.tp-own input:focus-visible { outline: 2px solid var(--on-field); outline-offset: 2px; }
 .tp-app { background: var(--bg); color: var(--fg); border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.12), 0 18px 50px -20px rgb(0 0 0 / 0.35); min-width: 0; transition: background-color 0.2s var(--ease); }
 .tp-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--card); }
 .tp-logo { width: 22px; height: 22px; border-radius: calc(var(--r) * 0.75); background: var(--primary); display: grid; place-items: center; color: var(--primary-fg); font: 700 12px/1 var(--font); flex: none; }
