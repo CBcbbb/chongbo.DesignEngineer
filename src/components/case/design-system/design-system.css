@@ -603,17 +603,17 @@
 }
 
 /* ---------- outcome: results by part, each a large line under its label; the role line above them stays quiet ---------- */
-[data-palette="design-system"] #outcome.is-text .cf-head { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
-[data-palette="design-system"] #outcome.is-text .cf-body { padding: 0; }
-[data-palette="design-system"] #outcome .cf-notes { margin-top: clamp(1.5rem, 3vw, 2.25rem); }
-@media (max-width: 760px) { [data-palette="design-system"] #outcome.is-text .cf-head { grid-template-columns: minmax(0, 1fr); } }
-[data-palette="design-system"] #outcome .cf-body p { max-width: 60ch; font: 400 clamp(1rem, 1.4vw, 1.125rem)/1.5 var(--sans); letter-spacing: 0; color: var(--on-dark-body); }
-[data-palette="design-system"] #outcome .cf-notes { grid-template-columns: minmax(0, 1fr); gap: clamp(14px, 2vw, 22px); padding-top: 0; border-top: 0; }
-[data-palette="design-system"] #outcome .cf-notes div { grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr); gap: 16px; padding-top: clamp(12px, 1.6vw, 18px); border-top: 1px solid var(--dark-rule); }
-[data-palette="design-system"] #outcome .cf-notes dt { font: 500 13px/1.8 var(--mono); letter-spacing: 0.02em; color: var(--accent-on-dark); }
-[data-palette="design-system"] #outcome .cf-notes dd { max-width: none; font: 400 clamp(1.1rem, 1.8vw, 1.45rem)/1.35 var(--sans); letter-spacing: -0.01em; color: var(--on-dark); }
+[data-palette="design-system"] :is([data-card="outcome"], #outcome).is-text .cf-head { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); }
+[data-palette="design-system"] :is([data-card="outcome"], #outcome).is-text .cf-body { padding: 0; }
+[data-palette="design-system"] :is([data-card="outcome"], #outcome) .cf-notes { margin-top: clamp(1.5rem, 3vw, 2.25rem); }
+@media (max-width: 760px) { [data-palette="design-system"] :is([data-card="outcome"], #outcome).is-text .cf-head { grid-template-columns: minmax(0, 1fr); } }
+[data-palette="design-system"] :is([data-card="outcome"], #outcome) .cf-body p { max-width: 60ch; font: 400 clamp(1rem, 1.4vw, 1.125rem)/1.5 var(--sans); letter-spacing: 0; color: var(--on-dark-body); }
+[data-palette="design-system"] :is([data-card="outcome"], #outcome) .cf-notes { grid-template-columns: minmax(0, 1fr); gap: clamp(14px, 2vw, 22px); padding-top: 0; border-top: 0; }
+[data-palette="design-system"] :is([data-card="outcome"], #outcome) .cf-notes div { grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr); gap: 16px; padding-top: clamp(12px, 1.6vw, 18px); border-top: 1px solid var(--dark-rule); }
+[data-palette="design-system"] :is([data-card="outcome"], #outcome) .cf-notes dt { font: 500 13px/1.8 var(--mono); letter-spacing: 0.02em; color: var(--accent-on-dark); }
+[data-palette="design-system"] :is([data-card="outcome"], #outcome) .cf-notes dd { max-width: none; font: 400 clamp(1.1rem, 1.8vw, 1.45rem)/1.35 var(--sans); letter-spacing: -0.01em; color: var(--on-dark); }
 @media (max-width: 600px) {
-  [data-palette="design-system"] #outcome .cf-notes div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  [data-palette="design-system"] :is([data-card="outcome"], #outcome) .cf-notes div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
 }
 
 /* the pieces that scroll sideways on narrow screens take focus, so a keyboard can scroll them */

@@ -75,21 +75,31 @@ function Asks({ text }: { text: string }) {
 /**
  * One card = one sheet: the index above the claim on the left, the reasoning on the right, the evidence underneath
  * at full width (or beside the text, for `layout: "pair"`, where the screen is wide and tall enough).
+ * The same component is printed on the home page and /ask: `idPrefix` keeps its ids unique there, and `data-card`
+ * (never prefixed) is what a project's own CSS targets, so a printed card looks exactly like the case page's.
  */
-function Card({ section, idx, url }: { section: Section; idx: string; url: string }) {
+export function Card({ section, idx, url, idPrefix = "" }: { section: Section; idx: string; url: string; idPrefix?: string }) {
   const dark = section.surface === "dark";
   const side = section.layout === "pair";
   const hasEvidence = !!section.media || !!section.steps?.length;
   const cls = ["cf-sheet", "is-card", dark && "is-dark", side && "is-side", !hasEvidence && "is-text"].filter(Boolean).join(" ");
   return (
-    <section id={section.id} className={cls} data-canvas={canvasOf(section)} data-size={sizeOf(section)} data-layout={section.layout ?? "stack"} aria-labelledby={`${section.id}-title`}>
+    <section
+      id={`${idPrefix}${section.id}`}
+      className={cls}
+      data-card={section.id}
+      data-canvas={canvasOf(section)}
+      data-size={sizeOf(section)}
+      data-layout={section.layout ?? "stack"}
+      aria-labelledby={`${idPrefix}${section.id}-title`}
+    >
       <div className="cf-head">
         <div>
           <p className="cf-meta">
             <span className="cf-idx">{idx}</span>
             {section.tag && <span className={`cf-tag${section.tag.strong ? " is-strong" : ""}`}>{section.tag.label}</span>}
           </p>
-          <h3 id={`${section.id}-title`} className="cf-h3">
+          <h3 id={`${idPrefix}${section.id}-title`} className="cf-h3">
             <CardTitle section={section} />
           </h3>
         </div>
@@ -114,13 +124,35 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
       {section.facts && <Facts items={section.facts} />}
       {hasEvidence && (
         <div className="cf-evidence" data-fit={fitOf(section)} data-split={section.media && section.steps?.length ? (section.media.kind === "deck" ? "deck" : "") : undefined}>
-          {section.media && <CaseMedia media={section.media} index={idx} url={url} bleed={!section.steps?.length} />}
+          {section.media && <CaseMedia media={section.media} index={`${idPrefix}${idx}`} url={url} bleed={!section.steps?.length} />}
           {section.steps && section.steps.length > 0 && <StepsRow steps={section.steps} />}
         </div>
       )}
     </section>
   );
 }
+
+/** The parts of a case file, in order, each with its cards (a project without parts is one unnamed part). */
+function partsOf(project: Project) {
+  const parts = project.parts ?? [{ id: "main", label: "", title: project.title }];
+  return parts.map((p) => ({ part: p, cards: project.sections.filter((s) => (s.part ?? parts[0]!.id) === p.id) }));
+}
+
+/** Each card's index as the case page prints it ("02.3": part 2, card 3), keyed by section id. */
+export function cardIndexes(project: Project): Record<string, string> {
+  const out: Record<string, string> = {};
+  partsOf(project).forEach(({ cards }, pi) => cards.forEach((s, ci) => (out[s.id] = `${pad2(pi + 1)}.${ci + 1}`)));
+  return out;
+}
+
+/** The address shown in the live product's browser frame. */
+export function caseUrl(project: Project): string {
+  const live = project.links.find((l) => /live/i.test(l.label));
+  return project.work?.url ?? (live ? new URL(live.href).host : "");
+}
+
+/** The palette a case file (and every card printed from it) reads its colours from. */
+export const paletteOf = (project: Project) => (project.slug === "hhcd-data-platform" ? "hhcd" : project.slug);
 
 /** The work: the product itself, as a project module on the field (or the cover image in a browser frame). */
 function WorkSheet({ project }: { project: Project }) {
@@ -194,11 +226,12 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
   }));
   const live = project.links.find((l) => /live/i.test(l.label));
   const others = project.links.filter((l) => l !== live);
-  const url = project.work?.url ?? (live ? new URL(live.href).host : "");
+  const url = caseUrl(project);
+  const idx = cardIndexes(project);
   const ground = project.openers === "ground";
 
   return (
-    <div className="cf" data-palette={project.slug === "hhcd-data-platform" ? "hhcd" : project.slug}>
+    <div className="cf" data-palette={paletteOf(project)}>
       <div className="cf-frame">
         <CaseContents title={project.title} parts={contents} />
 
@@ -333,9 +366,9 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                     )}
                   </section>
                 )}
-                {cards.map((s, ci) => (
+                {cards.map((s) => (
                   <Fragment key={s.id}>
-                    <Card section={s} idx={`${n}.${ci + 1}`} url={url} />
+                    <Card section={s} idx={idx[s.id]!} url={url} />
                     {workAfter === s.id && <WorkSheet project={project} />}
                   </Fragment>
                 ))}

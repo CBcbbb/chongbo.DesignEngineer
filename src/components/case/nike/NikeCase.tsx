@@ -176,14 +176,15 @@ const POSTERS = [
 ];
 
 /** A card's head: index and claim on the left, the reasoning on the right. */
-function Head({ s, idx, clip }: { s: Section; idx: string; clip?: Moment }) {
+type HeadProps = { s: Section; idx: string; clip?: Moment };
+function HeadEl({ s, idx, clip, pre }: HeadProps & { pre: string }) {
   return (
     <div className="nk-head">
       <div>
         <p className="nk-meta">
           <span className="nk-idx">{idx}</span>
         </p>
-        <h3 id={`${s.id}-h`}>{s.title}</h3>
+        <h3 id={`${pre}${s.id}-h`}>{s.title}</h3>
       </div>
       <div className="nk-body">
         {s.body.map((p) => (
@@ -196,12 +197,14 @@ function Head({ s, idx, clip }: { s: Section; idx: string; clip?: Moment }) {
 }
 
 /** `side` puts the text beside the evidence on wide screens: for long copy or tall evidence. */
-function Card({ s, tone, layout, children }: { s: Section; tone?: "black"; layout?: "side"; children: ReactNode }) {
+type CardProps = { s: Section; tone?: "black"; layout?: "side"; children: ReactNode };
+function CardEl({ s, tone, layout, children, pre }: CardProps & { pre: string }) {
   return (
     <article
-      id={s.id}
+      id={`${pre}${s.id}`}
+      data-card={s.id}
       className={`nk-sheet is-card${tone === "black" ? " is-black" : ""}${layout === "side" ? " is-side" : ""}`}
-      aria-labelledby={`${s.id}-h`}
+      aria-labelledby={`${pre}${s.id}-h`}
     >
       {children}
     </article>
@@ -223,10 +226,11 @@ function Opener({ part }: { part: ContentsPart }) {
 }
 
 /**
- * The Nike case file. Copy comes from content/projects/nike.ts so printed sheets and the page say the same
- * words; this file decides how each card shows its evidence.
+ * Every Nike card, keyed by section id, as the case file shows it. The printed sheets on the home page and /ask
+ * use these same elements, so a printed card is the case-file card itself. `pre` keeps ids unique where cards
+ * are printed; `data-card` is never prefixed.
  */
-export function NikeCase({ project, next }: { project: Project; next: Project }) {
+export function nikeCards(project: Project, pre = ""): Record<string, ReactNode> {
   const s = Object.fromEntries(project.sections.map((x) => [x.id, x])) as Record<string, Section>;
   const sec = (id: string) => {
     const found = s[id];
@@ -234,6 +238,293 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
     return found;
   };
   const outcome = sec("outcome");
+  const Card = (props: CardProps) => <CardEl pre={pre} {...props} />;
+  const Head = (props: HeadProps) => <HeadEl pre={pre} {...props} />;
+  return {
+    "graphic-system": (
+    <Card s={sec("graphic-system")}>
+      <Head s={sec("graphic-system")} idx="01.1" clip={M.framing} />
+      <figure className="nk-ev">
+        <Switcher
+          options={[
+            {
+              label: "Logo lock-up",
+              layer: "Layout/Framing/Logo-Lockup",
+              image: <Image quality={Q} src={A("gs-logo-lockup.png")} alt="Logo lock-up: the 星推官 Athletes Closet lock-up, VOL number and headline." width={2024} height={436} sizes="(min-width: 761px) 640px, 90vw" />,
+            },
+            {
+              label: "One-line header",
+              layer: "Layout/Header/One-Line",
+              image: <Image quality={Q} src={A("gs-header-one-line.png")} alt="One-line header: subtitle, chapter number and headline." width={1506} height={465} sizes="(min-width: 761px) 640px, 90vw" />,
+            },
+            {
+              label: "Key message",
+              layer: "Layout/Message/Key-Message",
+              image: <Image quality={Q} src={A("gs-key-message.png")} alt="Key message: subtitle above a centred headline." width={1506} height={462} sizes="(min-width: 761px) 640px, 90vw" />,
+            },
+            {
+              label: "Simplified text",
+              layer: "Layout/Message/Text-Simplified",
+              image: <Image quality={Q} src={A("gs-text-simplified.png")} alt="Simplified text: one line of text in a frame." width={1506} height={210} sizes="(min-width: 761px) 640px, 90vw" />,
+            },
+            {
+              label: "Image and text",
+              layer: "Layout/Content/ImageText-Combo",
+              tall: true,
+              image: <Image quality={Q} src={A("gs-image-text-combo.png")} alt="Image and text: a full-height image with the lock-up and body text below." width={1197} height={2358} sizes="(min-width: 761px) 300px, 60vw" />,
+            },
+          ]}
+        />
+      </figure>
+    </Card>
+    ),
+    "style": (
+    <Card s={sec("style")}>
+      <Head s={sec("style")} idx="01.2" clip={M.poster} />
+      <figure className="nk-ev nk-ev-one">
+        <div className="nk-box nk-grain nk-posters">
+          <PosterStrip label="Six poster cards, one per influencer">
+            {POSTERS.map((p, i) => (
+              <Image
+                key={p.file}
+                quality={Q}
+                src={A(p.file)}
+                alt={`Poster card ${i + 1} of 6: ${p.alt}`}
+                width={POSTER_W}
+                height={POSTER_H}
+                sizes="(min-width: 761px) 300px, 70vw"
+              />
+            ))}
+          </PosterStrip>
+        </div>
+      </figure>
+    </Card>
+    ),
+    "retouching": (
+    <Card s={sec("retouching")}>
+      <Head s={sec("retouching")} idx="01.3" />
+      <figure className="nk-ev nk-ev-one">
+        <div className="nk-box nk-field nk-retouch">
+          <div className="nk-cq" style={{ ["--ar" as string]: "0.666" }}>
+            <Compare
+              label="Compare photo 1, original and retouched"
+              labels={["Original", "Retouched"]}
+              ratio="1332 / 2000"
+              under={<Image quality={Q} src={A("retouch-1-after.jpg")} alt="Photo 1, retouched with a flash-photography look." width={1332} height={2000} sizes="(min-width: 761px) 420px, 90vw" />}
+              over={<Image quality={Q} src={A("retouch-1-original.jpg")} alt="Photo 1, the original before retouching." width={1332} height={2000} sizes="(min-width: 761px) 420px, 90vw" />}
+            />
+          </div>
+          <div className="nk-cq" style={{ ["--ar" as string]: "0.666" }}>
+            <Compare
+              label="Compare photo 2, original and retouched"
+              labels={["Original", "Retouched"]}
+              ratio="1332 / 2000"
+              under={<Image quality={Q} src={A("retouch-2-after.jpg")} alt="Photo 2, retouched with a flash-photography look." width={1332} height={2000} sizes="(min-width: 761px) 420px, 90vw" />}
+              over={<Image quality={Q} src={A("retouch-2-original.jpg")} alt="Photo 2, the original before retouching." width={1332} height={2000} sizes="(min-width: 761px) 420px, 90vw" />}
+            />
+          </div>
+        </div>
+      </figure>
+    </Card>
+    ),
+    "views": (
+    <Card s={sec("views")} tone="black">
+      <Head s={sec("views")} idx="01.4" clip={M.views} />
+      <figure className="nk-ev nk-ev-one">
+        {/* The decision is structural, so the wireframes lead; the app screens are one press away. */}
+        <Pip
+          ratio={1000 / 620}
+          insetRatio={1555 / 813}
+          main={{ label: "Wireframes", image: <FeedWireframes /> }}
+          inset={{
+            label: "App screens",
+            image: (
+              <Image
+                quality={Q}
+                src={A("storytelling-feed.png")}
+                alt="In the app. Before: one long vertical scroll. After: an outfit's views set as horizontal pages, with the next view showing at the edge."
+                width={1555}
+                height={813}
+                sizes="(min-width: 1180px) 900px, 100vw"
+              />
+            ),
+          }}
+        />
+      </figure>
+    </Card>
+    ),
+    "components": (
+    <Card s={sec("components")}>
+      <Head s={sec("components")} idx="01.5" />
+      <figure className="nk-ev">
+        <div className="nk-box nk-grid nk-comps">
+          {(
+            [
+              ["gs-imagery-primary.png", "Imagery/Primary", 1125, 1794],
+              ["gs-imagery-secondary.png", "Imagery/Secondary", 1125, 1794],
+              ["gs-imagery-tertiary.png", "Imagery/Tertiary", 1125, 1794],
+              ["gs-poster-card.png", "Poster-Card", 1125, 1500],
+            ] as const
+          ).map(([file, name, w, h]) => (
+            <figure key={file}>
+              <Image quality={Q} src={A(file)} alt={`Layout component: ${name.replace("/", ", ").toLowerCase()}.`} width={w} height={h} sizes="240px" />
+              <figcaption>
+                <span>Layout/</span>
+                {name}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </figure>
+    </Card>
+    ),
+    "tags": (
+    <Card s={sec("tags")} tone="black">
+      <Head s={sec("tags")} idx="02.1" clip={M.tag} />
+      <figure className="nk-ev nk-ev-one">
+        <Pip
+          ratio={2500 / 1306}
+          main={{
+            label: "Final",
+            image: (
+              <Image quality={Q}
+                src={A("product-tags-2.png")}
+                alt="Final: three story pages, with product tags on the photos naming a T-shirt and a pair of trainers."
+                width={2500}
+                height={1306}
+                sizes="(min-width: 1180px) 900px, 100vw"
+              />
+            ),
+          }}
+          inset={{
+            label: "Wireframe",
+            image: (
+              <Image quality={Q}
+                src={A("product-tags-1.png")}
+                alt="Wireframe: the same three pages, with a product tag placed on the photo."
+                width={2500}
+                height={1306}
+                sizes="(min-width: 1180px) 900px, 100vw"
+              />
+            ),
+          }}
+        />
+      </figure>
+    </Card>
+    ),
+    "product-card": (
+    <Card s={sec("product-card")}>
+      <Head s={sec("product-card")} idx="02.2" clip={M.cards} />
+      <figure className="nk-ev nk-ev-one">
+        <div className="nk-box nk-field nk-phones">
+          <div className="nk-pair">
+            <figure>
+              <Image quality={Q} src={A("product-card-before.png")} alt="Before the redesign: products in small tiles under the story photo." width={1821} height={3584} sizes="(min-width: 760px) 420px, 45vw" />
+              <figcaption>
+                <b>Before</b>
+              </figcaption>
+            </figure>
+            <figure className="is-after">
+              <Image quality={Q} src={A("product-card-after.png")} alt="After the redesign: larger product images under the story photo." width={1821} height={3584} sizes="(min-width: 760px) 420px, 45vw" />
+              <figcaption>
+                <b>After</b>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </figure>
+    </Card>
+    ),
+    "ranking": (
+    <Card s={sec("ranking")}>
+      <Head s={sec("ranking")} idx="02.3" clip={M.ranking} />
+      <figure className="nk-ev">
+        <div className="nk-box nk-rank">
+          <figure>
+            <Image quality={Q} src={A("ranking-before.png")} alt="Before: three loose tiles." width={1125} height={1167} sizes="(min-width: 761px) 380px, 45vw" />
+            <figcaption>Before</figcaption>
+          </figure>
+          <span className="nk-arrow" aria-hidden="true">
+            →
+          </span>
+          <figure>
+            <Image quality={Q} src={A("ranking-after.png")} alt="After: a ranked top three with calls to action." width={1125} height={1260} sizes="(min-width: 761px) 380px, 45vw" />
+            <figcaption>After</figcaption>
+          </figure>
+        </div>
+      </figure>
+    </Card>
+    ),
+    "draw": (
+    <Card s={sec("draw")} tone="black">
+      <Head s={sec("draw")} idx="03.1" />
+      <figure className="nk-ev nk-bleed nk-bleed-end">
+        <GiftBox src={A("gift-box.lottie.json")} label="Animation: a shoebox opens and a pair of trainers rises out" />
+      </figure>
+    </Card>
+    ),
+    "star-voice": (
+    <Card s={sec("star-voice")}>
+      <Head s={sec("star-voice")} idx="03.2" clip={M.starVoice} />
+      <figure className="nk-ev nk-ev-one">
+        <div className="nk-box nk-sv">
+          <div className="nk-sv-phone">
+            <Image
+              quality={Q}
+              src={A("star-voice-screen.jpg")}
+              alt="Star Voice Q&A in the app: the next influencer's voice teaser, questions with their like counts, and a field to ask one."
+              width={1125}
+              height={1833}
+              sizes="(min-width: 761px) 340px, 70vw"
+            />
+            <VoiceTeaser src={A("star-voice-teaser.mp3")} label="the voice teaser" seconds={5} />
+          </div>
+          <ul className="nk-sv-notes">
+            {SV_NOTES.map((n) => (
+              <li key={n.title} className={n.side === "l" ? "is-l" : "is-r"} style={{ ["--y" as string]: String(n.y) }}>
+                <i aria-hidden="true" />
+                <span>
+                  <b>{n.title}</b>
+                  {n.text}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </figure>
+    </Card>
+    ),
+    "outcome": (
+    <section id={`${pre}outcome`} data-card="outcome" className="nk-sheet is-card is-black nk-noise nk-outcome" aria-labelledby={`${pre}outcome-h`}>
+      <div>
+        <p className="nk-meta">
+          <span className="nk-idx">04.1</span>
+        </p>
+        <h3 id={`${pre}outcome-h`} className="nk-big">
+          {outcome.title}
+        </h3>
+      </div>
+      <div className="nk-ofoot">
+        <ul className="nk-ogrid">
+          {(outcome.steps ?? []).map((r) => (
+            <li key={r.title}>
+              <p className="nk-olabel">{r.title}</p>
+              <p>{r.text}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+    ),
+  };
+}
+
+/**
+ * The Nike case file. Copy comes from content/projects/nike.ts so printed sheets and the page say the same
+ * words; this file decides how each card shows its evidence.
+ */
+export function NikeCase({ project, next }: { project: Project; next: Project }) {
+  const cards = nikeCards(project);
 
   return (
     <div className="nk" id="top">
@@ -287,278 +578,36 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
             {/* 01 Read */}
             <Opener part={PARTS[0]!} />
 
-            <Card s={sec("graphic-system")}>
-              <Head s={sec("graphic-system")} idx="01.1" clip={M.framing} />
-              <figure className="nk-ev">
-                <Switcher
-                  options={[
-                    {
-                      label: "Logo lock-up",
-                      layer: "Layout/Framing/Logo-Lockup",
-                      image: <Image quality={Q} src={A("gs-logo-lockup.png")} alt="Logo lock-up: the 星推官 Athletes Closet lock-up, VOL number and headline." width={2024} height={436} sizes="(min-width: 761px) 640px, 90vw" />,
-                    },
-                    {
-                      label: "One-line header",
-                      layer: "Layout/Header/One-Line",
-                      image: <Image quality={Q} src={A("gs-header-one-line.png")} alt="One-line header: subtitle, chapter number and headline." width={1506} height={465} sizes="(min-width: 761px) 640px, 90vw" />,
-                    },
-                    {
-                      label: "Key message",
-                      layer: "Layout/Message/Key-Message",
-                      image: <Image quality={Q} src={A("gs-key-message.png")} alt="Key message: subtitle above a centred headline." width={1506} height={462} sizes="(min-width: 761px) 640px, 90vw" />,
-                    },
-                    {
-                      label: "Simplified text",
-                      layer: "Layout/Message/Text-Simplified",
-                      image: <Image quality={Q} src={A("gs-text-simplified.png")} alt="Simplified text: one line of text in a frame." width={1506} height={210} sizes="(min-width: 761px) 640px, 90vw" />,
-                    },
-                    {
-                      label: "Image and text",
-                      layer: "Layout/Content/ImageText-Combo",
-                      tall: true,
-                      image: <Image quality={Q} src={A("gs-image-text-combo.png")} alt="Image and text: a full-height image with the lock-up and body text below." width={1197} height={2358} sizes="(min-width: 761px) 300px, 60vw" />,
-                    },
-                  ]}
-                />
-              </figure>
-            </Card>
+            {cards["graphic-system"]}
 
-            <Card s={sec("style")}>
-              <Head s={sec("style")} idx="01.2" clip={M.poster} />
-              <figure className="nk-ev nk-ev-one">
-                <div className="nk-box nk-grain nk-posters">
-                  <PosterStrip label="Six poster cards, one per influencer">
-                    {POSTERS.map((p, i) => (
-                      <Image
-                        key={p.file}
-                        quality={Q}
-                        src={A(p.file)}
-                        alt={`Poster card ${i + 1} of 6: ${p.alt}`}
-                        width={POSTER_W}
-                        height={POSTER_H}
-                        sizes="(min-width: 761px) 300px, 70vw"
-                      />
-                    ))}
-                  </PosterStrip>
-                </div>
-              </figure>
-            </Card>
+            {cards["style"]}
 
-            <Card s={sec("retouching")}>
-              <Head s={sec("retouching")} idx="01.3" />
-              <figure className="nk-ev nk-ev-one">
-                <div className="nk-box nk-field nk-retouch">
-                  <div className="nk-cq" style={{ ["--ar" as string]: "0.666" }}>
-                    <Compare
-                      label="Compare photo 1, original and retouched"
-                      labels={["Original", "Retouched"]}
-                      ratio="1332 / 2000"
-                      under={<Image quality={Q} src={A("retouch-1-after.jpg")} alt="Photo 1, retouched with a flash-photography look." width={1332} height={2000} sizes="(min-width: 761px) 420px, 90vw" />}
-                      over={<Image quality={Q} src={A("retouch-1-original.jpg")} alt="Photo 1, the original before retouching." width={1332} height={2000} sizes="(min-width: 761px) 420px, 90vw" />}
-                    />
-                  </div>
-                  <div className="nk-cq" style={{ ["--ar" as string]: "0.666" }}>
-                    <Compare
-                      label="Compare photo 2, original and retouched"
-                      labels={["Original", "Retouched"]}
-                      ratio="1332 / 2000"
-                      under={<Image quality={Q} src={A("retouch-2-after.jpg")} alt="Photo 2, retouched with a flash-photography look." width={1332} height={2000} sizes="(min-width: 761px) 420px, 90vw" />}
-                      over={<Image quality={Q} src={A("retouch-2-original.jpg")} alt="Photo 2, the original before retouching." width={1332} height={2000} sizes="(min-width: 761px) 420px, 90vw" />}
-                    />
-                  </div>
-                </div>
-              </figure>
-            </Card>
+            {cards["retouching"]}
 
-            <Card s={sec("views")} tone="black">
-              <Head s={sec("views")} idx="01.4" clip={M.views} />
-              <figure className="nk-ev nk-ev-one">
-                {/* The decision is structural, so the wireframes lead; the app screens are one press away. */}
-                <Pip
-                  ratio={1000 / 620}
-                  insetRatio={1555 / 813}
-                  main={{ label: "Wireframes", image: <FeedWireframes /> }}
-                  inset={{
-                    label: "App screens",
-                    image: (
-                      <Image
-                        quality={Q}
-                        src={A("storytelling-feed.png")}
-                        alt="In the app. Before: one long vertical scroll. After: an outfit's views set as horizontal pages, with the next view showing at the edge."
-                        width={1555}
-                        height={813}
-                        sizes="(min-width: 1180px) 900px, 100vw"
-                      />
-                    ),
-                  }}
-                />
-              </figure>
-            </Card>
+            {cards["views"]}
 
-            <Card s={sec("components")}>
-              <Head s={sec("components")} idx="01.5" />
-              <figure className="nk-ev">
-                <div className="nk-box nk-grid nk-comps">
-                  {(
-                    [
-                      ["gs-imagery-primary.png", "Imagery/Primary", 1125, 1794],
-                      ["gs-imagery-secondary.png", "Imagery/Secondary", 1125, 1794],
-                      ["gs-imagery-tertiary.png", "Imagery/Tertiary", 1125, 1794],
-                      ["gs-poster-card.png", "Poster-Card", 1125, 1500],
-                    ] as const
-                  ).map(([file, name, w, h]) => (
-                    <figure key={file}>
-                      <Image quality={Q} src={A(file)} alt={`Layout component: ${name.replace("/", ", ").toLowerCase()}.`} width={w} height={h} sizes="240px" />
-                      <figcaption>
-                        <span>Layout/</span>
-                        {name}
-                      </figcaption>
-                    </figure>
-                  ))}
-                </div>
-              </figure>
-            </Card>
+            {cards["components"]}
 
             {/* 02 Shop */}
             <Opener part={PARTS[1]!} />
 
-            <Card s={sec("tags")} tone="black">
-              <Head s={sec("tags")} idx="02.1" clip={M.tag} />
-              <figure className="nk-ev nk-ev-one">
-                <Pip
-                  ratio={2500 / 1306}
-                  main={{
-                    label: "Final",
-                    image: (
-                      <Image quality={Q}
-                        src={A("product-tags-2.png")}
-                        alt="Final: three story pages, with product tags on the photos naming a T-shirt and a pair of trainers."
-                        width={2500}
-                        height={1306}
-                        sizes="(min-width: 1180px) 900px, 100vw"
-                      />
-                    ),
-                  }}
-                  inset={{
-                    label: "Wireframe",
-                    image: (
-                      <Image quality={Q}
-                        src={A("product-tags-1.png")}
-                        alt="Wireframe: the same three pages, with a product tag placed on the photo."
-                        width={2500}
-                        height={1306}
-                        sizes="(min-width: 1180px) 900px, 100vw"
-                      />
-                    ),
-                  }}
-                />
-              </figure>
-            </Card>
+            {cards["tags"]}
 
-            <Card s={sec("product-card")}>
-              <Head s={sec("product-card")} idx="02.2" clip={M.cards} />
-              <figure className="nk-ev nk-ev-one">
-                <div className="nk-box nk-field nk-phones">
-                  <div className="nk-pair">
-                    <figure>
-                      <Image quality={Q} src={A("product-card-before.png")} alt="Before the redesign: products in small tiles under the story photo." width={1821} height={3584} sizes="(min-width: 760px) 420px, 45vw" />
-                      <figcaption>
-                        <b>Before</b>
-                      </figcaption>
-                    </figure>
-                    <figure className="is-after">
-                      <Image quality={Q} src={A("product-card-after.png")} alt="After the redesign: larger product images under the story photo." width={1821} height={3584} sizes="(min-width: 760px) 420px, 45vw" />
-                      <figcaption>
-                        <b>After</b>
-                      </figcaption>
-                    </figure>
-                  </div>
-                </div>
-              </figure>
-            </Card>
+            {cards["product-card"]}
 
-            <Card s={sec("ranking")}>
-              <Head s={sec("ranking")} idx="02.3" clip={M.ranking} />
-              <figure className="nk-ev">
-                <div className="nk-box nk-rank">
-                  <figure>
-                    <Image quality={Q} src={A("ranking-before.png")} alt="Before: three loose tiles." width={1125} height={1167} sizes="(min-width: 761px) 380px, 45vw" />
-                    <figcaption>Before</figcaption>
-                  </figure>
-                  <span className="nk-arrow" aria-hidden="true">
-                    →
-                  </span>
-                  <figure>
-                    <Image quality={Q} src={A("ranking-after.png")} alt="After: a ranked top three with calls to action." width={1125} height={1260} sizes="(min-width: 761px) 380px, 45vw" />
-                    <figcaption>After</figcaption>
-                  </figure>
-                </div>
-              </figure>
-            </Card>
+            {cards["ranking"]}
 
             {/* 03 Return */}
             <Opener part={PARTS[2]!} />
 
-            <Card s={sec("draw")} tone="black">
-              <Head s={sec("draw")} idx="03.1" />
-              <figure className="nk-ev nk-bleed nk-bleed-end">
-                <GiftBox src={A("gift-box.lottie.json")} label="Animation: a shoebox opens and a pair of trainers rises out" />
-              </figure>
-            </Card>
+            {cards["draw"]}
 
-            <Card s={sec("star-voice")}>
-              <Head s={sec("star-voice")} idx="03.2" clip={M.starVoice} />
-              <figure className="nk-ev nk-ev-one">
-                <div className="nk-box nk-sv">
-                  <div className="nk-sv-phone">
-                    <Image
-                      quality={Q}
-                      src={A("star-voice-screen.jpg")}
-                      alt="Star Voice Q&A in the app: the next influencer's voice teaser, questions with their like counts, and a field to ask one."
-                      width={1125}
-                      height={1833}
-                      sizes="(min-width: 761px) 340px, 70vw"
-                    />
-                    <VoiceTeaser src={A("star-voice-teaser.mp3")} label="the voice teaser" seconds={5} />
-                  </div>
-                  <ul className="nk-sv-notes">
-                    {SV_NOTES.map((n) => (
-                      <li key={n.title} className={n.side === "l" ? "is-l" : "is-r"} style={{ ["--y" as string]: String(n.y) }}>
-                        <i aria-hidden="true" />
-                        <span>
-                          <b>{n.title}</b>
-                          {n.text}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </figure>
-            </Card>
+            {cards["star-voice"]}
 
             {/* 04 Outcome */}
             <Opener part={PARTS[3]!} />
 
-            <section id="outcome" className="nk-sheet is-card is-black nk-noise nk-outcome" aria-labelledby="outcome-h">
-              <div>
-                <p className="nk-meta">
-                  <span className="nk-idx">04.1</span>
-                </p>
-                <h3 id="outcome-h" className="nk-big">
-                  {outcome.title}
-                </h3>
-              </div>
-              <div className="nk-ofoot">
-                <ul className="nk-ogrid">
-                  {(outcome.steps ?? []).map((r) => (
-                    <li key={r.title}>
-                      <p className="nk-olabel">{r.title}</p>
-                      <p>{r.text}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </section>
+            {cards["outcome"]}
 
 
             <nav className="nk-next" aria-label="Next case file">

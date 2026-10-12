@@ -1762,9 +1762,10 @@
  * and its evidence scales into the space left under the text. Images keep their own ratio: they are
  * limited by max-height and max-width together, never given both a width and a height.
  */
-@media (min-width: 761px) and (min-height: 620px) {
+@media (min-width: 761px) {
   .nk {
-    --nk-card-h: min(calc(100svh - 3rem), 58rem);
+    /* one fixed height on every window, the same as the case-file template */
+    --nk-card-h: 40rem;
   }
   .nk-sheet.is-card {
     height: var(--nk-card-h);
@@ -2023,7 +2024,7 @@
     max-height: 100%;
   }
 }
-@media (min-width: 1180px) and (min-height: 680px) {
+@media (min-width: 1180px) {
   /* side layout: text left, evidence right */
   .nk-sheet.is-side {
     grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
@@ -2056,8 +2057,8 @@
     grid-template-columns: auto auto;
   }
 }
-/* short windows: tighter text so the evidence keeps its space */
-@media (min-width: 761px) and (min-height: 620px) and (max-height: 800px) {
+/* the card's set type: what short windows used to get, now on every window */
+@media (min-width: 761px) {
   .nk-sheet.is-card {
     font-size: 0.9375rem;
     line-height: 1.55;
@@ -2068,11 +2069,6 @@
   .nk-body {
     gap: 0.6rem;
     padding-top: 1.35rem;
-  }
-}
-@media (min-width: 761px) and (max-width: 1000px) and (min-height: 620px) {
-  .nk {
-    --nk-card-h: min(calc(100svh - 7rem), 58rem);
   }
 }
 

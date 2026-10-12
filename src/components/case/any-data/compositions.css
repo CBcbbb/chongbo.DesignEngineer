@@ -18,7 +18,7 @@
 }
 
 /* ---------- 02.2 the whole card on the field, at every width ---------- */
-[data-palette="components-for-any-data"] #axis-pickers {
+[data-palette="components-for-any-data"] :is([data-card="axis-pickers"], #axis-pickers) {
   --case-bg: var(--field);
   --case-ink: var(--on-field);
   --case-body: var(--on-field);
@@ -33,32 +33,32 @@
   background-position: -1px -1px;
   border-color: var(--field);
 }
-[data-palette="components-for-any-data"] #axis-pickers .cf-evidence::before {
+[data-palette="components-for-any-data"] :is([data-card="axis-pickers"], #axis-pickers) .cf-evidence::before {
   display: none;
 }
-[data-palette="components-for-any-data"] #axis-pickers .cf-evidence {
+[data-palette="components-for-any-data"] :is([data-card="axis-pickers"], #axis-pickers) .cf-evidence {
   padding-top: 0;
 }
-[data-palette="components-for-any-data"] #axis-pickers :focus-visible {
+[data-palette="components-for-any-data"] :is([data-card="axis-pickers"], #axis-pickers) :focus-visible {
   outline-color: currentColor;
 }
 
 /* ---------- 01.1 on phones: the same order as on wide sheets (claim, context, strips, then the question) ---------- */
 @container ad-sheets (max-width: 639px) {
-  [data-palette="components-for-any-data"] #shapes :is(.cf-head, .cf-head > div, .cf-body) {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) :is(.cf-head, .cf-head > div, .cf-body) {
     display: contents;
   }
-  [data-palette="components-for-any-data"] #shapes .cf-meta {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-meta {
     margin: 0 !important;
   }
-  [data-palette="components-for-any-data"] #shapes .cf-h3 {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-h3 {
     margin-top: -0.4rem;
   }
-  [data-palette="components-for-any-data"] #shapes .cf-evidence {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-evidence {
     order: 1;
     margin-top: 0.25rem;
   }
-  [data-palette="components-for-any-data"] #shapes .cf-asks {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-asks {
     order: 2;
     margin-top: 0.25rem;
   }
@@ -66,34 +66,34 @@
 
 @container ad-sheets (min-width: 640px) {
   /* the head's boxes give way, so the index, the claim and each paragraph can be placed on the card's grid */
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) {
+  [data-palette="components-for-any-data"] :is(:is([data-card="shapes"], #shapes), :is([data-card="contract"], #contract), :is([data-card="pipeline"], #pipeline), :is([data-card="stream-fit"], #stream-fit), :is([data-card="axis-pickers"], #axis-pickers)) {
     gap: 0;
     align-content: start;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) :is(.cf-head, .cf-head > div, .cf-body) {
+  [data-palette="components-for-any-data"] :is(:is([data-card="shapes"], #shapes), :is([data-card="contract"], #contract), :is([data-card="pipeline"], #pipeline), :is([data-card="stream-fit"], #stream-fit), :is([data-card="axis-pickers"], #axis-pickers)) :is(.cf-head, .cf-head > div, .cf-body) {
     display: contents;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-meta {
+  [data-palette="components-for-any-data"] :is(:is([data-card="shapes"], #shapes), :is([data-card="contract"], #contract), :is([data-card="pipeline"], #pipeline), :is([data-card="stream-fit"], #stream-fit), :is([data-card="axis-pickers"], #axis-pickers)) .cf-meta {
     grid-area: meta;
     margin: 0 !important;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-h3 {
+  [data-palette="components-for-any-data"] :is(:is([data-card="shapes"], #shapes), :is([data-card="contract"], #contract), :is([data-card="pipeline"], #pipeline), :is([data-card="stream-fit"], #stream-fit), :is([data-card="axis-pickers"], #axis-pickers)) .cf-h3 {
     grid-area: h3;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-body > p {
+  [data-palette="components-for-any-data"] :is(:is([data-card="shapes"], #shapes), :is([data-card="contract"], #contract), :is([data-card="pipeline"], #pipeline), :is([data-card="stream-fit"], #stream-fit), :is([data-card="axis-pickers"], #axis-pickers)) .cf-body > p {
     max-width: none;
     margin: 0;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-body > p:nth-of-type(1) {
+  [data-palette="components-for-any-data"] :is(:is([data-card="shapes"], #shapes), :is([data-card="contract"], #contract), :is([data-card="pipeline"], #pipeline), :is([data-card="stream-fit"], #stream-fit), :is([data-card="axis-pickers"], #axis-pickers)) .cf-body > p:nth-of-type(1) {
     grid-area: p1;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-body > p:nth-of-type(2) {
+  [data-palette="components-for-any-data"] :is(:is([data-card="shapes"], #shapes), :is([data-card="contract"], #contract), :is([data-card="pipeline"], #pipeline), :is([data-card="stream-fit"], #stream-fit), :is([data-card="axis-pickers"], #axis-pickers)) .cf-body > p:nth-of-type(2) {
     grid-area: p2;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-body > p:nth-of-type(3) {
+  [data-palette="components-for-any-data"] :is(:is([data-card="shapes"], #shapes), :is([data-card="contract"], #contract), :is([data-card="pipeline"], #pipeline), :is([data-card="stream-fit"], #stream-fit), :is([data-card="axis-pickers"], #axis-pickers)) .cf-body > p:nth-of-type(3) {
     grid-area: p3;
   }
-  [data-palette="components-for-any-data"] :is(#shapes, #contract, #pipeline, #stream-fit, #axis-pickers) .cf-evidence {
+  [data-palette="components-for-any-data"] :is(:is([data-card="shapes"], #shapes), :is([data-card="contract"], #contract), :is([data-card="pipeline"], #pipeline), :is([data-card="stream-fit"], #stream-fit), :is([data-card="axis-pickers"], #axis-pickers)) .cf-evidence {
     grid-area: ev;
     height: auto;
     margin: 0;
@@ -101,7 +101,7 @@
   }
 
   /* ---------- 01.1 poster: the claim beside its context, the strips, then the two questions as the turn ---------- */
-  [data-palette="components-for-any-data"] #shapes {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) {
     grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
     grid-template-areas:
       "meta meta"
@@ -110,54 +110,54 @@
       "p2   p2";
     column-gap: clamp(1.75rem, 3.6vw, 3rem);
   }
-  [data-palette="components-for-any-data"] #shapes .cf-h3 {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-h3 {
     margin-top: 1.25rem;
     font-size: clamp(2rem, 3.6vw, 2.9rem);
     line-height: 0.98;
     letter-spacing: -0.05em;
   }
   /* the context starts on the claim's first line */
-  [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(1) {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-body > p:nth-of-type(1) {
     align-self: start;
     margin-top: 1.25rem;
     font-size: 0.9375rem;
     line-height: 1.55;
   }
-  [data-palette="components-for-any-data"] #shapes .cf-evidence {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-evidence {
     margin-top: clamp(1.5rem, 3vw, 2.25rem);
   }
   /* the turn: the lead beside the two questions, each on its own rule, so the pair costs one row */
-  [data-palette="components-for-any-data"] #shapes .cf-asks {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-asks {
     grid-template-columns: minmax(0, 0.42fr) minmax(0, 1fr) minmax(0, 1fr);
     column-gap: clamp(1.25rem, 2.6vw, 2.25rem);
     margin-top: clamp(1.25rem, 2.6vw, 1.75rem);
   }
-  [data-palette="components-for-any-data"] #shapes .cf-asks-lead {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-asks-lead {
     padding-top: 0.75rem;
     border-top: 1px solid var(--case-rule);
   }
   /* the strips run off the card's right edge, like streams that carry on */
-  [data-palette="components-for-any-data"] #shapes .ac-strip {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .ac-strip {
     margin-right: calc(-1 * var(--cf-pad));
     border-right: 0;
     border-radius: 12px 0 0 12px;
   }
   /* the strip's five columns stop at the content edge; only the strip itself runs on, so the empty cell keeps its
      full width and padding */
-  [data-palette="components-for-any-data"] #shapes .ac-strip dl {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .ac-strip dl {
     margin-right: var(--cf-pad);
   }
-  [data-palette="components-for-any-data"] #shapes .ac-cell.is-missing dd {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .ac-cell.is-missing dd {
     white-space: nowrap;
   }
-  [data-palette="components-for-any-data"] #shapes .cf-evidence::before {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-evidence::before {
     inset: -1.25rem calc(-1 * var(--cf-pad)) 0;
     -webkit-mask-image: linear-gradient(transparent, #000 2.5rem);
     mask-image: linear-gradient(transparent, #000 2.5rem);
   }
 
   /* ---------- 01.2 split sheet: a datasheet pane, full height, on the right ---------- */
-  [data-palette="components-for-any-data"] #contract {
+  [data-palette="components-for-any-data"] :is([data-card="contract"], #contract) {
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
     grid-template-rows: auto auto auto 1fr;
     grid-template-areas:
@@ -167,20 +167,20 @@
       "p2   ev";
     column-gap: calc(2 * var(--cf-pad));
   }
-  [data-palette="components-for-any-data"] #contract .cf-h3 {
+  [data-palette="components-for-any-data"] :is([data-card="contract"], #contract) .cf-h3 {
     margin-top: 1.1rem;
   }
-  [data-palette="components-for-any-data"] #contract .cf-body > p {
+  [data-palette="components-for-any-data"] :is([data-card="contract"], #contract) .cf-body > p {
     margin-top: 1rem;
   }
-  [data-palette="components-for-any-data"] #contract .cf-body > p:nth-of-type(1) {
+  [data-palette="components-for-any-data"] :is([data-card="contract"], #contract) .cf-body > p:nth-of-type(1) {
     margin-top: 1.6rem;
   }
-  [data-palette="components-for-any-data"] #contract .cf-evidence {
+  [data-palette="components-for-any-data"] :is([data-card="contract"], #contract) .cf-evidence {
     align-self: stretch;
     align-content: start;
   }
-  [data-palette="components-for-any-data"] #contract .cf-evidence::before {
+  [data-palette="components-for-any-data"] :is([data-card="contract"], #contract) .cf-evidence::before {
     inset: calc(-1 * var(--cf-pad-y)) calc(-1 * var(--cf-pad)) calc(-1 * var(--cf-pad-y)) calc(-1 * var(--cf-pad));
     border-left: 1px solid var(--ad-rule);
     background-color: var(--ad-inset);
@@ -189,7 +189,7 @@
   }
 
   /* ---------- 01.3 schematic: the flow across the card, the reasoning under it ---------- */
-  [data-palette="components-for-any-data"] #pipeline {
+  [data-palette="components-for-any-data"] :is([data-card="pipeline"], #pipeline) {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
       "meta meta"
@@ -198,7 +198,7 @@
       "body body";
     column-gap: clamp(1.5rem, 3.4vw, 2.75rem);
   }
-  [data-palette="components-for-any-data"] #pipeline .cf-h3 {
+  [data-palette="components-for-any-data"] :is([data-card="pipeline"], #pipeline) .cf-h3 {
     max-width: 12em;
     margin-top: 1.1rem;
     font-size: clamp(1.75rem, 3.4vw, 2.6rem);
@@ -206,12 +206,12 @@
     letter-spacing: -0.045em;
   }
   /* the flow is a band across the card, edge to edge */
-  [data-palette="components-for-any-data"] #pipeline .cf-evidence {
+  [data-palette="components-for-any-data"] :is([data-card="pipeline"], #pipeline) .cf-evidence {
     position: relative;
     margin: clamp(1.75rem, 3.4vw, 2.5rem) 0 0;
     padding: clamp(1.25rem, 2.6vw, 1.75rem) 0;
   }
-  [data-palette="components-for-any-data"] #pipeline .cf-evidence::before {
+  [data-palette="components-for-any-data"] :is([data-card="pipeline"], #pipeline) .cf-evidence::before {
     display: block;
     inset: 0 calc(-1 * var(--cf-pad));
     border-block: 1px solid var(--dark-line);
@@ -220,7 +220,7 @@
     mask-image: none;
   }
   /* the two paragraphs are one explanation: they run on through two columns that end on the same line */
-  [data-palette="components-for-any-data"] #pipeline .cf-head > .cf-body {
+  [data-palette="components-for-any-data"] :is([data-card="pipeline"], #pipeline) .cf-head > .cf-body {
     display: block;
     grid-area: body;
     margin-top: clamp(1.5rem, 3vw, 2.25rem);
@@ -228,17 +228,17 @@
     column-gap: clamp(1.5rem, 3.4vw, 2.75rem);
     column-fill: balance;
   }
-  [data-palette="components-for-any-data"] #pipeline .cf-body > p {
+  [data-palette="components-for-any-data"] :is([data-card="pipeline"], #pipeline) .cf-body > p {
     margin: 0;
     font-size: 0.9375rem;
     line-height: 1.6;
   }
-  [data-palette="components-for-any-data"] #pipeline .cf-body > p + p {
+  [data-palette="components-for-any-data"] :is([data-card="pipeline"], #pipeline) .cf-body > p + p {
     margin-top: 0.9em;
   }
 
   /* ---------- 02.1 halves: before on the left, after on the right, to the card's edges ---------- */
-  [data-palette="components-for-any-data"] #stream-fit {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) {
     --gap: 2.2rem;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
@@ -249,50 +249,50 @@
     column-gap: var(--gap);
   }
   /* the "before" half is tinted from its paragraph down to the card's foot; the claim above sits whole on paper */
-  [data-palette="components-for-any-data"] #stream-fit::before {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit)::before {
     content: "";
     grid-area: p1-start / p1-start / ev-end / p1-end;
     margin: -0.75rem calc(-0.5 * var(--gap)) calc(-1 * var(--cf-pad-y)) calc(-1 * var(--cf-pad));
     background: var(--ad-fit-tint);
     pointer-events: none;
   }
-  [data-palette="components-for-any-data"] #stream-fit .cf-h3 {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .cf-h3 {
     margin-top: 1.1rem;
   }
-  [data-palette="components-for-any-data"] #stream-fit .cf-body > p {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .cf-body > p {
     margin-top: 1.25rem;
     font-size: 0.9375rem;
     line-height: 1.6;
   }
-  [data-palette="components-for-any-data"] #stream-fit .cf-evidence {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .cf-evidence {
     margin-top: 1.5rem;
   }
-  [data-palette="components-for-any-data"] #stream-fit .cf-evidence::before {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .cf-evidence::before {
     display: none;
   }
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-cols {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .ac-fit-cols {
     grid-template-columns: minmax(0, 1fr) var(--gap) minmax(0, 1fr);
   }
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-col {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .ac-fit-col {
     padding: 0;
     border: 0;
     border-radius: 0;
     background: none;
   }
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-col header {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .ac-fit-col header {
     min-height: 0;
   }
   /* the number is the picture */
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-big {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .ac-fit-big {
     font-size: clamp(4.5rem, 9vw, 7rem);
     line-height: 0.82;
     letter-spacing: -0.07em;
     padding-block: 0.25rem 0.5rem;
   }
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-big span {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .ac-fit-big span {
     letter-spacing: 0;
   }
-  [data-palette="components-for-any-data"] #stream-fit .ac-fit-turn {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .ac-fit-turn {
     display: grid;
     place-items: center;
     width: 1.5rem;
@@ -305,7 +305,7 @@
     font-size: 12px;
   }
   /* the server closes the card: a band on paper across both halves */
-  [data-palette="components-for-any-data"] #stream-fit .ac-srv {
+  [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .ac-srv {
     margin: 0.5rem calc(-1 * var(--cf-pad)) calc(-1 * var(--cf-pad-y));
     padding: 0.9rem var(--cf-pad) var(--cf-pad-y);
     border-top: 1px solid var(--case-ink);
@@ -313,7 +313,7 @@
   }
 
   /* ---------- 02.2 field: the claim and the words in three columns open the card, the chart under them ---------- */
-  [data-palette="components-for-any-data"] #axis-pickers {
+  [data-palette="components-for-any-data"] :is([data-card="axis-pickers"], #axis-pickers) {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
       "meta p1 p2"
@@ -323,16 +323,16 @@
     column-gap: clamp(1.5rem, 3vw, 2.5rem);
   }
   /* the claim and the words open the card, the chart follows */
-  [data-palette="components-for-any-data"] #axis-pickers .cf-evidence {
+  [data-palette="components-for-any-data"] :is([data-card="axis-pickers"], #axis-pickers) .cf-evidence {
     margin-top: clamp(1.5rem, 3vw, 2.25rem);
   }
-  [data-palette="components-for-any-data"] #axis-pickers .cf-h3 {
+  [data-palette="components-for-any-data"] :is([data-card="axis-pickers"], #axis-pickers) .cf-h3 {
     margin-top: 0.9rem;
     font-size: clamp(1.6rem, 2.9vw, 2.2rem);
     line-height: 1.04;
     letter-spacing: -0.04em;
   }
-  [data-palette="components-for-any-data"] #axis-pickers .cf-body > p {
+  [data-palette="components-for-any-data"] :is([data-card="axis-pickers"], #axis-pickers) .cf-body > p {
     align-self: start;
     margin-top: 0;
     padding-top: 0.9rem;
@@ -340,11 +340,11 @@
     font-size: 0.9375rem;
     line-height: 1.6;
   }
-  [data-palette="components-for-any-data"] #axis-pickers .cf-meta,
-  [data-palette="components-for-any-data"] #axis-pickers .cf-h3 {
+  [data-palette="components-for-any-data"] :is([data-card="axis-pickers"], #axis-pickers) .cf-meta,
+  [data-palette="components-for-any-data"] :is([data-card="axis-pickers"], #axis-pickers) .cf-h3 {
     border-top: 0;
   }
-  [data-palette="components-for-any-data"] #axis-pickers .cf-meta {
+  [data-palette="components-for-any-data"] :is([data-card="axis-pickers"], #axis-pickers) .cf-meta {
     padding-top: calc(0.9rem + 1px);
     border-top: 1px solid var(--case-rule);
   }
@@ -352,10 +352,10 @@
 
 /* tablets: the lead goes above the two questions, so each question keeps two full lines */
 @container ad-sheets (min-width: 640px) and (max-width: 760px) {
-  [data-palette="components-for-any-data"] #shapes .cf-asks {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-asks {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
-  [data-palette="components-for-any-data"] #shapes .cf-asks-lead {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-asks-lead {
     grid-column: 1 / -1;
     padding-top: 0;
     border-top: 0;
@@ -364,67 +364,67 @@
 
 /* short windows: the poster and the schematic step their type down so each card stays inside one screen */
 @container ad-sheets (min-width: 640px) {
-  @media (max-height: 920px) {
-    [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(1) {
+  @media all {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-body > p:nth-of-type(1) {
       margin-top: 1.1rem;
     }
-    [data-palette="components-for-any-data"] #shapes .cf-evidence {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-evidence {
       margin-top: 1.25rem;
     }
-    [data-palette="components-for-any-data"] #shapes .cf-asks {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-asks {
       margin-top: 1rem;
     }
   }
-  @media (max-height: 800px) {
-    [data-palette="components-for-any-data"] #shapes {
+  @media all {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) {
       grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
     }
-    [data-palette="components-for-any-data"] #shapes .cf-asks-q {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-asks-q {
       font-size: 1.05rem;
     }
-    [data-palette="components-for-any-data"] #shapes .ac-shapes {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .ac-shapes {
       gap: 7px;
     }
-    [data-palette="components-for-any-data"] #pipeline .cf-h3 {
+    [data-palette="components-for-any-data"] :is([data-card="pipeline"], #pipeline) .cf-h3 {
       font-size: clamp(1.6rem, 2.8vw, 2.1rem);
     }
-    [data-palette="components-for-any-data"] #stream-fit .ac-fit-big {
+    [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .ac-fit-big {
       font-size: clamp(3.5rem, 7vw, 5rem);
     }
-    [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(1) {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-body > p:nth-of-type(1) {
       margin-top: 1rem;
       font-size: 0.9rem;
       line-height: 1.5;
     }
-    [data-palette="components-for-any-data"] #shapes .cf-asks {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-asks {
       margin-top: 0.75rem;
     }
-    [data-palette="components-for-any-data"] #shapes .cf-evidence {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-evidence {
       margin-top: 0.6rem;
     }
-    [data-palette="components-for-any-data"] #shapes .cf-h3 {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .cf-h3 {
       font-size: clamp(2rem, 3vw, 2.4rem);
     }
-    [data-palette="components-for-any-data"] #shapes .ac-cell {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .ac-cell {
       padding: 8px 12px 7px;
     }
-    [data-palette="components-for-any-data"] #pipeline .cf-evidence {
+    [data-palette="components-for-any-data"] :is([data-card="pipeline"], #pipeline) .cf-evidence {
       margin-top: 1.25rem;
       padding-block: 1rem;
     }
-    [data-palette="components-for-any-data"] #pipeline .cf-head > .cf-body {
+    [data-palette="components-for-any-data"] :is([data-card="pipeline"], #pipeline) .cf-head > .cf-body {
       margin-top: 1.1rem;
     }
-    [data-palette="components-for-any-data"] #stream-fit .cf-body > p {
+    [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .cf-body > p {
       margin-top: 0.9rem;
     }
-    [data-palette="components-for-any-data"] #stream-fit .cf-evidence {
+    [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .cf-evidence {
       margin-top: 1rem;
     }
-    [data-palette="components-for-any-data"] :is(#shapes, #stream-fit) .cf-h3 {
+    [data-palette="components-for-any-data"] :is(:is([data-card="shapes"], #shapes), :is([data-card="stream-fit"], #stream-fit)) .cf-h3 {
       margin-top: 0.8rem;
     }
-    [data-palette="components-for-any-data"] #stream-fit .ac-srv {
+    [data-palette="components-for-any-data"] :is([data-card="stream-fit"], #stream-fit) .ac-srv {
       padding-top: 0.7rem;
     }
   }
