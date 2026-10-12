@@ -2,66 +2,69 @@ import { expect, test, type Page } from "@playwright/test";
 import { projects } from "../../content";
 
 /**
- * The card rule. Every case-file card is --card-h tall (tokens.css), or shorter when it is sized to its content; none
- * may be taller, on its case page or printed on a home-page sheet, so a printed sheet always fits one screen under the
- * results title. A new card that breaks this fails here: tighten that card (or its short-window type), don't raise
- * --card-h.
+ * The card rule. On tablets and computers every case-file card is laid out on one artboard (tokens.css: --card-w x
+ * --card-h, 836 x 684) and scaled as a whole to fit the screen. So a card is the same card at every window size, and
+ * none may be taller than the artboard: the tallest today, HHCD 01.4 (the workshop), is exactly --card-h. A new card
+ * that breaks this fails here: tighten that card, don't raise --card-h.
  */
-
-/** Laptop screens, as browser windows: the shortest (800 high) holds the tallest card exactly. */
-const LAPTOPS = [
-  { width: 1280, height: 800 },
-  { width: 1440, height: 800 },
-  { width: 1512, height: 860 },
-  { width: 1440, height: 900 },
-  { width: 1680, height: 1050 },
-];
 
 const CARD = ".cf-sheet.is-card, .nk-sheet.is-card";
 
-/** --card-h in pixels, as the page resolves it. */
-const cardHeight = (page: Page) =>
-  page.evaluate(() => {
-    const probe = document.createElement("div");
-    probe.style.cssText = "position:absolute;visibility:hidden;height:var(--card-h)";
-    document.body.append(probe);
-    const h = probe.getBoundingClientRect().height;
-    probe.remove();
-    return h;
-  });
+/** Every card on every case page, as laid out on the artboard (the scale taken off). */
+async function artboardCards(page: Page) {
+  const out: { key: string; w: number; h: number; hidden: number }[] = [];
+  for (const p of projects) {
+    await page.goto(`/work/${p.slug}`, { waitUntil: "networkidle" });
+    await page.addStyleTag({ content: ":root { --card-zoom: 1 !important }" });
+    // every picture loaded and every font in, so a card is measured as it finally stands
+    await page.evaluate(async () => {
+      for (const img of document.images) img.loading = "eager";
+      await Promise.all([...document.images].map((img) => img.decode().catch(() => undefined)));
+      await document.fonts.ready;
+    });
+    const cards = await page.locator(CARD).evaluateAll((els) =>
+      els.map((el) => ({ id: el.id, w: el.getBoundingClientRect().width, h: el.getBoundingClientRect().height, hidden: el.scrollHeight - el.clientHeight })),
+    );
+    for (const c of cards) out.push({ key: `${p.slug}#${c.id}`, w: c.w, h: c.h, hidden: c.hidden });
+  }
+  return out;
+}
 
 test.describe("the card rule", () => {
-  test.skip(({ isMobile }) => isMobile, "laptop sizes only");
+  test.skip(({ isMobile }) => isMobile, "tablets and computers");
 
-  for (const size of LAPTOPS) {
-    test(`no case-file card is taller than --card-h at ${size.width}×${size.height}`, async ({ page }) => {
+  test("no case-file card is taller than the artboard, and nothing hides inside one", async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 800 });
+    const over: string[] = [];
+    for (const c of await artboardCards(page)) {
+      if (Math.round(c.w) !== 836) over.push(`${c.key} is ${Math.round(c.w)}px wide (artboard 836)`);
+      if (c.h > 684.5) over.push(`${c.key} is ${Math.round(c.h)}px tall (artboard 684)`);
+      if (c.hidden > 1) over.push(`${c.key} hides ${c.hidden}px of its content`);
+    }
+    expect(over, over.join("\n")).toEqual([]);
+  });
+
+  test("a card is laid out the same at every window size", async ({ page }) => {
+    test.setTimeout(90_000);
+    await page.setViewportSize({ width: 1440, height: 800 });
+    const base = new Map((await artboardCards(page)).map((c) => [c.key, c.h]));
+    const moved: string[] = [];
+    for (const size of [{ width: 1024, height: 700 }, { width: 1920, height: 1080 }]) {
       await page.setViewportSize(size);
-      const limit = await (async () => {
-        await page.goto("/");
-        return cardHeight(page);
-      })();
-      expect(limit, "--card-h resolves").toBeGreaterThan(400);
-      const over: string[] = [];
-      for (const p of projects) {
-        await page.goto(`/work/${p.slug}`);
-        await page.evaluate(() => document.fonts.ready);
-        const cards = await page.locator(CARD).evaluateAll((els) =>
-          els.map((el) => ({ id: el.id, h: el.getBoundingClientRect().height, hidden: el.scrollHeight - el.clientHeight })),
-        );
-        for (const c of cards) {
-          if (c.h > limit + 1) over.push(`${p.slug}#${c.id} is ${Math.round(c.h)}px (limit ${Math.round(limit)})`);
-          if (c.hidden > 1) over.push(`${p.slug}#${c.id} hides ${c.hidden}px of its content`);
-        }
+      for (const c of await artboardCards(page)) {
+        const h = base.get(c.key);
+        if (h === undefined || Math.abs(h - c.h) > 1) moved.push(`${c.key} at ${size.width}×${size.height}: ${Math.round(c.h)}px tall, ${Math.round(h ?? 0)}px at 1440×800`);
       }
-      expect(over, over.join("\n")).toEqual([]);
-    });
-  }
+    }
+    expect(moved, moved.join("\n")).toEqual([]);
+  });
 });
 
 test.describe("printed sheets", () => {
   test.skip(({ isMobile }) => isMobile, "laptop sizes only");
 
-  for (const size of [LAPTOPS[1]!, LAPTOPS[3]!]) {
+  // laptop browser windows, from a short one (tabs, address and bookmarks bars, the dock) to a tall one
+  for (const size of [{ width: 1440, height: 700 }, { width: 1440, height: 800 }, { width: 1512, height: 900 }]) {
     test(`every printed sheet fits the screen and carries its case-page card unchanged, ${size.width}×${size.height}`, async ({ page, context }) => {
       test.setTimeout(120_000);
       await page.setViewportSize(size);
