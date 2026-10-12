@@ -62,13 +62,29 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
 @keyframes caret{50%{opacity:0}}
 .field.on .ghost{display:none}
 
-/* endings to pick, written under the sentence like autocomplete */
-.sugg{list-style:none;margin:0 -8px;padding:0;display:flex;flex-direction:column}
+/* endings to pick: branches growing from the sentence. Quiet at rest; the branch lights up red on hover or focus. */
+.sugg{list-style:none;margin:0;padding:0 0 0 18px;display:flex;flex-direction:column}
+.sugg li{position:relative}
+.sugg li::after{content:"";position:absolute;left:-13px;top:-4px;bottom:0;border-left:1px solid var(--paper-chip)}
+.sugg li:first-child::after{top:-10px}
+.sugg li:last-child::after{bottom:50%;border-bottom:1px solid var(--paper-chip);border-bottom-left-radius:5px;width:13px}
+.sugg li::before{content:"";position:absolute;left:-13px;top:50%;width:13px;border-top:1px solid var(--paper-chip);transition:border-color .15s}
+.sugg li:last-child::before{display:none}
+.sugg li:has(button:hover)::before,.sugg li:has(button:focus-visible)::before{border-color:var(--red)}
+.sugg li:last-child:has(button:hover)::after,.sugg li:last-child:has(button:focus-visible)::after{border-bottom-color:var(--red)}
 .sugg button{display:flex;align-items:baseline;gap:10px;width:100%;min-height:32px;padding:5px 8px;border:0;border-radius:3px;background:transparent;cursor:pointer;text-align:left;
-  font:400 15px/1.35 var(--mono);color:var(--paper-dim);transition:background .15s,color .15s}
-.sugg button::before{content:"+";flex:none;color:var(--red);font-weight:500}
+  font:400 15px/1.35 var(--mono);color:var(--paper-ghost);transition:background .15s,color .15s}
+.sugg button::after{content:"+";margin-left:auto;color:var(--red);font-weight:600;opacity:0;transform:translateX(-4px);transition:opacity .15s,transform .15s}
 .sugg button:hover,.sugg button:focus-visible{background:var(--paper-current);color:var(--paper-ink)}
+.sugg button:hover::after,.sugg button:focus-visible::after{opacity:1;transform:none}
 .sugg button:focus-visible{outline-offset:0}
+
+/* the sentence as it would read, shown while an ending is hovered or focused */
+.mirror{position:absolute;top:0;left:0;right:0;font:400 17px/1.5 var(--mono);white-space:pre-wrap;overflow-wrap:break-word;color:var(--paper-ink);pointer-events:none}
+.mirror .frame{color:var(--paper-ghost)}
+.mirror .add{background:linear-gradient(transparent 60%,rgba(201,55,42,.16) 60%,rgba(201,55,42,.16) 94%,transparent 94%)}
+.field.previewing textarea{color:transparent}
+.field.previewing .ghost{display:none}
 .pfoot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-top:10px;border-top:1px solid var(--paper-rule);font:400 12.5px var(--sans);color:var(--paper-dim)}
 .pfoot button{border:0;background:none;padding:2px 0;font:500 12.5px var(--sans);color:var(--paper-ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--paper-chip);cursor:pointer}
 .pfoot button:hover{text-decoration-color:currentColor}
@@ -91,9 +107,14 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
 
 @media (max-width:640px){
   .bar nav,.who span{display:none}
-  .field textarea,.ghost{font-size:15px}
+  .field textarea,.ghost,.mirror{font-size:15px}
   .paper{padding:12px 12px 10px}
-  .sugg{margin:0 -6px}
+  .sugg{padding-left:14px}
+  .sugg li::after,.sugg li::before{left:-10px}
+  .sugg li::before,.sugg li:last-child::after{width:10px}
+  .sugg li::before{top:13px}
+  .sugg li:last-child::after{bottom:auto;height:17px}
+  .sugg button{padding-top:4px}
   .sugg button{min-height:40px;padding:4px 6px;gap:8px;font-size:13px}
   .pfoot .own{display:none}
   .pfoot{justify-content:flex-end}
@@ -120,6 +141,7 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
               <label for="brief" class="sr">Describe what you're looking for, or paste a job description.</label>
               <textarea id="brief" name="brief" rows="1" maxlength="6000"></textarea>
               <div class="ghost" id="ghost" aria-hidden="true">Someone who</div>
+              <div class="mirror" id="mirror" aria-hidden="true" hidden></div>
             </div>
             <ul class="sugg" id="sugg" aria-label="Ways to finish the sentence"></ul>
             <div class="pfoot" id="pfoot">
@@ -201,15 +223,51 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
   function sync() {
     field.classList.toggle("on", ta.value.length > 0 || document.activeElement === ta);
     ta.style.height = "auto";
-    ta.style.height = `${ta.scrollHeight}px`;
+    const shown = field.classList.contains("previewing") ? Math.max(ta.scrollHeight, $("mirror").offsetHeight) : ta.scrollHeight;
+    ta.style.height = `${shown}px`;
     machine.dataset.state = busy ? "working" : ta.value.trim() ? "ready" : "idle";
     foot.hidden = busy || ta.value.trim().length > 0;
     sugg.hidden = busy || ta.value.length > JD_LONG || picked.length === LINES.length;
     stage.style.setProperty("--pm", `${box.offsetHeight}px`);
   }
 
+  /** The paper as it would read with this ending, for the preview. */
+  function nextFor(id, ids = [...picked, id]) {
+    const owned = !ta.value.trim() || ta.value.trim() === generated.trim();
+    if (owned) return compose(ids);
+    const base = ta.value.replace(/\s+$/, "");
+    return `${base}${/[.!?]$/.test(base) ? "" : "."} Also someone who ${byId(id).text}.`;
+  }
+
+  const mirror = $("mirror");
+  let previewId = null;
+  function preview(id) {
+    previewId = busy ? null : id;
+    if (!previewId) {
+      field.classList.remove("previewing");
+      mirror.hidden = true;
+      return sync();
+    }
+    const next = nextFor(previewId);
+    const t = byId(previewId).text;
+    const at = next.lastIndexOf(t);
+    const empty = !ta.value.trim();
+    const head = next.slice(0, at), tail = next.slice(at + t.length);
+    mirror.innerHTML = empty
+      ? `<span class="frame">${esc(head)}</span><span class="add">${esc(t)}</span><span class="frame">${esc(tail)}</span>`
+      : `${esc(head)}<span class="add">${esc(t)}</span>${esc(tail)}`;
+    mirror.hidden = false;
+    field.classList.add("previewing");
+    sync();
+  }
+  sugg.addEventListener("mouseover", (e) => { const b = e.target.closest("button[data-id]"); if (b && b.dataset.id !== previewId) preview(b.dataset.id); });
+  sugg.addEventListener("mouseleave", () => preview(null));
+  sugg.addEventListener("focusin", (e) => { const b = e.target.closest("button[data-id]"); if (b) preview(b.dataset.id); });
+  sugg.addEventListener("focusout", (e) => { if (!sugg.contains(e.relatedTarget)) preview(null); });
+
   function add(id, byPointer) {
     if (busy || picked.includes(id)) return;
+    preview(null);
     const line = byId(id);
     picked = [...picked, id];
     // keyboard: focus stays in the list, on the next ending (or the paper when none are left)
