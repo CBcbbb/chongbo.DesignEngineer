@@ -95,7 +95,7 @@ As the company's only designer, I designed the system in Figma and shipped it as
 - **The work:** one panel of components (buttons, input, select, badges, alerts, pagination). Switch between three invented customers (colour, font, button shape), pick your own colour, switch Light / Dark; "Show ratios" puts the live contrast on every text pairing.
 - **01.1:** one screen drawn as the first product, then as the two later ones: same tokens, each with its own radii, buttons, type and spacing.
 - **01.2:** the rebuilt Figma file (component sets, variables with Light and Dark modes) beside the same components as code.
-- **Overview:** a tree that fans out: one shared package → three products → several clients per product → many users per client; "Seen as" highlights the path to one client and one user. Was: Shared package → one product's overrides (e.g. a menu highlight mixed from the hover and active tokens) → a customer's colour, font and button shape.
+- **Overview:** on a dark sheet, built from the bottom up in 3D: a gridded base (the shared package), three glass product slabs floating above it, brand-coloured client slabs above each product, user nodes above each client, linked by vertical pins; "Seen as" lights the path to one client and one user; levels labelled on the right with leader lines. Was: Shared package → one product's overrides (e.g. a menu highlight mixed from the hover and active tokens) → a customer's colour, font and button shape.
 - **02.1:** colour specimens. Six hues × five steps, each step labelled with its job.
 - **02.2:** numbers set large: **30 of 30** text pairings pass WCAG AA · **5.16:1** lowest · **2** modes.
 - **02.3:** the specimens with a Light / Dark switch.

@@ -296,55 +296,70 @@
     document.querySelectorAll('input[name="f2c"]').forEach((r) => r.addEventListener("change", () => { stage.dataset.show = r.value; }));
   }
 
-  /* ---------- overview: one package fans out to products, clients and users; each level overrides only what it needs ---------- */
+  /* ---------- overview: built from the bottom up; each level floats over the one it overrides ---------- */
   const layers = document.getElementById("layers");
   if (layers) {
     const CLIENTS = [
-      { id: "courier", name: "Courier", colour: "#f2c94c", font: "Archivo", product: 0 },
-      { id: "grocer", name: "Grocer", colour: "#2e7d3a", font: "Fraunces", product: 0 },
-      { id: "bank", name: "Bank", colour: "#1d2b5c", font: "IBM Plex Sans", product: 1 },
-      { id: "florist", name: "Florist", colour: "#e85d9a", font: "Geist", product: 1 },
-      { id: "bakery", name: "Bakery", colour: "#b5562b", font: "Geist", product: 2 },
-      { id: "studio", name: "Studio", colour: "#6b4fd8", font: "Geist", product: 2 },
+      { id: "courier", name: "Courier", colour: "#f2c94c", product: 0, side: -1 },
+      { id: "grocer", name: "Grocer", colour: "#2e7d3a", product: 0, side: 1 },
+      { id: "bank", name: "Bank", colour: "#2a3f8f", product: 1, side: -1 },
+      { id: "florist", name: "Florist", colour: "#e85d9a", product: 1, side: 1 },
+      { id: "bakery", name: "Bakery", colour: "#c8642f", product: 2, side: -1 },
+      { id: "studio", name: "Studio", colour: "#7a5cf0", product: 2, side: 1 },
     ];
-    const W = 820, TOP = 64, ROW = 66, COLX = [0, 196, 392, 612], SW = 150, PW = 150, CWID = 168;
-    const cy = (i) => TOP + i * ROW + ROW / 2;
-    const py = (p) => (cy(p * 2) + cy(p * 2 + 1)) / 2;
-    const H = TOP + CLIENTS.length * ROW + 12;
-    const curve = (x1, y1, x2, y2) => { const m = (x1 + x2) / 2; return `M${x1} ${y1} C${m} ${y1} ${m} ${y2} ${x2} ${y2}`; };
+    const OX = 340, OY = 196, C30 = 0.866, S30 = 0.5;
+    const P = (x, y, z) => [OX + (x - y) * C30, OY + (x + y) * S30 - z];
+    const pts = (a) => a.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
+    const Z = { shared: 0, product: 112, client: 206, user: 284 };
+    const top = (x0, y0, x1, y1, z) => [P(x0, y0, z), P(x1, y0, z), P(x1, y1, z), P(x0, y1, z)];
+    const slab = (x0, y0, x1, y1, z, t, cls, style = "") =>
+      `<g class="${cls}" style="${style}"><polygon class="sd" points="${pts([P(x1, y0, z), P(x1, y1, z), P(x1, y1, z - t), P(x1, y0, z - t)])}"/><polygon class="sd2" points="${pts([P(x0, y1, z), P(x1, y1, z), P(x1, y1, z - t), P(x0, y1, z - t)])}"/><polygon class="tp" points="${pts(top(x0, y0, x1, y1, z))}"/></g>`;
+    const isoText = (x, y, z, t, cls) => { const [X, Y] = P(x, y, z); return `<text class="${cls}" transform="matrix(${C30} ${S30} ${-C30} ${S30} ${X} ${Y})">${t}</text>`; };
+    const prodC = [[70, 190], [190, 190], [310, 190]];
+    const cliC = (k) => { const [px, py] = prodC[k.product]; return [px, py + k.side * 32]; };
     const draw = (c) => {
-      const active = CLIENTS.find((k) => k.id === c.id);
-      const activeP = active ? active.product : 0;
-      const on = (p) => (p === activeP ? " is-on" : "");
-      let g = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="One shared package; three products share it, each overriding only what it needs; each product has many clients, each setting its own colour, font and button shape; each client has many users, who can adjust their own look.">`;
-      // column heads
-      [["Shared package", "sets every token"], ["Products", "+ only what each needs"], ["Clients", "+ colour, font, button shape"], ["Users", "+ their own look"]].forEach(([t, s2], i) => {
-        g += `<text class="h" x="${COLX[i]}" y="16">${t}</text><text class="hs" x="${COLX[i]}" y="34">${s2}</text>`;
-      });
-      // links: package → products → clients
-      [0, 1, 2].forEach((p) => { g += `<path class="link${on(p)}" d="${curve(COLX[0] + SW, py(p), COLX[1], py(p))}"/>`; });
-      CLIENTS.forEach((k, i) => { g += `<path class="link${k.id === c.id ? " is-on" : ""}" d="${curve(COLX[1] + PW, py(k.product), COLX[2], cy(i))}"/>`; });
-      // shared package: one block
-      g += `<rect class="pkg" x="${COLX[0]}" y="${TOP}" width="${SW}" height="${CLIENTS.length * ROW - 8}" rx="14"/>`;
-      ["scales 50–700", "roles", "components", "radius", "font"].forEach((t, i) => { g += `<text class="pkg-t" x="${COLX[0] + 16}" y="${TOP + 34 + i * 26}">${t}</text>`; });
-      g += `<text class="pkg-n" x="${COLX[0] + 16}" y="${TOP + CLIENTS.length * ROW - 26}">1 package</text>`;
+      const act = CLIENTS.find((k) => k.id === c.id);
+      const aP = act ? act.product : 0;
+      let g = `<svg viewBox="0 0 960 600" role="img" aria-label="Built from the bottom up: one shared package; three products float above it, each overriding only what it needs; above each product, its clients set colour, font and button shape; above each client, its users set their own look.">
+        <defs><linearGradient id="ov-glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity=".04"/></linearGradient></defs>`;
+      // base: the shared package, with a grid
+      g += slab(0, 0, 380, 380, Z.shared, 10, "ov-base");
+      let grid = "";
+      for (let i = 20; i < 380; i += 20) { grid += `<line x1="${P(i, 0, 0)[0]}" y1="${P(i, 0, 0)[1]}" x2="${P(i, 380, 0)[0]}" y2="${P(i, 380, 0)[1]}"/><line x1="${P(0, i, 0)[0]}" y1="${P(0, i, 0)[1]}" x2="${P(380, i, 0)[0]}" y2="${P(380, i, 0)[1]}"/>`; }
+      g += `<g class="ov-grid">${grid}</g>`;
+      g += isoText(18, 352, 0, "SHARED PACKAGE", "ov-engrave");
+      // pins: package → products
+      prodC.forEach(([x, y], p) => { const [X1, Y1] = P(x, y, Z.shared), [X2, Y2] = P(x, y, Z.product - 8); g += `<line class="ov-pin${p === aP ? " is-on" : ""}" x1="${X1}" y1="${Y1}" x2="${X2}" y2="${Y2}"/><circle class="ov-node${p === aP ? " is-on" : ""}" cx="${X1}" cy="${Y1}" r="3"/>`; });
       // products
-      ["Product A", "Product B", "Product C"].forEach((n, p) => {
-        const y = py(p) - 34;
-        g += `<rect class="prod${on(p)}" x="${COLX[1]}" y="${y}" width="${PW}" height="68" rx="12"/><text class="prod-t" x="${COLX[1] + 14}" y="${y + 28}">${n}</text><text class="prod-s" x="${COLX[1] + 14}" y="${y + 50}">+ its own overrides</text>`;
+      prodC.forEach(([x, y], p) => { g += slab(x - 50, y - 62, x + 50, y + 62, Z.product, 8, `ov-prod${p === aP ? " is-on" : ""}`); g += isoText(x - 42, y + 54, Z.product, `PRODUCT ${"ABC"[p]}`, "ov-label"); });
+      // pins: products → clients, clients and their users
+      CLIENTS.forEach((k) => {
+        const [x, y] = cliC(k), on = k.id === c.id, st = on ? `--glow:${k.colour}` : "";
+        const [X1, Y1] = P(x, y, Z.product), [X2, Y2] = P(x, y, Z.client - 6);
+        g += `<line class="ov-pin${on ? " is-on" : ""}" style="${st}" x1="${X1}" y1="${Y1}" x2="${X2}" y2="${Y2}"/>`;
       });
-      // clients and their users
-      CLIENTS.forEach((k, i) => {
-        const y = cy(i), isOn = k.id === c.id, ink = pickPage(k.colour);
-        g += `<rect class="cli${isOn ? " is-on" : ""}" x="${COLX[2]}" y="${y - 22}" width="${CWID}" height="44" rx="22" style="fill:${k.colour}"/>`;
-        g += `<text class="cli-t" x="${COLX[2] + 20}" y="${y + 5}" style="fill:${ink};font-family:'${k.font}', 'Geist', sans-serif">${k.name}</text>`;
-        g += `<path class="link${isOn ? " is-on" : ""}" d="${curve(COLX[2] + CWID, y, COLX[3], y)}"/>`;
-        [0, 1, 2, 3].forEach((u) => {
-          const x = COLX[3] + 14 + u * 30, own = isOn && u === 1;
-          g += `<circle class="usr${own ? " is-own" : ""}" cx="${x}" cy="${y}" r="11" style="${own ? `stroke:${k.colour}` : ""}"/>`;
+      CLIENTS.forEach((k) => {
+        const [x, y] = cliC(k), on = k.id === c.id;
+        g += slab(x - 30, y - 22, x + 30, y + 22, Z.client, 7, `ov-cli${on ? " is-on" : ""}`, `--b:${k.colour}`);
+        [-18, 0, 18].forEach((dx, u) => {
+          const ux = x + dx, uy = y, own = on && u === 2;
+          const [X1, Y1] = P(ux, uy, Z.client), [X2, Y2] = P(ux, uy, Z.user);
+          g += `<line class="ov-pin is-user${own ? " is-on" : ""}" style="${own ? `--glow:${k.colour}` : ""}" x1="${X1}" y1="${Y1}" x2="${X2}" y2="${Y2}"/>`;
+          g += `<ellipse class="ov-user${own ? " is-on" : ""}" style="${own ? `--b:${k.colour}` : ""}" cx="${X2}" cy="${Y2}" rx="7" ry="4.2"/>`;
         });
-        if (isOn) g += `<text class="usr-t" x="${COLX[3] + 128}" y="${y + 4}">own look</text>`;
       });
+      // the active client's name, floating beside it
+      if (act) { const [x, y] = cliC(act); const [X, Y] = P(x + 30, y - 22, Z.client); g += `<g class="ov-callout"><line x1="${X}" y1="${Y}" x2="${X + 26}" y2="${Y - 26}"/><text x="${X + 30}" y="${Y - 30}" style="fill:${act.colour}">${act.name}</text></g>`; }
+      // levels, labelled on the right with leader lines
+      const LX = 740;
+      const lv = [
+        ["Users", "+ their own look", P(380, 0, Z.user)[1] - 70],
+        ["Clients", "+ colour, font, button shape", P(380, 0, Z.client)[1] - 70],
+        ["Products", "+ only what each needs", P(380, 0, Z.product)[1] - 58],
+        ["Shared package", "sets every token", P(380, 0, Z.shared)[1]],
+      ];
+      const anchorX = [P(340, 190, Z.user)[0], P(340, 190, Z.client)[0], P(360, 128, Z.product)[0], P(380, 0, 0)[0]];
+      lv.forEach(([t, s2, y], i) => { g += `<line class="ov-leader" x1="${anchorX[i] + 8}" y1="${y}" x2="${LX - 12}" y2="${y}"/><circle class="ov-leader-dot" cx="${anchorX[i] + 8}" cy="${y}" r="2.5"/><text class="ov-ln" x="${LX}" y="${y - 3}">${t}</text><text class="ov-ls" x="${LX}" y="${y + 15}">${s2}</text>`; });
       g += `</svg>`;
       layers.innerHTML = g;
     };
