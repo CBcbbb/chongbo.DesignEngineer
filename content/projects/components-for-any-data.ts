@@ -16,7 +16,7 @@ export const anyData: Project = {
   context: "Logistics infrastructure company · current role",
   client: "Logistics infrastructure company",
   role: "Design Engineer",
-  roleSplit: [{ with: "solo", what: "Data model, interface, front end and server", note: "on my own, with Claude Code and Cursor" }],
+  roleSplit: [{ with: "solo", what: "Data model, interface, front end and server design", note: "on my own, with Claude Code and Cursor" }],
   outcome:
     "One library serves every customer. Each component declares the shape of data it needs, and customers connect their own streams by choosing fields.",
   stack: ["React", "TypeScript", "Tailwind", "ECharts"],
