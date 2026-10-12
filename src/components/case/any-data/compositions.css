@@ -3,11 +3,11 @@
  * content"). The shared card puts the claim and the reasoning side by side over the evidence; here, on wide sheets,
  * the head is unwrapped (display: contents) and its parts placed on the card's own grid:
  *
- *   01.1 Different shapes      poster: a large claim, the question set as the turn, the strips running off the edge
+ *   01.1 Different shapes      poster: the claim, its context in two columns, the strips running off the edge, the question as the turn
  *   01.2 A shape, not names    split sheet: the reasoning on the left, the contract on a full-height datasheet pane
- *   01.3 One pipeline          schematic: the layers left to right across the card, the reasoning at its foot
- *   02.1 Ranked by fit         halves: the card itself split into before and after, each paragraph over its half
- *   02.2 Fields like axes      field: the whole card on the project's blue, the chart first, the words under it
+ *   01.3 One pipeline          schematic: the layers left to right across the card, the reasoning at its foot in two columns
+ *   02.1 Ranked by fit         halves: under the claim, the card splits into before and after, each paragraph over its half
+ *   02.2 Fields like axes      field: the whole card on the project's blue, the claim and the words first, the chart under them
  *
  * Phones and narrow sheets keep the shared order (claim, reasoning, evidence). Words are never changed or moved
  * out of reading order: only placed.
@@ -41,6 +41,33 @@
 }
 [data-palette="components-for-any-data"] #axis-pickers :focus-visible {
   outline-color: currentColor;
+}
+
+/* ---------- 01.1 on phones: the same order as on wide sheets (claim, context, strips, then the question) ---------- */
+@container ad-sheets (max-width: 639px) {
+  [data-palette="components-for-any-data"] #shapes :is(.cf-head, .cf-head > div, .cf-body) {
+    display: contents;
+  }
+  [data-palette="components-for-any-data"] #shapes .cf-meta {
+    margin: 0 !important;
+  }
+  [data-palette="components-for-any-data"] #shapes .cf-h3 {
+    margin-top: -0.4rem;
+  }
+  [data-palette="components-for-any-data"] #shapes .cf-evidence {
+    order: 1;
+    margin-top: 0.25rem;
+  }
+  [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
+    order: 2;
+    margin-top: 0.25rem;
+    padding-top: 0.9rem;
+    border-top: 2px solid var(--case-ink);
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--case-ink);
+  }
 }
 
 @container ad-sheets (min-width: 640px) {
@@ -79,15 +106,16 @@
     padding: 0;
   }
 
-  /* ---------- 01.1 poster ---------- */
+  /* ---------- 01.1 poster: the claim, its context set as a deck in two columns, the strips, then the two questions
+     as the turn ---------- */
   [data-palette="components-for-any-data"] #shapes {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
-      "meta meta"
-      "h3   h3"
-      "p1   p2"
-      "ev   ev";
-    column-gap: clamp(2rem, 4.5vw, 3.75rem);
+      "meta"
+      "h3"
+      "p1"
+      "ev"
+      "p2";
   }
   [data-palette="components-for-any-data"] #shapes .cf-h3 {
     max-width: 11.5em;
@@ -96,22 +124,27 @@
     line-height: 0.98;
     letter-spacing: -0.05em;
   }
-  [data-palette="components-for-any-data"] #shapes .cf-body > p {
+  /* one paragraph, two columns that end together: the context reads as one block, not a wall down one side */
+  [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(1) {
     margin-top: clamp(1.25rem, 2.6vw, 1.85rem);
-  }
-  /* the question is the turn of the story: set as the line the reader carries into the strips */
-  [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
-    align-self: start;
-    padding-left: 1.1rem;
-    border-left: 2px solid var(--case-ink);
-    font-size: clamp(1.125rem, 1.75vw, 1.35rem);
-    font-weight: 500;
-    line-height: 1.32;
-    letter-spacing: -0.015em;
-    color: var(--case-ink);
+    columns: 2;
+    column-gap: clamp(2rem, 4.5vw, 3.75rem);
+    column-fill: balance;
   }
   [data-palette="components-for-any-data"] #shapes .cf-evidence {
-    margin-top: clamp(1.75rem, 3.4vw, 2.5rem);
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  }
+  /* the question closes the card, after the strips that raise it, and leads into 01.2 */
+  [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
+    margin-top: clamp(1.25rem, 2.6vw, 1.75rem);
+    padding-top: clamp(1rem, 2vw, 1.25rem);
+    border-top: 2px solid var(--case-ink);
+    font-size: clamp(1.2rem, 1.9vw, 1.35rem);
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    color: var(--case-ink);
   }
   /* the strips run off the card's right edge, like streams that carry on */
   [data-palette="components-for-any-data"] #shapes .ac-strip {
@@ -119,12 +152,13 @@
     border-right: 0;
     border-radius: 12px 0 0 12px;
   }
-  /* the empty cell stays clear of the edge the strip runs off */
-  [data-palette="components-for-any-data"] #shapes .ac-cell.is-missing {
+  /* the strip's five columns stop at the content edge; only the strip itself runs on, so the empty cell keeps its
+     full width and padding */
+  [data-palette="components-for-any-data"] #shapes .ac-strip dl {
     margin-right: var(--cf-pad);
   }
   [data-palette="components-for-any-data"] #shapes .cf-evidence::before {
-    inset: -1.25rem calc(-1 * var(--cf-pad)) calc(-1 * var(--cf-pad-y));
+    inset: -1.25rem calc(-1 * var(--cf-pad)) 0;
     -webkit-mask-image: linear-gradient(transparent, #000 2.5rem);
     mask-image: linear-gradient(transparent, #000 2.5rem);
   }
@@ -172,7 +206,7 @@
       "meta meta"
       "h3   h3"
       "ev   ev"
-      "p1   p2";
+      "body body";
     column-gap: clamp(1.5rem, 3.4vw, 2.75rem);
   }
   [data-palette="components-for-any-data"] #pipeline .cf-h3 {
@@ -196,11 +230,22 @@
     -webkit-mask-image: none;
     mask-image: none;
   }
-  [data-palette="components-for-any-data"] #pipeline .cf-body > p:is(:nth-of-type(1), :nth-of-type(2)) {
-    max-width: 44ch;
+  /* the two paragraphs are one explanation: they run on through two columns that end on the same line */
+  [data-palette="components-for-any-data"] #pipeline .cf-head > .cf-body {
+    display: block;
+    grid-area: body;
     margin-top: clamp(1.5rem, 3vw, 2.25rem);
+    columns: 2;
+    column-gap: clamp(1.5rem, 3.4vw, 2.75rem);
+    column-fill: balance;
+  }
+  [data-palette="components-for-any-data"] #pipeline .cf-body > p {
+    margin: 0;
     font-size: 0.9375rem;
     line-height: 1.6;
+  }
+  [data-palette="components-for-any-data"] #pipeline .cf-body > p + p {
+    margin-top: 0.9em;
   }
 
   /* ---------- 02.1 halves: before on the left, after on the right, to the card's edges ---------- */
@@ -213,7 +258,14 @@
       "p1   p2"
       "ev   ev";
     column-gap: var(--gap);
-    background-image: linear-gradient(90deg, var(--ad-inset) 50%, transparent 50%);
+  }
+  /* the "before" half is tinted from its paragraph down to the card's foot; the claim above sits whole on paper */
+  [data-palette="components-for-any-data"] #stream-fit::before {
+    content: "";
+    grid-area: p1-start / p1-start / ev-end / p1-end;
+    margin: -0.75rem calc(-0.5 * var(--gap)) calc(-1 * var(--cf-pad-y)) calc(-1 * var(--cf-pad));
+    background: var(--ad-fit-tint);
+    pointer-events: none;
   }
   [data-palette="components-for-any-data"] #stream-fit .cf-h3 {
     margin-top: 1.1rem;
@@ -271,18 +323,19 @@
     background: var(--case-bg);
   }
 
-  /* ---------- 02.2 field: the chart opens the card, the words under it in three columns ---------- */
+  /* ---------- 02.2 field: the claim and the words in three columns open the card, the chart under them ---------- */
   [data-palette="components-for-any-data"] #axis-pickers {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
-      "ev   ev ev"
       "meta p1 p2"
-      "h3   p1 p2";
-    grid-template-rows: auto auto 1fr;
+      "h3   p1 p2"
+      "ev   ev ev";
+    grid-template-rows: auto 1fr auto;
     column-gap: clamp(1.5rem, 3vw, 2.5rem);
   }
-  [data-palette="components-for-any-data"] #axis-pickers .cf-meta {
-    margin-top: clamp(1.75rem, 3.4vw, 2.5rem) !important;
+  /* the claim and the words open the card, the chart follows */
+  [data-palette="components-for-any-data"] #axis-pickers .cf-evidence {
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
   }
   [data-palette="components-for-any-data"] #axis-pickers .cf-h3 {
     margin-top: 0.9rem;
@@ -292,7 +345,7 @@
   }
   [data-palette="components-for-any-data"] #axis-pickers .cf-body > p {
     align-self: start;
-    margin-top: clamp(1.75rem, 3.4vw, 2.5rem);
+    margin-top: 0;
     padding-top: 0.9rem;
     border-top: 1px solid var(--case-rule);
     font-size: 0.9375rem;
@@ -310,9 +363,21 @@
 
 /* short windows: the poster and the schematic step their type down so each card stays near one screen */
 @container ad-sheets (min-width: 640px) {
+  @media (max-height: 920px) {
+    [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(1) {
+      margin-top: 1.1rem;
+    }
+    [data-palette="components-for-any-data"] #shapes .cf-evidence {
+      margin-top: 1.25rem;
+    }
+    [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
+      margin-top: 1rem;
+      padding-top: 0.85rem;
+    }
+  }
   @media (max-height: 800px) {
-    [data-palette="components-for-any-data"] #shapes .cf-h3 {
-      font-size: clamp(2rem, 3.8vw, 2.75rem);
+    [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
+      font-size: clamp(1.1rem, 1.7vw, 1.25rem);
     }
     [data-palette="components-for-any-data"] #pipeline .cf-h3 {
       font-size: clamp(1.6rem, 2.8vw, 2.1rem);
@@ -320,17 +385,27 @@
     [data-palette="components-for-any-data"] #stream-fit .ac-fit-big {
       font-size: clamp(3.5rem, 7vw, 5rem);
     }
-    [data-palette="components-for-any-data"] #shapes .cf-body > p {
-      margin-top: 1rem;
+    [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(1) {
+      margin-top: 0.85rem;
+    }
+    [data-palette="components-for-any-data"] #shapes .cf-body > p:nth-of-type(2) {
+      margin-top: 0.75rem;
+      padding-top: 0.6rem;
     }
     [data-palette="components-for-any-data"] #shapes .cf-evidence {
-      margin-top: 1.25rem;
+      margin-top: 1rem;
+    }
+    [data-palette="components-for-any-data"] #shapes .cf-h3 {
+      font-size: clamp(2rem, 3.6vw, 2.5rem);
+    }
+    [data-palette="components-for-any-data"] #shapes .ac-cell {
+      padding: 8px 12px 7px;
     }
     [data-palette="components-for-any-data"] #pipeline .cf-evidence {
       margin-top: 1.25rem;
       padding-block: 1rem;
     }
-    [data-palette="components-for-any-data"] #pipeline .cf-body > p:is(:nth-of-type(1), :nth-of-type(2)) {
+    [data-palette="components-for-any-data"] #pipeline .cf-head > .cf-body {
       margin-top: 1.1rem;
     }
     [data-palette="components-for-any-data"] #stream-fit .cf-body > p {

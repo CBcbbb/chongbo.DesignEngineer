@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { Chart, Empty, Swatch, type ChartKind } from "./charts";
 import {
   fitOf,
@@ -47,9 +47,7 @@ export function Demo() {
   const uid = useId();
   const [srcId, setSrcId] = useState("courier");
   const [kind, setKind] = useState<ChartKind | "table">("bar");
-  const [showOther, setShowOther] = useState(false);
   const [state, setState] = useState(() => start(STREAMS[0]!));
-  const listRef = useRef<HTMLDivElement>(null);
 
   const all = STREAMS;
   const isSample = srcId === "sample";
@@ -64,13 +62,11 @@ export function Demo() {
   };
   const reset = () => {
     setKind("bar");
-    setShowOther(false);
     choose("courier", STREAMS);
   };
 
   const groups = { fits: [] as Stream[], partly: [] as Stream[], other: [] as Stream[] };
   for (const s of all) groups[fitOf(s).group].push(s);
-  const otherOpen = showOther || groups.other.some((s) => s.id === srcId);
   const roleOf = (name: string) => ROLES.find((r) => mapping[r.key] === name);
 
   const option = (id: string, name: string, meta?: string, fit?: ReturnType<typeof fitOf>) => (
@@ -87,28 +83,14 @@ export function Demo() {
     </label>
   );
   const streamOption = (s: Stream) => option(s.id, s.name, s.rows ? `${s.rows.toLocaleString("en-GB")} rows` : "No rows yet", fitOf(s));
-  const group = (key: string, label: string, items: ReactNode, action?: ReactNode) => (
+  const group = (key: string, label: string, items: ReactNode) => (
     <div className="dm-group" role="group" aria-labelledby={`${uid}-g-${key}`}>
       <div className="dm-group-h">
         <p id={`${uid}-g-${key}`}>{label}</p>
-        {action}
       </div>
       {items}
     </div>
   );
-  const showMore = (
-    <button
-      type="button"
-      className="dm-more"
-      onClick={() => {
-        setShowOther(true);
-        requestAnimationFrame(() => listRef.current?.querySelector<HTMLInputElement>(`input[value="${groups.other[0]?.id}"]`)?.focus());
-      }}
-    >
-      Show {groups.other.length} more
-    </button>
-  );
-
   return (
     <div className="dm-wrap">
       <p className="dm-flag">
@@ -211,11 +193,12 @@ export function Demo() {
                 Reset
               </button>
             </div>
-            <div className="dm-list" ref={listRef} role="radiogroup" aria-labelledby={`${uid}-data`}>
+            {/* every stream is listed; the list scrolls in its own box, so the panel keeps its height */}
+            <div className="dm-list" role="radiogroup" aria-labelledby={`${uid}-data`}>
               {option("sample", "Sample data")}
               {groups.fits.length > 0 && group("fits", "Fits", groups.fits.map(streamOption))}
               {groups.partly.length > 0 && group("partly", "Partly fits", groups.partly.map(streamOption))}
-              {groups.other.length > 0 && group("other", "Other", otherOpen ? groups.other.map(streamOption) : null, otherOpen ? undefined : showMore)}
+              {groups.other.length > 0 && group("other", "Other", groups.other.map(streamOption))}
             </div>
           </section>
 

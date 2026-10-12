@@ -39,10 +39,14 @@ type Tip = { k: string; v: number; x: number; y: number } | null;
 type MarkProps = { onTip: (d: Datum, e: React.PointerEvent) => void };
 
 function Bar({ data, w, h, onTip }: { data: Datum[]; w: number; h: number } & MarkProps) {
-  const L = 40, R = 6, T = 18, B = 28;
+  // when a category name is wider than its bar's slot (phones), the labels tilt, so each name is shown whole
+  const L = 40, R = 6, T = 18;
   const max = niceMax(Math.max(...data.map((d) => d.v)));
-  const iw = w - L - R, ih = h - T - B;
+  const iw = w - L - R;
   const step = iw / data.length, bw = Math.min(56, step * 0.58);
+  const tilt = data.some((d) => d.k.length * 6.6 > step - 6);
+  const B = tilt ? 46 : 28;
+  const ih = h - T - B;
   const y = (v: number) => T + ih - (v / max) * ih;
   return (
     <>
@@ -67,9 +71,15 @@ function Bar({ data, w, h, onTip }: { data: Datum[]; w: number; h: number } & Ma
               onPointerMove={(e) => onTip(d, e)}
               d={`M${x},${T + ih} V${yy + r} Q${x},${yy} ${x + r},${yy} H${x + bw - r} Q${x + bw},${yy} ${x + bw},${yy + r} V${T + ih} Z`}
             />
-            <text x={x + bw / 2} y={h - 8} textAnchor="middle" fontSize="12">
-              {trunc(d.k, step / 6.6)}
-            </text>
+            {tilt ? (
+              <text x={x + bw / 2 + 4} y={T + ih + 14} textAnchor="end" fontSize="11.5" transform={`rotate(-35 ${x + bw / 2 + 4} ${T + ih + 14})`}>
+                {trunc(d.k, 12)}
+              </text>
+            ) : (
+              <text x={x + bw / 2} y={h - 8} textAnchor="middle" fontSize="12">
+                {trunc(d.k, step / 6.6)}
+              </text>
+            )}
             {i === 0 && (
               <text className="ad-t-ink" x={x + bw / 2} y={yy - 6} textAnchor="middle" fontSize="13">
                 {fmt(d.v)}

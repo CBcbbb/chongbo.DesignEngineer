@@ -184,6 +184,9 @@
 }
 .ac-spec ul {
   display: grid;
+  /* one set of columns for every role, so the types line up and a long role name never runs into its type */
+  grid-template-columns: max-content minmax(0, 1fr) auto;
+  column-gap: 14px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -191,8 +194,8 @@
 }
 .ac-spec li {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 4.2rem auto;
-  gap: 10px;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
   align-items: center;
   padding: 11px 0;
   border-bottom: 1px solid var(--ad-rule);
@@ -308,8 +311,18 @@
   .ac-contract-stage {
     min-height: 0;
   }
+  .ac-spec {
+    padding-inline: 16px;
+  }
+  .ac-spec ul {
+    column-gap: 10px;
+  }
   .ac-spec-role {
-    font-size: 18px;
+    font-size: 17px;
+  }
+  .ac-spec-req {
+    min-width: 0;
+    padding-inline: 8px;
   }
   .ac-code {
     font-size: 12px;
@@ -422,6 +435,7 @@
 }
 .ac-lane-val {
   font: 400 11.5px/1.35 var(--mono);
+  white-space: nowrap;
   color: var(--pipe-dim);
   overflow-wrap: anywhere;
 }
@@ -436,7 +450,8 @@
   position: absolute;
   top: 0;
   left: 12px;
-  right: -14px;
+  /* the lane stops at the contract's edge, clear of the chart's labels */
+  right: 0;
   height: 2px;
   margin-top: -1px;
   background: linear-gradient(90deg, var(--sw) 85%, transparent);
@@ -533,6 +548,31 @@
   }
   .ac-inputs {
     grid-template-columns: minmax(0, 1fr);
+  }
+}
+/* tablets: the chart gets the room it needs, the source fits its column, and the three inputs share one shape */
+@container (min-width: 521px) and (max-width: 700px) {
+  .ac-flow {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 0.95fr) minmax(0, 1fr) minmax(0, 1.45fr);
+  }
+  .ac-layer {
+    padding-inline: 9px;
+  }
+  .ac-json {
+    font-size: 10.5px;
+  }
+  .ac-lane-val {
+    white-space: normal;
+  }
+  .ac-hbars > div {
+    grid-template-columns: 3.3rem minmax(0, 1fr) 1.6rem;
+    gap: 5px;
+  }
+  .ac-hbars-k {
+    font-size: 11.5px;
+  }
+  .ac-inputs li {
+    display: grid;
   }
 }
 
@@ -700,6 +740,9 @@
   padding-left: 14px;
   border-left: 1px solid var(--case-rule);
 }
+.ac-srv li > span:not(.ad-label) {
+  text-wrap: balance;
+}
 .ac-srv strong {
   font-size: 14px;
   font-weight: 600;
@@ -855,6 +898,16 @@
     font-size: 12px;
     padding: 0 10px;
   }
+  /* the three streams stack as one list, each as wide as the card */
+  .ac-axis-streams {
+    display: grid;
+    justify-self: stretch;
+    border-radius: 14px;
+  }
+  .ac-axis-streams button {
+    text-align: left;
+    border-radius: 11px;
+  }
 }
 
 /* ---------- part openers and the takeaway ---------- */
@@ -868,6 +921,7 @@
   border-top-color: var(--dark-line);
 }
 [data-palette="components-for-any-data"] #takeaway .cf-points li {
+  text-wrap: pretty;
   grid-template-columns: minmax(0, 1fr);
   gap: clamp(0.9rem, 2.4vw, 1.75rem);
   align-content: start;
@@ -879,6 +933,12 @@
   font: 600 clamp(2.75rem, 6vw, 4.5rem) / 0.8 var(--sans);
   letter-spacing: -0.06em;
   color: var(--accent-on-dark);
+}
+/* the first point is the longest: its column is wider, so the three end close together */
+@media (min-width: 761px) {
+  [data-palette="components-for-any-data"] #takeaway .cf-points {
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
 }
 @media (max-width: 760px) {
   [data-palette="components-for-any-data"] #takeaway .cf-points {
@@ -899,6 +959,19 @@
   .ac-axis-x .ac-ax {
     display: flex;
     flex-wrap: wrap;
+  }
+}
+
+/* windows up to about 900px tall: the three strips sit tighter, so 01.1 stays inside one screen */
+@media (min-width: 761px) and (max-height: 920px) {
+  .ac-shapes {
+    gap: 10px;
+  }
+  .ac-cell {
+    padding: 10px 12px 9px;
+  }
+  .ac-strip header {
+    padding: 6px 14px;
   }
 }
 
@@ -933,7 +1006,7 @@
     padding: 12px 14px 10px;
   }
   .ac-fit-list li {
-    min-height: 26px;
+    min-height: 24px;
   }
   .ac-fit-big {
     font-size: 34px;

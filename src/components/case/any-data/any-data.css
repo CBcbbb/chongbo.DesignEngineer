@@ -35,6 +35,9 @@
   --ad-grid: #e8ecf3;
   --ad-good: #0f7a3a;
   --ad-canvas: rgb(29 79 215 / 0.08);
+  --ad-scroll-shade: rgb(16 24 40 / 0.16);
+  /* the 'before' half of 02.1: a tint of the panels' inset, kept quiet on the dark paper */
+  --ad-fit-tint: var(--ad-inset);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) [data-palette="components-for-any-data"] {
@@ -65,6 +68,8 @@
     --ad-grid: #222d47;
     --ad-good: #5cc98a;
     --ad-canvas: rgb(143 176 255 / 0.07);
+    --ad-scroll-shade: rgb(0 0 0 / 0.55);
+    --ad-fit-tint: #1d212c;
   }
 }
 :root[data-theme="dark"] [data-palette="components-for-any-data"] {
@@ -95,6 +100,8 @@
   --ad-grid: #222d47;
   --ad-good: #5cc98a;
   --ad-canvas: rgb(143 176 255 / 0.07);
+  --ad-scroll-shade: rgb(0 0 0 / 0.55);
+  --ad-fit-tint: #1d212c;
 }
 
 /* the canvas under the evidence: a fine grid, like the rows and columns the page is about (replaces the dot field) */
@@ -950,7 +957,8 @@
 .ad-wires {
   position: absolute;
   top: calc(-1 * clamp(1.75rem, 4.2vw, 3rem));
-  right: calc(-1 * var(--cf-pad));
+  /* the role chips end on the cover's content edge, the same edge as the rule and the text below */
+  right: 0;
   width: min(calc((100% + 2 * var(--cf-pad)) * 0.44), 420px);
   aspect-ratio: 400 / 250;
   pointer-events: none;
@@ -990,6 +998,12 @@
 @media (max-width: 600px) {
   .ad-wires {
     display: none;
+  }
+}
+/* tablets: the lede stays clear of the art in the corner */
+@media (min-width: 601px) and (max-width: 900px) {
+  [data-palette="components-for-any-data"] .cf-cover.has-art-wires .cf-lede {
+    max-width: 21em;
   }
 }
 /* the title breaks where the name does ("Components / for Any Data"), leaving the corner to the art */
