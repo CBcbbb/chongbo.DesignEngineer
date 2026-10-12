@@ -46,8 +46,9 @@ export const anyData: Project = {
       layout: "stack",
       title: "Every customer's data has a different shape",
       body: [
-        "Customers build their own products on our platform, from our components, and preview them in the store first. But each component showed fixed values from its settings, and none could take a customer's own data stream. Each customer names and formats the same data differently.",
-        "So I started from two questions: what does a component need to know about its data, and where does that data come from?",
+        "Our platform carries customers' operational data as live streams, and customers build their own products on it from our components. In the store, they preview each component with their own data before choosing it.",
+        "But each component showed fixed values from its settings, and none could take a customer's stream. We never see that data, and each customer names and formats the same data differently.",
+        "So I started from two questions: what does a component need to know about its data, and how does a customer connect theirs?",
       ],
       signals: ["data", "design-eng-gap", "judgement"],
       capabilities: ["C"],
