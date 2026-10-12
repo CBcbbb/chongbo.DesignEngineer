@@ -129,6 +129,8 @@
   position: relative;
   aspect-ratio: 1100 / 494;
   z-index: 2;
+  /* the engraving's type is sized from the machine itself, so it fits the plate at every width */
+  container-type: inline-size;
 }
 .machine > img {
   position: absolute;
@@ -150,7 +152,8 @@
   flex-direction: column;
   justify-content: center;
   padding-left: 0.9%;
-  font: 500 clamp(5.5px, 0.82vw, 9px) / 1.3 var(--mono);
+  /* "DESIGN ENGINEER" is the longer line: about 9.5em wide, inside a plate 13% of the machine wide */
+  font: 500 min(9px, 1.33cqi) / 1.3 var(--mono);
   color: #6e6a63;
   letter-spacing: 0.03em;
   white-space: nowrap;
