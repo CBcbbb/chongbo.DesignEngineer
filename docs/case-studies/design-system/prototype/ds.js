@@ -311,78 +311,96 @@
     document.querySelectorAll('input[name="f2c"]').forEach((r) => r.addEventListener("change", () => { stage.dataset.show = r.value; }));
   }
 
-  /* ---------- overview: built from the bottom up (isometric). Each level sits in one row (x + y constant), so it reads
-     side by side on screen; every child floats straight above its parent and casts a shadow on it. ---------- */
+  /* ---------- overview: an exploded build, like an architect's axonometric or a LEGO set. Every part is lifted off
+     the seat it clicks into (dashed outline on the part below) and dashed guides drop it back in place. ---------- */
   const layers = document.getElementById("layers");
   if (layers) {
     const CLIENTS = [
       { id: "courier", name: "Courier", colour: "#f2c94c", product: 0, side: -1 },
-      { id: "grocer", name: "Grocer", colour: "#2f8a3e", product: 0, side: 1 },
+      { id: "grocer", name: "Grocer", colour: "#3a9a4a", product: 0, side: 1 },
       { id: "bank", name: "Bank", colour: "#3651b0", product: 1, side: -1 },
       { id: "florist", name: "Florist", colour: "#e85d9a", product: 1, side: 1 },
       { id: "bakery", name: "Bakery", colour: "#d06a33", product: 2, side: -1 },
       { id: "studio", name: "Studio", colour: "#8a68f5", product: 2, side: 1 },
     ];
-    const C30 = 0.866, S30 = 0.5, OX = 340, OY = 112;
+    const C30 = 0.866, S30 = 0.5, OX = 352, OY = 150;
     const P = (x, y, z) => [OX + (x - y) * C30, OY + (x + y) * S30 - z];
     const pts = (a) => a.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
-    const Z = { product: 104, client: 196, user: 262 };
-    const quad = (cx, cy, h, z) => [P(cx - h, cy - h, z), P(cx + h, cy - h, z), P(cx + h, cy + h, z), P(cx - h, cy + h, z)];
-    const slab = (cx, cy, h, z, t, cls, style = "") => {
-      const [x0, y0, x1, y1] = [cx - h, cy - h, cx + h, cy + h];
-      return `<g class="${cls}" style="${style}">
-        <polygon class="sd" points="${pts([P(x1, y0, z), P(x1, y1, z), P(x1, y1, z - t), P(x1, y0, z - t)])}"/>
-        <polygon class="sd2" points="${pts([P(x0, y1, z), P(x1, y1, z), P(x1, y1, z - t), P(x0, y1, z - t)])}"/>
-        <polygon class="tp" points="${pts(quad(cx, cy, h, z))}"/></g>`;
+    const shade = (hex, t) => mix("#000000", hex, t); // t = share of black
+    const lift = (hex, t) => mix("#ffffff", hex, t);
+    // a box: right face (x = x1), left face (y = y1), top. Faces take three tones of one colour.
+    const box = (x0, y0, x1, y1, z, h, cls, col) => {
+      const f = col ? `style="--t:${col};--l:${shade(col, 0.16)};--r:${shade(col, 0.32)}"` : "";
+      return `<g class="ob ${cls}" ${f}>
+        <polygon class="r" points="${pts([P(x1, y0, z), P(x1, y1, z), P(x1, y1, z - h), P(x1, y0, z - h)])}"/>
+        <polygon class="l" points="${pts([P(x0, y1, z), P(x1, y1, z), P(x1, y1, z - h), P(x0, y1, z - h)])}"/>
+        <polygon class="t" points="${pts([P(x0, y0, z), P(x1, y0, z), P(x1, y1, z), P(x0, y1, z)])}"/></g>`;
     };
-    const shadow = (cx, cy, h, z) => `<polygon class="ov-shadow" points="${pts(quad(cx + 6, cy + 6, h * 1.04, z))}"/>`;
-    const isoText = (x, y, z, t, cls) => { const [X, Y] = P(x, y, z); return `<text class="${cls}" transform="matrix(${C30} ${S30} ${-C30} ${S30} ${X} ${Y})">${t}</text>`; };
-    // one row per level: centres on the line x + y = 380, spread along x − y
+    // a stud: a short cylinder on a top face
+    const RX = 1.2247, RY = 0.7071;
+    const stud = (x, y, z, r, h, cls = "") => {
+      const [X, Y] = P(x, y, z), [, Yt] = P(x, y, z + h);
+      return `<g class="os ${cls}"><path class="s" d="M${X - r * RX} ${Y} A${r * RX} ${r * RY} 0 0 0 ${X + r * RX} ${Y} L${X + r * RX} ${Yt} L${X - r * RX} ${Yt} Z"/><ellipse class="c" cx="${X}" cy="${Yt}" rx="${r * RX}" ry="${r * RY}"/></g>`;
+    };
+    const studs = (x0, y0, x1, y1, z, step, r, h, cls) => {
+      const out = [];
+      for (let x = x0 + step / 2; x < x1; x += step) for (let y = y0 + step / 2; y < y1; y += step) out.push([x, y]);
+      out.sort((a, b) => a[0] + a[1] - (b[0] + b[1]));
+      return out.map(([x, y]) => stud(x, y, z, r, h, cls)).join("");
+    };
+    const seat = (x0, y0, x1, y1, z, on) => `<polygon class="seat${on ? " is-on" : ""}" points="${pts([P(x0, y0, z), P(x1, y0, z), P(x1, y1, z), P(x0, y1, z)])}"/>`;
+    const guides = (x0, y0, x1, y1, zFrom, zTo, on, col) => [[x1, y0], [x1, y1], [x0, y1]].map(([x, y]) => { const a1 = P(x, y, zFrom), a2 = P(x, y, zTo); return `<line class="guide${on ? " is-on" : ""}" style="${on && col ? `stroke:${col}` : ""}" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/>`; }).join("");
     const along = (d) => [190 + d / 2, 190 - d / 2];
-    const PROD = [-216, 0, 216].map(along);
-    const PH = 52, CH = 18, BASE = 190;
-    const cliC = (k) => { const [px, py] = PROD[k.product]; return [px + k.side * 20, py - k.side * 20]; };
+    const PROD = [-224, 0, 224].map(along);
+    const PH = 48, CW = 26, CD = 13; // product half-size; client brick half-sizes (2 × 1 studs)
+    const Z = { base: 0, product: 104, client: 196, user: 262 };
+    const T = { base: 10, product: 8, client: 16, user: 5 };
+    const cliC = (k) => { const [px, py] = PROD[k.product]; return [px + k.side * 21, py - k.side * 21]; };
     const draw = (c) => {
       const act = CLIENTS.find((k) => k.id === c.id);
       const aP = act ? act.product : 0;
-      let g = `<svg viewBox="0 0 960 540" role="img" aria-label="Built from the bottom up: one shared package; three products float above it, each overriding only what it needs; above each product, its clients set colour, font and button shape; above each client, its users set their own look.">
-        <defs>
-          <linearGradient id="ov-glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity=".05"/></linearGradient>
-          <filter id="ov-blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>
-        </defs>`;
-      // base: the shared package, a gridded board
-      g += slab(BASE, BASE, 190, 0, 12, "ov-base");
-      let grid = "";
-      for (let i = 20; i < 380; i += 20) { const a1 = P(i, 0, 0), a2 = P(i, 380, 0), b1 = P(0, i, 0), b2 = P(380, i, 0); grid += `<line x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/><line x1="${b1[0]}" y1="${b1[1]}" x2="${b2[0]}" y2="${b2[1]}"/>`; }
-      g += `<g class="ov-grid">${grid}</g>` + isoText(20, 366, 0, "SHARED PACKAGE", "ov-engrave");
-      // products: shadow on the base, pin, slab
-      PROD.forEach(([x, y]) => { g += shadow(x, y, PH, 0); });
+      let g = `<svg viewBox="0 36 1000 524" role="img" aria-label="An exploded build. One shared package at the bottom; three products lifted above their seats on it; above each product, two clients lifted above theirs; above each client, its users. Each level overrides only what it needs.">`;
+      // 0 · a soft shadow under the build, so it sits on the page
+      const sh = [P(0, 0, -T.base), P(380, 0, -T.base), P(380, 380, -T.base), P(0, 380, -T.base)].map(([x, y]) => [x + 6, y + 10]);
+      g += `<defs><filter id="ov-blur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="9"/></filter></defs><polygon class="o-shadow" filter="url(#ov-blur)" points="${pts(sh)}"/>`;
+      // 1 · base plate with studs
+      g += box(0, 0, 380, 380, Z.base, T.base, "o-base");
+      PROD.forEach(([x, y], p) => { g += seat(x - PH, y - PH, x + PH, y + PH, Z.base, p === aP); });
+      g += studs(0, 0, 380, 380, Z.base, 38, 6, 3, "on-base");
+      // 2 · products: guides down to their seats, plates with 3 × 3 studs
       PROD.forEach(([x, y], p) => {
-        const on = p === aP, a1 = P(x, y, 0), a2 = P(x, y, Z.product - 8);
-        g += `<line class="ov-pin${on ? " is-on" : ""}" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/><circle class="ov-node${on ? " is-on" : ""}" cx="${a1[0]}" cy="${a1[1]}" r="3"/>`;
-        g += slab(x, y, PH, Z.product, 8, `ov-prod${on ? " is-on" : ""}`);
-        g += isoText(x - PH + 8, y + PH - 8, Z.product, `PRODUCT ${"ABC"[p]}`, "ov-label");
+        const on = p === aP;
+        g += guides(x - PH, y - PH, x + PH, y + PH, Z.product - T.product, Z.base, on);
+        g += box(x - PH, y - PH, x + PH, y + PH, Z.product, T.product, `o-prod${on ? " is-on" : ""}`);
+        CLIENTS.filter((k) => k.product === p).forEach((k) => { const [cx, cy] = cliC(k); g += seat(cx - CD, cy - CW, cx + CD, cy + CW, Z.product, k.id === c.id); });
+        g += studs(x - PH, y - PH, x + PH, y + PH, Z.product, 32, 5, 2.5, "on-prod");
       });
-      // clients: shadow on their product, pin, slab; users above each
-      CLIENTS.forEach((k) => { const [x, y] = cliC(k); g += shadow(x, y, CH, Z.product); });
+      // 3 · clients: bricks in their brand colour, 2 × 1 studs; 4 · users: round 1 × 1 tiles
       CLIENTS.forEach((k) => {
-        const [x, y] = cliC(k), on = k.id === c.id, st = `--b:${k.colour};--glow:${k.colour}`;
-        const a1 = P(x, y, Z.product), a2 = P(x, y, Z.client - 6);
-        g += `<line class="ov-pin${on ? " is-on" : ""}" style="${st}" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/>`;
-        g += slab(x, y, CH, Z.client, 6, `ov-cli${on ? " is-on" : ""}`, st);
+        const [x, y] = cliC(k), on = k.id === c.id;
+        g += guides(x - CD, y - CW, x + CD, y + CW, Z.client - T.client, Z.product, on, k.colour);
+        g += box(x - CD, y - CW, x + CD, y + CW, Z.client, T.client, `o-cli${on ? " is-on" : ""}`, k.colour);
+        [-1, 1].forEach((d) => { g += stud(x, y + d * 13, Z.client, 5, 3, "on-cli"); });
         [-1, 0, 1].forEach((u) => {
-          const ux = x + u * 8, uy = y - u * 8, own = on && u === 1;
-          const b1 = P(ux, uy, Z.client), b2 = P(ux, uy, Z.user);
-          g += `<line class="ov-pin is-user${own ? " is-on" : ""}" style="${own ? st : ""}" x1="${b1[0]}" y1="${b1[1]}" x2="${b2[0]}" y2="${b2[1]}"/>`;
-          g += `<ellipse class="ov-user${own ? " is-on" : ""}" style="${own ? st : ""}" cx="${b2[0]}" cy="${b2[1]}" rx="6.5" ry="3.8"/>`;
+          const ux = x + u * 12, uy = y - u * 12, own = on && u === 1;
+          const a1 = P(ux, uy, Z.client + 3), a2 = P(ux, uy, Z.user - T.user);
+          g += `<line class="guide is-user${own ? " is-on" : ""}" style="${own ? `stroke:${k.colour}` : ""}" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/>`;
+          g += stud(ux, uy, Z.user - T.user, 6, T.user, `o-user${own ? " is-on" : ""}`).replace('class="os', `style="${own ? `--u:${k.colour}` : ""}" class="os`);
         });
       });
-      if (act) { const [x, y] = cliC(act); const [X, Y] = P(x, y, Z.user); g += `<text class="ov-callout" x="${X}" y="${Y - 16}" text-anchor="middle" style="fill:${act.colour}">${act.name}</text>`; }
-      // levels on the right, each with a leader line from its row
-      const LX = 744, rightOf = (z, h, d) => { const [x, y] = along(d); return P(x + h, y - h, z); };
-      [["Users", "+ their own look", Z.user, 8, 236], ["Clients", "+ colour, font, button shape", Z.client, CH, 236], ["Products", "+ only what each needs", Z.product, PH, 216], ["Shared package", "sets every token", 0, 190, 0]].forEach(([t, s2, z, h, d]) => {
-        const [x0] = rightOf(z, h, d), y = P(BASE, BASE, z)[1];
-        g += `<line class="ov-leader" x1="${x0 + 12}" y1="${y}" x2="${LX - 12}" y2="${y}"/><circle class="ov-leader-dot" cx="${x0 + 12}" cy="${y}" r="2.5"/><text class="ov-ln" x="${LX}" y="${y - 3}">${t}</text><text class="ov-ls" x="${LX}" y="${y + 15}">${s2}</text>`;
+      if (act) { const [x, y] = cliC(act); const [X, Y] = P(x, y, Z.user + 8); g += `<text class="o-callname" x="${X}" y="${Y - 6}" text-anchor="middle">${act.name}</text>`; }
+      // callouts: numbered, with leaders to the legend
+      const LX = 744;
+      const rows = [
+        [4, "Users", "+ their own look", (() => { const [x, y] = cliC(CLIENTS[5]); const [X, Y] = P(x + 12, y - 12, Z.user); return [X + 8, Y]; })()],
+        [3, "Clients", "+ colour, font, button shape", (() => { const [x, y] = cliC(CLIENTS[5]); return P(x + CD, y - CW, Z.client - T.client / 2); })()],
+        [2, "Products", "+ only what each needs", P(...along(224 + PH * 2), Z.product - 4)],
+        [1, "Shared package", "sets every token", P(380, 0, Z.base - 5)],
+      ];
+      rows.forEach(([n, t, s2, [ax, ay]]) => {
+        g += `<line class="o-leader" x1="${ax + 6}" y1="${ay}" x2="${LX - 22}" y2="${ay}"/><circle class="o-tick" cx="${ax + 6}" cy="${ay}" r="2.2"/>`;
+        g += `<circle class="o-num" cx="${LX - 10}" cy="${ay}" r="10"/><text class="o-numt" x="${LX - 10}" y="${ay + 4}" text-anchor="middle">${n}</text>`;
+        g += `<text class="o-ln" x="${LX + 8}" y="${ay - 2}">${t}</text><text class="o-ls" x="${LX + 8}" y="${ay + 15}">${s2}</text>`;
       });
       g += `</svg>`;
       layers.innerHTML = g;
