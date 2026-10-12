@@ -640,7 +640,7 @@
 @media (min-width: 900px) {
   /* After a print the results title sits at the top of the screen with the sheet under it, and the whole sheet fits:
      the title row, the sheet's top line and its foot are the frame (--card-frame, tokens.css) and the card below the
-     line is the case-file card at the height it has on its case page (--card-h). */
+     line is the case-file card on its artboard (--card-w x --card-h, tokens.css), scaled as on its case page. */
   .results {
     --rhead-h: 40px;
     --sheet-band: 28px;
@@ -685,13 +685,13 @@
   .sheets {
     /* from the screen edge to the page's content: what is left over once the shell is centred, plus its gutter */
     --edge: calc(max((100vw - var(--wrap-max)) / 2, 0px) + var(--gutter));
-    /* a printed card is the case-file card at its own size: 836px wide, as on the case page from 1180px up, and
-       --card-h tall. A card shorter than that sits at the top of its sheet with paper below it. */
-    --card-w: 836px;
+    /* a printed card is the case-file card at its own size: the artboard, scaled by --card-zoom like every card.
+       A card shorter than the artboard sits at the top of its sheet with paper below it. */
     --sheet-pad: 14px;
-    --sheet-card-h: var(--card-h, 560px);
+    --sheet-card-w: calc(var(--card-w) * var(--card-zoom));
+    --sheet-card-h: calc(var(--card-h) * var(--card-zoom));
     --sheet-h: calc(var(--sheet-card-h) + 2 * var(--sheet-band));
-    --sheet-w: min(calc(var(--card-w) + 2 * var(--sheet-pad)), 100%);
+    --sheet-w: calc(var(--sheet-card-w) + 2 * var(--sheet-pad));
     display: flex;
     align-items: flex-start;
     gap: var(--s5);

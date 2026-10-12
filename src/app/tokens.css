@@ -133,16 +133,34 @@
 }
 
 /*
- * One card height for every case-file card, on its case page and printed on a home-page sheet (tablets and up, when
- * the window is tall enough). It is the screen less the sheet's frame (the results title above the sheet, the sheet's
- * top line and its "Read it in context" foot), so a printed sheet fits one screen and the card on it is the very card
- * on the case page. Cards sized to their content must not be taller than this: tests/e2e/cards.spec.ts checks every
- * card at laptop sizes. The case files' tighter type for short windows applies up to 968px high, the height at which
- * the tallest card in its roomier type still fits.
+ * The card artboard. On tablets and computers every case-file card is laid out on one fixed artboard, 836 x 684px,
+ * like a slide: the same composition at every window size, on its case page and printed on a home-page sheet. Nothing
+ * inside a card follows the window (--vw is a fixed 14.4px there: the 1440px-wide window the cards were composed at);
+ * the finished card is then scaled as a whole (--card-zoom, set by src/lib/card-zoom.ts) to fit the screen under the
+ * home sheet's frame. No card may be taller than the artboard: tests/e2e/cards.spec.ts checks every card. Phones
+ * (760px and below) keep the fluid layout and no scaling.
  */
-@media (min-width: 761px) and (min-height: 620px) {
+:root {
+  --vw: 1vw;
+  --card-zoom: 1;
+}
+@media (min-width: 761px) {
   :root {
+    --card-w: 836px;
+    --card-h: 684px;
+    /* what the home page puts round a printed card: the results title row, the sheet's top line and its foot */
     --card-frame: 116px;
-    --card-h: min(calc(100svh - var(--card-frame)), 58rem);
+  }
+  .cf-sheet.is-card,
+  .nk-sheet.is-card {
+    --vw: 14.4px;
+    width: var(--card-w);
+    max-width: none;
+    zoom: var(--card-zoom);
+  }
+  /* an enlarged picture opens at the real screen's size, not the card's */
+  .cf-sheet.is-card dialog,
+  .nk-sheet.is-card dialog {
+    zoom: calc(1 / var(--card-zoom));
   }
 }

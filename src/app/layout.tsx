@@ -1,3 +1,4 @@
+import { CARD_ZOOM_SCRIPT } from "@/lib/card-zoom";
 import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
@@ -35,7 +36,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en-GB" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
+      <head>
+        {/* the card scale is set before the first paint, so a card never jumps (src/lib/card-zoom.ts) */}
+        <script dangerouslySetInnerHTML={{ __html: CARD_ZOOM_SCRIPT }} />
+      </head>
       <body>
         <a className="skip sr-only-focusable" href="#main">
           Skip to content

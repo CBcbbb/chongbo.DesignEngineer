@@ -29,7 +29,7 @@
   --nk-tint: #fde3d3;
   --nk-r: 20px;
   --nk-r-in: 14px;
-  --nk-pad: clamp(1.25rem, 3.6vw, 2.75rem);
+  --nk-pad: clamp(1.25rem, calc(3.6 * var(--vw)), 2.75rem);
   --nk-ease: cubic-bezier(0.16, 1, 0.3, 1);
   --nk-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
 
@@ -37,6 +37,10 @@
   font-family: var(--sans);
   font-size: 1.0625rem;
   line-height: 1.6;
+}
+/* a card works its padding out from its own --vw (the artboard's, tokens.css), not the page's */
+.nk-sheet.is-card {
+  --nk-pad: clamp(1.25rem, calc(3.6 * var(--vw)), 2.75rem);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .nk {
@@ -123,8 +127,8 @@
 .nk-frame {
   max-width: 1180px;
   margin: 0 auto;
-  padding-inline: clamp(16px, 4vw, 48px);
-  padding-block: clamp(1rem, 3vw, 2rem) clamp(3rem, 8vw, 5rem);
+  padding-inline: clamp(16px, calc(4 * var(--vw)), 48px);
+  padding-block: clamp(1rem, calc(3 * var(--vw)), 2rem) clamp(3rem, calc(8 * var(--vw)), 5rem);
   display: grid;
   grid-template-columns: 12.5rem minmax(0, 1fr);
   gap: 0 3rem;
@@ -232,7 +236,7 @@
 .nk-head {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 1rem clamp(1.5rem, 4vw, 3rem);
+  gap: 1rem clamp(1.5rem, calc(4 * var(--vw)), 3rem);
   align-items: start;
 }
 .nk-meta {
@@ -250,7 +254,7 @@
   color: var(--nk-orange-on-black);
 }
 .nk-head h3 {
-  font-size: clamp(1.45rem, 2.6vw, 2rem);
+  font-size: clamp(1.45rem, calc(2.6 * var(--vw)), 2rem);
   font-weight: 500;
   line-height: 1.12;
   letter-spacing: -0.03em;
@@ -363,7 +367,7 @@
 /* the same type scale and spacing as the shared case-file cover (src/app/case-file.css, .cf-cover), so every project's cover matches */
 .nk-cover {
   gap: 0;
-  padding-block: clamp(1.75rem, 4.2vw, 3rem);
+  padding-block: clamp(1.75rem, calc(4.2 * var(--vw)), 3rem);
 }
 .nk-client {
   display: flex;
@@ -380,16 +384,16 @@
 }
 .nk-cover h1 {
   max-width: 10em;
-  margin-top: clamp(1rem, 2.2vw, 1.5rem);
-  font-size: clamp(2.25rem, 5vw, 4rem);
+  margin-top: clamp(1rem, calc(2.2 * var(--vw)), 1.5rem);
+  font-size: clamp(2.25rem, calc(5 * var(--vw)), 4rem);
   font-weight: 600;
   line-height: 0.96;
   letter-spacing: -0.045em;
 }
 .nk-lede {
   max-width: 40ch;
-  margin-top: clamp(0.75rem, 1.6vw, 1.1rem);
-  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  margin-top: clamp(0.75rem, calc(1.6 * var(--vw)), 1.1rem);
+  font-size: clamp(1.0625rem, calc(1.6 * var(--vw)), 1.25rem);
   font-weight: 400;
   line-height: 1.4;
   letter-spacing: -0.01em;
@@ -399,8 +403,8 @@
 .nk-facts {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  gap: 1rem clamp(1.25rem, 3vw, 2.5rem);
-  margin-top: clamp(1.75rem, 4vw, 2.75rem);
+  gap: 1rem clamp(1.25rem, calc(3 * var(--vw)), 2.5rem);
+  margin-top: clamp(1.75rem, calc(4 * var(--vw)), 2.75rem);
   padding-top: 1rem;
   border-top: 1px solid var(--nk-on-orange);
 }
@@ -426,7 +430,7 @@
   flex-wrap: wrap;
   gap: 0.5rem 0.9rem;
   align-items: center;
-  margin-top: clamp(1rem, 2vw, 1.4rem);
+  margin-top: clamp(1rem, calc(2 * var(--vw)), 1.4rem);
 }
 .nk-chips p {
   font: 400 0.75rem/1 var(--mono);
@@ -454,11 +458,11 @@
 .nk-rec {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: clamp(1.5rem, 5vw, 3.5rem);
+  gap: clamp(1.5rem, calc(5 * var(--vw)), 3.5rem);
   align-items: center;
 }
 .nk-rec h2 {
-  font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+  font-size: clamp(1.7rem, calc(3.4 * var(--vw)), 2.4rem);
   font-weight: 500;
   line-height: 1.05;
   letter-spacing: -0.035em;
@@ -469,7 +473,7 @@
 /* A device frame around the recording: the video keeps its own size and ratio, with nothing cropped. */
 .nk-phone {
   position: relative;
-  width: min(17.5rem, 68vw);
+  width: min(17.5rem, calc(68 * var(--vw)));
   padding: 2.4rem 0.6rem 2.6rem;
   border-radius: 2.5rem;
   background: #1d1c1a;
@@ -788,18 +792,18 @@
   grid-template-columns: auto minmax(0, 1fr);
   align-items: end;
   gap: 1rem 2rem;
-  margin-top: clamp(1.5rem, 4vw, 3rem);
-  padding-block: clamp(1.25rem, 3vw, 2rem);
+  margin-top: clamp(1.5rem, calc(4 * var(--vw)), 3rem);
+  padding-block: clamp(1.25rem, calc(3 * var(--vw)), 2rem);
 }
 .nk-opener .nk-num {
-  font-size: clamp(4.5rem, 13vw, 9rem);
+  font-size: clamp(4.5rem, calc(13 * var(--vw)), 9rem);
   font-weight: 600;
   line-height: 0.78;
   letter-spacing: -0.07em;
   font-variant-numeric: tabular-nums;
 }
 .nk-opener h2 {
-  font-size: clamp(2rem, 5vw, 3.4rem);
+  font-size: clamp(2rem, calc(5 * var(--vw)), 3.4rem);
   line-height: 0.95;
   letter-spacing: -0.05em;
 }
@@ -854,8 +858,8 @@
   display: grid;
   grid-template-rows: minmax(0, 1fr);
   place-items: center;
-  height: clamp(17rem, 42vw, 24rem);
-  padding: clamp(2.5rem, 5vw, 3.25rem) clamp(1rem, 4vw, 3rem);
+  height: clamp(17rem, calc(42 * var(--vw)), 24rem);
+  padding: clamp(2.5rem, calc(5 * var(--vw)), 3.25rem) clamp(1rem, calc(4 * var(--vw)), 3rem);
 }
 .nk-spec-img {
   display: grid;
@@ -907,7 +911,7 @@
   gap: 1.25rem;
   align-items: flex-end;
   justify-content: center;
-  padding: clamp(1.25rem, 4vw, 2.5rem);
+  padding: clamp(1.25rem, calc(4 * var(--vw)), 2.5rem);
 }
 .nk-comps figure {
   gap: 0.5rem;
@@ -931,7 +935,7 @@
 /* 01.2: the posters as a strip on the grain, swiped sideways, the next one showing at the edge */
 .nk-posters {
   position: relative;
-  padding: clamp(1.25rem, 3vw, 2rem) 0 clamp(1.25rem, 3vw, 2rem) clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(1.25rem, calc(3 * var(--vw)), 2rem) 0 clamp(1.25rem, calc(3 * var(--vw)), 2rem) clamp(1.25rem, calc(3 * var(--vw)), 2rem);
   overflow: hidden;
 }
 .nk-strip {
@@ -944,7 +948,7 @@
   display: flex;
   gap: 1rem;
   height: 100%;
-  padding-right: clamp(1.25rem, 3vw, 2rem);
+  padding-right: clamp(1.25rem, calc(3 * var(--vw)), 2rem);
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
@@ -960,7 +964,7 @@
 }
 .nk-strip-track li {
   flex: none;
-  width: min(17rem, 62vw);
+  width: min(17rem, calc(62 * var(--vw)));
   scroll-snap-align: start;
 }
 .nk-strip-track img {
@@ -974,7 +978,7 @@
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
-  padding-right: clamp(1.25rem, 3vw, 2rem);
+  padding-right: clamp(1.25rem, calc(3 * var(--vw)), 2rem);
 }
 .nk-strip-nav button {
   display: grid;
@@ -1013,14 +1017,14 @@
   display: grid;
   gap: 1rem;
   place-items: center;
-  padding: clamp(1.25rem, 4vw, 2.75rem);
+  padding: clamp(1.25rem, calc(4 * var(--vw)), 2.75rem);
   border-radius: var(--nk-r-in);
   background: var(--nk-orange);
   color: var(--nk-on-orange);
 }
 .nk-retouch {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(0.75rem, 3vw, 2rem);
+  gap: clamp(0.75rem, calc(3 * var(--vw)), 2rem);
   place-items: center;
 }
 .nk-compare {
@@ -1105,7 +1109,7 @@
 .nk-pair {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(1rem, 4vw, 2.5rem);
+  gap: clamp(1rem, calc(4 * var(--vw)), 2.5rem);
   align-items: end;
   width: min(100%, 44rem);
 }
@@ -1302,7 +1306,7 @@
 .nk-clip {
   position: fixed;
   z-index: 50;
-  width: min(15rem, 72vw);
+  width: min(15rem, calc(72 * var(--vw)));
   padding: 0.5rem;
   border-radius: 1.1rem;
   background: var(--nk-black);
@@ -1603,10 +1607,10 @@
 .nk-rank {
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(1rem, 4vw, 2.5rem);
+  gap: clamp(1rem, calc(4 * var(--vw)), 2.5rem);
   align-items: center;
   justify-content: center;
-  padding: clamp(1.25rem, 4vw, 2.5rem);
+  padding: clamp(1.25rem, calc(4 * var(--vw)), 2.5rem);
   border-radius: var(--nk-r-in);
   background: var(--nk-tint);
 }
@@ -1633,7 +1637,7 @@
 }
 .nk-big {
   max-width: 16ch;
-  font-size: clamp(2.4rem, 6vw, 4.6rem) !important;
+  font-size: clamp(2.4rem, calc(6 * var(--vw)), 4.6rem) !important;
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.035em;
@@ -1734,7 +1738,7 @@
   color: var(--nk-dim);
 }
 .nk-next a {
-  font-size: clamp(1.5rem, 3.4vw, 2.3rem);
+  font-size: clamp(1.5rem, calc(3.4 * var(--vw)), 2.3rem);
   font-weight: 600;
   letter-spacing: -0.035em;
   text-decoration: none;
@@ -1758,11 +1762,11 @@
 }
 
 /*
- * One card, one screen (tablets and up, when the window is tall enough): every card is the same height,
+ * One card, one screen (tablets and up, on the artboard in tokens.css): every card is the same height,
  * and its evidence scales into the space left under the text. Images keep their own ratio: they are
  * limited by max-height and max-width together, never given both a width and a height.
  */
-@media (min-width: 761px) and (min-height: 620px) {
+@media (min-width: 761px) {
   .nk {
     --nk-card-h: var(--card-h);
   }
@@ -2023,12 +2027,12 @@
     max-height: 100%;
   }
 }
-@media (min-width: 1180px) and (min-height: 680px) {
+@media (min-width: 761px) {
   /* side layout: text left, evidence right */
   .nk-sheet.is-side {
     grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
     grid-template-rows: minmax(0, 1fr);
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    gap: clamp(1.5rem, calc(3 * var(--vw)), 2.5rem);
   }
   .is-side .nk-head {
     grid-template-columns: minmax(0, 1fr);
@@ -2056,14 +2060,14 @@
     grid-template-columns: auto auto;
   }
 }
-/* short windows: tighter text so the evidence keeps its space */
-@media (min-width: 761px) and (min-height: 620px) and (max-height: 968px) {
+/* the artboard's type (tokens.css): tighter text so the evidence keeps its space */
+@media (min-width: 761px) {
   .nk-sheet.is-card {
     font-size: 0.9375rem;
     line-height: 1.55;
   }
   .nk-head h3 {
-    font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+    font-size: clamp(1.35rem, calc(2.2 * var(--vw)), 1.7rem);
   }
   .nk-body {
     gap: 0.6rem;
@@ -2104,8 +2108,8 @@
     position: sticky;
     top: 0;
     z-index: 20;
-    margin: 0 calc(-1 * clamp(16px, 4vw, 48px)) 1rem;
-    padding: 0.6rem clamp(16px, 4vw, 48px);
+    margin: 0 calc(-1 * clamp(16px, calc(4 * var(--vw)), 48px)) 1rem;
+    padding: 0.6rem clamp(16px, calc(4 * var(--vw)), 48px);
     overflow-x: auto;
     border-bottom: 1px solid var(--nk-rule);
     background: color-mix(in srgb, var(--studio) 92%, transparent);
