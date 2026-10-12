@@ -44,16 +44,15 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 
 | # | id | Heading (the claim) | Caps | ux | engineer | web | Evidence | Gaps |
 |---|---|---|---|---|---|---|---|---|
-| | | **Part 1 · From one product to five** | | | | | | |
-| 01.1 | `drift` | Five products, drifting from the first | C | in | in | · | Drawn: the first product, then the four new ones on the same tokens, each with its own radii, buttons, type and spacing | |
-| 01.2 | `three-layers` | One shared package under every product | C B | · | lead | in | Diagram: shared package → one product's overrides → a customer's colour, font and button shape | |
-| | | **Part 2 · Figma and code** | | | | | | |
-| 02.1 | `figma-to-code` | From a Figma library to shared code | C B | in | in | lead | Rebuilt Figma: component sets, variables (Light / Dark), beside the same components as code | |
-| | | **Part 3 · Accessibility built into the colours** | | | | | | |
-| 03.1 | `roles` | Components ask for a role, not a colour | C E | in | in | in | Colour specimens: six hues × five steps, each step labelled with its job (surface, border, charts, text on white, text on tint) | |
-| 03.2 | `fixed-lightness` | The same lightness on every hue | E | in | in | in | Numbers set large: 30 of 30 text pairings pass AA in both modes; lowest 5.16:1 | |
-| 03.3 | `dark` | Dark mode designed step by step | E D | in | · | in | The specimen with a Light / Dark switch: borders lose chroma so they don't glow, text steps get lighter | |
-| 03.4 | `customer-colour` | Readable with any customer's colour | D E B | lead | in | in | The signature module on one state: pale yellow, "Passed through" / "Derived" switch, ratios shown | `[the fix ships]` |
+| | | **Part 1 · One system for five products** | | | | | | |
+| 01.1 | `drift` | Five products, drifting from the first | C | in | in | · | Drawn: the first product, then the four later ones on the same tokens, each with its own radii, buttons, type and spacing | |
+| 01.2 | `figma-to-code` | From a Figma library to shared code | C B | in | in | lead | Rebuilt Figma (component sets, variables Light / Dark) beside the same components as code | |
+| 01.3 | `three-layers` | Three layers: shared, product, customer | C B | · | lead | in | Diagram: shared package → one product's overrides → a customer's colour, font and button shape | |
+| | | **Part 2 · Accessibility built into the colours** | | | | | | |
+| 02.1 | `roles` | Components ask for a role, not a colour | C E | in | in | in | Colour specimens: six hues × five steps, each step labelled with its job | |
+| 02.2 | `fixed-lightness` | The same lightness on every hue | E | in | in | in | Numbers set large: 30 of 30 · 5.16:1 lowest · 2 modes | |
+| 02.3 | `dark` | Dark mode designed step by step | E D | in | · | in | The specimens with a Light / Dark switch | |
+| 02.4 | `customer-colour` | Readable with any customer's colour | D E B | lead | in | in | The signature module on pale yellow, "Passed through" / "Derived" switch, ratios shown | `[the fix ships]` |
 | | | **Close** | | | | | | |
 | — | `outcome` | `[step 4]` | C | in | in | · | Statement card: results by part, role in full (no numbers: what happened) | |
 
