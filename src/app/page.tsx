@@ -6,7 +6,8 @@ import { sheetEvidence } from "@/components/SheetEvidence";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { buildCardIndex, cardKey } from "@/lib/cards";
-import { slideHasMedia } from "@/lib/projector";
+import { assetExists } from "@/lib/assets";
+import { slideHasMedia, thumbCandidates } from "@/lib/projector";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -24,6 +25,17 @@ function slideMedia(): Record<string, ReactNode> {
   for (const p of projects)
     for (const [i, s] of p.sections.entries())
       if (s.media && (p.template === "case-file" || slideHasMedia(s.media))) out[cardKey(p.slug, s.id)] = sheetEvidence(p, s, i);
+  return out;
+}
+
+/** A picture for each section's story card: the first of its evidence images that exists. */
+function storyThumbs(): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const p of projects)
+    for (const s of p.sections) {
+      const a = thumbCandidates(s.media).find((x) => assetExists(x));
+      if (a) out[cardKey(p.slug, s.id)] = `/assets/${a}`;
+    }
   return out;
 }
 
@@ -50,6 +62,7 @@ export default function Home() {
         <Projector
           cards={buildCardIndex()}
           media={slideMedia()}
+          thumbs={storyThumbs()}
           questions={suggestedQuestions}
           name={profile.name}
           location={profile.location}

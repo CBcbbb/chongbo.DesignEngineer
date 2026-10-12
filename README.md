@@ -1,6 +1,6 @@
 # Chongbo Ning — Design Engineer
 
-The portfolio of Chongbo Ning, a design engineer in London. The home page is a conversation staged on a slide projector: put a card in it (four questions a recruiter might ask, or a blank one to write on or paste a job description into), press the red button, and the room goes dark while the parts of my work that answer it are projected, one slide per project. Every project is also a case file you can read without asking anything.
+The portfolio of Chongbo Ning, a design engineer in London. The home page is a conversation staged on a slide projector: put a card in it (four questions a recruiter might ask, or a blank one to write on or paste a job description into), press the red button, and the room goes dark: we move in on the machine while it works out the answer, and the parts of my work that answer it come into focus on the wall as a row of story cards, each opening into its full slide. Every project is also a case file you can read without asking anything.
 
 - `/` — the projector (`?type=serif` shows the display type in Instrument Serif, for review)
 - `/ask?brief=…&topics=a,b` (or the older `?q=…`) — the same answer, server-rendered (works without JavaScript; shareable; `noindex`)

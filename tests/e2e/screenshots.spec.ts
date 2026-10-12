@@ -24,7 +24,7 @@ for (const s of SIZES) {
     await page.screenshot({ path: `${OUT}/home-idle-${s.name}.png`, fullPage: true });
     await projectAccessibility(page);
     await page.screenshot({ path: `${OUT}/home-accessibility-${s.name}.png`, fullPage: true });
-    await page.locator(".pj-wall").screenshot({ path: `${OUT}/slides-${s.name}.png` });
+    await page.locator(".pj-area").screenshot({ path: `${OUT}/slides-${s.name}.png` });
     await page.goto("/work/hhcd-data-platform#dual-view");
     await page.waitForTimeout(500);
     await page.screenshot({ path: `${OUT}/case-rail-${s.name}.png` });

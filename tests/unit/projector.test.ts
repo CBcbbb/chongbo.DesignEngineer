@@ -3,7 +3,7 @@ import { projects, suggestedQuestions } from "@content";
 import { fallbackAnswer } from "@/lib/ask/fallback";
 import { AskRequestSchema } from "@/lib/ask/schema";
 import { buildCardIndex, cardKey } from "@/lib/cards";
-import { beamPolygon, quoteCard, slideHasMedia } from "@/lib/projector";
+import { BEAM, beamPlacement, beamPolygon, firstSentence, quoteCard, slideHasMedia, storyPose, thumbCandidates } from "@/lib/projector";
 
 describe("the cards in the hand", () => {
   it("are the four suggested questions, each short enough for one line on a card", () => {
@@ -53,5 +53,38 @@ describe("the beam", () => {
     const pts = beamPolygon({ x: 600, y: 300 }, slide);
     expect(pts).toHaveLength(4);
     expect(pts).not.toContainEqual({ x: 600, y: 300 });
+  });
+});
+
+describe("the row of story cards", () => {
+  it("lights the active card and turns the others away, out of the light two places off", () => {
+    const on = storyPose(1, 1);
+    expect(on).toMatchObject({ rel: 0, scale: 1, rotate: -0, opacity: 1 });
+    const right = storyPose(2, 1);
+    expect(right.rotate).toBeLessThan(0);
+    expect(right.opacity).toBeLessThan(1);
+    expect(storyPose(0, 1).rotate).toBeGreaterThan(0);
+    expect(storyPose(4, 1).opacity).toBe(0);
+    // dragging half a card moves every pose by half a place
+    expect(storyPose(1, 1, -0.5).rel).toBe(-0.5);
+  });
+
+  it("finds a picture for a card from its evidence, and an excerpt when there is none", () => {
+    expect(thumbCandidates({ kind: "video", asset: "a.mp4", alt: "", need: "", ratio: "16:10", poster: "a.jpg" })).toEqual(["a.jpg"]);
+    expect(thumbCandidates({ kind: "code", language: "ts", code: "" })).toEqual([]);
+    expect(firstSentence(["One thing. Then another."])).toBe("One thing.");
+    expect(firstSentence(["No full stop"])).toBe("No full stop");
+  });
+});
+
+describe("the beam photograph", () => {
+  it("puts its apex on the lens", () => {
+    const lens = { x: 400, y: 700 };
+    const p = beamPlacement(lens, { x: 900, y: 400 }, 400);
+    const s = p.width / BEAM.w;
+    expect(p.left + BEAM.apex.x * s).toBeCloseTo(lens.x);
+    expect(p.top + BEAM.apex.y * s).toBeCloseTo(lens.y);
+    // its length is the distance from the lens to the target
+    expect(Math.hypot(BEAM.end.x - BEAM.apex.x, BEAM.end.y - BEAM.apex.y) * s).toBeCloseTo(Math.hypot(500, 300));
   });
 });

@@ -66,3 +66,75 @@ export function beamPolygon(lens: Point, slide: Box): Point[] {
   }
   return [...lower.slice(0, -1), ...upper.slice(0, -1)];
 }
+
+/**
+ * Pictures that could stand for a section on its story card, best first (the caller keeps the first that exists):
+ * an image, a video's poster, the first side of a comparison, the first image of a group.
+ */
+export function thumbCandidates(media: Media | undefined): string[] {
+  if (!media) return [];
+  switch (media.kind) {
+    case "image":
+      return [media.asset];
+    case "video":
+      return media.poster ? [media.poster] : [];
+    case "compare":
+    case "toggle":
+      return [media.a.asset, media.b.asset];
+    case "group":
+      return media.items.map((i) => i.asset);
+    default:
+      return [];
+  }
+}
+
+/** The first sentence of a section's body: the excerpt on a story card without a picture. */
+export function firstSentence(body: readonly string[]): string {
+  const t = (body[0] ?? "").trim();
+  const m = t.match(/^.+?[.!?](?=\s|$)/);
+  return m ? m[0] : t;
+}
+
+/**
+ * Where each story card stands in the carousel, relative to the one in the light (`rel` 0). Cards either side turn
+ * towards it, shrink and dim, and anything two or more places away is out of the light. `drag` is a fraction of a
+ * place, while a finger or the pointer is moving the row.
+ */
+export function storyPose(i: number, active: number, drag = 0) {
+  const rel = i - active + drag;
+  const d = Math.abs(rel);
+  const near = Math.max(0, 1 - Math.min(d, 1));
+  return {
+    rel,
+    scale: 0.8 + 0.2 * near,
+    rotate: -26 * Math.max(-1, Math.min(1, rel)),
+    opacity: d >= 2.2 ? 0 : Math.max(0, 1 - 0.45 * d),
+    bright: 0.62 + 0.38 * near,
+    z: Math.round(20 - d * 5),
+  };
+}
+
+/** The beam photograph (public/projector/beam.webp, 1536 × 1024): where the light leaves the lens, where it lands. */
+export const BEAM = { w: 1536, apex: { x: 229, y: 691 }, end: { x: 1500, y: 430 }, endWidth: 307 } as const;
+
+/**
+ * Places the beam photograph so its apex sits on the lens and its far end covers the target (a box on the wall):
+ * returns the image's left, top and width, and a transform about the apex.
+ */
+export function beamPlacement(lens: Point, target: Point, targetHeight: number) {
+  const bx = BEAM.end.x - BEAM.apex.x;
+  const by = BEAM.end.y - BEAM.apex.y;
+  const base = Math.hypot(bx, by);
+  const a0 = Math.atan2(by, bx);
+  const dist = Math.hypot(target.x - lens.x, target.y - lens.y);
+  const s = dist / base;
+  const phi = Math.atan2(target.y - lens.y, target.x - lens.x);
+  const k = Math.max(0.6, Math.min(3.2, targetHeight / (BEAM.endWidth * s)));
+  return {
+    left: lens.x - BEAM.apex.x * s,
+    top: lens.y - BEAM.apex.y * s,
+    width: BEAM.w * s,
+    origin: `${BEAM.apex.x * s}px ${BEAM.apex.y * s}px`,
+    transform: `rotate(${phi}rad) scale(1, ${k}) rotate(${-a0}rad)`,
+  };
+}

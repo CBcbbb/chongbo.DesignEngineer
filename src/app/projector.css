@@ -79,7 +79,6 @@ body:has(.pj) {
 .pj {
   --strip: 46px;
   --cw: 372px;
-  --mw-dark: 204px;
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
@@ -564,21 +563,19 @@ body:has(.pj) {
   color: var(--ink-2);
 }
 
-/* reading: the hand rests */
-.pj[data-phase="reading"] .pj-hand,
-.pj[data-phase="reading"] .pj-intro {
-  opacity: 0.55;
-  transition: opacity 0.4s;
+/* ---------- the dark room ----------
+ * We move in on the machine: it becomes the close, slightly soft foreground in the bottom-left corner, its lens lit,
+ * and the beam (public/projector/beam.webp, aimed in JS) reaches the wall. The wall fills the window under the header.
+ */
+.pj {
+  --bar: 68px;
+  --mw: clamp(520px, 62vw, 1000px);
+  --ch: min(52vh, 450px);
+  --cwid: calc(var(--ch) * 0.7527);
+  --cx: 7vw;
 }
-
-/* ---------- the dark room ---------- */
-.pj[data-phase="dark"] {
-  grid-template-columns: var(--mw-dark) minmax(0, 1fr);
-  grid-template-areas: none;
-  grid-template-rows: auto auto auto;
-  column-gap: clamp(28px, 3.4vw, 48px);
-  align-content: start;
-  padding-top: clamp(4px, 2vh, 24px);
+:root[data-room="dark"] {
+  overflow: hidden;
 }
 /* the page's title stays for screen readers */
 .pj[data-phase="dark"] .pj-intro {
@@ -590,101 +587,619 @@ body:has(.pj) {
   white-space: nowrap;
 }
 .pj[data-phase="dark"] .pj-hand,
-.pj[data-phase="dark"] .pj-all {
+.pj[data-phase="dark"] .pj-all,
+.pj[data-phase="dark"] .pj-status,
+.pj[data-phase="dark"] .pj-note {
   display: none;
 }
 .pj[data-phase="dark"] .pj-stage {
-  grid-area: auto;
-  grid-column: 1;
-  grid-row: 2;
-  align-self: end;
-  justify-self: stretch;
+  position: fixed;
+  z-index: 30;
+  width: var(--mw);
   max-width: none;
-  margin-bottom: 8px;
+  left: calc(var(--mw) * -0.4);
+  bottom: calc(var(--mw) * -0.07);
+  margin: 0;
+  pointer-events: none;
 }
+.pj[data-phase="dark"] .pj-machine::before {
+  opacity: 0;
+}
+/* the foreground: a little soft, and darker away from the lens */
 .pj[data-phase="dark"] .pj-photo,
 .pj[data-phase="dark"] .pj-mag,
 .pj[data-phase="dark"] .pj-plate,
 .pj[data-phase="dark"] .pj-go-label {
-  filter: brightness(0.52) saturate(0.8) sepia(0.12);
+  filter: brightness(0.78) saturate(0.9) blur(1.1px);
 }
-.pj[data-phase="dark"] .pj-machine::before {
-  opacity: 0.5;
+.pj[data-phase="dark"] .pj-machine {
+  /* it melts into the dark away from the lens */
+  -webkit-mask-image: radial-gradient(115% 120% at 96% 48%, #000 42%, rgba(0, 0, 0, 0.55) 66%, transparent 92%);
+  mask-image: radial-gradient(115% 120% at 96% 48%, #000 42%, rgba(0, 0, 0, 0.55) 66%, transparent 92%);
 }
-.pj[data-phase="dark"] .pj-status {
-  margin-top: 16px;
-  color: var(--on-dark-room-2);
+/* a slide open: the focus moves to the wall, the machine goes softer */
+.pj[data-phase="dark"]:has(.pj-wall[data-open]) .pj-photo {
+  filter: brightness(0.6) saturate(0.85) blur(3.5px);
 }
-.pj[data-phase="dark"] .pj-note {
-  display: none;
-}
-
-.pj-beam {
+.pj-photo-on {
   position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 1;
-  pointer-events: none;
+  inset: 0;
   opacity: 0;
-  mix-blend-mode: screen;
-  transition: opacity 0.8s ease;
+  transition:
+    opacity 0.7s ease,
+    filter 0.9s ease;
 }
-.pj[data-lens="on"] .pj-beam {
+.pj[data-lens="on"] .pj-photo-on {
   opacity: 1;
 }
 
+.pj-beam {
+  position: fixed;
+  z-index: 15;
+  max-width: none;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  /* the light thins out before it reaches the wall, so the photograph's rounded end never shows */
+  -webkit-mask-image: linear-gradient(to right, #000 48%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
+  mask-image: linear-gradient(to right, #000 48%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
+}
+.pj[data-beam="on"] .pj-beam {
+  opacity: 0.92;
+  animation: pj-beam-breathe 5s ease-in-out infinite;
+}
+@keyframes pj-beam-breathe {
+  50% {
+    opacity: 0.8;
+  }
+}
+
 .pj-wall {
-  grid-column: 2;
-  grid-row: 1 / span 3;
+  position: fixed;
+  z-index: 20;
+  inset: var(--bar) 0 0 0;
   display: grid;
-  grid-template-rows: subgrid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  padding: clamp(4px, 1.5vh, 16px) max(clamp(16px, 4vw, 48px), calc((100vw - 1200px) / 2 + 48px)) clamp(16px, 3vh, 28px);
+  color: var(--on-dark-room);
+  pointer-events: none;
+}
+.pj-wall > * {
+  pointer-events: auto;
+}
+/* an open slide is read in front of everything, the machine included */
+.pj-wall[data-open] {
+  z-index: 35;
+}
+
+/* the head: the steps while it thinks, then the answer in the same place */
+.pj-wallhead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 16px;
+  min-height: 132px;
+}
+.pj-steps,
+.pj-answer {
+  grid-area: 1 / 1;
+}
+.pj-steps {
+  display: grid;
+  gap: 13px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  font: 500 14px / 1.3 var(--sans);
+  letter-spacing: -0.005em;
+  transition:
+    opacity 0.45s ease,
+    visibility 0.45s;
+}
+.pj-steps[data-done] {
+  opacity: 0;
+  visibility: hidden;
+}
+.pj-steps li {
   position: relative;
-  z-index: 2;
+  padding-left: 28px;
+  color: var(--on-dark-room-2);
+  transition: color 0.4s ease;
+}
+.pj-steps li::before {
+  /* the step's dot */
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 3px;
+  width: 11px;
+  height: 11px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  box-sizing: border-box;
+  transition:
+    background-color 0.4s,
+    box-shadow 0.4s,
+    border-color 0.4s;
+}
+.pj-steps li:not(:last-child)::after {
+  /* the thread between the dots */
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 17px;
+  width: 1px;
+  height: calc(100% - 4px);
+  background: currentColor;
+  opacity: 0.35;
+}
+.pj-steps li[data-state="now"] {
   color: var(--on-dark-room);
 }
-.pj-wallhead {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 8px 24px;
-  margin-bottom: clamp(18px, 3vh, 30px);
+.pj-steps li[data-state="now"]::before {
+  border-color: #fff;
+  background: #fff;
+  box-shadow: 0 0 10px 2px rgba(255, 236, 205, 0.55);
+  animation: pj-pulse 1.4s ease-in-out infinite;
 }
-.pj-wallhead h2 {
+.pj-steps li[data-state="done"]::before {
+  background: var(--on-dark-room-2);
+  border-color: var(--on-dark-room-2);
+}
+@keyframes pj-pulse {
+  50% {
+    box-shadow: 0 0 4px 1px rgba(255, 236, 205, 0.25);
+  }
+}
+.pj-answer {
+  animation: pj-rise 0.6s var(--ease-out) 0.2s backwards;
+}
+@keyframes pj-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.pj-eyebrow {
+  margin: 0 0 8px;
+  font: 500 12px / 1.4 var(--mono);
+  letter-spacing: 0.02em;
+  color: var(--on-dark-room-2);
+}
+.pj-answer h2 {
   margin: 0;
-  font: 600 clamp(22px, 2.3vw, 30px) / 1.15 var(--sans);
+  max-width: 26ch;
+  font: 600 clamp(22px, 2.2vw, 28px) / 1.12 var(--sans);
   letter-spacing: -0.03em;
   color: var(--on-dark-room);
 }
 /* the heading receives focus after projecting so the answer is read first; it is not a control, so no ring */
-.pj-wallhead h2:focus,
-.pj-wallhead h2:focus-visible {
+.pj-answer h2:focus,
+.pj-answer h2:focus-visible {
   outline: none;
 }
-.pj-quote {
-  margin: 0;
-  max-width: 48ch;
-  font: 400 13px / 1.5 var(--mono);
+.pj-quote,
+.pj-missing,
+.pj-prov {
+  margin: 8px 0 0;
+  max-width: 72ch;
+  font: 400 12.5px / 1.5 var(--mono);
   color: var(--on-dark-room-2);
 }
-
-/* the slides: one lit at a time, all the same size */
-.pj-screen {
-  display: grid;
-  touch-action: pan-y;
-  /* room for the glow round the slide */
-  margin: 4px 0 0;
+.pj-missing {
+  color: var(--on-dark-room);
 }
+.pj-prov {
+  margin-top: 2px;
+}
+.pj-count {
+  margin: 4px 0 0;
+  font: 500 12.5px var(--mono);
+  color: var(--on-dark-room-2);
+  animation: pj-rise 0.6s var(--ease-out) 0.35s backwards;
+}
+
+/* the wall: where the light lands */
+.pj-area {
+  position: relative;
+  min-height: 0;
+}
+.pj-area::before {
+  /* light spilling on the wall round the card in the light */
+  content: "";
+  position: absolute;
+  left: calc(50% + var(--cx));
+  top: 50%;
+  width: calc(var(--cwid) * 3.2);
+  height: calc(var(--ch) * 1.7);
+  translate: -50% -50%;
+  background: radial-gradient(closest-side, rgba(255, 210, 150, 0.12), rgba(255, 210, 150, 0));
+  pointer-events: none;
+}
+.pj-aim,
+.pj-patch {
+  position: absolute;
+  left: calc(50% + var(--cx));
+  top: 50%;
+  width: var(--cwid);
+  height: var(--ch);
+  translate: -50% -50%;
+  pointer-events: none;
+}
+.pj-aim {
+  visibility: hidden;
+}
+/* the light on the wall before it is in focus */
+.pj-patch {
+  background: url(/projector/story.webp) center / 100% 100% no-repeat;
+  filter: blur(22px);
+  opacity: 0;
+  animation:
+    pj-patch-in 1.1s ease-out 1.3s forwards,
+    pj-patch-breathe 2.6s ease-in-out 2.4s infinite;
+}
+@keyframes pj-patch-in {
+  to {
+    opacity: 0.62;
+  }
+}
+@keyframes pj-patch-breathe {
+  0%,
+  100% {
+    opacity: 0.62;
+  }
+  50% {
+    opacity: 0.48;
+  }
+}
+
+/* the row of story cards: the one in the light faces us; the others turn away into the dark */
+.pj-row {
+  position: absolute;
+  inset: 0;
+  perspective: 1300px;
+  touch-action: pan-y;
+  user-select: none;
+}
+.pj-story {
+  position: absolute;
+  left: calc(50% + var(--cx));
+  top: 50%;
+  width: var(--cwid);
+  height: var(--ch);
+  padding: 0;
+  border: 0;
+  background: url(/projector/story.webp) center / 100% 100% no-repeat;
+  color: var(--slide-ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  opacity: var(--o);
+  filter: brightness(var(--b));
+  transform: translate(-50%, -50%) translateX(calc(var(--rel) * var(--cwid) * 0.9)) scale(var(--scale)) rotateY(var(--rot));
+  transition:
+    transform 0.65s var(--ease-out),
+    opacity 0.5s ease,
+    filter 0.5s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.pj-row[data-dragging] .pj-story {
+  transition: none;
+}
+.pj-wall[data-open] .pj-story {
+  opacity: calc(var(--o) * 0.14);
+  filter: brightness(0.5) blur(2px);
+}
+.pj-story:focus-visible {
+  outline: none;
+}
+.pj-story:focus-visible .pj-story-face {
+  outline: 2px solid var(--slide-ink);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.pj-story-glow {
+  /* the bright edge of the card in the light (public/projector/story-glow.webp) */
+  position: absolute;
+  inset: 0;
+  background: url(/projector/story-glow.webp) center / 100% 100% no-repeat;
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.pj-story[data-current] .pj-story-glow {
+  opacity: 0.3;
+}
+.pj-story[data-current]:hover .pj-story-glow,
+.pj-story[data-current]:focus-visible .pj-story-glow {
+  opacity: 0.65;
+}
+.pj-story-face {
+  position: absolute;
+  inset: 3.9% 5.1%;
+  display: flex;
+  flex-direction: column;
+  padding: 9% 8.5% 8%;
+  container-type: inline-size;
+}
+.pj-story-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font: 500 max(10.5px, 3.6cqi) / 1.3 var(--mono);
+  color: var(--slide-dim);
+}
+.pj-story-top .pj-why {
+  gap: 6px;
+}
+.pj-story-top .pj-why::before {
+  width: 6px;
+  height: 6px;
+}
+.pj-story-pic {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  margin-top: 9%;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgba(60, 45, 30, 0.08);
+}
+.pj-story-pic img {
+  object-fit: cover;
+  /* projected: the picture takes the light's warmth */
+  mix-blend-mode: multiply;
+  filter: sepia(0.12) contrast(0.97);
+}
+.pj-story-excerpt {
+  display: -webkit-box;
+  margin-top: 10%;
+  overflow: hidden;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  font: 400 max(13px, 5.6cqi) / 1.45 var(--sans);
+  color: var(--slide-body);
+}
+.pj-story-title {
+  display: block;
+  margin-top: 10%;
+  font: 600 max(16px, 7.4cqi) / 1.15 var(--sans);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.pj-story-proj {
+  display: block;
+  margin-top: 6px;
+  font: 500 max(11px, 3.9cqi) / 1.3 var(--mono);
+  color: var(--slide-dim);
+}
+.pj-story-open {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: auto;
+  font: 600 max(12.5px, 4.6cqi) var(--sans);
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s var(--ease-out);
+}
+.pj-story[data-current] .pj-story-open {
+  opacity: 1;
+  transform: none;
+}
+.pj-story-open span {
+  transition: translate 0.25s var(--ease-out);
+}
+.pj-story[data-current]:hover .pj-story-open span {
+  translate: 3px 0;
+}
+
+/* the open slide: it grows out of its card */
+.pj-open {
+  position: absolute;
+  z-index: 25;
+  inset: 0 0 0 clamp(0px, 14vw, 240px);
+  width: min(1000px, calc(100% - clamp(0px, 14vw, 240px)));
+  height: fit-content;
+  max-height: 100%;
+  margin: auto;
+}
+.pj-slide-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  margin: 0 -8px;
+  padding: 0 8px;
+}
+.pj-back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  margin: -8px 0 -8px -2px;
+  padding: 0 2px;
+  border: 0;
+  background: none;
+  color: var(--slide-ink);
+  font: 500 13px var(--sans);
+  cursor: pointer;
+}
+.pj-back:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.pj-back:focus-visible,
+.pj-next:focus-visible {
+  outline: 2px solid var(--slide-ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.pj-why-open {
+  margin: 0 0 12px;
+  font: 500 12px / 1.4 var(--mono);
+  color: var(--slide-dim);
+}
+.pj-slide-title:focus {
+  outline: none;
+}
+.pj-slide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 22px;
+  margin-top: 22px;
+}
+.pj-slide-actions .pj-full {
+  margin-top: 0;
+}
+.pj-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--slide-ink);
+  font: 500 14px var(--sans);
+  cursor: pointer;
+}
+.pj-next span {
+  transition: translate 0.25s var(--ease-out);
+}
+.pj-next:hover span {
+  translate: 3px 0;
+}
+
+/* the foot: turn the row, and the way back */
+.pj-foot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding-top: 10px;
+  animation: pj-rise 0.6s var(--ease-out) 0.5s backwards;
+}
+.pj-foot .pj-pager {
+  grid-column: 2;
+  translate: var(--cx) 0;
+}
+.pj-foot .pj-again {
+  grid-column: 3;
+  justify-self: end;
+}
+.pj-pager {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pj-arrow,
+.pj-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border: 1px solid var(--dark-room-line);
+  border-radius: 999px;
+  background: rgba(15, 14, 13, 0.35);
+  color: var(--on-dark-room);
+  font: 500 14px var(--sans);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    opacity 0.2s;
+}
+.pj-arrow {
+  width: 44px;
+  font-size: 17px;
+}
+.pj-arrow:hover:not(:disabled),
+.pj-btn:hover {
+  border-color: var(--on-dark-room-2);
+}
+.pj-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.pj-dots {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pj-dots button {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.pj-dots button::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--on-dark-room-2);
+  opacity: 0.55;
+  transition:
+    opacity 0.2s,
+    width 0.3s var(--ease-out),
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+.pj-dots button:hover::before {
+  opacity: 1;
+}
+.pj-dots button[aria-current]::before {
+  width: 16px;
+  border-radius: 3px;
+  opacity: 1;
+  background: var(--light);
+  box-shadow: 0 0 8px 1px rgba(255, 217, 163, 0.55);
+}
+.pj-again {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.pj-btn {
+  padding: 0 20px;
+}
+.pj-btn-on {
+  background: var(--on-dark-room);
+  border-color: var(--on-dark-room);
+  color: var(--dark-room);
+}
+.pj-btn-on:hover {
+  background: #fff;
+  border-color: #fff;
+}
+.pj-wall :focus-visible {
+  outline-color: var(--on-dark-room);
+}
+
+/* ---------- the slide (the open story, and the 404) ---------- */
 .pj-slide {
   --bi: 110px;
   --bo: 73px;
-  grid-area: 1 / 1;
   position: relative;
   isolation: isolate;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: clamp(30px, 3.4vw, 46px) clamp(30px, 3.8vw, 52px) clamp(30px, 3.4vw, 44px);
+  padding: clamp(26px, 3vw, 40px) clamp(28px, 3.6vw, 48px) clamp(26px, 3vw, 38px);
   border-radius: 14px;
   background: var(--slide);
   color: var(--slide-ink);
@@ -699,12 +1214,10 @@ body:has(.pj) {
   border-image: url(/projector/slide.webp) 220 fill / var(--bi) / var(--bo) stretch;
   pointer-events: none;
 }
-.pj-slide:not([data-current]) {
-  visibility: hidden;
-}
 .pj-slide-top {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 16px;
   font: 500 12px / 1.4 var(--mono);
   letter-spacing: 0.02em;
@@ -718,6 +1231,7 @@ body:has(.pj) {
 }
 .pj-why::before {
   content: "";
+  flex: none;
   width: 7px;
   height: 7px;
   border-radius: 50%;
@@ -725,16 +1239,14 @@ body:has(.pj) {
   box-shadow: 0 0 6px 1px rgba(240, 122, 43, 0.45);
 }
 .pj-slide-main {
-  flex: 1;
   display: grid;
   grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
   gap: clamp(24px, 3vw, 44px);
   align-items: center;
-  margin-top: clamp(16px, 2.6vh, 26px);
+  margin-top: clamp(14px, 2.4vh, 24px);
 }
 .pj-slide.is-text .pj-slide-main {
   grid-template-columns: minmax(0, 1fr);
-  align-items: center;
 }
 .pj-slide-text {
   display: flex;
@@ -745,13 +1257,13 @@ body:has(.pj) {
 .pj-slide-title {
   margin: 0 0 14px;
   max-width: 20ch;
-  font: 600 clamp(24px, 2.5vw, 34px) / 1.08 var(--sans);
+  font: 600 clamp(24px, 2.4vw, 32px) / 1.08 var(--sans);
   letter-spacing: -0.035em;
   text-wrap: balance;
 }
 .pj-slide.is-text .pj-slide-title {
   max-width: 24ch;
-  font-size: clamp(28px, 3.2vw, 42px);
+  font-size: clamp(28px, 3vw, 40px);
 }
 .pj-slide-text p {
   margin: 0;
@@ -760,12 +1272,19 @@ body:has(.pj) {
   line-height: 1.55;
   color: var(--slide-body);
 }
-.pj-slide.is-text .pj-slide-text p {
+.pj-slide-text p.pj-why-open {
+  font: 500 12px / 1.4 var(--mono);
+  color: var(--slide-dim);
+}
+.pj-slide.is-text .pj-slide-text p:not(.pj-why-open) {
   max-width: 62ch;
   font-size: 17px;
 }
 .pj-slide-text p + p {
   margin-top: 0.7em;
+}
+.pj-slide-text p.pj-why-open + h3 + p {
+  margin-top: 0;
 }
 .pj-tags {
   display: flex;
@@ -810,15 +1329,6 @@ body:has(.pj) {
 .pj-slide-media {
   min-width: 0;
 }
-@media (min-width: 1000px) {
-  /* tall evidence (a table of colour specimens, say) scrolls inside the slide rather than stretching every slide */
-  .pj-slide-media {
-    max-height: min(54vh, 470px);
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
-  }
-}
 .pj-slide-media figure {
   margin: 0;
 }
@@ -827,159 +1337,6 @@ body:has(.pj) {
 }
 .pj-slide-media .slot-ph {
   background: rgba(255, 255, 255, 0.35);
-}
-
-/* under the slide: pager, what's missing, who chose, and the way back */
-.pj-under {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: clamp(16px, 2.6vh, 26px);
-}
-.pj-under > p:first-of-type {
-  margin-top: 6px;
-}
-.pj-controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px 24px;
-}
-.pj-pager {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.pj-arrow,
-.pj-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  border: 1px solid var(--dark-room-line);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--on-dark-room);
-  font: 500 14px var(--sans);
-  text-decoration: none;
-  cursor: pointer;
-  transition:
-    background-color 0.2s,
-    border-color 0.2s,
-    opacity 0.2s;
-}
-.pj-arrow {
-  width: 44px;
-  font-size: 17px;
-}
-.pj-arrow:hover:not(:disabled),
-.pj-btn:hover {
-  border-color: var(--on-dark-room-2);
-}
-.pj-arrow:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-.pj-count {
-  min-width: 7ch;
-  text-align: center;
-  font: 500 13px var(--mono);
-  color: var(--on-dark-room);
-}
-.pj-dots {
-  display: flex;
-  margin: 0 0 0 4px;
-  padding: 0;
-  list-style: none;
-}
-.pj-dots button {
-  display: grid;
-  place-items: center;
-  width: 24px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-.pj-dots button::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--on-dark-room-2);
-  opacity: 0.55;
-  transition:
-    opacity 0.2s,
-    background-color 0.2s,
-    box-shadow 0.2s;
-}
-.pj-dots button:hover::before {
-  opacity: 1;
-}
-.pj-dots button[aria-current]::before {
-  opacity: 1;
-  background: var(--light);
-  box-shadow: 0 0 8px 1px rgba(255, 217, 163, 0.6);
-}
-.pj-missing,
-.pj-prov {
-  margin: 0;
-  font: 400 12.5px / 1.5 var(--mono);
-  color: var(--on-dark-room-2);
-}
-.pj-missing {
-  color: var(--on-dark-room);
-}
-.pj-again {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.pj-btn {
-  padding: 0 20px;
-}
-.pj-btn-on {
-  background: var(--on-dark-room);
-  border-color: var(--on-dark-room);
-  color: var(--dark-room);
-}
-.pj-btn-on:hover {
-  background: #fff;
-  border-color: #fff;
-}
-.pj-wall :focus-visible {
-  outline-color: var(--on-dark-room);
-}
-
-@media (min-width: 1000px) and (max-height: 860px) {
-  .pj-wallhead {
-    margin-bottom: 16px;
-  }
-  .pj-slide {
-    padding: 28px 40px 28px;
-  }
-  .pj-slide-main {
-    margin-top: 12px;
-  }
-  .pj-slide-title {
-    margin-bottom: 10px;
-    font-size: clamp(22px, 2.2vw, 28px);
-  }
-  .pj-slide.is-text .pj-slide-title {
-    font-size: clamp(26px, 2.6vw, 34px);
-  }
-  .pj-slide-text p {
-    font-size: 14.5px;
-    line-height: 1.5;
-  }
-  .pj-full {
-    margin-top: 16px;
-  }
-  .pj-slide-media video {
-    max-height: 340px;
-  }
 }
 
 /* the review switch: ?type=serif sets the display type in Instrument Serif */
@@ -996,16 +1353,17 @@ body:has(.pj) {
   top: 3.3cqi;
   font: 400 3.7cqi / 1.35 var(--mono);
 }
-.pj[data-type="serif"] .pj-wallhead h2 {
-  font: 400 clamp(28px, 3vw, 40px) / 1.05 var(--font-serif), Georgia, serif;
+.pj[data-type="serif"] .pj-answer h2 {
+  font: 400 clamp(28px, 2.9vw, 38px) / 1.05 var(--font-serif), Georgia, serif;
+  letter-spacing: -0.01em;
+}
+.pj[data-type="serif"] .pj-story-title {
+  font: 400 max(20px, 9.4cqi) / 1.05 var(--font-serif), Georgia, serif;
   letter-spacing: -0.01em;
 }
 .pj[data-type="serif"] .pj-slide-title {
-  font: 400 clamp(30px, 3.1vw, 44px) / 1.02 var(--font-serif), Georgia, serif;
+  font: 400 clamp(30px, 3vw, 42px) / 1.02 var(--font-serif), Georgia, serif;
   letter-spacing: -0.015em;
-}
-.pj[data-type="serif"] .pj-slide.is-text .pj-slide-title {
-  font-size: clamp(34px, 3.8vw, 52px);
 }
 
 /* ---------- tablets and phones ---------- */
@@ -1019,6 +1377,7 @@ body:has(.pj) {
       "all";
     grid-template-rows: none;
     min-height: 0;
+    --cx: 0px;
   }
   .pj-h1 {
     max-width: 13ch;
@@ -1036,49 +1395,88 @@ body:has(.pj) {
   .pj-all {
     justify-self: center;
   }
-
-  .pj[data-phase="dark"] {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto auto auto auto;
-  }
-  .pj[data-phase="dark"] .pj-wall {
-    grid-column: 1;
-    grid-row: 1 / span 3;
-  }
-  .pj[data-phase="dark"] .pj-stage {
-    grid-column: 1;
-    grid-row: 4;
-    justify-self: center;
-    width: min(var(--mw-dark), 60%);
-    margin: 36px 0 0;
-  }
   .pj-slide-main {
     grid-template-columns: minmax(0, 1fr);
   }
   .pj-slide-media {
     order: -1;
   }
+  .pj-open {
+    inset: 0;
+    width: 100%;
+  }
+  .pj-foot .pj-pager {
+    translate: none;
+  }
 }
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .pj {
     --strip: 44px;
-    --mw-dark: 190px;
+    --mw: 420px;
+    --ch: min(46vh, 380px);
   }
   .pj-lede {
     font-size: 16px;
   }
+  /* on a phone the machine sits lower and smaller, and the wall keeps clear of it */
+  .pj[data-phase="dark"] .pj-stage {
+    left: calc(var(--mw) * -0.46);
+    bottom: calc(var(--mw) * -0.09);
+  }
+  .pj-wall {
+    padding-bottom: 150px;
+  }
+  .pj-wallhead {
+    min-height: 112px;
+  }
+  .pj-steps {
+    gap: 11px;
+    font-size: 13.5px;
+  }
+  .pj-answer h2 {
+    font-size: 21px;
+  }
+  .pj-quote,
+  .pj-prov {
+    display: none;
+  }
+  .pj-foot {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 6px;
+  }
+  .pj-foot .pj-pager,
+  .pj-foot .pj-again {
+    grid-column: 1;
+    justify-self: center;
+  }
   .pj-slide {
     --bi: 70px;
     --bo: 46px;
-    padding: 26px 22px 24px;
+    padding: 22px 20px 20px;
     border-radius: 9px;
   }
   .pj-slide-top {
-    flex-direction: column;
-    gap: 4px;
+    flex-wrap: wrap;
+    gap: 4px 12px;
   }
   .pj-slide-text p {
     font-size: 15px;
+  }
+}
+@media (min-width: 1000px) and (max-height: 820px) {
+  .pj {
+    --ch: min(50vh, 400px);
+  }
+  .pj-wallhead {
+    min-height: 116px;
+  }
+  .pj-slide-title {
+    font-size: clamp(22px, 2.2vw, 28px);
+  }
+  .pj-slide-text p {
+    font-size: 14.5px;
+    line-height: 1.5;
   }
 }
 
@@ -1118,4 +1516,9 @@ body:has(.pj) {
   font: 500 14px var(--sans);
   color: var(--slide-ink);
   text-underline-offset: 4px;
+}
+
+/* the dark room fills the window: the footer waits until the lights are up */
+:root[data-room="dark"] .foot {
+  visibility: hidden;
 }

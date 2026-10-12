@@ -57,11 +57,19 @@ test.describe("the projector", () => {
     await expect(title).toBeFocused();
     await expect(page.getByRole("status")).toContainText("One project shows accessibility.");
     await expect(page.locator("html")).toHaveAttribute("data-room", "dark");
-    const slide = page.locator(".pj-slide[data-current]");
-    await expect(slide).toHaveCount(1);
-    await expect(slide).toContainText("Accessibility – keyboard navigation");
-    await expect(slide.locator(".pj-full")).toHaveAttribute("href", "/work/hhcd-data-platform#keyboard");
+    const story = page.locator(".pj-story[data-current]");
+    await expect(story).toHaveCount(1);
+    await expect(story).toContainText("Accessibility – keyboard navigation");
     await expect(page.locator(".pj-quote")).toContainText(A11Y);
+    // The card in the light opens as the full slide, with the way to its place in the case file.
+    await story.click();
+    const open = page.locator(".pj-open");
+    await expect(open).toBeVisible();
+    await expect(open.locator("#pj-open-title")).toBeFocused();
+    await expect(open.locator(".pj-full")).toHaveAttribute("href", "/work/hhcd-data-platform#keyboard");
+    await page.getByRole("button", { name: "Back to the selection" }).click();
+    await expect(open).toHaveCount(0);
+    await expect(story).toBeFocused();
     // Change the card: the lights come up and the card comes back to the hand.
     await page.getByRole("button", { name: "Change the card" }).click();
     await expect(page.locator("#r-title")).toHaveCount(0);
@@ -93,7 +101,7 @@ test.describe("the projector", () => {
     await expect(second).toHaveAttribute("aria-pressed", "false");
   });
 
-  test("keyboard only: write on the blank card, Enter, the answer is focused, Tab reaches the slide's link", async ({ page }) => {
+  test("keyboard only: write on the blank card, Enter, the answer is focused, Enter opens the story, Tab reaches its link", async ({ page }) => {
     await page.goto("/");
     for (let i = 0; i < 20; i++) {
       await page.keyboard.press("Tab");
@@ -106,7 +114,11 @@ test.describe("the projector", () => {
     await page.keyboard.press("Enter");
     await expect(page.locator("#r-title")).toBeFocused({ timeout: 10_000 });
     await page.keyboard.press("Tab");
-    await expect(page.locator(":focus")).toHaveText(/Full project/);
+    await expect(page.locator(":focus")).toHaveClass(/pj-story/);
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#pj-open-title")).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(page.locator(":focus")).toHaveText(/Open full project/);
     const href = await page.locator(":focus").getAttribute("href");
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(new RegExp(`${href!.replace(/[#/]/g, "\\$&")}$`));
@@ -114,19 +126,28 @@ test.describe("the projector", () => {
     await expect(page.locator('a[aria-current="step"]')).toHaveCount(1);
   });
 
-  test("arrow keys move along the slides; Escape brings the lights up", async ({ page }) => {
+  test("arrow keys turn the row of stories; Escape closes a story, then brings the lights up", async ({ page }) => {
     await page.goto("/");
     await projectCard(page, "Show me something you built end to end.");
-    await expect(page.locator(".pj-count")).toHaveText("01 / 03");
+    const current = page.locator(".pj-story[data-current]");
+    await expect(page.locator(".pj-count")).toHaveText("3 stories");
+    await expect(current).toHaveAttribute("aria-label", /^1 of 3/);
     await page.keyboard.press("ArrowRight");
-    await expect(page.locator(".pj-count")).toHaveText("02 / 03");
-    await expect(page.getByRole("status")).toContainText("Slide 2 of 3");
-    // The slides that aren't lit are out of reach.
-    await expect(page.locator(".pj-slide:not([data-current])").first()).toHaveAttribute("aria-hidden", "true");
-    await page.waitForTimeout(500);
+    await expect(current).toHaveAttribute("aria-label", /^2 of 3/);
+    await expect(page.getByRole("status")).toContainText("Story 2 of 3");
+    // Only the card in the light is in the tab order.
+    await expect(page.locator(".pj-story:not([data-current])").first()).toHaveAttribute("tabindex", "-1");
     await page.keyboard.press("ArrowLeft");
-    await expect(page.locator(".pj-count")).toHaveText("01 / 03");
+    await expect(current).toHaveAttribute("aria-label", /^1 of 3/);
+    await current.click();
+    await expect(page.locator(".pj-open")).toBeVisible();
+    await page.waitForTimeout(800);
+    await page.keyboard.press("ArrowRight");
+    await expect(page.locator(".pj-open .pj-slide-top")).toContainText("02 / 03");
     await page.waitForTimeout(500);
+    await page.keyboard.press("Escape");
+    await expect(page.locator(".pj-open")).toHaveCount(0);
+    await page.waitForTimeout(300);
     await page.keyboard.press("Escape");
     await expect(page.locator("#r-title")).toHaveCount(0);
   });
@@ -141,22 +162,23 @@ test.describe("the projector", () => {
     await expect(page.locator("#r-title")).toHaveCount(0);
   });
 
-  test("every slide is readable in full, with a link to its place in the case file", async ({ page }) => {
+  test("every story opens in full, with a link to its place in the case file", async ({ page }) => {
     await page.goto("/");
     await projectCard(page, "Show me something you built end to end.");
-    const n = await page.locator(".pj-slide").count();
+    const n = await page.locator(".pj-story").count();
     expect(n).toBeGreaterThan(1);
+    await page.locator(".pj-story[data-current]").click();
     for (let i = 0; i < n; i++) {
-      const slide = page.locator(".pj-slide[data-current]");
-      await expect(slide.locator(".pj-slide-title")).toBeVisible();
-      await expect(slide.locator(".pj-full")).toHaveAttribute("href", /^\/work\/[a-z-]+#[a-z-]+$/);
+      const open = page.locator(".pj-open");
+      await expect(open.locator(".pj-slide-title")).toBeVisible();
+      await expect(open.locator(".pj-slide-top")).toContainText(`0${i + 1} / 0${n}`);
+      await expect(open.locator(".pj-full")).toHaveAttribute("href", /^\/work\/[a-z-]+#[a-z-]+$/);
       if (i < n - 1) {
-        await page.getByRole("button", { name: "Next slide" }).click();
-        await expect(page.locator(".pj-count")).toHaveText(new RegExp(`^0${i + 2} /`));
-        await page.waitForTimeout(450);
+        await page.getByRole("button", { name: /^Next story/ }).first().click();
+        await page.waitForTimeout(600);
       }
     }
-    await expect(page.getByRole("button", { name: "Next slide" })).toBeDisabled();
+    await expect(page.locator(".pj-open .pj-next")).toHaveCount(0);
   });
 
   test("missing capabilities are named", async ({ page }) => {
