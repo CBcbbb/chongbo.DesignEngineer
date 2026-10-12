@@ -46,7 +46,7 @@ Customers apply their own colour, font and button shape on top.
 
 I built the system in Figma first, starting from the main product's shadcn components: colour variables with Light and Dark modes, and components with their variants and states.
 
-I now build the product directly in code with AI coding tools, so Figma is where ideas are tried, not where they're specified. With the library in place, a sketch already uses the system's colours and parts when it reaches code.
+I've since moved to building the product directly in code with AI coding tools. With the library in place, a sketch already uses the system's colours and parts when it reaches code.
 
 I keep the library to its foundations and leave the polish to the code.
 
