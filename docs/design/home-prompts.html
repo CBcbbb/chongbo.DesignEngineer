@@ -201,29 +201,54 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
     sugg.innerHTML = left.map((l) => `<li><button type="button" data-id="${l.id}">${esc(l.text)}</button></li>`).join("");
     const long = ta.value.length > JD_LONG;
     sugg.hidden = busy || long || !left.length;
-    foot.hidden = busy || ta.value.trim().length > 0;
+    foot.style.visibility = busy || ta.value.trim().length > 0 ? "hidden" : "";
   }
 
   /** Types the change: backspaces to where old and new agree, then types the rest. */
   async function typeTo(next) {
     const cur = ta.value;
     if (reduced()) { ta.value = next; return sync(); }
+    typing = true;
     let i = 0;
     while (i < cur.length && i < next.length && cur[i] === next[i]) i++;
     for (let k = cur.length; k > i; k = Math.max(i, k - 4)) { ta.value = cur.slice(0, k); sync(); await sleep(6); }
     for (let k = i; k < next.length; k += 2) { ta.value = next.slice(0, k); sync(); await sleep(14); }
     ta.value = next;
+    typing = false;
     sync();
   }
 
+  /**
+   * The paper's text area is kept as tall as the longest sentence any remaining ending could make,
+   * so hovering an ending (and previewing it) never changes the paper's height or moves the printer.
+   */
+  function reserved() {
+    const m = $("mirror");
+    let h = ta.scrollHeight;
+    const left = LINES.filter((l) => !picked.includes(l.id));
+    if (busy || ta.value.length > JD_LONG || !left.length) return h;
+    const keep = { hidden: m.hidden, html: m.innerHTML };
+    m.hidden = false;
+    m.style.visibility = "hidden";
+    for (const l of left) { m.textContent = nextFor(l.id); h = Math.max(h, m.offsetHeight); }
+    m.hidden = keep.hidden;
+    m.innerHTML = keep.html;
+    m.style.visibility = "";
+    return h;
+  }
+
+  let typing = false;
   function sync() {
     field.classList.toggle("on", ta.value.length > 0 || document.activeElement === ta);
-    ta.style.height = "auto";
-    const shown = field.classList.contains("previewing") ? Math.max(ta.scrollHeight, $("mirror").offsetHeight) : ta.scrollHeight;
-    ta.style.height = `${shown}px`;
     machine.dataset.state = busy ? "working" : ta.value.trim() ? "ready" : "idle";
-    foot.hidden = busy || ta.value.trim().length > 0;
+    foot.style.visibility = busy || ta.value.trim().length > 0 ? "hidden" : "";
     sugg.hidden = busy || ta.value.length > JD_LONG || picked.length === LINES.length;
+    if (field.classList.contains("previewing")) return; // a preview never changes the layout
+    const before = ta.offsetHeight;
+    ta.style.height = "auto";
+    // while an ending is being typed, the paper only grows, so it never bobs
+    const h = typing ? Math.max(before, ta.scrollHeight) : reserved();
+    ta.style.height = `${h}px`;
     stage.style.setProperty("--pm", `${box.offsetHeight}px`);
   }
 
