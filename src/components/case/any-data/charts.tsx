@@ -329,11 +329,10 @@ export function Swatch({ role }: { role: RoleKey }) {
   return <i className="ad-sw" data-role={role} aria-hidden="true" />;
 }
 
-export function Axes({ mapping, roles = ["category", "value", "period"] }: { mapping: Record<RoleKey, string>; roles?: RoleKey[] }): ReactNode {
+export function Axes({ mapping, roles = ["category", "value"] }: { mapping: Record<RoleKey, string>; roles?: RoleKey[] }): ReactNode {
   return (
     <p className="ad-axes">
       {roles
-        .filter((r) => r !== "period" || mapping.period)
         .map((r) => (
           <span key={r}>
             <Swatch role={r} />

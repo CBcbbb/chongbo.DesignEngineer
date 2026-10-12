@@ -7,7 +7,7 @@ export type FieldType = "text" | "number" | "date";
 export type Field = { name: string; type: FieldType };
 export type Cell = string | number;
 export type Stream = { id: string; name: string; rows: number; fields: Field[] | null; data: Cell[][] };
-export type RoleKey = "category" | "value" | "period";
+export type RoleKey = "category" | "value";
 export type Role = { key: RoleKey; type: FieldType; required: boolean };
 export type Confidence = "exact" | "known" | "close" | "manual";
 export type Mapping = Record<RoleKey, string>;
@@ -18,7 +18,6 @@ export type Datum = { k: string; v: number };
 export const ROLES: Role[] = [
   { key: "category", type: "text", required: true },
   { key: "value", type: "number", required: true },
-  { key: "period", type: "date", required: false },
 ];
 
 export const STREAMS: Stream[] = [
@@ -108,14 +107,13 @@ export const SAMPLE: Stream = {
   fields: [
     { name: "category", type: "text" },
     { name: "value", type: "number" },
-    { name: "period", type: "date" },
   ],
   data: [
-    ["Category A", 48, "2026-01-01"],
-    ["Category B", 36, "2026-01-01"],
-    ["Category C", 29, "2026-01-01"],
-    ["Category D", 18, "2026-01-01"],
-    ["Category E", 11, "2026-01-01"],
+    ["Category A", 48],
+    ["Category B", 36],
+    ["Category C", 29],
+    ["Category D", 18],
+    ["Category E", 11],
   ],
 };
 
@@ -133,19 +131,14 @@ const VOCAB: Record<RoleKey, { exact: string[]; known: string[]; close: RegExp }
     known: ["deliveries", "parcels", "qty", "quantity", "count", "items"],
     close: /(num|total|cnt|vol|units)/i,
   },
-  period: {
-    exact: ["period", "date", "day"],
-    known: ["delivered_on", "delivery_date", "arrival_date"],
-    close: /(date|_at$|_ts$|time|_on$|day|week|month)/i,
-  },
 };
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 
 /** For each role, the best field of the right type and how sure the match is. One matcher for the picker and the panel. */
 export function suggest(fields: Field[]): { mapping: Mapping; confs: Confidences } {
   const used = new Set<string>();
-  const mapping = { category: "", value: "", period: "" } as Mapping;
-  const confs = { category: null, value: null, period: null } as Confidences;
+  const mapping = { category: "", value: "" } as Mapping;
+  const confs = { category: null, value: null } as Confidences;
   for (const r of ROLES) {
     const typed = fields.filter((f) => f.type === r.type && !used.has(f.name));
     const v = VOCAB[r.key];

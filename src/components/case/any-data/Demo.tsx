@@ -35,12 +35,12 @@ const KINDS = [
 function start(stream: Stream) {
   return stream.fields
     ? suggest(stream.fields)
-    : { mapping: { category: "", value: "", period: "" } as Mapping, confs: { category: null, value: null, period: null } as Confidences };
+    : { mapping: { category: "", value: "" } as Mapping, confs: { category: null, value: null } as Confidences };
 }
 
 /**
  * The work: the store's preview panel, rebuilt on invented data and laid out as a component inspector. The preview on
- * the left (chart type, the chart, the rows as they arrive); the settings on the right (the data source, ranked by
+ * the left (chart type, the chart, the rows as they arrive); the settings on the right (the data source, grouped by
  * fit, and one field per role of the contract). Native radios and selects, so it works fully by keyboard.
  */
 export function Demo() {
@@ -54,7 +54,7 @@ export function Demo() {
   const all = STREAMS;
   const isSample = srcId === "sample";
   const stream = isSample ? SAMPLE : all.find((s) => s.id === srcId)!;
-  const mapping: Mapping = isSample ? { category: "category", value: "value", period: "period" } : state.mapping;
+  const mapping: Mapping = isSample ? { category: "category", value: "value" } : state.mapping;
   const missing = stream.fields ? missingRoles(stream, mapping) : (["category", "value"] as RoleKey[]);
   const absent = stream.fields ? absentRoles(stream) : [];
 

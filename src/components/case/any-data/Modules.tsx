@@ -2,14 +2,14 @@
 
 import { useId, useState, type ReactNode } from "react";
 import { Chart, Empty, Swatch } from "./charts";
-import { absentRoles, fmt, missingRoles, ROLES, SAMPLE, streamById, suggest, totals, type Confidence, type Mapping, type RoleKey, type Stream } from "./data";
+import { absentRoles, fmt, missingRoles, ROLES, SAMPLE, streamById, suggest, totals, type Mapping, type RoleKey, type Stream } from "./data";
 import "./any-data.css";
 import "./cards.css";
 import "./compositions.css";
 
 /*
  * The case file's evidence, one module per card. One visual language throughout: a contract role is a colour
- * (violet category, orange value, green period), always with its name beside it, and a field that plays a role
+ * (violet category, orange value), always with its name beside it, and a field that plays a role
  * carries that role's colour wherever it appears. Each piece of evidence has one edge; the card is the canvas.
  */
 
@@ -77,15 +77,13 @@ const CONTRACT_CODE = `// A contract names the roles a component draws,
 // not the fields a stream happens to have.
 export const totalsByCategory = defineContract({
   id: "totals-by-category",
-  key: "category",
   roles: {
     category: { type: "text",   required: true },
     value:    { type: "number", required: true },
-    period:   { type: "date",   required: false },
   },
 });
 
-// Bar, pie, treemap and waterfall
+// Bar, donut, treemap and table
 // all declare the same contract.
 export const BarChart = component({
   contract: totalsByCategory,
@@ -105,15 +103,16 @@ function MiniBar() {
     </svg>
   );
 }
-function MiniPie() {
+function MiniDonut() {
   const sum = SAMPLE_V.reduce((a, b) => a + b, 0);
-  const R = 34, cx = 60, cy = 36;
+  const R = 34, r = 19, cx = 60, cy = 36;
   const starts = SAMPLE_V.reduce<number[]>((acc, v, i) => acc.concat(acc[i]! + (v / sum) * Math.PI * 2), [-Math.PI / 2]);
   return (
     <svg viewBox="0 0 120 72" aria-hidden="true">
       {SAMPLE_V.map((_, i) => {
         const a0 = starts[i]!, a1 = starts[i + 1]!;
-        const d = `M${cx},${cy} L${cx + R * Math.cos(a0)},${cy + R * Math.sin(a0)} A${R},${R} 0 ${a1 - a0 > Math.PI ? 1 : 0} 1 ${cx + R * Math.cos(a1)},${cy + R * Math.sin(a1)} Z`;
+        const big = a1 - a0 > Math.PI ? 1 : 0;
+        const d = `M${cx + R * Math.cos(a0)},${cy + R * Math.sin(a0)} A${R},${R} 0 ${big} 1 ${cx + R * Math.cos(a1)},${cy + R * Math.sin(a1)} L${cx + r * Math.cos(a1)},${cy + r * Math.sin(a1)} A${r},${r} 0 ${big} 0 ${cx + r * Math.cos(a0)},${cy + r * Math.sin(a0)} Z`;
         return <path key={i} d={d} fill={seq(i)} className="ac-mini-slice" />;
       })}
     </svg>
@@ -136,25 +135,26 @@ function MiniTree() {
     </svg>
   );
 }
-function MiniWaterfall() {
-  const total = SAMPLE_V.reduce((a, b) => a + b, 0);
-  const k = 64 / total;
-  const runs = SAMPLE_V.reduce<number[]>((acc, v, i) => acc.concat(acc[i]! + v), [0]);
+function MiniTable() {
+  const max = Math.max(...SAMPLE_V);
   return (
     <svg viewBox="0 0 120 72" aria-hidden="true">
-      <line x1="0" x2="120" y1="71.5" y2="71.5" className="ac-mini-base" />
       {SAMPLE_V.map((v, i) => (
-        <rect key={i} x={4 + i * 19} y={71 - runs[i + 1]! * k} width="14" height={v * k} rx="2" fill={seq(i)} />
+        <g key={i}>
+          <line x1="0" x2="120" y1={i * 14.4 + 14.2} y2={i * 14.4 + 14.2} className="ac-mini-base" />
+          <rect x="4" y={i * 14.4 + 4} width="8" height="6" rx="1.5" fill={seq(i)} />
+          <rect x="18" y={i * 14.4 + 5} width="44" height="4" rx="2" className="ac-mini-text" />
+          <rect x={116 - (v / max) * 34} y={i * 14.4 + 5} width={(v / max) * 34} height="4" rx="2" className="ac-mini-text" />
+        </g>
       ))}
-      <rect x={101} y={71 - total * k} width="14" height={total * k} rx="2" className="ac-mini-total" />
     </svg>
   );
 }
 const MINIS = [
   ["Bar", MiniBar],
-  ["Pie", MiniPie],
+  ["Donut", MiniDonut],
   ["Treemap", MiniTree],
-  ["Waterfall", MiniWaterfall],
+  ["Table", MiniTable],
 ] as const;
 
 export function Contract() {
@@ -225,7 +225,7 @@ export function Contract() {
 
 /* ---------- 01.3 one record, left to right through five layers; each role is a lane from the adapter to the chart ---------- */
 function PipeBars() {
-  const d = totals(streamById("courier"), { category: "town", value: "parcels", period: "" }).slice(0, 5);
+  const d = totals(streamById("courier"), { category: "town", value: "parcels" }).slice(0, 5);
   const max = Math.max(...d.map((x) => x.v));
   return (
     <div className="ac-hbars" role="img" aria-label={`Bar chart: ${d.map((x) => `${x.k} ${fmt(x.v)}`).join(", ")}`}>
@@ -242,9 +242,9 @@ function PipeBars() {
   );
 }
 
-const ROLE_KEYS: RoleKey[] = ["category", "value", "period"];
+const ROLE_KEYS: RoleKey[] = ["category", "value"];
 type Lane = [string, string];
-type Layer = { k: string; job: string; lanes?: [Lane, Lane, Lane]; whole?: ReactNode };
+type Layer = { k: string; job: string; lanes?: [Lane, Lane]; whole?: ReactNode };
 const LAYERS: Layer[] = [
   {
     k: "Producer",
@@ -263,7 +263,6 @@ const LAYERS: Layer[] = [
     lanes: [
       ["town", "Leeds"],
       ["parcels", "128"],
-      ["delivered_on", "2026-09-28"],
     ],
   },
   {
@@ -272,7 +271,6 @@ const LAYERS: Layer[] = [
     lanes: [
       ["category", "←\u00a0town"],
       ["value", "←\u00a0parcels"],
-      ["period", "←\u00a0delivered_on"],
     ],
   },
   {
@@ -281,7 +279,6 @@ const LAYERS: Layer[] = [
     lanes: [
       ["category", "text · required"],
       ["value", "number · required"],
-      ["period", "date"],
     ],
   },
   { k: "Component", job: "draws the roles", whole: <PipeBars /> },
@@ -321,12 +318,12 @@ export function Pipeline() {
           [
             ["Charts", "a stream"],
             ["Filters, search", "the page"],
-            ["Forms", "the user"],
+            ["Forms", "wait for the user"],
           ] as const
         ).map(([c, src]) => (
           <li key={c}>
             <strong>{c}</strong>
-            <span>read {src}</span>
+            <span>{src.startsWith("wait") ? src : `read ${src}`}</span>
           </li>
         ))}
       </ul>
@@ -338,8 +335,8 @@ export function Pipeline() {
 const BY_ROWS: [string, number][] = [
   ["telematics.pings", 412_880],
   ["gate_cameras.events", 96_210],
-  ["depot_b.scans", 26_708],
-  ["finance.ledger", 9_120],
+  ["north_depot.scans", 26_708],
+  ["finance.invoices", 9_120],
   ["driver_shifts.log", 4_455],
 ];
 const Tick = () => (
@@ -383,7 +380,7 @@ export function Fit() {
           <div className="ac-fit-group">
             <p className="ac-fit-g">Fits</p>
             <ol className="ac-fit-list">
-              {["courier_b.deliveries", "depot_b.scans"].map((n) => (
+              {["courier_app.deliveries", "north_depot.scans"].map((n) => (
                 <li key={n}>
                   <span className="ac-fit-name">{n}</span>
                   <span className="ac-fit-meta is-good">
@@ -399,19 +396,19 @@ export function Fit() {
             <ol className="ac-fit-list">
               {(
                 [
-                  ["returns.portal", 3],
-                  ["driver_shifts.log", 2],
+                  ["partner_carrier.feed", 1],
+                  ["driver_shifts.log", 1],
                 ] as const
               ).map(([n, k]) => (
                 <li key={n}>
                   <span className="ac-fit-name">{n}</span>
                   <span className="ac-fit-meta">
                     <i className="ac-fit-dots" aria-hidden="true">
-                      {[0, 1, 2, 3, 4].map((d) => (
+                      {[0, 1].map((d) => (
                         <b key={d} data-on={d < k ? "" : undefined} />
                       ))}
                     </i>
-                    {k} of 5 fields
+                    {k} of 2 fields
                   </span>
                 </li>
               ))}
@@ -458,14 +455,12 @@ function AxisSelect({
   role,
   stream,
   value,
-  conf,
   onPick,
   id,
 }: {
   role: RoleKey;
   stream: Stream;
   value: string;
-  conf: Confidence | null;
   onPick: (f: string) => void;
   id: string;
 }) {
@@ -486,16 +481,6 @@ function AxisSelect({
           ))}
         </select>
       </span>
-      {value && conf && (
-        <span className="ad-conf" data-c={conf}>
-          <i aria-hidden="true">
-            <b />
-            <b />
-            <b />
-          </i>
-          {conf === "manual" ? "your choice" : conf}
-        </span>
-      )}
     </span>
   );
 }
@@ -515,7 +500,7 @@ export function AxisPickers() {
   const missing = missingRoles(s, st.mapping);
   const base = useId();
   const ax = (role: RoleKey) => (
-    <AxisSelect role={role} id={`${base}-${role}`} stream={s} value={st.mapping[role]} conf={st.confs[role]} onPick={pick(role)} />
+    <AxisSelect role={role} id={`${base}-${role}`} stream={s} value={st.mapping[role]} onPick={pick(role)} />
   );
   return (
     <div className="ad ac-axis">
@@ -529,7 +514,6 @@ export function AxisPickers() {
       <div className="ad-panel ac-axis-card">
         <div className="ac-axis-head">
           <h4>Bar chart</h4>
-          {ax("period")}
         </div>
         <div className="ac-axis-y">{ax("value")}</div>
         <div className="ac-axis-plot" aria-live="polite">

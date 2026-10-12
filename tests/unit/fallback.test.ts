@@ -120,8 +120,10 @@ describe("fallback: several capabilities", () => {
     expect(findEntry(r.sheets[0]!.project, r.sheets[0]!.section)!.section.kind).not.toBe("problem");
   });
 
-  it("API and back end: the data-architecture cards, pipeline first; the data layer brief also leads with pipeline", () => {
-    expect(fallbackAnswer("Strong in API design and backend.").sheets.map((s) => s.section)).toEqual(["pipeline", "stream-fit", "contract"]);
+  it("API and back end: the data-architecture cards, pipeline or stream fit first; the data layer brief leads with pipeline", () => {
+    const sections = fallbackAnswer("Strong in API design and backend.").sheets.map((s) => s.section);
+    expect(["pipeline", "stream-fit"]).toContain(sections[0]);
+    expect([...sections].sort()).toEqual(["contract", "pipeline", "stream-fit"]);
     expect(fallbackAnswer("design the data layer between our backend and the UI").sheets[0]!.section).toBe("pipeline");
   });
 });

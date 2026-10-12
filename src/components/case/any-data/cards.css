@@ -279,8 +279,8 @@
   stroke: var(--ad-bg);
   stroke-width: 1.5;
 }
-.ac-mini-total {
-  fill: var(--ad-ink);
+.ac-mini-text {
+  fill: var(--ad-line);
 }
 .ac-sample {
   display: flex;
@@ -336,7 +336,7 @@
 .ac-flow {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1.05fr) minmax(0, 1.15fr) minmax(0, 1.25fr);
-  grid-template-rows: auto repeat(3, minmax(var(--lane-h), auto));
+  grid-template-rows: auto repeat(2, minmax(var(--lane-h), auto));
   margin: 0;
   padding: 0;
   list-style: none;

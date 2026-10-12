@@ -7,7 +7,7 @@ import type { Project } from "../schema";
  * Confidentiality (playbook §9): never name the employer, its products (the store's real name included), its
  * customers or its storage technology anywhere in this file, the case file's modules or the AI's knowledge. Every
  * stream, field and value on the page is invented. No progress: the copy says what the system does.
- * One term per thing: stream, field, role, contract, binding, adapter, store, template, component.
+ * One term per thing: stream, field, role, contract, binding, adapter, source system, store, component.
  */
 export const anyData: Project = {
   slug: "components-for-any-data",
@@ -16,7 +16,7 @@ export const anyData: Project = {
   context: "Logistics infrastructure company · current role",
   client: "Logistics infrastructure company",
   role: "Design Engineer",
-  roleSplit: [{ with: "solo", what: "Data model, interface, front end and server", note: "on my own" }],
+  roleSplit: [{ with: "solo", what: "Data model, interface, front end and server", note: "on my own, with Claude Code and Cursor" }],
   outcome:
     "One library serves every customer. Each component declares the shape of data it needs, and customers connect their own streams by choosing fields.",
   stack: ["React", "TypeScript", "Tailwind", "ECharts"],
@@ -46,8 +46,8 @@ export const anyData: Project = {
       layout: "stack",
       title: "Every customer's data has a different shape",
       body: [
-        "Customers build their own products on our platform, from our components. But each component showed the demo data written into its settings, and none could take a customer's real stream.",
-        "So I started from one question: what does a component need to know about the data it shows?",
+        "Customers build their own products on our platform, from our components, and preview them in the store first. But each component showed fixed values from its settings, and none could take a customer's own data stream. Each customer names and formats the same data differently.",
+        "So I started from two questions: what does a component need to know about its data, and where does that data come from?",
       ],
       signals: ["data", "design-eng-gap", "judgement"],
       capabilities: ["C"],
@@ -62,8 +62,8 @@ export const anyData: Project = {
       layout: "stack",
       title: "A component promises a shape, not field names",
       body: [
-        "I based the model on ECharts' dataset: a chart names the roles it draws, and each page maps its data onto them. A contract lists those roles, their types and which are required.",
-        "Contracts belong to the data, not to each component, so bar, pie, treemap and waterfall charts share one. Sample data fits the same contract, so a component explains itself before anything is connected.",
+        "I based the model on ECharts' dataset and encode: a chart type has fixed dimensions it draws, and encode maps the data's columns onto them. A contract adds what ECharts leaves out: each role's type, and which are required.",
+        "Each component declares one contract, and a stream can feed it once its fields map onto that contract's roles. Components that draw the same shape share one, so a bar chart, a donut, a treemap and a table all declare the same contract. Sample data fits it too, so a component explains itself before anything is connected.",
       ],
       signals: ["design-eng-gap", "data-architecture", "reusable-components", "design-systems"],
       capabilities: ["C", "B"],
@@ -79,9 +79,8 @@ export const anyData: Project = {
       surface: "dark",
       title: "One pipeline from stream to chart",
       body: [
-        "An adapter turns each producer's format into flat rows, a binding maps one slot's fields onto the contract's roles, and the component draws the roles. Components never subscribe to streams, and settings never carry data.",
-        "Not every component takes a stream: filters and search read the page, and forms wait for the user.",
-        "I wrote the front end and the server with Claude Code and Cursor.",
+        "An adapter turns each source system's format into flat rows, a binding maps the stream's fields onto the contract's roles, the contract checks their types, and the component draws the roles. Components never subscribe to streams, and settings hold configuration only, never data.",
+        "Charts and tables read a stream, filters and search read the page, and forms wait for the user.",
       ],
       signals: ["data-architecture", "design-eng-gap", "end-to-end", "ai-tools"],
       capabilities: ["B", "C"],
@@ -90,14 +89,14 @@ export const anyData: Project = {
     },
     {
       id: "stream-fit",
-      nav: "Ranked by fit",
+      nav: "Grouped by fit",
       kind: "decision",
       part: "interface",
       layout: "stack",
-      title: "Streams ranked by fit, judged on the server",
+      title: "Streams grouped by fit, judged on the server",
       body: [
         "The first answer was to list every stream in the organisation by row count. A test organisation already had 74, most didn't fit, and users found out after reading a stream's rows.",
-        "I grouped streams by fit instead: \"Fits\", then \"Partly fits · 3 of 5 fields\", then the rest, searchable. A stream record carries no field names, so one endpoint on the server judges fit, in two phases that never change the interface.",
+        "I designed the list to group streams by fit: \"Fits\", then \"Partly fits · 1 of 2 fields\", then Other, searchable. The browser can't judge fit, because a stream record carries no field names, so I designed one endpoint on the server to judge it: first from the newest entry, later from a stored field profile, with the same interface either way.",
       ],
       signals: ["data-architecture", "judgement", "end-to-end"],
       capabilities: ["B", "D"],
@@ -112,8 +111,8 @@ export const anyData: Project = {
       layout: "stack",
       title: "Each field picked like a chart axis",
       body: [
-        "The people connecting data aren't always engineers, so mapping can't read as configuration. Each role has a dropdown of the stream's fields, the way you pick a chart's axes.",
-        "The panel suggests a field for each role from aliases and industry terms (\"ccy\" for currency), and says how sure it is: exact, known or close. The picker and the panel share one matcher, so they never disagree.",
+        "The people connecting data aren't always engineers, so connecting fields can't feel like configuration. Each role has a dropdown of the stream's fields, the way you pick a chart's axes.",
+        "The store suggests a field for each role from aliases and industry terms. The stream list and the field suggestions share one matcher, so a stream marked \"Fits\" always fills its fields.",
       ],
       signals: ["motion-interaction", "prototyping", "data"],
       capabilities: ["D"],
@@ -129,9 +128,9 @@ export const anyData: Project = {
       surface: "dark",
       title: "Takeaway",
       body: [
-        "A preview problem turned out to be a data problem. Once each component declared its shape, the interface followed from it.",
-        "Every layer has one job, so a new data source needs a new adapter, and nothing else changes.",
-        "Each data decision came with the user behaviour it had to support, so the engineering and the interface were designed together.",
+        "The store couldn't preview a customer's data, which looked like an interface problem. The cause was in the data model, so I defined the shape each component needs before designing the panel.",
+        "A stream record carries no field names, so the browser can't tell which streams fit. Judging fit on the server lets users see what fits before they pick, however many streams there are.",
+        "Every layer has one job, so a new source system needs a new adapter, and nothing else changes.",
       ],
       signals: ["end-to-end", "judgement", "design-eng-gap"],
       capabilities: ["B", "C", "D"],

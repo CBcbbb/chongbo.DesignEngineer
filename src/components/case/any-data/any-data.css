@@ -1,7 +1,7 @@
 /*
  * Components for Any Data: the project's own evidence (playbook §7: the skeleton is shared, the art direction is not).
  * The product panels are rebuilt in the product's cool neutrals and blue; they follow the theme. Colour inside the work
- * means a contract role: violet = category, orange = value, green = period, always with the role's name beside it
+ * means a contract role: violet = category, orange = value, always with the role's name beside it
  * (validated all-pairs for colour-blind readers, light and dark). Each piece of evidence has one hairline edge.
  * The palette's shared tokens (accent, field, dark) are in src/app/case-palettes.css.
  */
@@ -163,7 +163,6 @@
 }
 [data-role="category"] { --sw: var(--ad-cat); }
 [data-role="value"] { --sw: var(--ad-val); }
-[data-role="period"] { --sw: var(--ad-per); }
 
 /* segmented control, as the product draws it: the chosen option filled in the product's blue */
 .ad-seg {
