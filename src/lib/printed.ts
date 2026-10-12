@@ -88,7 +88,7 @@ export function topicsToLabels(signals: readonly string[]): string[] {
 /** Under the results title: who chose the sheets, so the reader knows the words are mine. */
 export function provenanceLine(source: "model" | "fallback", count: number): string {
   if (!count) return "";
-  return source === "model" ? "Chosen by Claude from my case files. The words are mine." : "Matched by keyword from my case files.";
+  return source === "model" ? "Chosen by Claude from my case files. The words are mine." : "Picked from my case files.";
 }
 
 /**

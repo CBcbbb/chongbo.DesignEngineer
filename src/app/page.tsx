@@ -16,8 +16,11 @@ export default function Home() {
     url: SITE_URL,
     email: `mailto:${profile.contact.email}`,
     address: { "@type": "PostalAddress", addressLocality: profile.location, addressCountry: "GB" },
-    alumniOf: { "@type": "CollegeOrUniversity", name: "Royal College of Art" },
-    sameAs: [profile.contact.linkedin, profile.contact.github],
+    alumniOf: [
+      { "@type": "CollegeOrUniversity", name: "Royal College of Art" },
+      { "@type": "CollegeOrUniversity", name: "Tongji University" },
+    ],
+    sameAs: [profile.contact.linkedin],
     knowsAbout: ["Design engineering", "Design systems", "Accessibility", "React", "TypeScript", "Data visualisation"],
     workExample: projects.map((p) => ({ "@type": "CreativeWork", name: p.title, url: `${SITE_URL}/work/${p.slug}` })),
   };
@@ -28,11 +31,11 @@ export default function Home() {
       <main id="main" tabIndex={-1}>
         <p className="eyebrow">Printed to order</p>
         <h1 id="home-title" className="home-h1">
-          What skills are you looking for?
+          What are you looking for?
         </h1>
         <p className="home-intro">
-          <b>I&apos;m {profile.name}, a design engineer in {profile.location}.</b> Pick the skills your role needs, describe what
-          you&apos;re looking for, or paste the job description. The machine prints the parts of my work that match.
+          <b>I&apos;m Chongbo, a design engineer in {profile.location}.</b> Pick what your role needs, or paste the job description,
+          and my printer turns out the parts of my work that match.
         </p>
         <PrintedToOrder cards={buildCardIndex()} printed={printedCards(projects)} labelledBy="home-title" topics={shownTopics()} />
       </main>
