@@ -31,7 +31,7 @@ export const nike: Project = {
       title: "Redesigning the creative system first",
       body: [
         "Three volumes had shipped when I took over at VOL.4. The redesign covered the logo lock-up, typography, colour, framing devices and motion.",
-        "The framing device balances consistency with flexibility: it adds, removes or rearranges details to fit each headline, and takes its colour from each influencer's photos or products.",
+        "The framing device balances consistency with flexibility: it adds, removes or rearranges details to fit each headline.",
       ],
       signals: ["brand-storytelling", "design-systems", "reusable-components", "typography"],
       media: {
@@ -47,7 +47,7 @@ export const nike: Project = {
       kind: "evidence",
       title: "A unified visual style",
       body: [
-        "Each influencer gets a hero visual and a poster card, so readers know whose volume they're in.",
+        "Each influencer gets a hero visual and a poster card in one shared style, which still highlights their own character.",
       ],
       signals: ["brand-storytelling", "typography"],
       media: {
@@ -63,7 +63,7 @@ export const nike: Project = {
       kind: "evidence",
       title: "Retouched to one tone",
       body: [
-        "I gave every key photo tone correction, blemish removal and a flash-photography look.",
+        "To unify the visual tone and highlight the character of each featured influencer, I retouched key campaign images with tone correction, blemish removal, and flash-shooting vibe enhancement. These treatments aligned the visuals with Nike's core brand values of authenticity, energy, and youthfulness.",
       ],
       signals: ["brand-storytelling"],
       media: {
@@ -95,7 +95,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Reusable components, built for handover",
       body: [
-        "The earlier screens drifted in size, which made extra work for Nike's engineers. I audited every element, unified sizes, spacing and names, and rebuilt the screens in Figma with Auto Layout, and documented them. It cut the back-and-forth between design and engineering.",
+        "The earlier designs had no standardised component system, so sizes were inconsistent and Nike's engineers had extra work. I audited every UI element, unified sizes, spacing and naming, then rebuilt the interfaces in Figma with Auto Layout and reusable components. It reduced the back-and-forth between design and development.",
       ],
       signals: ["reusable-components", "design-systems", "design-eng-gap"],
       media: {
@@ -127,7 +127,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Products as part of the story",
       body: [
-        "The old product cards were small tiles under the photo. I redesigned the layout and enlarged the product visuals, to make each item more visible and give it a clear role in the content flow, so products are more noticeable and click-worthy.",
+        "I redesigned the product card layout by enlarging product visuals to increase visibility and emphasise their role in the content flow, making items more noticeable and click-worthy.",
       ],
       signals: ["conversion", "brand-storytelling"],
       media: {
@@ -159,7 +159,7 @@ export const nike: Project = {
       kind: "decision",
       title: "A reward for every like",
       body: [
-        "The stories were static, so readers had little reason to act. I made each like an entry in a prize draw, then designed and animated the microinteraction.",
+        "The stories relied on static text and images, so readers stayed passive and nothing drew them back to the section. I designed a surprise prize draw triggered by a like, with a gift-box animation to reward the action.",
       ],
       signals: ["motion-interaction", "brand-storytelling", "prototyping"],
       media: {
@@ -175,7 +175,7 @@ export const nike: Project = {
       kind: "decision",
       title: "Star Voice Q&A",
       body: [
-        "To maintain audience interest between volumes and build anticipation for the next influencer, I designed a new feature. It shipped, and was recommended for wider use in other campaigns.",
+        "To maintain interest between volumes and build anticipation for the next influencer, I designed Star Voice Q&A: a loop of preview, participation and live response. It shipped, and was recommended for wider use in other campaigns.",
       ],
       signals: ["brand-storytelling", "motion-interaction", "prototyping"],
       media: {
@@ -201,11 +201,11 @@ export const nike: Project = {
         },
         {
           title: "Conversion",
-          text: "Product tags and larger product cards made the products easier to find in the stories and gave readers a clearer path from story to product. Nike's feedback was positive.",
+          text: "Product visibility significantly improved, with a clearer click-through path and positive feedback from the client on increased user interest and conversions.",
         },
         {
           title: "Engagement",
-          text: "Likes, the prize draw and Star Voice Q&A lifted engagement beyond what Nike expected.",
+          text: "The layered interaction mechanisms significantly boosted user engagement across the board – from liking to question submission to livestream participation, completing a full engagement loop. The client reported higher-than-expected interaction performance.",
         },
       ],
       signals: ["end-to-end", "conversion", "brand-storytelling"],
