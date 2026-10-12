@@ -34,3 +34,15 @@ Words unchanged; layout and evidence redone. To decide:
 - **03.1** The takeaway's three points as three columns with large numbers; the empty gap under the title is gone.
 - **Height.** At 1440 × 900 every card fits one screen. At 1280 × 720 the shapes, pipeline, fit and axis cards run 25 to 70px past it, mostly because of three-paragraph bodies; cutting a sentence from 01.3 and 02.1 would close it.
 - **Not checked here:** the production build (Google Fonts can't be fetched from this sandbox, an existing WildEcho dependency), so the e2e suite didn't run. Typecheck, lint, unit tests, contrast (193 pairs) and axe in both modes pass.
+
+### Second pass: each card composed for its content
+
+Chongbo: the cards shouldn't all be "claim left, text right, evidence under". Each card is now placed on its own grid (`src/components/case/any-data/compositions.css`, project-owned; the shared head is unwrapped with `display: contents` on sheets 640px and wider):
+
+- **01.1 poster.** Large claim; the question set as a pull line; the strips run off the card's right edge.
+- **01.2 split sheet.** Reasoning on the left; the contract on a full-height datasheet pane on the right (roles as a spec table).
+- **01.3 schematic.** The five layers now run left to right, with each role as a coloured lane from the adapter into the chart, on a band across the card. The reasoning sits at the foot; "Claude Code and Cursor" is a note beside the claim.
+- **02.1 halves.** The card itself is split, before on a tint and after on paper. Each paragraph sits over its half, "74" is set large, and the server is a band across the foot.
+- **02.2 field.** The whole card is on the blue field, the chart comes first, and the claim and two paragraphs sit in three columns underneath.
+
+No words changed. At 1280 × 720 02.1 is 5px over one screen; every other card fits at every review size. Axe passes in light, dark and phone.

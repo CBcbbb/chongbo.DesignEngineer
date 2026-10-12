@@ -5,6 +5,7 @@ import { Chart, Empty, Swatch } from "./charts";
 import { fmt, missingRoles, ROLES, SAMPLE, streamById, suggest, totals, type Confidence, type Mapping, type RoleKey, type Stream } from "./data";
 import "./any-data.css";
 import "./cards.css";
+import "./compositions.css";
 
 /*
  * The case file's evidence, one module per card. One visual language throughout: a contract role is a colour
@@ -222,97 +223,97 @@ export function Contract() {
   );
 }
 
-/* ---------- 01.3 one record down the layers; each role's wire runs from the adapter's row to the chart ---------- */
+/* ---------- 01.3 one record, left to right through five layers; each role is a lane from the adapter to the chart ---------- */
 function PipeBars() {
   const d = totals(streamById("courier"), { category: "town", value: "parcels", period: "" }).slice(0, 5);
   const max = Math.max(...d.map((x) => x.v));
   return (
-    <div className="ac-pipe-bars" role="img" aria-label={`Bar chart: ${d.map((x) => `${x.k} ${fmt(x.v)}`).join(", ")}`}>
-      {d.map((x, i) => (
+    <div className="ac-hbars" role="img" aria-label={`Bar chart: ${d.map((x) => `${x.k} ${fmt(x.v)}`).join(", ")}`}>
+      {d.map((x) => (
         <div key={x.k}>
-          {i === 0 && <span className="ac-pipe-bar-v">{fmt(x.v)}</span>}
-          <span className="ac-pipe-bar" style={{ height: `${(x.v / max) * 100}%` }} />
-          <span className="ac-pipe-bar-k">{x.k}</span>
+          <span className="ac-hbars-k">{x.k}</span>
+          <span className="ac-hbars-track">
+            <span className="ac-hbars-bar" style={{ width: `${(x.v / max) * 100}%` }} />
+          </span>
+          <span className="ac-hbars-v">{fmt(x.v)}</span>
         </div>
       ))}
     </div>
   );
 }
 
-type PipeRow = { k: string; job: string; cells?: [ReactNode, ReactNode, ReactNode]; span?: ReactNode };
-const PIPE: PipeRow[] = [
+const ROLE_KEYS: RoleKey[] = ["category", "value", "period"];
+type Lane = [string, string];
+type Layer = { k: string; job: string; lanes?: [Lane, Lane, Lane]; whole?: ReactNode };
+const LAYERS: Layer[] = [
   {
     k: "Producer",
     job: "its own format",
-    span: (
-      <code className="ac-pipe-json">
-        <span className="ac-faint">{'{"evt":"delivered","payload":'}</span>
-        {'{"town":"Leeds","parcels":"128"}'}
-        <span className="ac-faint">{"}"}</span>
-      </code>
+    whole: (
+      <pre className="ac-json" aria-label='{"evt":"delivered","payload":{"town":"Leeds","parcels":"128"}}'>
+        <span className="ac-faint">{'{"evt": "delivered",\n "payload": {'}</span>
+        {'\n   "town": "Leeds",\n   "parcels": "128"'}
+        <span className="ac-faint">{"\n }}"}</span>
+      </pre>
     ),
   },
   {
     k: "Adapter",
     job: "flat rows",
-    cells: [
-      <>
-        town <b>Leeds</b>
-      </>,
-      <>
-        parcels <b>128</b>
-      </>,
-      <>
-        delivered_on <b>2026-09-28</b>
-      </>,
+    lanes: [
+      ["town", "Leeds"],
+      ["parcels", "128"],
+      ["delivered_on", "2026-09-28"],
     ],
   },
-  { k: "Binding", job: "fields onto roles", cells: [<>category ← town</>, <>value ← parcels</>, <>period ← delivered_on</>] },
+  {
+    k: "Binding",
+    job: "fields onto roles",
+    lanes: [
+      ["category", "← town"],
+      ["value", "← parcels"],
+      ["period", "← delivered_on"],
+    ],
+  },
   {
     k: "Contract",
     job: "roles and types",
-    cells: [
-      <>
-        category <span className="ac-faint">text · required</span>
-      </>,
-      <>
-        value <span className="ac-faint">number · required</span>
-      </>,
-      <>
-        period <span className="ac-faint">date</span>
-      </>,
+    lanes: [
+      ["category", "text · required"],
+      ["value", "number · required"],
+      ["period", "date"],
     ],
   },
-  { k: "Component", job: "draws the roles", span: <PipeBars /> },
+  { k: "Component", job: "draws the roles", whole: <PipeBars /> },
 ];
-const ROLE_KEYS: RoleKey[] = ["category", "value", "period"];
 
 export function Pipeline() {
   return (
     <div className="ad ac-pipe">
-      <ol className="ac-pipe-grid">
-        {PIPE.map((row, ri) => (
-          <li key={row.k} className="ac-pipe-row" style={{ gridRow: ri + 1 }}>
-            <span className="ac-pipe-n" aria-hidden="true">
-              {ri + 1}
-            </span>
-            <span className="ac-pipe-k">
-              {row.k}
-              <small>{row.job}</small>
-            </span>
-            {row.span ? (
-              <span className="ac-pipe-span">{row.span}</span>
+      <ol className="ac-flow">
+        {LAYERS.map((l, li) => (
+          <li key={l.k} className="ac-layer" style={{ gridColumn: li + 1 }}>
+            <p className="ac-layer-h">
+              <span className="ac-layer-n" aria-hidden="true">
+                {li + 1}
+              </span>
+              <span className="ac-layer-k">{l.k}</span>
+              <small>{l.job}</small>
+            </p>
+            {l.whole ? (
+              <div className="ac-layer-whole">{l.whole}</div>
             ) : (
-              row.cells!.map((c, ci) => (
-                <span key={ci} className="ac-pipe-cell" data-role={ROLE_KEYS[ci]}>
-                  {c}
-                </span>
+              l.lanes!.map(([key, val], i) => (
+                <p key={key} className="ac-lane-cell" data-role={ROLE_KEYS[i]}>
+                  <span className="ac-lane-key">{key}</span>
+                  <span className="ac-lane-val">{val}</span>
+                </p>
               ))
             )}
           </li>
         ))}
         {ROLE_KEYS.map((r, i) => (
-          <li key={r} className="ac-wire" data-role={r} style={{ gridColumn: 3 + i }} aria-hidden="true" />
+          <li key={r} className="ac-lane" data-role={r} style={{ gridRow: i + 2 }} aria-hidden="true" />
         ))}
       </ol>
       <ul className="ac-inputs" aria-label="What each kind of component reads">
