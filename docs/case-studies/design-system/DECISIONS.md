@@ -1,0 +1,10 @@
+# One Design System, Three Products: decisions for Chongbo
+
+Things built on a best guess in step 5, or still open.
+
+1. **Figma file.** "Design System — rebuilt on an invented brand", in the Portfolio-NCB team: https://www.figma.com/design/tQf4R37QLPB6IPz5S93o5K. Pages: Colours (scales, light and dark), Components (Button 12 variants, TextInput 4, Badge 5, Alert 4, PaginationItem 3, and a Light/Dark review frame of instances). Decide: keep it in that team, or move it.
+2. **Light and Dark are two collections, not two modes.** The team's free plan allows one mode per collection, so `Colour · Light` and `Colour · Dark` hold the same variable names; the Dark review frame is rebound by name. The copy says the original used modes, which stays true. On a paid plan, the two collections merge into one with two modes.
+3. **The Figma export is 1x** (1468 px wide; the Plugin API's 2x export is over the tool's size limit). It shows at about 840 px on the card, so about 1.75x. A 2x export from the Figma app would replace `public/assets/design-system/figma-components.webp`.
+4. **02.2's figures come from the real system** (30 of 30, lowest 5.16:1), computed from the CSS values. The specimens on the page use the invented brand, where amber text on white is 5.17:1. The chart uses the real lightness values, which carry no hue.
+5. **02.4 is drafted as done.** It goes live only once the derivation ships in the product (`readable-theme.ts`); otherwise it becomes the "What I'd change" line.
+6. **Contents labels** (short names in the left rail) are new: Drifting apart, Figma to code, Three layers, Roles, not colours, One lightness per step, Dark mode, Customer colours, Outcome.
