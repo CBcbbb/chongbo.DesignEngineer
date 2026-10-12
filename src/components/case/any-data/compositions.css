@@ -194,10 +194,6 @@
     -webkit-mask-image: none;
     mask-image: none;
   }
-  [data-palette="components-for-any-data"] #contract .ac-code {
-    margin-right: calc(-1 * var(--cf-pad));
-    border-radius: 12px 0 0 12px;
-  }
 
   /* ---------- 01.3 schematic: the flow across the card, the reasoning under it ---------- */
   [data-palette="components-for-any-data"] #pipeline {

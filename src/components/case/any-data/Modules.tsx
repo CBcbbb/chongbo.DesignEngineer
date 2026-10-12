@@ -73,22 +73,53 @@ export function Shapes() {
 }
 
 /* ---------- 01.2 one contract, four components on it; the code behind it one tab away ---------- */
-const CONTRACT_CODE = `// A contract names the roles a component draws,
-// not the fields a stream happens to have.
-export const totalsByCategory = defineContract({
-  id: "totals-by-category",
-  roles: {
-    category: { type: "text",   required: true },
-    value:    { type: "number", required: true },
-  },
-});
+/* set at 36 columns, so the whole file fits the pane at a readable size without scrolling or running off its edge */
+const CONTRACT_CODE = `// A contract names the roles a
+// component draws, not the fields a
+// stream happens to have.
+export const totalsByCategory =
+  defineContract({
+    id: "totals-by-category",
+    roles: {
+      category: {
+        type: "text",
+        required: true,
+      },
+      value: {
+        type: "number",
+        required: true,
+      },
+    },
+  });
 
-// Bar, donut, treemap and table
-// all declare the same contract.
+// Bar, donut, treemap and table all
+// declare the same contract.
 export const BarChart = component({
   contract: totalsByCategory,
   settings: { sort: "desc" },
 });`;
+
+/** One line of the contract, tinted: comments dim, strings light, and each role's name in its role's colour. */
+function CodeLine({ line }: { line: string }) {
+  if (line.trim().startsWith("//")) return <span className="is-comment">{line}</span>;
+  const role = line.match(/^(\s*)(category|value)(:.*)$/);
+  if (role) {
+    return (
+      <>
+        {role[1]}
+        <span className="is-role" data-role={role[2]}>
+          {role[2]}
+        </span>
+        {role[3]}
+      </>
+    );
+  }
+  return (
+    <>
+      {line.split(/("[^"]*")/).map((part, i) => (i % 2 ? <span key={i} className="is-string">{part}</span> : part))}
+    </>
+  );
+}
 
 const SAMPLE_V = SAMPLE.data.map((r) => Number(r[1]));
 const seq = (i: number) => `var(--ad-seq-${i + 1})`;
@@ -169,55 +200,63 @@ export function Contract() {
           </button>
         ))}
       </div>
+      {/* both views sit in one cell, so switching never changes the card's height; the hidden one is inert */}
       <div id={id} className="ac-contract-stage">
-        {view === "contract" ? (
-          <div className="ac-spec-wrap">
-            <div className="ac-spec">
-              <p className="ac-spec-id">
-                <span className="ad-label">Contract</span>
-                totals-by-category
-              </p>
-              <ul>
-                {ROLES.map((r) => (
-                  <li key={r.key} data-role={r.key}>
-                    <span className="ac-spec-role">
-                      <Swatch role={r.key} />
-                      {r.key}
-                    </span>
-                    <span className="ac-spec-type">{r.type}</span>
-                    <span className={`ac-spec-req${r.required ? " is-req" : ""}`}>{r.required ? "required" : "optional"}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="ac-bus">
-              <p className="ad-label">Declared by</p>
-              <ul className="ac-uses" aria-label="Components on this contract, drawn with its sample data">
-                {MINIS.map(([name, M]) => (
-                  <li key={name}>
-                    <M />
-                    <span>{name}</span>
-                  </li>
-                ))}
-              </ul>
-              <p className="ac-sample">
-                <span className="ad-tag is-sample">Sample data</span>
-                fits the same contract
-              </p>
-            </div>
+        <div className="ac-spec-wrap" data-on={view === "contract" ? "" : undefined} inert={view !== "contract"}>
+          <div className="ac-spec">
+            <p className="ac-spec-id">
+              <span className="ad-label">Contract</span>
+              totals-by-category
+            </p>
+            <ul>
+              {ROLES.map((r) => (
+                <li key={r.key} data-role={r.key}>
+                  <span className="ac-spec-role">
+                    <Swatch role={r.key} />
+                    {r.key}
+                  </span>
+                  <span className="ac-spec-type">{r.type}</span>
+                  <span className={`ac-spec-req${r.required ? " is-req" : ""}`}>{r.required ? "required" : "optional"}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-        ) : (
-          <pre className="ac-code" tabIndex={0} aria-label="The contract in TypeScript">
+          <div className="ac-bus">
+            <p className="ad-label">Declared by</p>
+            <ul className="ac-uses" aria-label="Components on this contract, drawn with its sample data">
+              {MINIS.map(([name, M]) => (
+                <li key={name}>
+                  <M />
+                  <span>{name}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="ac-sample">
+              <span className="ad-tag is-sample">Sample data</span>
+              fits the same contract
+            </p>
+          </div>
+        </div>
+        <figure className="ac-code" data-on={view === "code" ? "" : undefined} inert={view !== "code"}>
+          <figcaption className="ac-code-bar">
+            <span className="ac-code-dots" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </span>
+            contracts/totals-by-category.ts
+          </figcaption>
+          <pre tabIndex={view === "code" ? 0 : -1} aria-label="The contract in TypeScript">
             <code>
               {CONTRACT_CODE.split("\n").map((l, i) => (
-                <span key={i} className={l.trim().startsWith("//") ? "is-comment" : undefined}>
-                  {l}
+                <span key={i} className="ac-code-line">
+                  <CodeLine line={l} />
                   {"\n"}
                 </span>
               ))}
             </code>
           </pre>
-        )}
+        </figure>
       </div>
     </div>
   );

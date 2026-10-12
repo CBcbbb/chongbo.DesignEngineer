@@ -155,10 +155,15 @@
 }
 .ac-contract-stage {
   display: grid;
-  min-height: 21.5rem;
 }
+/* the contract and its code share one cell: the stage is as tall as the taller of the two, so switching views never
+   moves the card, and the hidden view keeps its space */
 .ac-contract-stage > * {
+  grid-area: 1 / 1;
   min-height: 0;
+}
+.ac-contract-stage > :not([data-on]) {
+  visibility: hidden;
 }
 .ac-spec-wrap {
   display: grid;
@@ -294,18 +299,65 @@
   color: var(--ad-body);
 }
 .ac-code {
-  max-height: 21.5rem;
+  /* the code is set at 40 columns and sized to its own width, so every line shows whole: never cut, never scrolled */
+  container-type: inline-size;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  align-self: start;
   margin: 0;
-  padding: 22px 24px;
-  overflow: auto;
+  overflow: hidden;
   border-radius: 12px;
   background: #0e1730;
   color: #e6ecfb;
-  font: 400 13.5px/1.75 var(--mono);
+}
+.ac-code-bar,
+.ac-code pre {
+  --code-pad: clamp(14px, 5cqw, 22px);
+}
+.ac-code-bar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 9px var(--code-pad);
+  border-bottom: 1px solid #253150;
+  font: 400 11.5px/1.3 var(--mono);
+  color: #93a0bd;
+}
+.ac-code-dots {
+  display: inline-flex;
+  gap: 5px;
+}
+.ac-code-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34436a;
+}
+.ac-code pre {
+  margin: 0;
+  padding: calc(var(--code-pad) * 0.8) var(--code-pad) var(--code-pad);
+  overflow: hidden;
+  /* the longest line is 36 columns of Geist Mono (about 0.65em each): it fills the width inside the padding, with a little room */
+  font: 400 clamp(10.5px, calc((100cqw - 2 * var(--code-pad)) / 24.2), 13.5px) / 1.6 var(--mono);
+  white-space: pre;
   tab-size: 2;
+}
+.ac-code pre:focus-visible {
+  outline: 2px solid #a9c1ff;
+  outline-offset: -4px;
 }
 .ac-code .is-comment {
   color: #93a0bd;
+}
+.ac-code .is-string {
+  color: #a9c1ff;
+}
+/* a role's name carries its role's colour, as everywhere else in the case */
+.ac-code .is-role[data-role="category"] {
+  color: #a597ff;
+}
+.ac-code .is-role[data-role="value"] {
+  color: #f08a5d;
 }
 @container (max-width: 520px) {
   .ac-contract-stage {
@@ -323,9 +375,6 @@
   .ac-spec-req {
     min-width: 0;
     padding-inline: 8px;
-  }
-  .ac-code {
-    font-size: 12px;
   }
 }
 
@@ -986,12 +1035,8 @@
   .ac-strip header {
     padding: 6px 14px;
   }
-  .ac-contract-stage {
-    min-height: 19rem;
-  }
-  .ac-code {
-    max-height: 19rem;
-    line-height: 1.6;
+  .ac-code pre {
+    line-height: 1.45;
   }
   .ac-spec li {
     padding-top: 8px;
