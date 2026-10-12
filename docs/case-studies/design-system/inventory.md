@@ -44,13 +44,12 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 
 | # | id | Heading (the claim) | Caps | ux | engineer | web | Evidence | Gaps |
 |---|---|---|---|---|---|---|---|---|
-| | | **Part 1 · Five products** | | | | | | |
-| 01.1 | `drift` | The same colours, five different products | C | in | in | · | Drawn: one screen five times, the same palette in each, with different corner radii, buttons, type and spacing | |
-| 01.2 | `extend-shadcn` | Extending shadcn instead of replacing it | C B | in | in | · | Code: shadcn's own tokens, then what the system adds in shadcn's own naming (status roles, scales, dark, customer layer) | |
-| | | **Part 2 · Figma to code** | | | | | | |
-| 02.1 | `figma-first` | Components and colours drawn in Figma first | C B D | in | in | lead | Rebuilt Figma: component sets with variants and states (button, input, select, pagination); a switch to the variables (Light / Dark modes) | |
-| 02.2 | `three-layers` | Three layers: shared, product, customer | C B | · | lead | in | Diagram, redrawn: the shared package → one product's overrides (real kinds: a dark-mode menu fix derived from tokens, no raw values) → a customer's colour, font and button shape | |
-| | | **Part 3 · Readable in any theme** | | | | | | |
+| | | **Part 1 · From one product to five** | | | | | | |
+| 01.1 | `drift` | Five products, drifting from the first | C | in | in | · | Drawn: the first product, then the new ones on the same tokens, each with its own radii, buttons, type and spacing | `[product count]` |
+| 01.2 | `three-layers` | One shared package under every product | C B | · | lead | in | Diagram: shared package → one product's overrides → a customer's colour, font and button shape | |
+| | | **Part 2 · Figma and code** | | | | | | |
+| 02.1 | `figma-library` | A Figma library for sketching in the system | C B | in | in | lead | Rebuilt Figma: component sets, variables (Light / Dark); a sketch beside the same screen in code | |
+| | | **Part 3 · Accessibility built into the colours** | | | | | | |
 | 03.1 | `roles` | Components ask for a role, not a colour | C E | in | in | in | Colour specimens: six hues × five steps, each step labelled with its job (surface, border, charts, text on white, text on tint) | |
 | 03.2 | `fixed-lightness` | The same lightness on every hue | E | in | in | in | Numbers set large: 30 of 30 text pairings pass AA in both modes; lowest 5.16:1 | |
 | 03.3 | `dark` | Dark mode designed step by step | E D | in | · | in | The specimen with a Light / Dark switch: borders lose chroma so they don't glow, text steps get lighter | |
@@ -167,6 +166,14 @@ Resolved 12 Oct: what differed (radii, buttons, type, spacing); variables (yes);
 - shadcn's `--accent` is a quiet hover fill, not a brand accent. In dark mode a menu's highlight on `--secondary` was nearly invisible; the product layer re-derives it from the hover and active tokens.
 - shadcn's components carry their own radii (the select menu's `rounded-2xl`); matching them meant overrides per component through `data-slot` selectors, a few with `!important`.
 - shadcn has one status colour (`destructive`). Success, warning, info and categorical were added in its naming pattern (`-foreground`, plus `-container`, `-border`, `-text`), so the new roles read like shadcn's own.
+
+## Draft 2 (Chongbo's review of the copy, 12 Oct)
+
+- Story: one main product; new products took only its first tokens and drifted, built fast by different teams.
+- `extend-shadcn` cut: shadcn was the main product's base, not every product's; it's a reference, mentioned in the Figma card.
+- `figma-first` → `figma-library`: Figma is for sketching ideas in the system; he builds in code with AI tools. Show that he can build a design system in Figma, not that it's complete. No screen sizes.
+- Part 3 is accessibility.
+- 8 cards.
 
 ## Decisions (12 October 2026)
 

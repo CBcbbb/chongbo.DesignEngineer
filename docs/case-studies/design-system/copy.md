@@ -1,8 +1,10 @@
-# One Design System, Five Products: copy (draft 1, 12 Oct)
+# One Design System, Five Products: copy (draft 2, 12 Oct)
 
 Playbook §8 step 4. Every line traces to "Facts and their sources" in `inventory.md`. `[Brackets]` mark what isn't confirmed yet. Nothing states status or progress.
 
-**Story.** Five products shared one palette and still looked like five companies. I extended the shadcn they already used into one system: scales whose text steps sit at almost one lightness on every hue, components that ask for roles, a dark mode tuned step by step, and three layers from the shared package to each customer's brand. The turn: customer colours first passed straight through and could make text unreadable, so the system now applies its own lightness rule to them.
+**Draft 2 (Chongbo's review, 12 Oct):** the story starts from one main product whose tokens were carried into new products and drifted; shadcn is a reference, folded into the Figma card (the `extend-shadcn` card is cut); Figma is a library for sketching in the system, not a spec, and screen sizes aren't mentioned; Part 3 is about accessibility. 8 cards.
+
+**Story.** The company began with one product. New products took only its first tokens, and were built fast by different teams, so each drifted further from the others. I moved the colours, roles and component styles into one shared package with layers for each product and each customer, and built the system in Figma so ideas are sketched in it before they're built in code. Accessibility sits in the colours themselves: text steps at almost one lightness on every hue, a dark mode tuned step by step, and the same rule applied to customer colours, which first passed straight through.
 
 ---
 
@@ -12,11 +14,11 @@ Logistics infrastructure company
 
 # One Design System, Five Products
 
-The colours, components and themes behind five products, and behind every customer who rebrands them.
+The shared colours and components behind five products, and every customer's brand on top.
 
 - **Role:** Design Engineer · Figma library, colour scales and CSS · on my own
-- **Outcome:** Five products that read as one company. Customers apply their own brand, and its text stays readable. `[second sentence once the fix ships]`
-- **What this shows:** Design system (C) · Contrast by construction (E) · Figma to code (B)
+- **Outcome:** Five products that read as one company again. Customers apply their own brand, and its text stays readable. `[second sentence once the fix ships]`
+- **What this shows:** Design system (C) · Accessibility in the colours (E) · Figma to code (B)
 
 ## The work
 
@@ -24,35 +26,31 @@ The system, rebuilt on an invented brand.
 
 ---
 
-## Part 1 · Five products
+## Part 1 · From one product to five
 
-### 01.1 The same colours, five different products
+### 01.1 Five products, drifting from the first
 
-The company's five products shared one palette. Each had its own corner radii, buttons, type and spacing, so side by side they read as five companies.
+The company began with one product, with its own colours and design tokens. New products took only those first tokens with them, and each needed things the first didn't have.
 
-As the company's only designer, I set out to make one system serve all five.
+Built fast by different teams, `[optional: much of it with AI coding tools,]` each product changed or dropped what didn't fit. With every release they looked less alike.
 
-### 01.2 Extending shadcn instead of replacing it
+### 01.2 One shared package under every product
 
-All five products were built on shadcn, so I kept its components and token names and added what it lacks. Beside its one status colour, destructive, I added success, warning, info and categorical in its own naming pattern, so they read like shadcn's own.
+I moved the colours, roles and component styles into one shared package, so a fix there reaches every product. Each product overrides only what it needs, built from tokens rather than new colours.
 
-Two of its defaults needed correcting: an accent that vanished in dark menus, and corner radii set inside each component.
+Customers apply their own colour, font and button shape on top.
 
-## Part 2 · Figma to code
+## Part 2 · Figma and code
 
-### 02.1 Components and colours drawn in Figma first
+### 02.1 A Figma library for sketching in the system
 
-I designed the palettes and the component library in Figma first, for every screen size. Each component has its variants and states, in light and dark.
+I built the system in Figma first, starting from the main product's shadcn components: colour variables with Light and Dark modes, and components with their variants and states.
 
-Colours are variables with a Light and a Dark mode. `[If confirmed: They use the CSS's role names, so a design reads as its code.]`
+I now build the product directly in code with AI coding tools, so Figma is where ideas are tried, not where they're specified. With the library in place, a sketch already uses the system's colours and parts when it reaches code.
 
-### 02.2 Three layers: shared, product, customer
+I keep the library to its foundations and leave the polish to the code.
 
-The shared package holds the scales, roles and component styles, so a fix there reaches all five products. Each product overrides only what it needs, and builds its fixes from tokens rather than new colours.
-
-Customers apply their own colour, font and button shape on top. `[optional: Their users can adjust it again.]`
-
-## Part 3 · Readable in any theme
+## Part 3 · Accessibility built into the colours
 
 ### 03.1 Components ask for a role, not a colour
 
@@ -82,8 +80,8 @@ Now the system applies its own rule. The fill stays the customer's colour; text 
 
 ### Outcome
 
-- **Five products:** one set of colours, components and roles, so the products read as one company.
-- **Figma to code:** designs and CSS share one system, so new screens are easier to design and to keep consistent.
+- **One package:** the products share their colours, roles and components, and read as one company again.
+- **Figma and code:** one system in both, so new ideas start in the system instead of drifting from it.
 - **Any brand:** customers rebrand the platform without losing its contrast. `[once the fix ships]`
 
 As the company's only designer, I designed the system in Figma and wrote its CSS on my own.
@@ -97,10 +95,9 @@ As the company's only designer, I designed the system in Figma and wrote its CSS
 ## Evidence
 
 - **The work:** one panel of components (buttons, input, select, badges, alerts, pagination). Switch between three invented customers (colour, font, button shape), pick your own colour, switch Light / Dark; "Show ratios" puts the live contrast on every text pairing.
-- **01.1:** one screen drawn five times on the same palette, each with its own radii, buttons, type and spacing.
-- **01.2:** code. shadcn's tokens first, then the added roles in its naming (`--success`, `--success-container`, `--success-border`, `--success-text` …), on invented values.
-- **02.1:** the rebuilt Figma file. Component sets with variants and states; a switch to the variables panel, Light and Dark modes.
-- **02.2:** diagram. Shared package → one product's overrides (e.g. a menu highlight mixed from the hover and active tokens) → a customer's colour, font and button shape.
+- **01.1:** one screen drawn as the first product, then as the new products: same tokens, each with its own radii, buttons, type and spacing, further apart release by release.
+- **01.2:** diagram. Shared package → one product's overrides (e.g. a menu highlight mixed from the hover and active tokens) → a customer's colour, font and button shape.
+- **02.1:** the rebuilt Figma file. Component sets with variants and states; a switch to the variables panel, Light and Dark modes; a quick sketch made from the library beside the same screen in code.
 - **03.1:** colour specimens. Six hues × five steps, each step labelled with its job.
 - **03.2:** numbers set large: **30 of 30** text pairings pass WCAG AA · **5.16:1** lowest · **2** modes.
 - **03.3:** the specimens with a Light / Dark switch.
