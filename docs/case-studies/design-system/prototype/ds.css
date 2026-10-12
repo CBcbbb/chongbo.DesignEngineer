@@ -351,8 +351,8 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-layers2 .o-note { font: 500 11.5px var(--mono); fill: var(--case-dim); }
 .ds-layers2 .os .s { fill: var(--ov-stud-s); stroke: var(--ov-line); stroke-width: .6; }
 .ds-layers2 .os .c { fill: var(--ov-stud-c); stroke: var(--ov-line); stroke-width: .6; }
-.ds-layers2 .os.on-cli .s { fill: rgb(0 0 0 / .18); }
-.ds-layers2 .os.on-cli .c { fill: rgb(255 255 255 / .35); }
+.ds-layers2 .os.on-cli .s { fill: var(--l); }
+.ds-layers2 .os.on-cli .c { fill: var(--t); }
 .ds-layers2 .os.o-user { opacity: .75; }
 .ds-layers2 .os.o-user .c { fill: var(--ov-user); }
 .ds-layers2 .os.o-user.is-on { opacity: 1; }

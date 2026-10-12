@@ -315,7 +315,7 @@
      dashed lines drop each part back into place. ---------- */
   const layers = document.getElementById("layers");
   if (layers) {
-    const C30 = 0.866, S30 = 0.5, OX = 250, OY = 300;
+    const C30 = 0.866, S30 = 0.5, OX = 250, OY = 326;
     const P = (x, y, z) => [OX + (x - y) * C30, OY + (x + y) * S30 - z];
     const f1 = (n) => n.toFixed(1);
     const pts = (a) => a.map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ");
@@ -350,7 +350,7 @@
     const frustum = (X, Yb, r1, Yt, r2, cls) => `<path class="${cls}" d="M${f1(X - r1 * RX)} ${f1(Yb)} A${f1(r1 * RX)} ${f1(r1 * RY)} 0 0 0 ${f1(X + r1 * RX)} ${f1(Yb)} L${f1(X + r2 * RX)} ${f1(Yt)} A${f1(r2 * RX)} ${f1(r2 * RY)} 0 0 1 ${f1(X - r2 * RX)} ${f1(Yt)} Z"/>${ell(X, Yt, r2, cls)}`;
     const piece = (kind, x, y, z, tone) => {
       const [X, Y] = P(x, y, z);
-      let s = `<g class="pc ${tone}" transform="translate(${f1(X)} ${f1(Y)}) scale(1.3) translate(${f1(-X)} ${f1(-Y)})">` + ell(X, Y + 1.5, 8.5, "pc-shadow") + frustum(X, Y, 7.2, Y - 3.2, 7.2, "pc-b") + frustum(X, Y - 3.2, 6.2, Y - 5, 5.6, "pc-b");
+      let s = `<g class="pc ${tone}" transform="translate(${f1(X)} ${f1(Y)}) scale(1.3) translate(${f1(-X)} ${f1(-Y)})">` + frustum(X, Y, 7.2, Y - 3.2, 7.2, "pc-b") + frustum(X, Y - 3.2, 6.2, Y - 5, 5.6, "pc-b");
       if (kind === "pawn") {
         s += frustum(X, Y - 5, 4.8, Y - 16, 2.6, "pc-b") + frustum(X, Y - 16, 4.2, Y - 17.8, 4.2, "pc-a") + `<circle class="pc-a" cx="${f1(X)}" cy="${f1(Y - 22.6)}" r="5.4"/>`;
       } else if (kind === "rook") {
@@ -381,7 +381,7 @@
       { id: "studio", name: "Studio", colour: "#8a68f5", product: 2, col: 2, user: "bishop" },
     ];
     const CX = U / 2, CY = 1.5 * U;
-    const Z = { base: 0, product: 108, client: 196, user: 262 };
+    const Z = { base: 0, product: 105, client: 180, user: 292 }; // product and client gaps of 105 and 75 put each level's studs half a stud off the ones below; users float high enough to clear the brick behind
     const T = { base: 12, product: 10, client: 18 };
     const cliC = (k) => { const r = PRODS[k.product].r; return [r[0] + (k.col + 0.5) * U, r[1] + 1.5 * U]; };
     const USERS = [-U, 0, U]; // one user over each stud of the brick, back to front
@@ -399,7 +399,7 @@
     const draw = (c) => {
       const act = CLIENTS.find((k) => k.id === c.id);
       const aP = act ? act.product : 0;
-      let g = `<svg viewBox="0 0 954 600" role="img" aria-label="An exploded build. A long base plate, the shared package; three products lifted above it, each on a different part of the plate and overhanging its edge a little; two clients above each product and users above each client, inside their product. Each level overrides only what it needs.">`;
+      let g = `<svg viewBox="0 0 954 626" role="img" aria-label="An exploded build. A long base plate, the shared package; three products lifted above it, each on a different part of the plate and overhanging its edge a little; two clients above each product and users above each client, inside their product. Each level overrides only what it needs.">`;
       g += `<defs><pattern id="ov-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)"><line class="hx-l" x1="0" y1="0" x2="0" y2="5"/></pattern>
         <filter id="ov-blur" x="-10%" y="-10%" width="120%" height="140%"><feGaussianBlur stdDeviation="8"/></filter></defs>`;
       const [bx0, by0, bx1, by1] = BASE;
@@ -422,9 +422,9 @@
           const [cx, cy] = cliC(k), kon = k === act;
           g += guides(cx - CX, cy - CY, cx + CX, cy + CY, Z.client - T.client, Z.product, kon, k.colour);
           g += box(cx - CX, cy - CY, cx + CX, cy + CY, Z.client, T.client, `o-cli${kon ? " is-on" : ""}`, k.colour);
-          USERS.forEach((dy) => { g += stud(cx, cy + dy, Z.client, 5, 3, "on-cli"); });
+          USERS.forEach((dy) => { g += stud(cx, cy + dy, Z.client, 5, 3, "on-cli", `style="--t:${k.colour};--l:${shade(k.colour, 0.22)}"`); });
           // users: one stud each; on three clients, one user is drawn as a piece, each a different one
-          const kl = hexToLch(k.colour), mine = lchToHex({ ...kl, l: 0.62, c: 0.16, h: (kl.h + 150) % 360 });
+          const mine = "#1c9a92"; // the bishop's user picked a colour of their own
           USERS.forEach((dy, i) => {
             const isPiece = k.user && i === 1, gs = `guide${kon ? " is-on" : isPiece ? "" : " is-user"}`;
             g += line(P(cx, cy + dy, Z.client + 3), P(cx, cy + dy, isPiece ? Z.user : Z.user - 4), gs, kon ? `stroke:${k.colour}` : "");
