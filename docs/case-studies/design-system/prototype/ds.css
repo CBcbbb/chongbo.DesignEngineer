@@ -406,3 +406,9 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 /* the nav sits at the top of the app frame: its callout hangs below the tab instead */
 .show-ratios .tp-tabs [data-r] { bottom: auto; top: calc(100% + 5px); }
 .show-ratios .tp-tabs [data-r] .ds-ratio::after { top: auto; bottom: 100%; border-top: 0; border-bottom: 4px solid #151515; }
+
+/* "What this shows": this project's own icons, drawn like the Nike case's: bold, mostly solid, one open detail */
+.ds-ico { overflow: visible; }
+.ds-ico .f { fill: currentColor; stroke: none; }
+.ds-ico .s { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.ds-ico .o { fill: none; stroke: currentColor; stroke-width: 1.8; }
