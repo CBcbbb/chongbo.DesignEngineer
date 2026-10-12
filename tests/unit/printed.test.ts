@@ -3,7 +3,7 @@ import { projects, SIGNALS } from "@content";
 import { fallbackAnswer } from "@/lib/ask/fallback";
 import { AskRequestSchema } from "@/lib/ask/schema";
 import { shownTopics } from "@/lib/cards";
-import { missingLine, printedCount, projectRuns, provenanceLine, quoteBrief, resultTitle, TOPICS, topicsToSignals } from "@/lib/printed";
+import { missingLine, printedCount, projectRuns, provenanceLine, quoteBrief, resultTitle, TOPICS, topicsToLabels, topicsToSignals } from "@/lib/printed";
 
 describe("skills cards", () => {
   it("has the eight approved cards in order", () => {
@@ -78,5 +78,13 @@ describe("wording", () => {
     // One project only: the sheet counter says it already.
     expect(projectRuns(cards.slice(0, 3))).toEqual([null, null, null]);
     expect(provenanceLine("model", 4)).toBe("Chosen by Claude from my case files. The words are mine.");
+  });
+});
+
+describe("topicsToLabels", () => {
+  it("names a skills card from its lead signal alone, as shared links give it", () => {
+    expect(topicsToLabels(["accessibility", "design-systems"])).toEqual(["Accessibility", "Design systems"]);
+    expect(topicsToLabels(["design-systems", "cross-platform"])).toEqual(["Design systems"]);
+    expect(topicsToLabels(["cross-platform"])).toEqual([]);
   });
 });

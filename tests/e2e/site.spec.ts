@@ -107,11 +107,15 @@ test.describe("printing", () => {
     await page.keyboard.press("Enter");
     await expect(page.locator("#r-title")).toBeFocused({ timeout: 10_000 });
     await expect(page.locator("#r-title")).toHaveText(/Design systems/);
-    // Tab reaches the strip of sheets, then the first sheet's link.
+    // Tab reaches the strip of sheets, then, past any controls on the card itself, the first sheet's link.
     await page.keyboard.press("Tab");
     await expect(page.locator(".sheets")).toBeFocused();
-    await page.keyboard.press("Tab");
+    for (let i = 0; i < 12; i++) {
+      await page.keyboard.press("Tab");
+      if (/Read it in context/.test((await page.locator(":focus").textContent()) ?? "")) break;
+    }
     await expect(page.locator(":focus")).toHaveText(/Read it in context/);
+    await expect(page.locator(".sheets .sheet").first().locator(".full")).toBeFocused();
     const href = await page.locator(":focus").getAttribute("href");
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(new RegExp(`${href!.replace(/[#/]/g, "\\$&")}$`));
@@ -128,14 +132,18 @@ test.describe("printing", () => {
     await expect(page.locator("#brief")).toHaveValue("");
   });
 
-  test("every sheet is readable in full, with its evidence and a link to the case file", async ({ page }) => {
+  test("every sheet carries its case-file card, named by the card's own heading, and links to the case file", async ({ page }) => {
     await page.goto("/");
     await printAccessibility(page);
     const sheets = page.locator(".sheets .sheet");
     expect(await sheets.count()).toBeGreaterThan(0);
     for (const sheet of await sheets.all()) {
-      await expect(sheet.locator(".sheet-title")).toBeVisible();
-      await expect(sheet.locator(".full")).toHaveAttribute("href", /^\/work\/[a-z-]+#[a-z-]+$/);
+      const card = sheet.locator(".s-card [data-card]");
+      await expect(card).toHaveCount(1);
+      const heading = card.locator("h3");
+      await expect(heading).toHaveCount(1);
+      await expect(sheet.locator("article")).toHaveAttribute("aria-labelledby", (await heading.getAttribute("id"))!);
+      await expect(sheet.locator(".full")).toHaveAttribute("href", new RegExp(`^/work/[a-z-]+#${await card.getAttribute("data-card")}$`));
     }
   });
 
