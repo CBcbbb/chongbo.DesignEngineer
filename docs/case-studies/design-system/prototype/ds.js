@@ -207,17 +207,32 @@
   }
   const layersArt = document.getElementById("cover-layers");
   if (layersArt) {
-    const plane = (cx, cy, w, h) => `${cx - w / 2},${cy} ${cx},${cy - h / 2} ${cx + w / 2},${cy} ${cx},${cy + h / 2}`;
-    const cx = 140, w = 210, h = 105, ys = [66, 128, 190];
+    // the overview's build, small: a base, three products, clients above them; the current brand is the solid one
+    const C30 = 0.866, S30 = 0.5, OX = 150, OY = 40;
+    const P = (x, y, z) => [OX + (x - y) * C30 * 0.5, OY + (x + y) * S30 * 0.5 - z * 0.5];
+    const pts = (a) => a.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
+    const quad = (cx, cy, h, z) => [P(cx - h, cy - h, z), P(cx + h, cy - h, z), P(cx + h, cy + h, z), P(cx - h, cy + h, z)];
+    const along = (d) => [190 + d / 2, 190 - d / 2];
+    const PROD = [-216, 0, 216].map(along);
+    const slots = [[0, -1], [0, 1], [1, -1], [1, 1], [2, -1], [2, 1]];
+    const which = { courier: 0, grocer: 1, bank: 2 };
     const draw = (c) => {
-      layersArt.innerHTML = `<svg viewBox="0 0 400 260" role="img" aria-label="Three layers: shared, product, customer">
-        <line class="rail" x1="${cx}" x2="${cx}" y1="${ys[0]}" y2="${ys[2]}"/>
-        <polygon class="pl pl-shared" points="${plane(cx, ys[2], w, h)}"/>
-        <polygon class="pl pl-product" points="${plane(cx, ys[1], w, h)}"/>
-        <polygon class="pl pl-customer" points="${plane(cx, ys[0], w, h)}"/>
-        <polygon class="btn" points="${plane(cx, ys[0], 84, 42)}"/>
-        ${[["Customer", c.name, ys[0]], ["Product", "", ys[1]], ["Shared", "", ys[2]]].map(([t, n, y]) => `<line class="tick" x1="${cx + w / 2 + 6}" x2="${cx + w / 2 + 22}" y1="${y}" y2="${y}"/><text x="${cx + w / 2 + 28}" y="${y + 4}">${t}</text>${n ? `<text class="is-brand" x="${cx + w / 2 + 28}" y="${y + 22}">${esc(n)}</text>` : ""}`).join("")}
-      </svg>`;
+      const mine = c.id in which ? which[c.id] : c.id === "platform" ? -1 : 0;
+      let g = `<svg viewBox="-18 26 336 210" role="img" aria-label="One shared package, three products above it, clients above each product">`;
+      g += `<polygon class="cl-base" points="${pts(quad(190, 190, 190, 0))}"/>`;
+      PROD.forEach(([x, y], p) => {
+        const a1 = P(x, y, 0), a2 = P(x, y, 104);
+        g += `<line class="cl-pin" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/><polygon class="cl-prod${mine === -1 && p === 0 ? " is-on" : ""}" points="${pts(quad(x, y, 52, 104))}"/>`;
+      });
+      slots.forEach(([p, side], i) => {
+        const [px, py] = PROD[p], x = px + side * 20, y = py - side * 20, on = i === mine;
+        const a1 = P(x, y, 104), a2 = P(x, y, 196);
+        g += `<line class="cl-pin${on ? " is-on" : ""}" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/><polygon class="cl-cli${on ? " is-on" : ""}" points="${pts(quad(x, y, 18, 196))}"/>`;
+      });
+      const lab = (t, z) => { const y = P(190, 190, z)[1]; return `<line class="cl-tick" x1="322" x2="336" y1="${y}" y2="${y}"/><text x="342" y="${y + 4}">${t}</text>`; };
+      void lab;
+      g += `</svg>`;
+      layersArt.innerHTML = g;
     };
     listeners.push(draw);
   }
@@ -296,70 +311,79 @@
     document.querySelectorAll('input[name="f2c"]').forEach((r) => r.addEventListener("change", () => { stage.dataset.show = r.value; }));
   }
 
-  /* ---------- overview: built from the bottom up; each level floats over the one it overrides ---------- */
+  /* ---------- overview: built from the bottom up (isometric). Each level sits in one row (x + y constant), so it reads
+     side by side on screen; every child floats straight above its parent and casts a shadow on it. ---------- */
   const layers = document.getElementById("layers");
   if (layers) {
     const CLIENTS = [
       { id: "courier", name: "Courier", colour: "#f2c94c", product: 0, side: -1 },
-      { id: "grocer", name: "Grocer", colour: "#2e7d3a", product: 0, side: 1 },
-      { id: "bank", name: "Bank", colour: "#2a3f8f", product: 1, side: -1 },
+      { id: "grocer", name: "Grocer", colour: "#2f8a3e", product: 0, side: 1 },
+      { id: "bank", name: "Bank", colour: "#3651b0", product: 1, side: -1 },
       { id: "florist", name: "Florist", colour: "#e85d9a", product: 1, side: 1 },
-      { id: "bakery", name: "Bakery", colour: "#c8642f", product: 2, side: -1 },
-      { id: "studio", name: "Studio", colour: "#7a5cf0", product: 2, side: 1 },
+      { id: "bakery", name: "Bakery", colour: "#d06a33", product: 2, side: -1 },
+      { id: "studio", name: "Studio", colour: "#8a68f5", product: 2, side: 1 },
     ];
-    const OX = 340, OY = 196, C30 = 0.866, S30 = 0.5;
+    const C30 = 0.866, S30 = 0.5, OX = 340, OY = 112;
     const P = (x, y, z) => [OX + (x - y) * C30, OY + (x + y) * S30 - z];
     const pts = (a) => a.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
-    const Z = { shared: 0, product: 112, client: 206, user: 284 };
-    const top = (x0, y0, x1, y1, z) => [P(x0, y0, z), P(x1, y0, z), P(x1, y1, z), P(x0, y1, z)];
-    const slab = (x0, y0, x1, y1, z, t, cls, style = "") =>
-      `<g class="${cls}" style="${style}"><polygon class="sd" points="${pts([P(x1, y0, z), P(x1, y1, z), P(x1, y1, z - t), P(x1, y0, z - t)])}"/><polygon class="sd2" points="${pts([P(x0, y1, z), P(x1, y1, z), P(x1, y1, z - t), P(x0, y1, z - t)])}"/><polygon class="tp" points="${pts(top(x0, y0, x1, y1, z))}"/></g>`;
+    const Z = { product: 104, client: 196, user: 262 };
+    const quad = (cx, cy, h, z) => [P(cx - h, cy - h, z), P(cx + h, cy - h, z), P(cx + h, cy + h, z), P(cx - h, cy + h, z)];
+    const slab = (cx, cy, h, z, t, cls, style = "") => {
+      const [x0, y0, x1, y1] = [cx - h, cy - h, cx + h, cy + h];
+      return `<g class="${cls}" style="${style}">
+        <polygon class="sd" points="${pts([P(x1, y0, z), P(x1, y1, z), P(x1, y1, z - t), P(x1, y0, z - t)])}"/>
+        <polygon class="sd2" points="${pts([P(x0, y1, z), P(x1, y1, z), P(x1, y1, z - t), P(x0, y1, z - t)])}"/>
+        <polygon class="tp" points="${pts(quad(cx, cy, h, z))}"/></g>`;
+    };
+    const shadow = (cx, cy, h, z) => `<polygon class="ov-shadow" points="${pts(quad(cx + 6, cy + 6, h * 1.04, z))}"/>`;
     const isoText = (x, y, z, t, cls) => { const [X, Y] = P(x, y, z); return `<text class="${cls}" transform="matrix(${C30} ${S30} ${-C30} ${S30} ${X} ${Y})">${t}</text>`; };
-    const prodC = [[70, 190], [190, 190], [310, 190]];
-    const cliC = (k) => { const [px, py] = prodC[k.product]; return [px, py + k.side * 32]; };
+    // one row per level: centres on the line x + y = 380, spread along x − y
+    const along = (d) => [190 + d / 2, 190 - d / 2];
+    const PROD = [-216, 0, 216].map(along);
+    const PH = 52, CH = 18, BASE = 190;
+    const cliC = (k) => { const [px, py] = PROD[k.product]; return [px + k.side * 20, py - k.side * 20]; };
     const draw = (c) => {
       const act = CLIENTS.find((k) => k.id === c.id);
       const aP = act ? act.product : 0;
-      let g = `<svg viewBox="0 0 960 600" role="img" aria-label="Built from the bottom up: one shared package; three products float above it, each overriding only what it needs; above each product, its clients set colour, font and button shape; above each client, its users set their own look.">
-        <defs><linearGradient id="ov-glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset="1" stop-color="#fff" stop-opacity=".04"/></linearGradient></defs>`;
-      // base: the shared package, with a grid
-      g += slab(0, 0, 380, 380, Z.shared, 10, "ov-base");
+      let g = `<svg viewBox="0 0 960 540" role="img" aria-label="Built from the bottom up: one shared package; three products float above it, each overriding only what it needs; above each product, its clients set colour, font and button shape; above each client, its users set their own look.">
+        <defs>
+          <linearGradient id="ov-glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset="1" stop-color="#fff" stop-opacity=".05"/></linearGradient>
+          <filter id="ov-blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6"/></filter>
+        </defs>`;
+      // base: the shared package, a gridded board
+      g += slab(BASE, BASE, 190, 0, 12, "ov-base");
       let grid = "";
-      for (let i = 20; i < 380; i += 20) { grid += `<line x1="${P(i, 0, 0)[0]}" y1="${P(i, 0, 0)[1]}" x2="${P(i, 380, 0)[0]}" y2="${P(i, 380, 0)[1]}"/><line x1="${P(0, i, 0)[0]}" y1="${P(0, i, 0)[1]}" x2="${P(380, i, 0)[0]}" y2="${P(380, i, 0)[1]}"/>`; }
-      g += `<g class="ov-grid">${grid}</g>`;
-      g += isoText(18, 352, 0, "SHARED PACKAGE", "ov-engrave");
-      // pins: package → products
-      prodC.forEach(([x, y], p) => { const [X1, Y1] = P(x, y, Z.shared), [X2, Y2] = P(x, y, Z.product - 8); g += `<line class="ov-pin${p === aP ? " is-on" : ""}" x1="${X1}" y1="${Y1}" x2="${X2}" y2="${Y2}"/><circle class="ov-node${p === aP ? " is-on" : ""}" cx="${X1}" cy="${Y1}" r="3"/>`; });
-      // products
-      prodC.forEach(([x, y], p) => { g += slab(x - 50, y - 62, x + 50, y + 62, Z.product, 8, `ov-prod${p === aP ? " is-on" : ""}`); g += isoText(x - 42, y + 54, Z.product, `PRODUCT ${"ABC"[p]}`, "ov-label"); });
-      // pins: products → clients, clients and their users
-      CLIENTS.forEach((k) => {
-        const [x, y] = cliC(k), on = k.id === c.id, st = on ? `--glow:${k.colour}` : "";
-        const [X1, Y1] = P(x, y, Z.product), [X2, Y2] = P(x, y, Z.client - 6);
-        g += `<line class="ov-pin${on ? " is-on" : ""}" style="${st}" x1="${X1}" y1="${Y1}" x2="${X2}" y2="${Y2}"/>`;
+      for (let i = 20; i < 380; i += 20) { const a1 = P(i, 0, 0), a2 = P(i, 380, 0), b1 = P(0, i, 0), b2 = P(380, i, 0); grid += `<line x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/><line x1="${b1[0]}" y1="${b1[1]}" x2="${b2[0]}" y2="${b2[1]}"/>`; }
+      g += `<g class="ov-grid">${grid}</g>` + isoText(20, 366, 0, "SHARED PACKAGE", "ov-engrave");
+      // products: shadow on the base, pin, slab
+      PROD.forEach(([x, y]) => { g += shadow(x, y, PH, 0); });
+      PROD.forEach(([x, y], p) => {
+        const on = p === aP, a1 = P(x, y, 0), a2 = P(x, y, Z.product - 8);
+        g += `<line class="ov-pin${on ? " is-on" : ""}" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/><circle class="ov-node${on ? " is-on" : ""}" cx="${a1[0]}" cy="${a1[1]}" r="3"/>`;
+        g += slab(x, y, PH, Z.product, 8, `ov-prod${on ? " is-on" : ""}`);
+        g += isoText(x - PH + 8, y + PH - 8, Z.product, `PRODUCT ${"ABC"[p]}`, "ov-label");
       });
+      // clients: shadow on their product, pin, slab; users above each
+      CLIENTS.forEach((k) => { const [x, y] = cliC(k); g += shadow(x, y, CH, Z.product); });
       CLIENTS.forEach((k) => {
-        const [x, y] = cliC(k), on = k.id === c.id;
-        g += slab(x - 30, y - 22, x + 30, y + 22, Z.client, 7, `ov-cli${on ? " is-on" : ""}`, `--b:${k.colour}`);
-        [-18, 0, 18].forEach((dx, u) => {
-          const ux = x + dx, uy = y, own = on && u === 2;
-          const [X1, Y1] = P(ux, uy, Z.client), [X2, Y2] = P(ux, uy, Z.user);
-          g += `<line class="ov-pin is-user${own ? " is-on" : ""}" style="${own ? `--glow:${k.colour}` : ""}" x1="${X1}" y1="${Y1}" x2="${X2}" y2="${Y2}"/>`;
-          g += `<ellipse class="ov-user${own ? " is-on" : ""}" style="${own ? `--b:${k.colour}` : ""}" cx="${X2}" cy="${Y2}" rx="7" ry="4.2"/>`;
+        const [x, y] = cliC(k), on = k.id === c.id, st = `--b:${k.colour};--glow:${k.colour}`;
+        const a1 = P(x, y, Z.product), a2 = P(x, y, Z.client - 6);
+        g += `<line class="ov-pin${on ? " is-on" : ""}" style="${st}" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/>`;
+        g += slab(x, y, CH, Z.client, 6, `ov-cli${on ? " is-on" : ""}`, st);
+        [-1, 0, 1].forEach((u) => {
+          const ux = x + u * 8, uy = y - u * 8, own = on && u === 1;
+          const b1 = P(ux, uy, Z.client), b2 = P(ux, uy, Z.user);
+          g += `<line class="ov-pin is-user${own ? " is-on" : ""}" style="${own ? st : ""}" x1="${b1[0]}" y1="${b1[1]}" x2="${b2[0]}" y2="${b2[1]}"/>`;
+          g += `<ellipse class="ov-user${own ? " is-on" : ""}" style="${own ? st : ""}" cx="${b2[0]}" cy="${b2[1]}" rx="6.5" ry="3.8"/>`;
         });
       });
-      // the active client's name, floating beside it
-      if (act) { const [x, y] = cliC(act); const [X, Y] = P(x + 30, y - 22, Z.client); g += `<g class="ov-callout"><line x1="${X}" y1="${Y}" x2="${X + 26}" y2="${Y - 26}"/><text x="${X + 30}" y="${Y - 30}" style="fill:${act.colour}">${act.name}</text></g>`; }
-      // levels, labelled on the right with leader lines
-      const LX = 740;
-      const lv = [
-        ["Users", "+ their own look", P(380, 0, Z.user)[1] - 70],
-        ["Clients", "+ colour, font, button shape", P(380, 0, Z.client)[1] - 70],
-        ["Products", "+ only what each needs", P(380, 0, Z.product)[1] - 58],
-        ["Shared package", "sets every token", P(380, 0, Z.shared)[1]],
-      ];
-      const anchorX = [P(340, 190, Z.user)[0], P(340, 190, Z.client)[0], P(360, 128, Z.product)[0], P(380, 0, 0)[0]];
-      lv.forEach(([t, s2, y], i) => { g += `<line class="ov-leader" x1="${anchorX[i] + 8}" y1="${y}" x2="${LX - 12}" y2="${y}"/><circle class="ov-leader-dot" cx="${anchorX[i] + 8}" cy="${y}" r="2.5"/><text class="ov-ln" x="${LX}" y="${y - 3}">${t}</text><text class="ov-ls" x="${LX}" y="${y + 15}">${s2}</text>`; });
+      if (act) { const [x, y] = cliC(act); const [X, Y] = P(x, y, Z.user); g += `<text class="ov-callout" x="${X}" y="${Y - 16}" text-anchor="middle" style="fill:${act.colour}">${act.name}</text>`; }
+      // levels on the right, each with a leader line from its row
+      const LX = 744, rightOf = (z, h, d) => { const [x, y] = along(d); return P(x + h, y - h, z); };
+      [["Users", "+ their own look", Z.user, 8, 236], ["Clients", "+ colour, font, button shape", Z.client, CH, 236], ["Products", "+ only what each needs", Z.product, PH, 216], ["Shared package", "sets every token", 0, 190, 0]].forEach(([t, s2, z, h, d]) => {
+        const [x0] = rightOf(z, h, d), y = P(BASE, BASE, z)[1];
+        g += `<line class="ov-leader" x1="${x0 + 12}" y1="${y}" x2="${LX - 12}" y2="${y}"/><circle class="ov-leader-dot" cx="${x0 + 12}" cy="${y}" r="2.5"/><text class="ov-ln" x="${LX}" y="${y - 3}">${t}</text><text class="ov-ls" x="${LX}" y="${y + 15}">${s2}</text>`;
+      });
       g += `</svg>`;
       layers.innerHTML = g;
     };

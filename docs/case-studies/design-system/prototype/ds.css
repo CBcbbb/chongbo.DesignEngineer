@@ -56,18 +56,18 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 
 /* ---------- cover: the brand's own buttons in the corner, and "Seen as" ---------- */
 /* cover art: the three layers, stacked in the corner; the top one wears the brand */
-.cf-cover-top > .ds-cover-layers { position: absolute; z-index: 0; top: calc(-1 * clamp(0.5rem, 1.6vw, 1rem)); right: calc(-1 * var(--cf-pad) + 12px); width: min(36%, 320px); pointer-events: none;
-  -webkit-mask-image: linear-gradient(250deg, #000 52%, rgb(0 0 0 / 0.4) 78%, transparent 96%); mask-image: linear-gradient(250deg, #000 52%, rgb(0 0 0 / 0.4) 78%, transparent 96%); }
+.cf-cover-top > .ds-cover-layers { position: absolute; z-index: 0; top: calc(-1 * clamp(0.75rem, 2vw, 1.5rem)); right: calc(-1 * var(--cf-pad) + 14px); width: min(31%, 280px); pointer-events: none;
+  -webkit-mask-image: none; mask-image: none; }
 .ds-cover-layers svg { display: block; width: 100%; height: auto; overflow: visible; }
-.ds-cover-layers .pl { stroke: var(--on-field); stroke-width: 1.4; stroke-linejoin: round; transition: fill 0.35s var(--ease), stroke 0.35s var(--ease); }
-.ds-cover-layers .pl-shared { fill: none; stroke-dasharray: 4 4; }
-.ds-cover-layers .pl-product { fill: color-mix(in srgb, var(--on-field) 14%, transparent); }
-.ds-cover-layers .pl-customer { fill: var(--on-field); }
-.ds-cover-layers .btn { fill: var(--field); transition: fill 0.35s var(--ease); }
-.ds-cover-layers .tick { stroke: var(--on-field-2); stroke-width: 1; }
-.ds-cover-layers text { font: 500 14px var(--mono); fill: var(--on-field-2); }
-.ds-cover-layers text.is-brand { font: 600 16px var(--ds-btn-font); fill: var(--on-field); }
-.ds-cover-layers .rail { stroke: var(--on-field-2); stroke-width: 1; stroke-dasharray: 2 4; }
+.ds-cover-layers .cl-base { fill: color-mix(in srgb, var(--on-field) 6%, transparent); stroke: var(--on-field); stroke-width: 0.8; stroke-dasharray: 4 4; }
+.ds-cover-layers .cl-prod { fill: color-mix(in srgb, var(--on-field) 14%, transparent); stroke: var(--on-field); stroke-width: 0.8; }
+.ds-cover-layers .cl-prod.is-on { fill: var(--on-field); }
+.ds-cover-layers .cl-cli { fill: none; stroke: var(--on-field); stroke-width: 0.8; }
+.ds-cover-layers .cl-cli.is-on { fill: var(--on-field); }
+.ds-cover-layers .cl-pin { stroke: var(--on-field-2); stroke-width: 0.6; stroke-dasharray: 1.5 2; }
+.ds-cover-layers .cl-pin.is-on { stroke: var(--on-field); stroke-width: 1.1; stroke-dasharray: none; }
+.ds-cover-layers .cl-tick { stroke: var(--on-field-2); stroke-width: 1; }
+.ds-cover-layers text { font: 500 13px var(--mono); fill: var(--on-field-2); }
 @media (max-width: 900px) { .cf-cover-top > .ds-cover-layers { display: none; } }
 .cf-cover-top .cf-h1 { max-width: none; }
 .ds-seen { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 3px; border-radius: 22px; width: fit-content; max-width: 100%; margin-top: clamp(1rem, 2.4vw, 1.5rem); background: color-mix(in srgb, var(--on-field) 10%, transparent); }
@@ -345,8 +345,8 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-layers2 .ov-node.is-on { fill: var(--on-dark); }
 .ds-layers2 .ov-user { fill: var(--dark-inset); stroke: var(--on-dark-2); stroke-width: 1; }
 .ds-layers2 .ov-user.is-on { fill: var(--b); stroke: #fff; filter: drop-shadow(0 0 6px var(--b)); }
-.ds-layers2 .ov-callout line { stroke: var(--on-dark-2); stroke-width: 1; }
-.ds-layers2 .ov-callout text { font: 600 15px var(--sans); }
+.ds-layers2 .ov-callout { font: 600 15px var(--sans); }
+.ds-layers2 .ov-shadow { fill: #000; opacity: 0.45; filter: url(#ov-blur); }
 .ds-layers2 .ov-leader { stroke: var(--dark-line); stroke-width: 1; }
 .ds-layers2 .ov-leader-dot { fill: var(--on-dark); }
 .ds-layers2 .ov-ln { font: 600 16px var(--sans); fill: var(--on-dark); }
