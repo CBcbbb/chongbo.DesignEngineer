@@ -4,7 +4,7 @@
 .wrap {
   max-width: 1180px;
   margin: 0 auto;
-  padding-inline: clamp(16px, 4vw, 48px);
+  padding-inline: var(--gutter);
 }
 .sr-only-focusable:not(:focus):not(:focus-within) {
   position: absolute;

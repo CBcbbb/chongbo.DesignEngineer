@@ -31,6 +31,10 @@
   --stamp: #c2311f;
   --focus: #1c1b19;
 
+  /* the page shell: its widest and the gutter either side; the home strip uses both to reach the screen edge */
+  --wrap-max: 1200px;
+  --gutter: clamp(16px, 4vw, 48px);
+
   /* spacing scale: every vertical gap in the shell is one of these */
   --s1: 4px;
   --s2: 8px;

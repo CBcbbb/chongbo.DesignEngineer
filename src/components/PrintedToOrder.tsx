@@ -30,6 +30,48 @@ const prefersReduced = () =>
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, prefersReduced() ? 0 : ms));
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+/** The ticket's flight: from the rack into the slot (or back). The chip on the paper appears as it lands. */
+const FLY_MS = 600;
+/** The empty paper swaps its example every so often, with a fade rather than a typewriter, so it reads as a hint, not output. */
+const EXAMPLE_MS = 3800;
+
+/**
+ * A ticket leaves its place and lands somewhere else: a copy of it flies between the two rectangles, shrinking to fit,
+ * and is thrown away on arrival. The real elements never move, so the layout stays put.
+ */
+function fly(source: HTMLElement, from: DOMRect, to: DOMRect) {
+  if (prefersReduced()) return;
+  const copy = source.cloneNode(true) as HTMLElement;
+  copy.className = "topic flying";
+  copy.removeAttribute("aria-pressed");
+  copy.setAttribute("aria-hidden", "true");
+  Object.assign(copy.style, {
+    position: "fixed",
+    left: `${from.left}px`,
+    top: `${from.top}px`,
+    width: `${from.width}px`,
+    height: `${from.height}px`,
+    margin: "0",
+    zIndex: "40",
+    pointerEvents: "none",
+  });
+  document.body.appendChild(copy);
+  const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+  const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+  const scale = Math.min(1, to.height / from.height);
+  const tilt = rnd(-9, 9);
+  const anim = copy.animate(
+    [
+      { translate: "0 0", scale: "1", rotate: "0deg", opacity: 1 },
+      { translate: `${dx * 0.45}px ${dy * 0.4}px`, scale: "0.8", rotate: `${tilt}deg`, opacity: 1, offset: 0.45 },
+      { translate: `${dx}px ${dy}px`, scale: `${scale}`, rotate: "0deg", opacity: 1, offset: 0.86 },
+      { translate: `${dx}px ${dy}px`, scale: `${scale}`, rotate: "0deg", opacity: 0 },
+    ],
+    { duration: FLY_MS, easing: "cubic-bezier(0.45, 0, 0.2, 1)", fill: "forwards" },
+  );
+  anim.onfinish = () => copy.remove();
+  anim.oncancel = () => copy.remove();
+}
 
 type Outcome = { ok: true; data: AskResponse } | { ok: false; message: string };
 
@@ -61,7 +103,7 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
   const [busy, setBusy] = useState(false);
   const [steps, setSteps] = useState<string[] | null>(null);
   const [stepAt, setStepAt] = useState(-1);
-  const [ghost, setGhost] = useState(EXAMPLES[0]!);
+  const [example, setExample] = useState(0);
   const [result, setResult] = useState<Result | null>(null);
   const [cur, setCur] = useState(0);
   const [live, setLive] = useState("");
@@ -77,33 +119,17 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
   const machineRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
+  const chipsRef = useRef<HTMLDivElement>(null);
+  const rackRef = useRef<HTMLUListElement>(null);
 
-  // ---------- typed examples on the paper; a still hint once a skill is picked ----------
+  // ---------- examples on the paper, one at a time; a still hint once a skill is picked ----------
   const anyPicked = picked.length > 0;
-  const ghostText = anyPicked ? PICKED_HINT : ghost;
+  const ghostText = anyPicked ? PICKED_HINT : EXAMPLES[example % EXAMPLES.length]!;
   useEffect(() => {
-    if (anyPicked || prefersReduced()) return;
-    let ex = 0;
-    let i = EXAMPLES[0]!.length;
-    let timer: ReturnType<typeof setTimeout>;
-    const tick = () => {
-      const s = EXAMPLES[ex % EXAMPLES.length]!;
-      if (i < s.length) {
-        i++;
-        setGhost(s.slice(0, i));
-        timer = setTimeout(tick, 55);
-      } else {
-        timer = setTimeout(() => {
-          ex++;
-          i = 0;
-          setGhost("");
-          tick();
-        }, 1800);
-      }
-    };
-    timer = setTimeout(tick, 0);
-    return () => clearTimeout(timer);
-  }, [anyPicked]);
+    if (anyPicked || focused || brief || prefersReduced()) return;
+    const t = setInterval(() => setExample((e) => e + 1), EXAMPLE_MS);
+    return () => clearInterval(t);
+  }, [anyPicked, focused, brief]);
 
   // The sheet grows with its chips; the machine moves down to keep clear of the cards above.
   useEffect(() => {
@@ -116,12 +142,33 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
   }, []);
 
   // ---------- skills cards ----------
-  const toggle = (id: string, el?: HTMLElement | null) => {
+  /** Where a ticket lands on the paper: beside the last chip, or the paper's bottom-left corner when there are none. */
+  const slotOnPaper = (): DOMRect | null => {
+    const chips = chipsRef.current;
+    const last = chips && !chips.hidden ? (chips.lastElementChild as HTMLElement | null) : null;
+    if (last) {
+      const r = last.getBoundingClientRect();
+      return new DOMRect(r.right + 6, r.top, r.width, r.height);
+    }
+    const paper = paperRef.current?.getBoundingClientRect();
+    return paper ? new DOMRect(paper.left + 22, paper.bottom - 14 - 28, 120, 28) : null;
+  };
+
+  /** A ticket is taken from the rack and dropped into the slot, or taken off the paper and put back. */
+  const toggle = (id: string, from?: HTMLElement | null) => {
     if (busyRef.current) return;
+    const taking = !picked.includes(id);
     setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
-    // A card picked up gets a small random tilt and settles; the layout never moves.
-    if (el && !prefersReduced())
-      el.animate([{ rotate: "0deg" }, { rotate: `${rnd(-2.4, 2.4)}deg`, offset: 0.35 }, { rotate: "0deg" }], { duration: 480, easing: SPRING });
+    const rackTicket = rackRef.current?.querySelector<HTMLElement>(`[data-topic="${id}"]`);
+    if (taking) {
+      const to = slotOnPaper();
+      if (rackTicket && to) fly(rackTicket, rackTicket.getBoundingClientRect(), to);
+    } else if (rackTicket) {
+      const chip = from?.closest(".chips") ? from : chipsRef.current?.querySelector<HTMLElement>(`[data-topic="${id}"]`);
+      if (chip) fly(rackTicket, chip.getBoundingClientRect(), rackTicket.getBoundingClientRect());
+      if (!prefersReduced())
+        rackTicket.animate([{ scale: "0.96", opacity: 0.4 }, { scale: "1", opacity: 1 }], { duration: 320, delay: FLY_MS - 80, easing: SPRING, fill: "backwards" });
+    }
   };
 
   /** The button goes down and the whole machine takes the knock, a little differently each time. */
@@ -289,17 +336,21 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
         <h2 className="sr-only" id="skills-title">
           Skills
         </h2>
-        <ul className="topics" style={{ "--topics": topics.length } as CSSProperties}>
+        <ul className="topics" ref={rackRef} style={{ "--topics": topics.length } as CSSProperties}>
           {topics.map((t, i) => (
             <li key={t.id}>
               <button
                 type="button"
                 className="topic"
+                data-topic={t.id}
                 aria-pressed={picked.includes(t.id)}
                 onClick={(e) => toggle(t.id, e.currentTarget)}
               >
                 <small aria-hidden="true">{pad2(i + 1)}</small>
                 <b>{t.label}</b>
+                <span className="taken" aria-hidden="true">
+                  In the machine
+                </span>
               </button>
             </li>
           ))}
@@ -319,11 +370,20 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
             aria-labelledby={labelledBy}
             onSubmit={onSubmit}
           >
-            <div className="paper" ref={paperRef}>
-              <div className={`field${brief || focused ? " on" : ""}`} hidden={working}>
-                <label htmlFor="brief" className="sr-only">
-                  Describe the role or paste a job description.
-                </label>
+            <div
+              className="paper"
+              ref={paperRef}
+              onClick={(e) => {
+                // The whole sheet is the form: a click anywhere on it puts the caret in the field.
+                if (working || (e.target as HTMLElement).closest("button, textarea")) return;
+                textareaRef.current?.focus();
+              }}
+            >
+              <div className="paper-head" hidden={working}>
+                <label htmlFor="brief">Your brief</label>
+                <span aria-hidden="true">{brief.trim() || picked.length ? "↵ to print" : ""}</span>
+              </div>
+              <div className={`field${brief ? " has-text" : ""}${focused ? " on" : ""}`} hidden={working}>
                 <textarea
                   ref={textareaRef}
                   id="brief"
@@ -335,16 +395,18 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
                   onBlur={() => setFocused(false)}
                   onKeyDown={onKeyDown}
                 />
-                <div className="ghost" aria-hidden="true">
+                <div className="ghost" aria-hidden="true" key={anyPicked ? "picked" : example}>
                   {ghostText}
                 </div>
               </div>
               <input type="hidden" name="topics" value={topicsToSignals(picked).join(",")} />
-              <div className="chips" aria-label="Selected skills" role="group" hidden={working || !picked.length}>
+              <div className="chips" ref={chipsRef} aria-label="Selected skills" role="group" hidden={working || !picked.length}>
                 {picked.map((id) => {
                   const label = topicById(id)?.label ?? id;
+                  const n = topics.findIndex((t) => t.id === id);
                   return (
-                    <button key={id} type="button" aria-label={`Remove ${label}`} onClick={() => toggle(id)}>
+                    <button key={id} type="button" data-topic={id} aria-label={`Remove ${label}`} onClick={(e) => toggle(id, e.currentTarget)}>
+                      {n >= 0 && <small aria-hidden="true">{pad2(n + 1)}</small>}
                       {label}
                     </button>
                   );

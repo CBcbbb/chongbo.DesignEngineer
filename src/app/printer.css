@@ -4,7 +4,7 @@
  */
 
 .wrap {
-  max-width: 1200px;
+  max-width: var(--wrap-max);
 }
 .bar {
   padding-block: var(--s3);
@@ -58,30 +58,54 @@
   padding: var(--s3) 0 var(--s2);
   list-style: none;
 }
+/* Each skill is a ticket: paper, a punched notch each side, a perforation line between the number and the name.
+   Picking one takes it out of the rack (a copy flies into the slot) and leaves its outline behind; the ticket itself
+   turns up on the paper as a chip with the same number. The rack never reflows. */
 .topic {
   --focus: var(--ink);
+  --notch: 7px;
+  /* where the perforation runs, and the notches sit, from the top of the ticket */
+  --perf: 28px;
   position: relative;
   width: 100%;
   min-height: 74px;
-  padding: 9px 10px 10px;
+  padding: 9px 12px 10px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
   text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 8px;
+  gap: 9px;
   background: var(--paper);
   color: var(--paper-ink);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 0 0 1px rgba(60, 50, 40, 0.1),
-    0 2px 0 #d6d2ca,
-    0 10px 18px -10px rgba(40, 30, 20, 0.35);
+  /* the notches are cut out of the ticket, shadow and all */
+  mask-image:
+    radial-gradient(circle at 30px calc(30px + var(--perf)), transparent var(--notch), #000 calc(var(--notch) + 0.5px)),
+    radial-gradient(circle at calc(100% - 30px) calc(30px + var(--perf)), transparent var(--notch), #000 calc(var(--notch) + 0.5px));
+  mask-size: calc(100% + 60px) calc(100% + 60px);
+  mask-position: -30px -30px;
+  mask-repeat: no-repeat;
+  mask-clip: no-clip;
+  mask-composite: intersect;
+  filter: drop-shadow(0 2px 0 #d6d2ca) drop-shadow(0 12px 10px rgba(40, 30, 20, 0.2));
   transition:
     transform 0.25s var(--ease),
-    box-shadow 0.25s;
+    filter 0.25s,
+    background-color 0.25s,
+    color 0.25s;
+}
+/* perforation between the stub (number) and the ticket (name) */
+.topic::before {
+  content: "";
+  position: absolute;
+  left: var(--notch);
+  right: var(--notch);
+  top: var(--perf);
+  border-top: 1.5px dashed rgba(60, 50, 40, 0.2);
+  pointer-events: none;
+  transition: border-color 0.25s;
 }
 .topic small {
   font: 500 10.5px var(--mono);
@@ -94,23 +118,58 @@
   overflow-wrap: anywhere;
 }
 .topic:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) rotate(-0.6deg);
+  filter: drop-shadow(0 2px 0 #d6d2ca) drop-shadow(0 18px 14px rgba(40, 30, 20, 0.26));
 }
+.topic:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+/* taken: the ticket has gone into the machine; its place in the rack stays, drawn as an outline */
 .topic[aria-pressed="true"] {
-  transform: translateY(-10px);
-  box-shadow:
-    0 0 0 1.5px var(--paper-ink),
-    0 18px 24px -12px rgba(40, 30, 20, 0.45);
+  background: transparent;
+  color: var(--ink-2);
+  filter: none;
+  transform: none;
+  box-shadow: 0 0 0 1.5px var(--rule) inset;
+  mask-image: none;
 }
-.topic[aria-pressed="true"]::after {
-  content: "";
+.topic[aria-pressed="true"]::before {
+  border-top-color: transparent;
+}
+.topic[aria-pressed="true"] small {
+  color: var(--ink-2);
+}
+.topic[aria-pressed="true"] b {
+  opacity: 0.55;
+}
+.topic .taken {
+  display: none;
+}
+.topic[aria-pressed="true"] .taken {
+  display: block;
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--red);
+  left: 12px;
+  bottom: 10px;
+  font: 500 10px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--red);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.topic[aria-pressed="true"]:hover .taken,
+.topic[aria-pressed="true"]:focus-visible .taken {
+  opacity: 1;
+}
+.topic[aria-pressed="true"]:hover b,
+.topic[aria-pressed="true"]:focus-visible b {
+  opacity: 0;
+}
+.topic.flying {
+  transform: none;
+  transition: none;
+  filter: drop-shadow(0 18px 16px rgba(40, 30, 20, 0.3));
 }
 
 /* ---------- the printer ----------
@@ -286,38 +345,93 @@
   pointer-events: none;
 }
 /* The sheet grows upwards with what is on it (chips, steps); the field keeps at least three lines. */
+/* The sheet is an order form: a label at the top, ruled lines to write on, the caret waiting at the start of the first
+   line. Everything on it says "fill me in", so it never reads as something the machine has already printed. */
 .paper {
   --focus: var(--paper-ink);
+  --line: 1.5em;
   position: relative;
   min-height: inherit;
   background: var(--paper);
   color: var(--paper-ink);
   border-radius: 3px 3px 0 0;
-  padding: 18px 22px 14px;
+  padding: 14px 22px 14px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   overflow: hidden;
+  cursor: text;
   box-shadow:
     0 -1px 0 rgba(0, 0, 0, 0.04),
     0 10px 30px -14px rgba(0, 0, 0, 0.25);
   background-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.05));
+  transition: box-shadow 0.3s;
+}
+.paperbox:focus-within .paper {
+  box-shadow:
+    0 -1px 0 rgba(0, 0, 0, 0.04),
+    0 14px 34px -14px rgba(0, 0, 0, 0.35);
+}
+.paper-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--paper-rule);
+  font: 500 10.5px var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+.paper-head label {
+  cursor: text;
+  color: var(--paper-ink);
+}
+.paper-head span {
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s;
+}
+.paperbox:focus-within .paper-head span {
+  color: var(--red);
 }
 .field {
   position: relative;
   flex: 1;
-  min-height: 4.6em;
+  min-height: calc(3 * var(--line));
+  font: 400 17px / var(--line) var(--mono);
+  /* ruled lines, one per line of text; a touch darker while writing */
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--line) - 1px),
+    var(--paper-rule) calc(var(--line) - 1px),
+    var(--paper-rule) var(--line)
+  );
+  transition: background-image 0.2s;
+}
+.field.on {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--line) - 1px),
+    var(--paper-chip) calc(var(--line) - 1px),
+    var(--paper-chip) var(--line)
+  );
 }
 .field textarea {
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 4.6em;
+  min-height: calc(3 * var(--line));
   resize: none;
   border: 0;
   background: transparent;
   color: var(--paper-ink);
-  font: 400 17px/1.5 var(--mono);
+  font: inherit;
   padding: 0;
   outline: none;
   caret-color: var(--red);
@@ -325,19 +439,27 @@
 .ghost {
   position: absolute;
   inset: 0;
-  font: 400 17px/1.5 var(--mono);
+  font: inherit;
   color: var(--paper-ghost);
   pointer-events: none;
   white-space: pre-wrap;
+  animation: ghost-in 0.45s var(--ease-out) both;
 }
-.ghost::after {
+@keyframes ghost-in {
+  from {
+    opacity: 0;
+    translate: 0 3px;
+  }
+}
+/* the caret waits at the start of the first line until the field is focused, when the real one takes over */
+.ghost::before {
   content: "";
   display: inline-block;
   width: 2px;
   height: 1.1em;
   background: var(--red);
   vertical-align: -3px;
-  margin-left: 1px;
+  margin-right: 1px;
   animation: caret 1s steps(2) infinite;
 }
 @keyframes caret {
@@ -345,9 +467,13 @@
     opacity: 0;
   }
 }
-.field.on .ghost {
+.field.on .ghost::before {
   display: none;
 }
+.field.has-text .ghost {
+  display: none;
+}
+/* tickets on the paper: the same stub, smaller, number and all */
 .paper .chips {
   display: flex;
   flex-wrap: wrap;
@@ -357,21 +483,44 @@
   display: none;
 }
 .paper .chips button {
+  --focus: var(--paper-ink);
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   min-height: 28px;
-  padding: 0 10px;
+  padding: 0 9px 0 8px;
   border: 1px solid var(--paper-chip);
-  border-radius: 999px;
-  background: transparent;
+  border-radius: 3px;
+  background: var(--paper);
   font: 500 12px var(--sans);
   color: var(--paper-ink);
   cursor: pointer;
+  animation: chip-in 0.3s var(--ease-out) both;
+  animation-delay: 0.5s;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+}
+.paper .chips button small {
+  font: 500 10px var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--paper-dim);
+  padding-right: 7px;
+  border-right: 1px dashed var(--paper-chip);
 }
 .paper .chips button::after {
   content: "×";
   color: var(--paper-dim);
+}
+.paper .chips button:hover {
+  border-color: var(--paper-ink);
+}
+.paper .chips button:hover::after {
+  color: var(--red);
+}
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    scale: 0.85;
+  }
 }
 .steps {
   list-style: none;
@@ -461,7 +610,6 @@
 /* ---------- results ---------- */
 .results {
   margin-top: var(--s6);
-  overflow-x: clip;
   padding-top: var(--s3);
   scroll-margin-top: var(--s4);
 }
@@ -513,24 +661,36 @@
   border-radius: 6px;
 }
 @media (min-width: 900px) {
+  /* The strip runs edge to edge of the screen, so the next sheet is cut by the screen itself, never by an invisible
+     line inside the page. The first sheet lines up with the title above it. */
   .sheets {
+    /* from the screen edge to the page's content: what is left over once the shell is centred, plus its gutter */
+    --edge: calc(max((100vw - var(--wrap-max)) / 2, 0px) + var(--gutter));
+    --sheet-w: min(640px, 72%);
     display: flex;
     gap: var(--s5);
-    max-width: 1100px;
+    max-width: none;
+    width: 100vw;
+    margin: 0 0 0 calc(50% - 50vw);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    scroll-padding-inline: 0;
-    padding: var(--s3) var(--s3) var(--s6);
+    scroll-padding-inline: var(--edge);
+    padding: var(--s3) 0 var(--s6) var(--edge);
     scrollbar-width: none;
   }
   .sheets::-webkit-scrollbar {
     display: none;
   }
   .sheets .sheet {
-    flex: 0 0 min(640px, 72%);
+    flex: 0 0 var(--sheet-w);
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;
+  }
+  /* room after the last sheet, so it too can come to the front */
+  .sheets::after {
+    content: "";
+    flex: 0 0 calc(100% - var(--sheet-w));
   }
   .sheets .s-foot {
     margin-top: auto;
@@ -917,9 +1077,11 @@
   .paper {
     padding: 14px 14px 10px;
   }
-  .field textarea,
-  .ghost {
+  /* the narrower sheet takes four lines, so the longest example still fits above the slot */
+  .field,
+  .field textarea {
     font-size: 15px;
+    min-height: calc(4 * var(--line));
   }
   .skills {
     margin-top: var(--s4);
