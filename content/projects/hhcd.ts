@@ -37,8 +37,8 @@ export const hhcd: Project = {
   ],
   shows: [
     { capability: "E", label: "Accessibility", section: "keyboard" },
-    { capability: "B", label: "Idea to production", section: "sample-data" },
-    { capability: "D", label: "Craft and interaction", section: "arrangements" },
+    { capability: "B", label: "End to end", section: "four-types" },
+    { capability: "D", label: "Data visualisation", section: "arrangements" },
   ],
   parts: [
     { id: "voice", label: "Part 1", title: "VOICE, the first version" },
@@ -78,7 +78,7 @@ export const hhcd: Project = {
       nav: "From map to network",
       part: "voice",
       kind: "decision",
-      title: "A network instead of a geographical map",
+      title: "A network instead of a geographic map",
       body: [
         "VOICE wanted to show its communities and projects together, as one connected body of work. Because the project spanned several countries, we started with the obvious approach: a geographic map. But VOICE was built around communities, and a community is held together by shared projects, methods and partners, not by borders. So we moved to a network with no hierarchy – a rhizomatic map – where people, projects, partners and methods connect directly, as equals.",
       ],
