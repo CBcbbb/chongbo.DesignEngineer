@@ -36,9 +36,7 @@ export function Sheet({ card, index, total, media, whole, current = true, headin
         </span>
       </div>
       {whole ? (
-        <div className="s-card">
-          <FitMedia>{whole}</FitMedia>
-        </div>
+        <div className="s-card">{whole}</div>
       ) : (
         <>
           <div className="s-head">

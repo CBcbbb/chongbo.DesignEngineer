@@ -640,9 +640,14 @@
   .sheets {
     /* from the screen edge to the page's content: what is left over once the shell is centred, plus its gutter */
     --edge: calc(max((100vw - var(--wrap-max)) / 2, 0px) + var(--gutter));
-    /* as wide as a case-file card plus the sheet's margins, so a printed card is the card at its own size */
-    --sheet-w: min(876px, 100%);
-    --sheet-h: clamp(520px, calc(100svh - 170px), 920px);
+    /* a printed card is the case-file card at its own size: the same width (836px on the case page) and the same
+       height (--cf-card-h, as case-file.css sets it), with the sheet's margin around it. A shorter card keeps its own
+       height and sits at the top; the sheet stays the same size either way. */
+    --card-w: 836px;
+    --sheet-pad: 18px;
+    --cf-card-h: min(calc(100svh - 3rem), 58rem);
+    --sheet-w: min(calc(var(--card-w) + 2 * var(--sheet-pad)), 100%);
+    --sheet-h: calc(var(--cf-card-h) + 150px);
     display: flex;
     gap: var(--s5);
     max-width: none;
@@ -679,11 +684,15 @@
     margin-bottom: 0;
   }
   .sheets .s-card {
+    flex: none;
+    height: var(--cf-card-h);
     margin-top: 0;
   }
-  /* the card is as tall as the room the sheet gives it; a card that is naturally shorter stays shorter */
-  .sheets .cf-print {
-    --cf-card-h: calc(var(--sheet-h) - 150px);
+  .sheets .sheet.has-card {
+    padding: var(--sheet-pad);
+  }
+  .sheets .sheet.has-card .s-foot {
+    margin-top: auto;
   }
   .sheets .fit {
     height: 100%;
@@ -822,7 +831,7 @@
   box-shadow: none;
 }
 .sheet.has-card {
-  padding: clamp(14px, 1.6vw, 18px) clamp(14px, 1.6vw, 18px) clamp(12px, 1.6vw, 16px);
+  padding: clamp(14px, 1.6vw, 18px);
 }
 .sheet.has-card .s-top {
   margin-bottom: var(--s3);
