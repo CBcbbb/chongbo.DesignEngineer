@@ -154,6 +154,12 @@ export function DataFlow({ steps }: { steps: string[] }) {
         </span>
       </div>
       <div className="cf-pipe-stage" data-step={step} aria-hidden="true">
+        {/* what this step shows, as the figure's label above the picture */}
+        <p className="cf-pipe-meta">
+          <span className="cf-pipe-note">{NOTES[step]}</span>
+          <span className="cf-pipe-sample">Sample labels</span>
+        </p>
+        <div className="cf-pipe-scroller">
         <div className="cf-pipe-canvas">
         <svg className="cf-pipe-links" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">
           {LINKS.map(([s, t]) => (
@@ -212,8 +218,7 @@ export function DataFlow({ steps }: { steps: string[] }) {
             </span>
           );
         })}
-        <span className="cf-pipe-note">{NOTES[step]}</span>
-        <span className="cf-pipe-sample">Sample labels</span>
+        </div>
         </div>
       </div>
       <p className="cf-pipe-scroll" aria-hidden="true">
