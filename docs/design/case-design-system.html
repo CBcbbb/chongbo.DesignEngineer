@@ -3440,6 +3440,10 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .p3-blk u { position: absolute; top: 50%; width: 6px; height: 6px; background: var(--b); margin-top: -3px; }
 .p3-blk u.l { left: -3.5px; } .p3-blk u.r { right: -3.5px; }
 
+/* the showcase near the end: say plainly that it is a rebuild with invented data */
+.ds-work-note { max-width: 62ch; margin: 10px 0 0; font: 400 15px/1.5 var(--sans); color: var(--on-field-2); }
+.cf-work-head:has(.ds-work-note) { display: block; }
+
 </style>
 <style id="ds-palette"></style>
 <div class="proto-bar" role="group" aria-label="Theme for review">
@@ -3475,6 +3479,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
             <li><a href="#fixed-lightness">One lightness per step</a></li>
             <li><a href="#dark">Dark mode</a></li>
             <li><a href="#customer-colour">Customer colours</a></li>
+            <li><a href="#try-it">Try it</a></li>
             <li><a href="#outcome">Outcome</a></li>
           </ol>
         </li>
@@ -3523,16 +3528,6 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
         </div>
       </header>
 
-
-      <!-- ============ the work ============ -->
-      <section class="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
-        <div class="cf-work-head">
-          <h2 id="cf-work-title">The system, rebuilt on an invented brand</h2>
-        </div>
-        <div class="cf-plate">
-          <div class="tp" id="work-panel"></div>
-        </div>
-      </section>
 
       <!-- ============ part 1 ============ -->
       <section id="one-system" class="cf-sheet is-field cf-opener" aria-labelledby="one-system-h">
@@ -3639,7 +3634,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
         <span class="cf-num" aria-hidden="true">03</span>
         <div>
           <h2 id="accessibility-h"><span class="sr-only">Part 03: </span>Accessibility built into the colours</h2>
-          <p class="cf-cards">Roles, not colours · One lightness per step · Dark mode · Customer colours · Outcome</p>
+          <p class="cf-cards">Roles, not colours · One lightness per step · Dark mode · Customer colours · Try it · Outcome</p>
         </div>
       </section>
 
@@ -3698,6 +3693,17 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
         </div>
         <div class="cf-evidence" data-fit="fill">
           <div class="ds-ev cc" id="cc"></div>
+        </div>
+      </section>
+
+      <!-- ============ try it: the showcase, near the end ============ -->
+      <section id="try-it" class="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
+        <div class="cf-work-head">
+          <h2 id="cf-work-title">Try it: the system, rebuilt with invented data</h2>
+          <p class="ds-work-note">The real products are confidential, so this is a rebuild. Every brand, name and number is made up; the colour rules and contrast checks are the system's own. Switch the brand, the mode and the contrast labels.</p>
+        </div>
+        <div class="cf-plate">
+          <div class="tp" id="work-panel"></div>
         </div>
       </section>
 

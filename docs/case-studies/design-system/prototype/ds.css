@@ -565,3 +565,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .p3-blk p { margin: 6px 8px 0; color: #9aa0ab; font: 400 10px/1.2 "Geist Mono", monospace; }
 .p3-blk u { position: absolute; top: 50%; width: 6px; height: 6px; background: var(--b); margin-top: -3px; }
 .p3-blk u.l { left: -3.5px; } .p3-blk u.r { right: -3.5px; }
+
+/* the showcase near the end: say plainly that it is a rebuild with invented data */
+.ds-work-note { max-width: 62ch; margin: 10px 0 0; font: 400 15px/1.5 var(--sans); color: var(--on-field-2); }
+.cf-work-head:has(.ds-work-note) { display: block; }

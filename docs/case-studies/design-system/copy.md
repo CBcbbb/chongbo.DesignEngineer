@@ -22,12 +22,6 @@ The shared colours and components behind three products, and every customer's br
 - **Outcome:** Three products that read as one company again, in any customer's brand. `[the last clause once the fix ships]`
 - **What this shows:** Design system (C) · Accessibility in the colours (E) · Figma to code (B)
 
-## The work
-
-The system, rebuilt on an invented brand.
-
----
-
 ## Part 1 · One system for every product and client
 
 ### 01.1 Three products, drifting from the first
@@ -87,6 +81,12 @@ Customers could pick any colour, and the first version passed it straight throug
 I applied the scales' own rule to the customer's colour. The fill stays theirs, and text on it turns dark or light. Used as text, their colour keeps its hue and moves in lightness until it reaches 4.5:1.
 
 `[Written as done: only once the fix is live in the product. If it isn't, this card moves to the Outcome as "What I'd change", see below.]`
+
+## Try it (after 03.4, before the outcome)
+
+**Title:** Try it: the system, rebuilt with invented data
+
+The real products are confidential, so this is a rebuild. Every brand, name and number is made up; the colour rules and contrast checks are the system's own. Switch the brand, the mode and the contrast labels.
 
 ## Close
 
