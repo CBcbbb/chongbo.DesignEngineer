@@ -296,57 +296,57 @@
     document.querySelectorAll('input[name="f2c"]').forEach((r) => r.addEventListener("change", () => { stage.dataset.show = r.value; }));
   }
 
-  /* ---------- overview: three translucent layers; each token is set once and overridden from above ---------- */
+  /* ---------- overview: one package fans out to products, clients and users; each level overrides only what it needs ---------- */
   const layers = document.getElementById("layers");
   if (layers) {
-    const COS = 0.866, SIN = 0.5, PW = 400, PH = 220, GAP = 172, OX = 206, OY = 14;
-    const P = (x, y, oy) => [OX + (x - y) * COS, oy + (x + y) * SIN];
-    const iso = (oy) => `matrix(${COS} ${SIN} ${-COS} ${SIN} ${OX} ${oy})`;
-    const TOKENS = ["--primary", "--radius", "--font", "--menu-highlight"];
-    const chipY = (i) => 50 + i * 38, CX = 18, CW = 236, CH = 28;
+    const CLIENTS = [
+      { id: "courier", name: "Courier", colour: "#f2c94c", font: "Archivo", product: 0 },
+      { id: "grocer", name: "Grocer", colour: "#2e7d3a", font: "Fraunces", product: 0 },
+      { id: "bank", name: "Bank", colour: "#1d2b5c", font: "IBM Plex Sans", product: 1 },
+      { id: "florist", name: "Florist", colour: "#e85d9a", font: "Geist", product: 1 },
+      { id: "bakery", name: "Bakery", colour: "#b5562b", font: "Geist", product: 2 },
+      { id: "studio", name: "Studio", colour: "#6b4fd8", font: "Geist", product: 2 },
+    ];
+    const W = 820, TOP = 64, ROW = 66, COLX = [0, 196, 392, 612], SW = 150, PW = 150, CWID = 168;
+    const cy = (i) => TOP + i * ROW + ROW / 2;
+    const py = (p) => (cy(p * 2) + cy(p * 2 + 1)) / 2;
+    const H = TOP + CLIENTS.length * ROW + 12;
+    const curve = (x1, y1, x2, y2) => { const m = (x1 + x2) / 2; return `M${x1} ${y1} C${m} ${y1} ${m} ${y2} ${x2} ${y2}`; };
     const draw = (c) => {
-      const brandFont = c.font.replace(/"/g, "'").replace("var(--sans)", "sans-serif");
-      const fontName = c.font.match(/"([^"]+)"/)[1];
-      const L = [
-        { key: "customer", name: "Customer", sub: "their brand", note: "colour · font · button shape", oy: OY,
-          set: { "--primary": c.colour, "--radius": c.btn === "999px" ? "pill" : c.btn === "0" ? "0" : c.btn, "--font": fontName } },
-        { key: "product", name: "Product", sub: "only what it needs", note: "fixes built from tokens", oy: OY + GAP,
-          set: { "--menu-highlight": "hover + active" } },
-        { key: "shared", name: "Shared package", sub: "every product", note: "scales · roles · components", oy: OY + 2 * GAP,
-          set: { "--primary": "brand-600", "--radius": "0.5rem", "--font": "Geist", "--menu-highlight": "accent" } },
-      ];
-      const plane = (l) => {
-        const chips = TOKENS.map((t, i) => {
-          const v = l.set[t];
-          if (v == null) return `<g class="chip is-through"><rect x="${CX}" y="${chipY(i)}" width="${CW}" height="${CH}" rx="6"/></g>`;
-          const over = L.indexOf(l) > 0 && L.slice(0, L.indexOf(l)).some((u) => u.set[t] != null);
-          return `<g class="chip is-set${over ? " is-over" : ""}"><rect x="${CX}" y="${chipY(i)}" width="${CW}" height="${CH}" rx="6"/><text x="${CX + 10}" y="${chipY(i) + 18}">${t}</text><text class="v" x="${CX + CW - 10}" y="${chipY(i) + 18}" text-anchor="end">${esc(v)}</text></g>`;
-        }).join("");
-        let art = "";
-        if (l.key === "shared") art = `<rect class="btn-base" x="280" y="80" width="100" height="36" rx="8"/><text class="btn-base-t" x="330" y="103" text-anchor="middle">New run</text>`;
-        if (l.key === "product") art = `<g class="menu"><rect x="274" y="60" width="108" height="100" rx="8"/><text x="286" y="84">Rename</text><rect class="hl" x="278" y="94" width="100" height="28" rx="5"/><text x="286" y="113">Duplicate</text><text x="286" y="144">Archive</text></g>`;
-        if (l.key === "customer") { const r = c.btn === "999px" ? 17 : parseFloat(c.btn) * 16 || 0; art = `<rect class="btn-cust" x="280" y="80" width="100" height="36" rx="${r}"/><text class="btn-cust-t" x="330" y="103" text-anchor="middle" style="font-family:${brandFont}">New run</text>`; }
-        return `<g class="plane is-${l.key}" transform="${iso(l.oy)}"><rect class="sheet" x="0" y="0" width="${PW}" height="${PH}" rx="16"/><text class="pn" x="18" y="32">${l.name.toUpperCase()}</text>${chips}${art}</g>`;
-      };
-      // pins: from the layer that sets a token down to the one it overrides
-      const centre = (i, oy) => P(CX + CW / 2, chipY(i) + CH / 2, oy);
-      const pins = TOKENS.map((t, i) => {
-        const setters = L.filter((l) => l.set[t] != null);
-        if (setters.length < 2) return "";
-        const [top, bottom] = [setters[0], setters[setters.length - 1]];
-        const [x1, y1] = centre(i, top.oy), [x2, y2] = centre(i, bottom.oy);
-        return `<line class="pin" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/><circle class="pin-top" cx="${x1}" cy="${y1}" r="4"/><circle class="pin-end" cx="${x2}" cy="${y2}" r="4"/>`;
-      }).join("");
-      // labels with leader lines from each plane's right corner
-      const LX = OX + PW * COS + 46;
-      const labels = L.map((l) => { const [x, y] = P(PW, 0, l.oy); return `<line class="leader" x1="${x + 6}" y1="${y}" x2="${LX - 10}" y2="${y}"/><circle class="leader-dot" cx="${x + 6}" cy="${y}" r="2.5"/><text class="ln" x="${LX}" y="${y - 6}">${l.name}</text><text class="ls" x="${LX}" y="${y + 13}">${l.sub}</text><text class="lt" x="${LX}" y="${y + 31}">${l.note}</text>`; }).join("");
-      const W = LX + 230, H = OY + 2 * GAP + (PW + PH) * SIN + 12;
-      layers.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Three layers stacked: the shared package sets every token; the product overrides only the menu highlight; the customer overrides colour, radius and font. Lines link each override to the value it replaces.">
-        ${[L[2], L[1], L[0]].map(plane).join("")}
-        <g class="pins">${pins}</g>
-        <g class="labels">${labels}</g>
-      </svg>
-      <p class="ds-layers-key"><span class="k-set"></span>set on this layer <span class="k-through"></span>comes through from below <span class="k-pin"></span>overrides the value below <span class="k-over">0.5rem</span> replaced</p>`;
+      const active = CLIENTS.find((k) => k.id === c.id);
+      const activeP = active ? active.product : 0;
+      const on = (p) => (p === activeP ? " is-on" : "");
+      let g = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="One shared package; three products share it, each overriding only what it needs; each product has many clients, each setting its own colour, font and button shape; each client has many users, who can adjust their own look.">`;
+      // column heads
+      [["Shared package", "sets every token"], ["Products", "+ only what each needs"], ["Clients", "+ colour, font, button shape"], ["Users", "+ their own look"]].forEach(([t, s2], i) => {
+        g += `<text class="h" x="${COLX[i]}" y="16">${t}</text><text class="hs" x="${COLX[i]}" y="34">${s2}</text>`;
+      });
+      // links: package → products → clients
+      [0, 1, 2].forEach((p) => { g += `<path class="link${on(p)}" d="${curve(COLX[0] + SW, py(p), COLX[1], py(p))}"/>`; });
+      CLIENTS.forEach((k, i) => { g += `<path class="link${k.id === c.id ? " is-on" : ""}" d="${curve(COLX[1] + PW, py(k.product), COLX[2], cy(i))}"/>`; });
+      // shared package: one block
+      g += `<rect class="pkg" x="${COLX[0]}" y="${TOP}" width="${SW}" height="${CLIENTS.length * ROW - 8}" rx="14"/>`;
+      ["scales 50–700", "roles", "components", "radius", "font"].forEach((t, i) => { g += `<text class="pkg-t" x="${COLX[0] + 16}" y="${TOP + 34 + i * 26}">${t}</text>`; });
+      g += `<text class="pkg-n" x="${COLX[0] + 16}" y="${TOP + CLIENTS.length * ROW - 26}">1 package</text>`;
+      // products
+      ["Product A", "Product B", "Product C"].forEach((n, p) => {
+        const y = py(p) - 34;
+        g += `<rect class="prod${on(p)}" x="${COLX[1]}" y="${y}" width="${PW}" height="68" rx="12"/><text class="prod-t" x="${COLX[1] + 14}" y="${y + 28}">${n}</text><text class="prod-s" x="${COLX[1] + 14}" y="${y + 50}">+ its own overrides</text>`;
+      });
+      // clients and their users
+      CLIENTS.forEach((k, i) => {
+        const y = cy(i), isOn = k.id === c.id, ink = pickPage(k.colour);
+        g += `<rect class="cli${isOn ? " is-on" : ""}" x="${COLX[2]}" y="${y - 22}" width="${CWID}" height="44" rx="22" style="fill:${k.colour}"/>`;
+        g += `<text class="cli-t" x="${COLX[2] + 20}" y="${y + 5}" style="fill:${ink};font-family:'${k.font}', 'Geist', sans-serif">${k.name}</text>`;
+        g += `<path class="link${isOn ? " is-on" : ""}" d="${curve(COLX[2] + CWID, y, COLX[3], y)}"/>`;
+        [0, 1, 2, 3].forEach((u) => {
+          const x = COLX[3] + 14 + u * 30, own = isOn && u === 1;
+          g += `<circle class="usr${own ? " is-own" : ""}" cx="${x}" cy="${y}" r="11" style="${own ? `stroke:${k.colour}` : ""}"/>`;
+        });
+        if (isOn) g += `<text class="usr-t" x="${COLX[3] + 128}" y="${y + 4}">own look</text>`;
+      });
+      g += `</svg>`;
+      layers.innerHTML = g;
     };
     listeners.push(draw);
   }
