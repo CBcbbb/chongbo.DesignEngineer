@@ -13,7 +13,7 @@ export const hhcd: Project = {
   context: "First built for VOICE, an EU-funded arts research project. Now used by the Helen Hamlyn Centre for Design, Royal College of Art.",
   role: "Research Assistant",
   roleSplit: [
-    { with: "team", what: "Data collection and analysis", note: "with the VOICE team" },
+    { with: "team", what: "Data collection and analysis", note: "with the team" },
     { with: "solo", what: "Data modelling, design and build", note: "on my own" },
   ],
   outcome: "Live and in use. Used to teach the Centre's summer interns. First-author paper on its accessibility approach accepted at DRS 2026.",
