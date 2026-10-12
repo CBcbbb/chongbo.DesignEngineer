@@ -170,7 +170,7 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-areas:
       "meta meta"
-      "h3   p3"
+      "h3   h3"
       "ev   ev"
       "p1   p2";
     column-gap: clamp(1.5rem, 3.4vw, 2.75rem);
@@ -181,17 +181,6 @@
     font-size: clamp(1.75rem, 3.4vw, 2.6rem);
     line-height: 1.02;
     letter-spacing: -0.045em;
-  }
-  /* the tools: a note beside the claim, aligned to its last line */
-  [data-palette="components-for-any-data"] #pipeline .cf-body > p:nth-of-type(3) {
-    align-self: end;
-    justify-self: start;
-    max-width: 24ch;
-    padding-left: 0.9rem;
-    border-left: 1px solid var(--case-line);
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--case-dim);
   }
   /* the flow is a band across the card, edge to edge */
   [data-palette="components-for-any-data"] #pipeline .cf-evidence {

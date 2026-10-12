@@ -247,7 +247,7 @@ type Lane = [string, string];
 type Layer = { k: string; job: string; lanes?: [Lane, Lane]; whole?: ReactNode };
 const LAYERS: Layer[] = [
   {
-    k: "Producer",
+    k: "Source",
     job: "its own format",
     whole: (
       <pre className="ac-json" aria-label='{"evt":"delivered","payload":{"town":"Leeds","parcels":"128"}}'>
@@ -316,7 +316,7 @@ export function Pipeline() {
       <ul className="ac-inputs" aria-label="What each kind of component reads">
         {(
           [
-            ["Charts", "a stream"],
+            ["Charts, tables", "a stream"],
             ["Filters, search", "the page"],
             ["Forms", "wait for the user"],
           ] as const

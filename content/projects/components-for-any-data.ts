@@ -46,8 +46,7 @@ export const anyData: Project = {
       layout: "stack",
       title: "Every customer's data has a different shape",
       body: [
-        "Our platform carries customers' operational data as live streams, and customers build their own products on it, picking components from our component store.",
-        "But the components in the store only showed fixed values from their settings, so no customer could see what their own data would look like in one. One set of sample data couldn't cover every case either, as each customer names and formats the same data differently.",
+        "Our platform carries customers' operational data as live streams, and customers build their own products on it, picking components from our component store. But the components in the store only showed fixed values from their settings, so no customer could see what their own data would look like in one. One set of sample data couldn't cover every case either, as each customer names and formats the same data differently.",
         "So I started from two questions: can we connect live streams to the store's components, and what does a component need to know about its data?",
       ],
       signals: ["data", "design-eng-gap", "judgement"],
