@@ -61,7 +61,7 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 
 - `drift`: the problem is real and organisational, not cosmetic.
 - `extend-shadcn`: judgement; the cheapest path that fixes the problem, chosen over a rewrite.
-- `figma-first`: Figma craft and a component library with variants and states (the JD's "Figma and code", Figma half).
+- `figma-to-code`: a design system built in Figma and shipped as shared code (the JD's "Figma and code").
 - `three-layers`: architecture; each layer overrides only what it owns.
 - `roles`: the naming decision that lets one component work in any theme.
 - `fixed-lightness`: why the roles stay readable, with numbers.
@@ -88,7 +88,7 @@ Invented customers (draft): a grocer in green, a courier in ochre, a bank in nav
 
 ## Rebuilt in Figma
 
-Chongbo's real Figma file can't be shown, and the Figma connector can't open it (view-only seat on the company team). So the evidence for `figma-first` is **the same system rebuilt in a new Figma file in his personal team**, through the Figma MCP, on the invented brand:
+Chongbo's real Figma file can't be shown, and the Figma connector can't open it (view-only seat on the company team). So the evidence for `figma-to-code` is **the same system rebuilt in a new Figma file in his personal team**, through the Figma MCP, on the invented brand:
 
 - **Colours page**: six hues × five steps with their roles; light and dark side by side.
 - **Components page**: component sets with variants and states, matching what the original has (buttons in six styles × three states, text input default / focus / error, select and multi-select, pagination item and set, header, breadcrumb).
@@ -105,7 +105,7 @@ Chongbo reviews and edits it in Figma, so it's his file to walk through in an in
 | `TokenLayersDiagram.tsx` (old) | **Redraw** → `three-layers` | Its per-app examples (density, accent, type scale) are invented; the redraw uses the kinds of override the real file makes |
 | Old CSS snippet (`--success: var(--green-500)` …) | **Redraw** → `extend-shadcn` code | Same idea, invented values, shadcn's tokens first |
 | Five-products picture | **Missing → draw** | `drift` needs it; abstract frames, no real screens |
-| Figma screenshots | **Missing → rebuild** (see above) | `figma-first` |
+| Figma screenshots | **Missing → rebuild** (see above) | `figma-to-code` |
 | Colour specimens, dark switch | **Build** in code | `roles`, `dark` (media `specimens`, `toggle`) |
 | Contrast figures | **Build** (metric strip) | `fixed-lightness`; computed from the scales, re-checked by `npm run contrast` |
 | Theme switcher | **Build** | The work and `customer-colour` |
