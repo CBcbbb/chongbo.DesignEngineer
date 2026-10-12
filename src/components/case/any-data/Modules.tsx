@@ -2,7 +2,7 @@
 
 import { useId, useState, type ReactNode } from "react";
 import { Chart, Empty, Swatch } from "./charts";
-import { fmt, missingRoles, ROLES, SAMPLE, streamById, suggest, totals, type Confidence, type Mapping, type RoleKey, type Stream } from "./data";
+import { absentRoles, fmt, missingRoles, ROLES, SAMPLE, streamById, suggest, totals, type Confidence, type Mapping, type RoleKey, type Stream } from "./data";
 import "./any-data.css";
 import "./cards.css";
 import "./compositions.css";
@@ -480,8 +480,8 @@ function AxisSelect({
         <select id={id} value={value} onChange={(e) => onPick(e.target.value)}>
           <option value="">{r.required ? "Choose a field" : "None"}</option>
           {stream.fields!.map((f) => (
-            <option key={f.name} value={f.name}>
-              {f.name}
+            <option key={f.name} value={f.name} disabled={f.type !== r.type}>
+              {f.type !== r.type ? `${f.name} (${f.type})` : f.name}
             </option>
           ))}
         </select>
@@ -533,7 +533,7 @@ export function AxisPickers() {
         </div>
         <div className="ac-axis-y">{ax("value")}</div>
         <div className="ac-axis-plot" aria-live="polite">
-          {missing.length ? <Empty missing={missing} /> : <Chart kind="bar" data={totals(s, st.mapping)} ratio={0.34} min={170} max={240} />}
+          {missing.length ? <Empty missing={missing} stream={s.name} absent={absentRoles(s)} /> : <Chart kind="bar" data={totals(s, st.mapping)} ratio={0.34} min={170} max={240} />}
         </div>
         <div className="ac-axis-x">{ax("category")}</div>
       </div>

@@ -189,6 +189,12 @@ export function missingRoles(stream: Stream, mapping: Mapping): RoleKey[] {
     .map((r) => r.key);
 }
 
+/** Required roles the stream has no field of the right type for: no choice of field can fill them. */
+export function absentRoles(stream: Stream): Role[] {
+  const fields = stream.fields ?? [];
+  return ROLES.filter((r) => r.required && !fields.some((f) => f.type === r.type));
+}
+
 /** Totals by category: the dataset every chart on the contract draws. At most six slices; the rest fold into "Other". */
 export function totals(stream: Stream, mapping: Mapping): Datum[] {
   const f = stream.fields ?? [];

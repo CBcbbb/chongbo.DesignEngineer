@@ -5,7 +5,7 @@ import { Chart, Empty, Swatch, type ChartKind } from "./charts";
 import {
   fitOf,
   missingRoles,
-  parseCSV,
+  absentRoles,
   ROLES,
   SAMPLE,
   STREAMS,
@@ -45,41 +45,28 @@ function start(stream: Stream) {
  */
 export function Demo() {
   const uid = useId();
-  const [extra, setExtra] = useState<Stream[]>([]);
   const [srcId, setSrcId] = useState("courier");
   const [kind, setKind] = useState<ChartKind | "table">("bar");
   const [showOther, setShowOther] = useState(false);
   const [state, setState] = useState(() => start(STREAMS[0]!));
-  const [drag, setDrag] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const all = STREAMS.concat(extra);
+  const all = STREAMS;
   const isSample = srcId === "sample";
   const stream = isSample ? SAMPLE : all.find((s) => s.id === srcId)!;
   const mapping: Mapping = isSample ? { category: "category", value: "value", period: "period" } : state.mapping;
   const confs: Confidences = isSample ? { category: "exact", value: "exact", period: "exact" } : state.confs;
   const missing = stream.fields ? missingRoles(stream, mapping) : (["category", "value"] as RoleKey[]);
+  const absent = stream.fields ? absentRoles(stream) : [];
 
-  const choose = (id: string, list = all) => {
+  const choose = (id: string, list: Stream[] = all) => {
     setSrcId(id);
     if (id !== "sample") setState(start(list.find((x) => x.id === id)!));
   };
   const reset = () => {
-    setExtra([]);
     setKind("bar");
     setShowOther(false);
     choose("courier", STREAMS);
-  };
-  const read = (file: File) => {
-    const r = new FileReader();
-    r.onload = () => {
-      const s = parseCSV(file.name, String(r.result), `csv${extra.length + 1}`);
-      if (!s) return;
-      const list = all.concat(s);
-      setExtra((e) => e.concat(s));
-      choose(s.id, list);
-    };
-    r.readAsText(file);
   };
 
   const groups = { fits: [] as Stream[], partly: [] as Stream[], other: [] as Stream[] };
@@ -147,7 +134,18 @@ export function Demo() {
 
         <div className="dm-canvas" aria-live="polite">
           {missing.length ? (
-            <Empty missing={missing} />
+            <Empty
+              missing={missing}
+              stream={isSample ? undefined : stream.name}
+              absent={isSample ? [] : absent}
+              action={
+                absent.length > 0 && groups.fits[0] ? (
+                  <button type="button" className="dm-ghost is-act" onClick={() => choose(groups.fits[0]!.id)}>
+                    Use {groups.fits[0].name}, which fits
+                  </button>
+                ) : undefined
+              }
+            />
           ) : (
             <Chart kind={kind === "table" ? "bar" : kind} table={kind === "table"} data={totals(stream, mapping)} ratio={0.56} min={250} max={300} />
           )}
@@ -219,37 +217,6 @@ export function Demo() {
               {groups.partly.length > 0 && group("partly", "Partly fits", groups.partly.map(streamOption))}
               {groups.other.length > 0 && group("other", "Other", otherOpen ? groups.other.map(streamOption) : null, otherOpen ? undefined : showMore)}
             </div>
-            <label
-              className={`dm-upload${drag ? " is-drag" : ""}`}
-              onDragOver={(e) => {
-                e.preventDefault();
-                setDrag(true);
-              }}
-              onDragLeave={() => setDrag(false)}
-              onDrop={(e) => {
-                e.preventDefault();
-                setDrag(false);
-                const f = e.dataTransfer.files[0];
-                if (f) read(f);
-              }}
-            >
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M8 10.5V3M5 5.5 8 2.5l3 3M3 10.5v2a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-2" />
-              </svg>
-              <span>
-                <strong>Try a CSV of your own</strong>
-                <small>Read in your browser. Nothing is uploaded.</small>
-              </span>
-              <input
-                type="file"
-                accept=".csv,text/csv"
-                onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) read(f);
-                  e.target.value = "";
-                }}
-              />
-            </label>
           </section>
 
           <section className="dm-sec" aria-labelledby={`${uid}-fields`}>
@@ -265,8 +232,10 @@ export function Demo() {
                 const wrongType = !!f && f.type !== r.type;
                 const conf = confs[r.key];
                 const selId = `${uid}-${r.key}`;
+                const none = !!stream.fields && r.required && !fields.some((x) => x.type === r.type);
                 let note = "";
                 if (!stream.fields) note = "This stream has no rows yet, so its fields are unknown.";
+                else if (none) note = `This stream has no ${r.type} field, so nothing can fill ${r.key}.`;
                 else if (wrongType) note = `Needs a ${r.type} field.`;
                 else if (!sel && r.required) note = "Required";
                 return (
@@ -286,17 +255,17 @@ export function Demo() {
                         <select
                           id={selId}
                           value={sel}
-                          disabled={isSample || !stream.fields}
+                          disabled={isSample || !stream.fields || none}
                           aria-describedby={note ? `${selId}-note` : undefined}
                           onChange={(e) => {
                             const v = e.target.value;
                             setState((s) => ({ mapping: { ...s.mapping, [r.key]: v }, confs: { ...s.confs, [r.key]: "manual" } }));
                           }}
                         >
-                          <option value="">{r.required ? "Choose a field" : "None"}</option>
+                          <option value="">{none ? `No ${r.type} field` : r.required ? "Choose a field" : "None"}</option>
                           {fields.map((x) => (
-                            <option key={x.name} value={x.name}>
-                              {x.name}
+                            <option key={x.name} value={x.name} disabled={x.type !== r.type}>
+                              {x.type !== r.type ? `${x.name} (${x.type})` : x.name}
                             </option>
                           ))}
                         </select>

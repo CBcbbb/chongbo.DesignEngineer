@@ -53,3 +53,5 @@ No words changed. At 1280 × 720 02.1 is 5px over one screen; every other card f
 - **Sheet on white with a fine blue grid** (dark mode: the dark paper with the same grid), instead of the blue field.
 - **Title and the line under it.** Chongbo asked for plain portfolio wording on confidentiality. Title: "The preview panel, rebuilt for this case study". Line: "The product is confidential, so this is an independent rebuild of its preview panel, with invented data and no production code." (Phrasing follows the common advice to say once, plainly, that work under NDA is an independent rebuild on synthetic data.)
 - `Roles.tsx` removed (only the old panel used it).
+- **CSV upload removed** from the work sheet (Chongbo). `parseCSV` stays in `data.ts`, unused by the page.
+- **Partly fits made usable.** A stream that partly fits has no field of the right type for a required role, so no choice can fix it. The chart now says so ("partner_carrier.feed has no number field for value") and offers the stream that fits; that role's select shows "No number field" and is locked; fields of the wrong type are listed but disabled, with their type. The same rules apply on 02.2.

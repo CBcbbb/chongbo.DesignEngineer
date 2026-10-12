@@ -306,9 +306,19 @@
   font-weight: 600;
   color: var(--ad-ink);
 }
-.ad-empty b {
+.ad-empty b,
+.ad-empty code {
   font-weight: 500;
   color: var(--ad-ink);
+}
+.ad-empty code {
+  font-family: var(--mono);
+  font-size: 0.94em;
+}
+.ad-empty-act {
+  display: flex;
+  justify-content: center;
+  margin-top: 12px;
 }
 .ad-axes {
   display: flex;

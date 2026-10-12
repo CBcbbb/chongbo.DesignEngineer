@@ -276,8 +276,38 @@ export function Chart({
   );
 }
 
-/** Nothing to draw: the chart never fills a gap with made-up data. */
-export function Empty({ missing }: { missing: RoleKey[] }) {
+/**
+ * Nothing to draw: the chart never fills a gap with made-up data. When the stream has no field of the right type for
+ * a role (it only partly fits), no choice of field can fix it, so the message says what is missing and offers a way out.
+ */
+export function Empty({
+  missing,
+  stream,
+  absent = [],
+  action,
+}: {
+  missing: RoleKey[];
+  stream?: string;
+  absent?: { key: RoleKey; type: string }[];
+  action?: ReactNode;
+}) {
+  if (absent.length && stream)
+    return (
+      <div className="ad-empty">
+        <div>
+          <strong>This stream can&rsquo;t draw this chart</strong>
+          <code>{stream}</code> has no{" "}
+          {absent.map((r, i) => (
+            <span key={r.key}>
+              {i > 0 && " or "}
+              {r.type} field for <b>{r.key}</b>
+            </span>
+          ))}
+          . The chart never fills a gap with made-up data.
+          {action && <span className="ad-empty-act">{action}</span>}
+        </div>
+      </div>
+    );
   return (
     <div className="ad-empty">
       <div>
