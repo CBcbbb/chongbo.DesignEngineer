@@ -3,7 +3,7 @@ import { projects, SIGNALS } from "@content";
 import { fallbackAnswer } from "@/lib/ask/fallback";
 import { AskRequestSchema } from "@/lib/ask/schema";
 import { shownTopics } from "@/lib/cards";
-import { missingLine, quoteBrief, resultTitle, TOPICS, topicsToSignals } from "@/lib/printed";
+import { missingLine, printedCount, projectRuns, provenanceLine, quoteBrief, resultTitle, TOPICS, topicsToSignals } from "@/lib/printed";
 
 describe("skills cards", () => {
   it("has the eight approved cards in order", () => {
@@ -68,5 +68,15 @@ describe("wording", () => {
     expect(missingLine(["A/B testing", "Swift"])).toBe("No work to show yet for A/B testing, Swift.");
     expect(quoteBrief("  hi ")).toBe("“hi”");
     expect(quoteBrief("x".repeat(100))).toBe(`“${"x".repeat(90)}…”`);
+  });
+
+  it("labels a project's run of cards and counts what was printed", () => {
+    const cards = [{ project: "hhcd" }, { project: "hhcd" }, { project: "hhcd" }, { project: "nike" }];
+    expect(projectRuns(cards)).toEqual([{ at: 1, of: 3 }, { at: 2, of: 3 }, { at: 3, of: 3 }, null]);
+    expect(printedCount(cards)).toBe("Four sheets from two projects");
+    expect(printedCount(cards.slice(0, 3))).toBe("Three sheets");
+    // One project only: the sheet counter says it already.
+    expect(projectRuns(cards.slice(0, 3))).toEqual([null, null, null]);
+    expect(provenanceLine("model", 4)).toBe("Chosen by Claude from my case files. The words are mine.");
   });
 });

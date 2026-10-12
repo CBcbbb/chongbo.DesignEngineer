@@ -496,7 +496,7 @@
   font: 500 12.5px/1.5 var(--mono);
   color: var(--ink-2);
 }
-/* the printed sheets: one per project, each the case-file card it comes from. A column on phones; side by side,
+/* the printed sheets: the cards that answer best, each the case-file card it comes from. A column on phones; side by side,
    swiped or stepped along, on wider screens, with the next sheet showing at the edge. */
 .sheets {
   display: grid;
@@ -609,6 +609,12 @@
   letter-spacing: -0.01em;
   text-transform: none;
   color: var(--paper-ink);
+}
+/* "2 of 3": this card's place among its project's cards in the print */
+.s-run {
+  font: 500 11.5px var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--paper-dim);
 }
 /* the claim on the left, the reasoning on the right, as on a case-file card */
 .s-head {

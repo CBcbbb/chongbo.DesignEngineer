@@ -2,20 +2,20 @@
  * Deterministic fallback: answers without a model.
  *
  *   1. Understand: score the brief against synonyms for each content signal; chosen topics come first.
- *   2. Print: for every project with a section showing an asked capability, pick that project's
- *      single best section (signal match first, with the first-listed signal weighing most, then
- *      word overlap with the brief, then decisions before problem statements). At most five sheets,
- *      strongest first.
+ *   2. Rank: every card that answers an asked capability, across all projects (the capability among
+ *      its first two signals, the first weighing most; then word overlap with the brief, then decisions
+ *      before problem statements). arrange() spreads them by capability and prints at most six.
  *   3. Be honest: capabilities with no matching work, and common asks the work never mentions
  *      (A/B testing, native mobile, …), are reported as missing.
  * Everything is driven by content/, so a new project or section is matched without code changes.
  */
 import { projects, SIGNALS, type Project, type Section, type Signal } from "@content";
+import { answered, arrange } from "./arrange";
 import { catalogue, findEntry } from "./catalogue";
+import { requestedCount } from "./count";
 import {
   ASKED_MAX,
   LINE_MAX,
-  MAX_SHEETS,
   MISSING_MAX,
   REASON_MAX,
   withLegacy,
@@ -34,7 +34,8 @@ export const KEYS: Record<Signal, string[]> = {
   "cross-platform": ["platform", "multiple product", "product line", "several product", "many product", "scale", "scaling", "cross platform", "multi brand", "ios!", "android", "web and mobile"],
   "design-eng-gap": ["engineer", "handoff", "hand off", "developer", "dev!", "devs!", "front end", "frontend", "code", "coding", "bridge", "gap", "react", "typescript", "tailwind", "css!", "html!", "implement", "between design"],
   "end-to-end": ["end to end", "ship", "from scratch", "solo", "alone", "own!", "ownership", "deliver", "launch", "zero to one", "idea to", "whole thing", "full stack", "fullstack"],
-  "seo-performance": ["seo!", "performance", "fast", "search engine", "lighthouse", "speed", "web vitals", "metadata", "static", "discoverab", "website", "web site", "web!"],
+  // Not "website": a marketing website is a brand ask, and SEO only when they say so.
+  "seo-performance": ["seo!", "performance", "fast", "search engine", "lighthouse", "speed", "web vitals", "metadata", "static", "discoverab"],
   "publishing-workflow": ["cms!", "publish", "content", "template", "workflow", "editor", "admin"],
   "reusable-components": ["reusab", "reuse", "component", "modular", "pattern librar", "building block"],
   "brand-storytelling": ["brand", "marketing", "story", "stories", "storytell", "landing", "campaign", "editorial", "narrative", "consumer", "website", "web site", "web!"],
@@ -197,46 +198,30 @@ const POSITION_WEIGHT = [3, 2, 1.5, 1];
 const positionWeight = (i: number) => POSITION_WEIGHT[Math.min(i, POSITION_WEIGHT.length - 1)]!;
 /** The first capability asked for matters most. */
 const rankWeight = (r: number) => 1 / (1 + 0.25 * r);
-
-type Candidate = { section: Section; order: number; signalScore: number; overlap: number; signal: Signal | undefined };
+/** A card answers a capability strongly when it is the card's first or second signal. */
+const STRONG = 2;
 
 function briefWords(brief: string): string[] {
   return [...new Set(normalise(brief).trim().split(" "))].filter((w) => w.length >= 4 && !STOPWORDS.has(w)).map(stem);
 }
 
-function scoreSection(project: Project, section: Section, order: number, asked: Signal[], words: string[]): Candidate {
-  let signalScore = 0;
-  let signal: Signal | undefined;
-  let bestContribution = 0;
-  section.signals.forEach((sig, i) => {
-    const r = asked.indexOf(sig);
-    if (r < 0) return;
-    const contribution = positionWeight(i) * rankWeight(r);
-    signalScore += contribution;
-    if (contribution > bestContribution) {
-      bestContribution = contribution;
-      signal = sig;
-    }
-  });
+function overlapOf(project: Project, section: Section, words: string[]): number {
   const entry = findEntry(project.slug, section.id)!;
   let overlap = 0;
   for (const w of words) {
     if (entry.titleText.includes(w)) overlap += 1;
     else if (entry.text.includes(w)) overlap += 0.4;
   }
-  return { section, order, signalScore, overlap, signal };
+  return overlap;
 }
 
 /** On a tie, a decision or evidence shows more of the work than the problem statement. */
 const KIND_RANK: Record<Section["kind"], number> = { decision: 0, evidence: 1, outcome: 2, role: 3, retrospective: 4, problem: 5 };
 
-const better = (a: Candidate, b: Candidate) => {
-  if (a.signalScore !== b.signalScore) return a.signalScore > b.signalScore;
-  if (a.overlap !== b.overlap) return a.overlap > b.overlap;
-  const ka = KIND_RANK[a.section.kind];
-  const kb = KIND_RANK[b.section.kind];
-  return ka !== kb ? ka < kb : a.order < b.order;
-};
+type Candidate = Sheet & { score: number; overlap: number; kind: number; order: number };
+
+const byStrength = (a: Candidate, b: Candidate) =>
+  b.score - a.score || b.overlap - a.overlap || a.kind - b.kind || a.order - b.order;
 
 function truncate(text: string, max: number): string {
   return text.length <= max ? text : `${text.slice(0, max - 1).trimEnd()}…`;
@@ -246,80 +231,158 @@ export function reasonFor(signal: Signal, section: Section): string {
   return truncate(`${SIGNALS[signal]}: ${section.title}.`, REASON_MAX);
 }
 
-/** One sheet per project that shows an asked capability, strongest first. */
-export function pickSheets(asked: Signal[], brief = "", named: Set<string> = new Set()): Sheet[] {
+/**
+ * Every card that answers an asked capability, strongest first, across all projects.
+ * A card answers a capability when that capability is its first or second signal; a capability with no such card
+ * gets its single best tagged card. Each card is ranked for the asked capability it answers best.
+ * arrange() then spreads the list by capability and prints at most six.
+ */
+export function rankCards(asked: Signal[], brief = "", named: Set<string> = new Set()): Sheet[] {
   const words = briefWords(brief);
-  const ranked: { sheet: Sheet; strength: number; overlap: number; order: number }[] = [];
+  const strong: Candidate[] = [];
+  const weakest = new Map<Signal, Candidate>();
+  let order = 0;
 
-  projects.forEach((project, projectOrder) => {
-    const scored = project.sections.map((s, i) => scoreSection(project, s, i, asked, words));
-    const matching = scored.filter((c) => c.signalScore > 0);
-    const isNamed = named.has(project.slug);
-    let best: Candidate | undefined;
-    if (matching.length) {
-      best = matching.reduce((a, b) => (better(b, a) ? b : a));
-    } else if (isNamed) {
-      // Named but no capability matched: its best section by overlap, preferring decisions.
-      best = scored.reduce((a, b) => {
-        const sa = a.overlap + (a.section.kind === "decision" || a.section.kind === "problem" ? 0.5 : 0);
-        const sb = b.overlap + (b.section.kind === "decision" || b.section.kind === "problem" ? 0.5 : 0);
-        return sb > sa ? b : a;
+  for (const project of projects) {
+    const boost = named.has(project.slug) ? 3 : 0;
+    const tier = project.tier === "earlier" && !named.has(project.slug) ? 0.6 : 1;
+    for (const section of project.sections) {
+      order++;
+      const overlap = overlapOf(project, section, words);
+      const base = { project: project.slug, section: section.id, overlap, kind: KIND_RANK[section.kind], order };
+      let best: { signal: Signal; weight: number } | undefined;
+      let others = 0;
+      section.signals.forEach((sig, i) => {
+        const r = asked.indexOf(sig);
+        if (r < 0) return;
+        const weight = positionWeight(i) * rankWeight(r);
+        if (i < STRONG && (!best || weight > best.weight)) {
+          if (best) others++;
+          best = { signal: sig, weight };
+        } else others++;
+        // Remember each capability's best card at any position, in case nothing answers it strongly.
+        const prev = weakest.get(sig);
+        const cand: Candidate = { ...base, signal: sig, reason: reasonFor(sig, section), score: weight * tier + boost };
+        if (!prev || byStrength(cand, prev) < 0) weakest.set(sig, cand);
       });
+      if (!best) continue;
+      // A card that also shows other asked capabilities is the stronger answer.
+      const score = (best.weight + 0.25 * others) * tier + boost;
+      strong.push({ ...base, signal: best.signal, reason: reasonFor(best.signal, section), score });
     }
-    if (!best) return;
-    const signal = best.signal ?? best.section.signals[0];
-    if (!signal) return;
+  }
 
-    // A project that shows the capability in several sections is the stronger answer.
-    let strength = best.signalScore + 0.25 * Math.max(0, matching.length - 1) + (isNamed ? 3 : 0);
-    if (project.tier === "earlier" && !isNamed) strength *= 0.6;
-    ranked.push({
-      sheet: { project: project.slug, section: best.section.id, signal, reason: reasonFor(signal, best.section) },
-      strength,
-      overlap: best.overlap,
-      order: projectOrder,
+  for (const sig of asked) {
+    if (strong.some((c) => c.signal === sig)) continue;
+    const weak = weakest.get(sig);
+    if (weak && !strong.some((c) => c.project === weak.project && c.section === weak.section)) strong.push({ ...weak, score: weak.score / 2 });
+  }
+
+  // A project named in the brief with no matching card still prints its best section.
+  for (const slug of named) {
+    if (strong.some((c) => c.project === slug)) continue;
+    const project = projects.find((p) => p.slug === slug);
+    if (!project) continue;
+    const pick = project.sections
+      .map((section, i) => ({ section, i, s: overlapOf(project, section, words) + (section.kind === "decision" || section.kind === "problem" ? 0.5 : 0) }))
+      .reduce((a, b) => (b.s > a.s ? b : a));
+    const signal = pick.section.signals[0];
+    if (!signal) continue;
+    strong.push({
+      project: slug,
+      section: pick.section.id,
+      signal,
+      reason: reasonFor(signal, pick.section),
+      score: 3,
+      overlap: pick.s,
+      kind: KIND_RANK[pick.section.kind],
+      order: pick.i,
     });
-  });
+  }
 
-  return ranked
-    .sort((a, b) => b.strength - a.strength || b.overlap - a.overlap || a.order - b.order)
-    .slice(0, MAX_SHEETS)
-    .map((r) => r.sheet);
+  return strong.sort(byStrength).map(({ project, section, signal, reason }) => ({ project, section, signal, reason }));
 }
 
-const NUMBER_WORD = ["No", "One", "Two", "Three", "Four", "Five"];
+/** Kept for callers that want the printed deck directly. */
+export function pickSheets(asked: Signal[], brief = "", named: Set<string> = new Set()): Sheet[] {
+  return arrange(rankCards(asked, brief, named), asked, requestedCount(brief));
+}
 
-/** One plain sentence about what was printed. */
+const NUMBER_WORD = ["No", "One", "Two", "Three", "Four", "Five", "Six"];
+const word = (n: number) => NUMBER_WORD[n] ?? String(n);
+
+/**
+ * One plain sentence about what was printed.
+ *  - "Three cards show accessibility."   - "Four cards from two projects show design systems."
+ *  - "Four cards from three projects match your brief."   - "No project shows Kotlin; here are three places to start."
+ */
 export function lineFor(asked: Signal[], sheets: Sheet[], missing: string[], startHere = false): string {
   const n = sheets.length;
-  const num = NUMBER_WORD[n] ?? String(n);
+  const p = new Set(sheets.map((s) => s.project)).size;
   let line: string;
   if (startHere) {
-    const where = `${num.toLowerCase()} ${n === 1 ? "place" : "places"} to start`;
+    const where = `${word(n).toLowerCase()} ${n === 1 ? "place" : "places"} to start`;
     line = missing.length ? `No project shows ${missing[0]}; here are ${where}.` : `Here are ${where}.`;
-  } else if (asked.length === 1 && sheets.every((s) => s.signal === asked[0])) {
-    line = `${num} ${n === 1 ? "project shows" : "projects show"} ${LINE_LABEL[asked[0]!]}.`;
   } else {
-    line = `${num} ${n === 1 ? "project matches" : "projects match"} your brief.`;
+    const cards = `${word(n)} ${n === 1 ? "card" : "cards"}${p > 1 ? ` from ${word(p).toLowerCase()} projects` : ""}`;
+    const one = asked.length === 1 && sheets.every((s) => s.signal === asked[0]);
+    line = one ? `${cards} ${n === 1 ? "shows" : "show"} ${LINE_LABEL[asked[0]!]}.` : `${cards} ${n === 1 ? "matches" : "match"} your brief.`;
   }
   return truncate(line, LINE_MAX);
+}
+
+/** Words that name people or organisations, never a skill: such labels are not "missing work". */
+const NOT_A_SKILL = /\b(employers?|company|companies|customers?|clients?|salary|salaries|contact|address|prompt|instructions?|projects?)\b/;
+/** Project names, shown or hidden (hidden ones aren't in `projects`, so they are listed here too). */
+const NAMES = [...projects.flatMap((p) => [p.slug.replace(/-/g, " "), p.title]), "wildecho", "wild echo", "this site", "this website", "this portfolio", "hhcd", "helen hamlyn", "voice", "nike"]
+  .map((t) => normalise(t).trim())
+  .filter((t) => t.length >= 3);
+const STACK = new Set(projects.flatMap((p) => p.stack.flatMap((s) => normalise(s).trim().split(" "))).filter((w) => w.length >= 2));
+
+/**
+ * The model's "missing" labels, checked before they are printed as "No work to show yet for …":
+ *  - a common ask the content never mentions (A/B testing, Kotlin, databases) is kept;
+ *  - a label naming a project (shown or hidden), a person or an organisation is dropped;
+ *  - a label for a tool in a project's stack, or a capability some card shows, is dropped: the work shows it.
+ * The fallback's own missing asks for the brief are added, so both paths say the same.
+ */
+export function verifyMissing(labels: string[], brief: string, asked: Signal[] = []): string[] {
+  const out: string[] = [];
+  for (const label of labels) {
+    const q = normalise(label);
+    const common = MISSING_ASKS.find((m) => m.pattern.test(q));
+    if (common) {
+      if (!common.pattern.test(CONTENT_TEXT)) out.push(common.label);
+      continue;
+    }
+    if (NOT_A_SKILL.test(q) || NAMES.some((n) => q.includes(` ${n} `))) continue;
+    if (q.trim().split(" ").some((w) => STACK.has(w))) continue;
+    const hits = Object.keys(signalHits(label)) as Signal[];
+    if (hits.some((s) => SHOWN.has(s))) continue;
+    // "SEO", "SEO and performance optimisation": one capability, said one way.
+    out.push(hits.length ? SIGNALS[hits[0]!] : label);
+  }
+  const unshown = asked.filter((s) => !SHOWN.has(s)).map((s) => SIGNALS[s]);
+  const seen = new Set<string>();
+  return [...detectMissing(brief), ...unshown, ...out]
+    .filter((l) => !seen.has(l.toLowerCase()) && seen.add(l.toLowerCase()))
+    .slice(0, MISSING_MAX);
+}
+
+/** Nothing asked for is shown: the strong defaults, said honestly. */
+export function startHereAnswer(missing: string[], source: AskResponse["source"]): AskResponse {
+  const asked = [...new Set(DEFAULT_SHEETS.map((s) => s.signal))];
+  return withLegacy({ asked, sheets: DEFAULT_SHEETS, missing, line: lineFor(asked, DEFAULT_SHEETS, missing, true), source }, { startHere: true });
 }
 
 export function fallbackAnswer(input: string | Partial<AskRequest>): AskResponse {
   const { brief = "", topics = [] } = typeof input === "string" ? { brief: input } : input;
   const { asked, missing, named } = understand(brief, topics);
   const sheets = pickSheets(asked, brief, named);
-
-  if (!sheets.length) {
-    const sheetsOut = DEFAULT_SHEETS;
-    const askedOut = [...new Set(sheetsOut.map((s) => s.signal))];
-    return withLegacy(
-      { asked: askedOut, sheets: sheetsOut, missing, line: lineFor(askedOut, sheetsOut, missing, true), source: "fallback" },
-      { startHere: true },
-    );
-  }
+  if (!sheets.length) return startHereAnswer(missing, "fallback");
 
   // A named project with no matching capability still printed a sheet; name what it shows.
-  const askedOut = asked.length ? asked : [...new Set(sheets.map((s) => s.signal))].slice(0, ASKED_MAX);
+  const shownAsked = answered(asked, sheets);
+  const askedOut = shownAsked.length ? shownAsked : [...new Set(sheets.map((s) => s.signal))].slice(0, ASKED_MAX);
   return withLegacy({ asked: askedOut, sheets, missing, line: lineFor(askedOut, sheets, missing), source: "fallback" });
 }

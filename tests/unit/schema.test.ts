@@ -55,8 +55,12 @@ describe("AskResponseSchema", () => {
     expect(AskResponseSchema.safeParse({ ...ok, asked: [] }).success).toBe(false);
     expect(AskResponseSchema.safeParse({ ...ok, asked: ["vibes"] }).success).toBe(false);
     expect(AskResponseSchema.safeParse({ ...ok, sheets: [] }).success).toBe(false);
-    expect(AskResponseSchema.safeParse({ ...ok, sheets: Array(6).fill(sheet) }).success).toBe(false);
-    expect(AskResponseSchema.safeParse({ ...ok, sheets: [sheet, { ...sheet, section: "keyboard" }] }).success).toBe(false);
+    const six = ["dual-view", "keyboard", "testing", "contrast", "narrow-screens", "workshop"].map((section) => ({ ...sheet, section }));
+    expect(AskResponseSchema.safeParse({ ...ok, sheets: six }).success).toBe(true);
+    expect(AskResponseSchema.safeParse({ ...ok, sheets: [...six, { ...sheet, section: "brief" }] }).success).toBe(false);
+    // Several cards from one project, but never the same card twice.
+    expect(AskResponseSchema.safeParse({ ...ok, sheets: [sheet, { ...sheet, section: "keyboard" }] }).success).toBe(true);
+    expect(AskResponseSchema.safeParse({ ...ok, sheets: [sheet, sheet] }).success).toBe(false);
     expect(AskResponseSchema.safeParse({ ...ok, sheets: [sheet, other] }).success).toBe(true);
     expect(AskResponseSchema.safeParse({ ...ok, sheets: [{ ...sheet, reason: "x".repeat(91) }] }).success).toBe(false);
     expect(AskResponseSchema.safeParse({ ...ok, sheets: [{ ...sheet, signal: "vibes" }] }).success).toBe(false);

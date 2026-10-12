@@ -48,27 +48,30 @@ Playwright uses a system Chromium at `/opt/pw-browsers/chromium-1194/chrome-linu
 
 All content lives in `content/` (typed by `content/schema.ts`). Each project is an ordered list of section cards, and each card carries **signals** (accessibility, design systems, …). The ask feature never writes the page; it only **chooses** cards.
 
-`POST /api/ask` with `{ "brief"?: "…", "topics"?: ["accessibility"] }` (brief 0–4,000 characters, 0–6 signal keys, at least one present; validated with Zod; the old `{ "question": "…" }` is still accepted as the brief) returns one sheet per project that shows what was asked:
+`POST /api/ask` with `{ "brief"?: "…", "topics"?: ["accessibility"] }` (brief 0–4,000 characters, 0–6 signal keys, at least one present; validated with Zod; the old `{ "question": "…" }` is still accepted as the brief) returns the cards that answer it best, across all projects:
 
 ```json
 {
   "asked": ["accessibility"],
   "sheets": [{ "project": "hhcd-data-platform", "section": "dual-view", "signal": "accessibility", "reason": "≤90 chars" }],
   "missing": ["A/B testing"],
-  "line": "Three projects show accessibility.",
+  "line": "Three cards show accessibility.",
   "source": "model",
   "reply": "…", "picks": [], "matched": "accessibility"
 }
 ```
 
-`asked` is 1–6 signal keys, most important first. `sheets` is 1–5, one per project, best first; each links to `/work/<project>#<section>`. `missing` lists requested things no work shows. `reply`, `picks` and `matched` are the old fields, derived from the new ones so the current home page keeps working.
+`asked` is 1–6 signal keys, most important first. `sheets` is 1–6 cards, never the same card twice, several from one project when they answer best; each links to `/work/<project>#<section>`. Cards from one project are printed together. `missing` lists requested things no work shows. `reply`, `picks` and `matched` are the old fields, derived from the new ones so the current home page keeps working.
 
 The schema is shared by the API route, the `/ask` page and the client (`src/lib/ask/schema.ts`).
 
 1. **Rate limit** (`src/lib/ask/rate-limit.ts`): a per-IP sliding window. Over the limit → `429` and the machine prints a small "Paused" ticket. Question text is never logged.
-2. **Model path** (`src/lib/ask/model.ts`): if `ANTHROPIC_API_KEY` is set and the daily cap allows, `claude-haiku-5-5` is called through the official SDK with structured JSON output (`output_config.format` via `zodOutputFormat`). The system prompt is a compact catalogue built from `content/` (project and section ids, titles, kinds, signals, one-sentence excerpts). The visitor's question is wrapped and treated as data. A 10-second timeout applies, and the answer may use up to 2,000 tokens; there are no retries. When the model path gives up, the server log says why (never the brief).
-3. **Sanitising** (`src/lib/ask/sanitize.ts`): sheets that point at sections that don't exist are dropped, only the first sheet per project is kept, at most five, reasons clipped; unknown signal keys are dropped and a sheet's signal is repaired from its section; an invalid `line` is rebuilt from a template. Topics the visitor chose always count as asked. If no valid sheet remains, it falls back.
-4. **Fallback** (`src/lib/ask/fallback.ts`): scores the brief against signal synonyms to find the capabilities asked for (chosen topics first), then picks each project's best section by signal match (the section's first-listed signal weighs most), then word overlap. A short list of common asks the content never mentions (A/B testing, native iOS or Android, Swift, Kotlin, backend and databases, analytics) is reported as `missing`. If nothing is understood, it prints three strong defaults (HHCD dual view, Component Store contracts, Nike layout system). Used for topic-only requests, and when there is no key, on error, timeout, refusal, or past the daily cap.
+2. **Model path** (`src/lib/ask/model.ts`): if `ANTHROPIC_API_KEY` is set and the daily cap allows, `claude-sonnet-5-5` at low effort is called through the official SDK with structured JSON output (`output_config.format` via `zodOutputFormat`). The system prompt is a catalogue built from `content/` (project and section ids, titles, kinds, signals, each card's full text, each project's stack), cached between requests. The model only **ranks**: the capabilities asked for, what's missing, and up to ten cards that genuinely answer, best first. An empty list means nothing answers, and the site prints its own places to start. The visitor's brief is wrapped and treated as data. A 10-second timeout applies; there are no retries. When the model path gives up, the server log says why (never the brief).
+3. **Sanitising** (`src/lib/ask/sanitize.ts`, `fallback.ts` `verifyMissing`): cards that don't exist are dropped, each card is kept once, and a card prints only for an asked capability its own signals carry. A `missing` label is printed only if it is a skill or tool: never a project (hidden ones included), a person or an organisation, and never something a card or the stack shows. Topics the visitor chose always count as asked. If no valid card remains, it falls back.
+4. **Arranging** (`src/lib/ask/arrange.ts`), the same for both paths: a requested count ("2 projects": the two strongest projects' cards; "3 examples": three cards), then a spread by capability (each asked capability gets its best card before any gets a second), at most six, never padded; cards from one project sit together. The line ("Four cards from two projects match your brief.") is written by the site, never the model.
+5. **Fallback** (`src/lib/ask/fallback.ts`): scores the brief against signal synonyms to find the capabilities asked for (chosen topics first), then ranks every card whose first or second signal is one of them, across all projects (the first signal weighs most, then word overlap). A short list of common asks the content never mentions (A/B testing, native iOS or Android, Swift, Kotlin, databases, analytics) is reported as `missing`. If nothing is understood, it prints three strong defaults. Used for topic-only requests, and when there is no key, on error, timeout, refusal, or past the daily cap.
+
+The eval set is `tests/eval/cases.ts`; `npm run eval:printer` runs it against the live model (about $0.04 a run; `MODEL=… EFFORT=… RUNS=…` to compare).
 
 On the page, the LED blinks and a lip of paper inches at the slot while waiting; the ticket prints when the answer arrives (at least ~400 ms so the motion reads, no other artificial delay). Focus then moves to the ticket and the reply is announced in a polite live region. With reduced motion, everything is instant.
 

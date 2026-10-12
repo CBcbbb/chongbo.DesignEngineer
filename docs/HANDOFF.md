@@ -23,7 +23,7 @@ Recruiters don't ask for a portfolio; they ask to see work. You tell the machine
 
 - Home: eyebrow "Printed to order", h1 "What skills are you looking for?", 8 skill cards (Accessibility, Design systems, Front‑end, Motion, Web and brand, AI tools, Research, Data), then a photographed cream printer (`public/printer.webp`, overlays positioned in % of the image).
 - The paper rising from the printer's top slot is the input (type a brief or paste a JD; typed examples cycle). Selected skills show as chips on the paper. The red button prints.
-- Processing: step lines print on the paper. Results: one sheet per project that shows the asked skill, each sheet being that project's best matching section, shown as an overlapping deck you can drag, click or arrow through.
+- Processing: step lines print on the paper. Results: up to six cards that answer the ask best, across all projects (several from one project when they answer best, grouped together), shown as a strip you can swipe, click or arrow through.
 - "Full project →" goes to `/work/<slug>#<section>`, a case file with a parts rail (01…n) that lands on that section.
 - Approved design reference: `docs/design/prototype.html` (single-file prototype) and `docs/design/screens/`.
 
@@ -37,7 +37,7 @@ Recruiters don't ask for a portfolio; they ask to see work. You tell the machine
 ## How the AI works today
 
 - `POST /api/ask` with `{ brief?: string (≤4000), topics?: SignalKey[] }`. It returns `{ asked, sheets: [{ project, section, signal, reason }], missing, line, source: "model" | "fallback" }`. The no-JS page `/ask?brief=&topics=` uses the same code.
-- Code is in `src/lib/ask/`: `schema.ts`, `catalogue.ts` (builds the section catalogue for the prompt), `model.ts` (`claude-haiku-5-5` via `@anthropic-ai/sdk` `messages.parse` + `zodOutputFormat`, 6 s timeout, no retries), `sanitize.ts` (drops unknown ids, one sheet per project, max 5, falls back if nothing valid), `fallback.ts` (deterministic keyword scorer), `rate-limit.ts` (in-memory per-IP sliding window behind an interface), `answer.ts`. The skill-card → signal mapping is in `src/lib/printed.ts`.
+- Code is in `src/lib/ask/`: `schema.ts`, `catalogue.ts` (builds the section catalogue for the prompt), `model.ts` (`claude-sonnet-5-5` at low effort via `@anthropic-ai/sdk` `messages.parse` + `zodOutputFormat`, cached prompt, 10 s timeout, no retries; it only ranks cards), `sanitize.ts` (drops unknown ids and repeats, falls back if nothing valid), `arrange.ts` (count, spread by capability, max 6, grouped by project), `fallback.ts` (deterministic keyword scorer), `rate-limit.ts` (in-memory per-IP sliding window behind an interface), `answer.ts`. The skill-card → signal mapping is in `src/lib/printed.ts`.
 - Requests with skills only and no brief skip the model and go straight to the deterministic matcher.
 - **No API key is set yet, so production always uses the fallback.**
 - Architecture doc written for the engineer conversation: "Printed to Order: AI architecture" (a Claude Doc in my artifacts). Its open questions:

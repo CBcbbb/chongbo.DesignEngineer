@@ -9,17 +9,19 @@ import {
   lineFor,
   signalHits,
   understand,
+  verifyMissing,
 } from "@/lib/ask/fallback";
 import { AskResponseSchema, LINE_MAX, MAX_SHEETS } from "@/lib/ask/schema";
 import { findEntry } from "@/lib/ask/catalogue";
 
-/** Projects with at least one section carrying the signal, read straight from content. */
-const projectsWith = (sig: Signal) => projects.filter((p) => p.sections.some((s) => s.signals.includes(sig))).map((p) => p.slug);
-
 function expectValid(r: ReturnType<typeof fallbackAnswer>, label: string) {
   expect(AskResponseSchema.safeParse(r).success, label).toBe(true);
-  const slugs = r.sheets.map((s) => s.project);
-  expect(new Set(slugs).size, label).toBe(slugs.length);
+  const keys = r.sheets.map((s) => `${s.project}#${s.section}`);
+  expect(new Set(keys).size, label).toBe(keys.length);
+  expect(r.sheets.length, label).toBeLessThanOrEqual(MAX_SHEETS);
+  // Cards from one project sit together.
+  const runs = r.sheets.map((s) => s.project).filter((p, i, a) => p !== a[i - 1]);
+  expect(new Set(runs).size, label).toBe(runs.length);
   for (const s of r.sheets) {
     const entry = findEntry(s.project, s.section);
     expect(entry, label).toBeDefined();
@@ -27,45 +29,49 @@ function expectValid(r: ReturnType<typeof fallbackAnswer>, label: string) {
   }
 }
 
+/** Cards whose first or second signal is the one asked for: what the fallback counts as answering it. */
+const strongCards = (sig: Signal) =>
+  projects.flatMap((p) => p.sections.filter((s) => s.signals.slice(0, 2).includes(sig)).map((s) => `${p.slug}#${s.id}`));
+
 describe("fallback: one capability", () => {
-  it("accessibility prints exactly one sheet per project that has an accessibility section", () => {
+  it("ranks cards across projects, several from one project if they answer best, at most six", () => {
     const r = fallbackAnswer({ topics: ["accessibility"] });
     expect(r.asked).toEqual(["accessibility"]);
-    expect(r.sheets.map((s) => s.project).sort()).toEqual(projectsWith("accessibility").sort());
+    expect(r.sheets.length).toBe(Math.min(MAX_SHEETS, strongCards("accessibility").length));
     expect(r.sheets.every((s) => s.signal === "accessibility")).toBe(true);
+    expect(r.sheets.filter((s) => s.project === "hhcd-data-platform").length).toBeGreaterThan(1);
     expect(r.source).toBe("fallback");
     expectValid(r, "topic accessibility");
   });
 
-  it("gives the same projects when accessibility is asked in words, HHCD first", () => {
+  it("asked in words, accessibility prints HHCD's keyboard, testing and contrast cards, keyboard first", () => {
     const r = fallbackAnswer("What matters most to us is accessibility.");
     expect(r.asked[0]).toBe("accessibility");
-    expect(r.sheets.map((s) => s.project).sort()).toEqual(projectsWith("accessibility").sort());
     expect(r.sheets[0]).toMatchObject({ project: "hhcd-data-platform", section: "keyboard" });
+    const keys = r.sheets.map((s) => `${s.project}#${s.section}`);
+    for (const k of ["keyboard", "testing", "contrast"]) expect(keys).toContain(`hhcd-data-platform#${k}`);
   });
 
-  it("picks each project's best section: the one where the signal comes first", () => {
+  it("never pads: only cards where the capability is a main signal, unless nothing else shows it", () => {
     const r = fallbackAnswer({ topics: ["accessibility"] });
-    for (const sheet of r.sheets) {
-      const project = projects.find((p) => p.slug === sheet.project)!;
-      const best = Math.min(...project.sections.map((s) => s.signals.indexOf("accessibility")).filter((i) => i >= 0));
-      expect(findEntry(sheet.project, sheet.section)!.section.signals.indexOf("accessibility"), sheet.project).toBe(best);
-    }
+    for (const s of r.sheets) expect(strongCards("accessibility"), `${s.project}#${s.section}`).toContain(`${s.project}#${s.section}`);
+    // AI tools is only a minor tag on one card: that card, and nothing else.
+    expect(fallbackAnswer({ topics: ["ai-tools"] }).sheets).toHaveLength(1);
   });
 
-  it("writes the line from a template", () => {
+  it("writes the line from a template, counting cards and projects", () => {
     const r = fallbackAnswer({ topics: ["accessibility"] });
-    const n = projectsWith("accessibility").length;
-    const word = ["No", "One", "Two", "Three", "Four", "Five"][n];
-    expect(r.line).toBe(`${word} ${n === 1 ? "project shows" : "projects show"} accessibility.`);
+    expect(r.line).toBe("Six cards show accessibility.");
     expect(r.reply).toBe(r.line);
+    expect(fallbackAnswer("give me 2 design systems projects").line).toBe("Three cards from two projects show design systems.");
   });
 
-  it("every signal used in content prints every project that shows it (capped at five)", () => {
+  it("every signal used in content prints something, and only cards that carry it", () => {
     const used = new Set(projects.flatMap((p) => p.sections.flatMap((s) => s.signals)));
     for (const sig of used) {
       const r = fallbackAnswer({ topics: [sig] });
-      expect(r.sheets.length, sig).toBe(Math.min(MAX_SHEETS, projectsWith(sig).length));
+      expect(r.sheets.length, sig).toBeGreaterThan(0);
+      expect(r.sheets.every((s) => s.signal === sig), sig).toBe(true);
       expectValid(r, sig);
     }
   });
@@ -84,17 +90,22 @@ describe("fallback: one capability", () => {
     expect(signalHits("How do you use AI?")["ai-tools"]).toBe(1);
     expect(signalHits("What is your aim?")["ai-tools"]).toBeUndefined();
   });
+
+  it("does not read a marketing website as SEO", () => {
+    const r = fallbackAnswer("A design engineer for our marketing website, strong in React and motion");
+    expect(r.asked).not.toContain("seo-performance");
+    expect(r.missing).toEqual([]);
+  });
 });
 
 describe("fallback: several capabilities", () => {
-  it("prints one sheet per project, only its single best section, for multiple topics", () => {
-    const topics: Signal[] = ["accessibility", "design-systems"];
+  it("gives every asked capability its best card before any gets a second", () => {
+    const topics: Signal[] = ["accessibility", "design-systems", "motion-interaction"];
     const r = fallbackAnswer({ topics });
     expect(r.asked).toEqual(topics);
-    const expected = new Set([...projectsWith("accessibility"), ...projectsWith("design-systems")]);
-    expect(new Set(r.sheets.map((s) => s.project))).toEqual(expected);
+    for (const t of topics) expect(r.sheets.some((s) => s.signal === t), t).toBe(true);
     expect(r.sheets.every((s) => topics.includes(s.signal))).toBe(true);
-    expect(r.line).toMatch(/projects? match(es)? your brief\.$/);
+    expect(r.line).toMatch(/match your brief\.$/);
     expectValid(r, "multi");
   });
 
@@ -106,14 +117,12 @@ describe("fallback: several capabilities", () => {
 
   it("on a tie, prints a decision rather than the problem statement", () => {
     const r = fallbackAnswer({ topics: ["data"] });
-    const hhcd = r.sheets.find((s) => s.project === "hhcd-data-platform")!;
-    expect(findEntry(hhcd.project, hhcd.section)!.section.kind).not.toBe("problem");
+    expect(findEntry(r.sheets[0]!.project, r.sheets[0]!.section)!.section.kind).not.toBe("problem");
   });
 
-  it("orders sheets by strength", () => {
-    const r = fallbackAnswer({ topics: ["accessibility"] });
-    // HHCD shows accessibility in more sections than anyone, so it leads.
-    expect(r.sheets[0]!.project).toBe("hhcd-data-platform");
+  it("API and back end: the data-architecture cards, pipeline first; the data layer brief also leads with pipeline", () => {
+    expect(fallbackAnswer("Strong in API design and backend.").sheets.map((s) => s.section)).toEqual(["pipeline", "stream-fit", "contract"]);
+    expect(fallbackAnswer("design the data layer between our backend and the UI").sheets[0]!.section).toBe("pipeline");
   });
 });
 
@@ -124,7 +133,7 @@ You'll champion accessibility (WCAG 2.2 AA) and build reusable components and pa
 You'll run A/B tests on landing pages, prototype new interactions with AI tools, and work with backend engineers on analytics.
 Bonus: Swift or Kotlin experience.`;
 
-  it("extracts the main capabilities and prints at most five sheets, one per project", () => {
+  it("extracts the main capabilities and prints at most six cards, each capability's best first", () => {
     const r = fallbackAnswer(jd);
     expectValid(r, "jd");
     expect(r.asked.length).toBeGreaterThan(1);
@@ -133,6 +142,7 @@ Bonus: Swift or Kotlin experience.`;
     expect(r.asked).toContain("accessibility");
     expect(r.sheets.length).toBeLessThanOrEqual(MAX_SHEETS);
     expect(r.line).toMatch(/your brief\.$/);
+    for (const a of r.asked.slice(0, MAX_SHEETS)) expect(r.sheets.some((s) => s.signal === a), a).toBe(true);
   });
 
   it("reports asks no work shows", () => {
@@ -171,6 +181,16 @@ describe("fallback: missing", () => {
     expectValid(r, "nothing");
   });
 
+  it("checks the model's missing labels before they are printed", () => {
+    // Kept: common asks the content never mentions, and gaps nothing shows.
+    expect(verifyMissing(["Kotlin", "SEO and performance"], "")).toEqual(["Kotlin", "SEO and performance"]);
+    expect(verifyMissing(["Postgres"], "")).toEqual(["databases"]);
+    // Dropped: projects (hidden ones too), people and organisations, the stack, capabilities some card shows.
+    expect(verifyMissing(["WildEcho project", "Current employer and customers", "React marketing websites", "Design tokens", "API design"], "")).toEqual([]);
+    // The brief's own common asks are always added.
+    expect(verifyMissing([], "Do you know Kotlin?")).toEqual(["Kotlin"]);
+  });
+
   it("does not treat a stray mention in a long brief as an ask", () => {
     const u = understand("accessibility accessibility accessibility accessibility, keyboard and screen readers. One chart.");
     expect(u.asked).toContain("accessibility");
@@ -204,6 +224,8 @@ describe("fallback: shape", () => {
       expect(lineFor([sig], DEFAULT_SHEETS.map((s) => ({ ...s, signal: sig })), []).length).toBeLessThanOrEqual(LINE_MAX);
     }
     expect(lineFor([], DEFAULT_SHEETS, ["databases"], true).length).toBeLessThanOrEqual(LINE_MAX);
+    const six = Array.from({ length: 6 }, (_, i) => ({ ...DEFAULT_SHEETS[0]!, project: `p${i}`, signal: "cross-platform" as Signal }));
+    expect(lineFor(["cross-platform"], six, []).length).toBeLessThanOrEqual(LINE_MAX);
   });
 
   it("has synonyms for every signal used in content", () => {

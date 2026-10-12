@@ -3,7 +3,7 @@
  * Imported by the API route, the /ask page and the client, so it must stay free of server-only code.
  *
  * The visitor asks for what they need to see (a brief, a pasted job description, or topic keys);
- * the machine prints one sheet per project that shows it, each sheet being that project's best section.
+ * the machine prints the cards that answer it best, across all projects (src/lib/ask/arrange.ts has the rules).
  */
 import { z } from "zod";
 import { SIGNALS, type Signal } from "@content/schema";
@@ -12,7 +12,9 @@ import { SIGNALS, type Signal } from "@content/schema";
 export const QUESTION_MAX = 300;
 export const BRIEF_MAX = 4000;
 export const ASKED_MAX = 6;
-export const MAX_SHEETS = 5;
+export const MAX_SHEETS = 6;
+/** How many ranked cards the model may return; arrange() prints at most MAX_SHEETS of them. */
+export const RANKED_MAX = 10;
 export const LINE_MAX = 90;
 export const REASON_MAX = 90;
 export const MISSING_MAX = 6;
@@ -67,7 +69,7 @@ export const AskResponseSchema = z
   .object({
     /** Capabilities understood, as signal keys, most important first. */
     asked: z.array(z.enum(SIGNAL_KEYS)).min(1).max(ASKED_MAX),
-    /** One per project, best first. */
+    /** Best first, at most six; a project may print several cards, never the same card twice. */
     sheets: z.array(SheetSchema).min(1).max(MAX_SHEETS),
     /** Plain labels of requested things no work shows. */
     missing: z.array(z.string().min(1).max(MISSING_LABEL_MAX)).max(MISSING_MAX),
@@ -78,8 +80,8 @@ export const AskResponseSchema = z
     picks: z.array(PickSchema).min(1).max(MAX_PICKS),
     matched: z.enum(MATCHED_KEYS),
   })
-  .refine((r) => new Set(r.sheets.map((s) => s.project)).size === r.sheets.length, {
-    message: "One sheet per project.",
+  .refine((r) => new Set(r.sheets.map((s) => `${s.project}#${s.section}`)).size === r.sheets.length, {
+    message: "Each card at most once.",
     path: ["sheets"],
   });
 

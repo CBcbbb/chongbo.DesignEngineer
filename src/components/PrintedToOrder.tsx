@@ -5,7 +5,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProp
 import { SIGNALS } from "@content/schema";
 import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type AskResponse } from "@/lib/ask/schema";
 import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
-import { EXAMPLES, NUM, PICKED_HINT, TOPICS, missingLine, pad2, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
+import { EXAMPLES, PICKED_HINT, TOPICS, missingLine, pad2, printedCount, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
 import { Pill } from "./nav/Pill";
 import { Sheet } from "./Sheet";
 
@@ -173,7 +173,7 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
       ? "Paper jam"
       : startHere || !sheets.length
         ? "Choosing where to start"
-        : `${NUM[sheets.length] ?? sheets.length} ${sheets.length === 1 ? "project" : "projects"}`;
+        : printedCount(sheets);
     setSteps(next);
     for (let i = 1; i <= 4; i++) {
       setStepAt(i);
@@ -236,6 +236,7 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
 
   // The sheets sit side by side on wide screens: arrows, keys and swiping move along the strip; the counter follows the scroll.
   const n = result?.cards.length ?? 0;
+  const runs = projectRuns(result?.cards ?? []);
   const goSheet = useCallback(
     (i: number) => {
       const strip = stripRef.current;
@@ -401,13 +402,14 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
               onKeyDown={onStripKey}
             >
               {result.cards.map((card, i) => (
-                <li key={card.project} className="sheet" style={{ animationDelay: `${80 + 110 * i}ms` }}>
+                <li key={cardKey(card.project, card.section)} className="sheet" style={{ animationDelay: `${80 + 110 * i}ms` }}>
                   <article aria-labelledby={`sh-${i}`}>
                     <Sheet
                       card={card}
                       index={i}
                       total={result.cards.length}
                       headingId={`sh-${i}`}
+                      run={runs[i]}
                       media={card.hasMedia ? media[cardKey(card.project, card.section)] : undefined}
                     />
                   </article>

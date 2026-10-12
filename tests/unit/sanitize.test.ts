@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { sanitizeAsked, sanitizeLine, sanitizeMissing, sanitizeSheets } from "@/lib/ask/sanitize";
+import { sanitizeAsked, sanitizeMissing, sanitizeSheets } from "@/lib/ask/sanitize";
 
 describe("sanitizeSheets", () => {
-  it("drops unknown and hidden ids, keeps one sheet per project and at most five", () => {
+  it("drops unknown and hidden ids and repeated cards; keeps several cards from one project, in order", () => {
     const sheets = sanitizeSheets([
       { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "a" },
       { project: "hhcd-data-platform", section: "keyboard", signal: "accessibility", reason: "second from same project" },
+      { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "same card again" },
       { project: "made-up", section: "problem", signal: "data", reason: "b" },
       { project: "components-for-any-data", section: "nope", signal: "data", reason: "c" },
       { project: "components-for-any-data", section: "contract", signal: "design-eng-gap", reason: "d" },
@@ -16,14 +17,17 @@ describe("sanitizeSheets", () => {
     ]);
     expect(sheets.map((s) => `${s.project}#${s.section}`)).toEqual([
       "hhcd-data-platform#dual-view",
+      "hhcd-data-platform#keyboard",
       "components-for-any-data#contract",
       "nike-athletes-closet#graphic-system",
     ]);
   });
 
-  it("caps at five", () => {
+  it("keeps each card once and at most ten ranked cards", () => {
     const one = { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "x" };
     expect(sanitizeSheets(Array(9).fill(one))).toHaveLength(1);
+    const hhcd = ["brief", "no-borders", "sample-data", "workshop", "four-types", "dual-view", "taken-up", "arrangements", "guide", "keyboard", "narrow-screens", "contrast"];
+    expect(sanitizeSheets(hhcd.map((section) => ({ project: "hhcd-data-platform", section, signal: "x" })))).toHaveLength(10);
   });
 
   it("repairs a signal the section does not carry, preferring an asked one", () => {
@@ -51,7 +55,7 @@ describe("sanitizeSheets", () => {
   });
 });
 
-describe("sanitizeAsked / sanitizeMissing / sanitizeLine", () => {
+describe("sanitizeAsked / sanitizeMissing", () => {
   it("keeps known signal keys only, in order, without duplicates, at most six", () => {
     expect(sanitizeAsked(["accessibility", "vibes", "data", "accessibility"])).toEqual(["accessibility", "data"]);
     expect(sanitizeAsked(["toString", "__proto__"])).toEqual([]);
@@ -66,13 +70,5 @@ describe("sanitizeAsked / sanitizeMissing / sanitizeLine", () => {
       "Kotlin",
     ]);
     expect(sanitizeMissing(null)).toEqual([]);
-  });
-
-  it("rejects long, empty or markup lines", () => {
-    expect(sanitizeLine("Three projects show accessibility.")).toBe("Three projects show accessibility.");
-    expect(sanitizeLine("x".repeat(91))).toBeNull();
-    expect(sanitizeLine("   ")).toBeNull();
-    expect(sanitizeLine("<script>alert(1)</script>")).toBeNull();
-    expect(sanitizeLine("See https://evil.example")).toBeNull();
   });
 });

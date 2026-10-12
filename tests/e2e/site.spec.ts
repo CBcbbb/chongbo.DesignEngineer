@@ -37,7 +37,7 @@ test.describe("accessibility", () => {
 });
 
 test.describe("printing", () => {
-  test("a skills card prints one sheet per project, focuses and announces the title", async ({ page }) => {
+  test("a skills card prints the best cards across projects, focuses and announces the title", async ({ page }) => {
     await page.goto("/");
     const card = page.getByRole("button", { name: "Accessibility", exact: true });
     await card.click();
@@ -50,6 +50,13 @@ test.describe("printing", () => {
     await expect(page.getByRole("status")).toHaveText(await title.innerText());
     await expect(page.locator(".sheets .sheet").first()).toContainText("A dual view: the network and a list");
     await expect(page.locator(".sheets .sheet").first().locator(".full")).toHaveAttribute("href", "/work/hhcd-data-platform#dual-view");
+    // Several HHCD cards print; all from one project, so the counter alone numbers them.
+    const sheets = page.locator(".sheets .sheet");
+    const n = await sheets.count();
+    expect(n).toBeGreaterThan(1);
+    expect(n).toBeLessThanOrEqual(6);
+    await expect(page.locator(".sheets .s-run")).toHaveCount(0);
+    await expect(page.locator(".deckbar span")).toHaveText(`01 / 0${n}`);
     // The cards reset after printing.
     await expect(card).toHaveAttribute("aria-pressed", "false");
     await page.getByRole("button", { name: "New request" }).click();
@@ -64,6 +71,16 @@ test.describe("printing", () => {
     await page.getByRole("button", { name: "Print" }).click();
     expect((await req).postDataJSON()).toEqual({ brief: "", topics: ["design-systems", "cross-platform"] });
     await expect(page.locator("#r-title")).toHaveText("Design systems", { timeout: 10_000 });
+  });
+
+  test("cards from one project in a mixed print read as a group", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Design systems", exact: true }).click();
+    await page.getByRole("button", { name: "Print" }).click();
+    await expect(page.locator("#r-title")).toHaveText("Design systems", { timeout: 10_000 });
+    const runs = page.locator(".sheets .s-run");
+    expect(await runs.count()).toBeGreaterThan(1);
+    await expect(runs.first()).toHaveText(/· 1 of \d$/);
   });
 
   test("keyboard only: type on the paper, Enter, results title focused, Tab reaches the first sheet's link", async ({ page }) => {

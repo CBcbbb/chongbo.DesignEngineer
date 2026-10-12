@@ -38,7 +38,7 @@ export const EXAMPLES = [
 /** Shown on the paper, still, once a skills card is picked. */
 export const PICKED_HINT = "Add a line about the role, or press the red button.";
 
-export const NUM = ["No", "One", "Two", "Three", "Four", "Five"];
+export const NUM = ["No", "One", "Two", "Three", "Four", "Five", "Six"];
 
 /** Short labels for signals, used in titles, stamps and chips. The long names live in content SIGNALS. */
 export const SIGNAL_SHORT: Record<Signal | "start-here", string> = {
@@ -84,8 +84,27 @@ export function topicsToLabels(signals: readonly string[]): string[] {
 /** Under the results title: who chose the sheets, so the reader knows the words are mine. */
 export function provenanceLine(source: "model" | "fallback", count: number): string {
   if (!count) return "";
-  const per = count === 1 ? "" : ", one section per project";
-  return source === "model" ? `Chosen by Claude from my case files${per}. The words are mine.` : `Matched by keyword from my case files${per}.`;
+  return source === "model" ? "Chosen by Claude from my case files. The words are mine." : "Matched by keyword from my case files.";
+}
+
+/**
+ * Where each printed card sits within its project's run: cards from one project are printed together, so a run of
+ * three reads "1 of 3", "2 of 3", "3 of 3" beside the project's name. A lone card has no position, and neither does a
+ * print from one project only: the sheet counter already says it.
+ */
+export function projectRuns(cards: readonly { project: string }[]): ({ at: number; of: number } | null)[] {
+  return cards.map((c, i) => {
+    const of = cards.filter((x) => x.project === c.project).length;
+    return of > 1 && of < cards.length ? { at: cards.slice(0, i + 1).filter((x) => x.project === c.project).length, of } : null;
+  });
+}
+
+/** "Three sheets" or "Four sheets from two projects", for the paper's checklist. */
+export function printedCount(cards: readonly { project: string }[]): string {
+  const n = cards.length;
+  const p = new Set(cards.map((c) => c.project)).size;
+  const sheets = `${NUM[n] ?? n} ${n === 1 ? "sheet" : "sheets"}`;
+  return p > 1 ? `${sheets} from ${(NUM[p] ?? String(p)).toLowerCase()} projects` : sheets;
 }
 
 export function missingLine(missing: readonly string[]): string {
