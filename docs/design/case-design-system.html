@@ -4033,7 +4033,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
       const R = [24, 150], H = [[176, 62], [176, 150], [176, 238]], L = [[300, 118], [300, 182]];
       const lines = H.map(([x, y], i) => curve(R[0] + 104, R[1], x, y, i === 1)).join("") + L.map(([x, y]) => curve(H[1][0] + 96, H[1][1], x, y, true)).join("");
       return `<div class="pf pf-2">
-        <aside class="p2-tree"><div class="p2-logo">${MARK}<b>Compass</b></div><div class="p2-search">${pi("search")}Search</div><div class="p2-sel">${pi("tree")}Network</div>
+        <aside class="p2-tree"><div class="p2-logo">${MARK}<b>Compass</b></div><div class="p2-search">${pi("search")}Search</div><div class="p2-sel">Network</div>
           <ul><li class="h">${pi("chev")}Inbound</li><li>Harbour</li><li>Customs</li><li class="h">${pi("chev")}Outbound</li><li class="is-on">Inland hubs</li><li>Last mile</li></ul></aside>
         <div class="p2-canvas"><svg class="p2-lines" viewBox="0 0 400 360" aria-hidden="true">${lines}</svg>
           <div class="p2-node is-root" style="left:${R[0]}px;top:${R[1] - 22}px"><small>12 lanes</small><b>North network</b></div>
