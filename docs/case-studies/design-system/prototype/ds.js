@@ -198,22 +198,30 @@
     render();
   }
 
-  /* ---------- 01.2: the same components, in code ---------- */
+  /* ---------- 01.2: the same library, rendered from code; one stage with a Figma / Code switch ---------- */
   const codeSide = document.getElementById("code-side");
   if (codeSide) {
-    apply(codeSide, theme(CUSTOMERS[0].colour, "light"));
-    codeSide.style.setProperty("--fg", "#09090b");
-    codeSide.innerHTML = `
-      <code>&lt;Button variant="default | outline | ghost" /&gt;</code>
-      <div class="ds-row"><button type="button" class="ui-btn is-primary">Settings</button><button type="button" class="ui-btn is-outline">Settings</button><button type="button" class="ui-btn is-ghost">Settings</button><button type="button" class="ui-btn is-primary" disabled>Settings</button></div>
-      <code>&lt;Input state="default | focus | error" /&gt;</code>
-      <div style="display:grid;gap:8px">
-        <input class="ui-input" placeholder="Placeholder text" aria-label="Example input">
-        <input class="ui-input is-focus" value="Placeholder text" aria-label="Example input, focused">
-        <input class="ui-input is-error" value="Placeholder text" aria-label="Example input with an error">
-      </div>
-      <code>&lt;Badge tone="success | warning | destructive | info" /&gt;</code>
-      <div class="ds-row"><span class="ui-badge r-success">Delivered</span><span class="ui-badge r-warning">Delayed</span><span class="ui-badge r-destructive">Failed</span><span class="ui-badge r-info">On the road</span></div>`;
+    const brand = SCALES.light.brand["600"];
+    codeSide.innerHTML = ["light", "dark"].map((mode) => `<div class="ds-f2c-pane ui" data-mode="${mode}">
+        <span>${mode === "light" ? "Light" : "Dark"}</span>
+        <div class="ds-f2c-row"><span class="ui-btn is-primary">Settings</span><span class="ui-btn is-outline">Settings</span><span class="ui-btn is-ghost">Settings</span><span class="ui-btn is-destructive">Settings</span><span class="ui-btn is-primary" style="opacity:.45">Settings</span></div>
+        <div class="ds-f2c-row">
+          <span class="ui-field"><span>Label <b>*</b></span><small>This is a description</small><span class="ui-input" style="color:var(--muted-fg)">Placeholder text</span></span>
+          <span class="ui-field"><span>Label <b>*</b></span><small>This is a description</small><span class="ui-input is-focus">Placeholder text</span></span>
+          <span class="ui-field"><span>Label <b>*</b></span><small>This is a description</small><span class="ui-input is-error">Placeholder text</span><small class="ui-err">A note is required.</small></span>
+        </div>
+        <div class="ds-f2c-row"><span class="ui-badge r-success">Delivered</span><span class="ui-badge r-warning">Delayed</span><span class="ui-badge r-destructive">Failed</span><span class="ui-badge r-info">On the road</span><span class="ui-badge r-primary">Today</span></div>
+        <div class="ds-f2c-row"><span class="ui-alert r-warning"><strong>Delayed</strong><span>Running 25 minutes late at Harbour depot.</span></span><span class="ui-alert r-info"><strong>On the road</strong><span>Next stop in 12 minutes.</span></span></div>
+        <div class="ui-pages"><span>1</span><span class="is-on">2</span><span>3</span><span>…</span><span style="opacity:.4">10</span></div>
+      </div>`).join("");
+    codeSide.querySelectorAll(".ds-f2c-pane").forEach((p) => {
+      const t = theme(brand, p.dataset.mode);
+      if (p.dataset.mode === "dark") { t["--primary-fg"] = "#fafafa"; t["--destructive-text"] = SCALES.dark.red["600"]; }
+      apply(p, t);
+      p.querySelectorAll(".ui-btn.is-destructive").forEach((b) => (b.style.color = p.dataset.mode === "dark" ? "#09090b" : "#fafafa"));
+    });
+    const stage = document.getElementById("f2c-stage");
+    document.querySelectorAll('input[name="f2c"]').forEach((r) => r.addEventListener("change", () => { stage.dataset.show = r.value; }));
   }
 
   /* ---------- 01.3: three layers ---------- */

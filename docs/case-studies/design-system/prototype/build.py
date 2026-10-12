@@ -26,5 +26,8 @@ css = "\n".join(
     ]
 )
 html = head + "<style>\n" + css + "\n</style>\n" + (here / "body.html").read_text() + "\n<script>\n" + (here / "ds.js").read_text() + "\n</script>\n"
+import base64
+img = root / "public/assets/design-system/figma-components.webp"
+html = html.replace("{{FIGMA_COMPONENTS}}", "data:image/webp;base64," + base64.b64encode(img.read_bytes()).decode())
 out.write_text(html)
 print(out, len(html), "bytes")

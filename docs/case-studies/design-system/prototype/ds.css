@@ -137,16 +137,32 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   --mp-row-gap: 4px; --mp-row-pad: 6px 8px; --mp-row-r: 0; --mp-row-bg: transparent; --mp-row-border: 1px solid var(--mp-rule); --mp-badge-r: 0; }
 .mp-3 { border-radius: 2px; }
 
-/* ---------- 01.2 Figma and code ---------- */
-.ds-f2c { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(10px, 1.6vw, 18px); align-items: stretch; }
-@media (max-width: 760px) { .ds-f2c { grid-template-columns: minmax(0, 1fr); } }
-.ds-f2c figure { margin: 0; display: grid; grid-template-rows: auto 1fr; gap: 8px; min-width: 0; }
-.ds-shot { border-radius: 10px; box-shadow: 0 0 0 1px var(--case-rule); overflow: hidden; background: #f5f5f5; display: grid; place-items: center; min-height: 260px; }
-.ds-shot img { display: block; width: 100%; height: auto; }
-.ds-shot .ds-missing { font: 500 12.5px/1.5 var(--mono); color: #57534e; text-align: center; padding: 24px; max-width: 34ch; }
-.ds-code-side { border-radius: 10px; box-shadow: 0 0 0 1px var(--case-rule); background: var(--ds-surface); color: var(--ds-surface-ink); padding: 18px; display: grid; gap: 16px; align-content: start; }
-.ds-code-side .ds-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.ds-code-side code { font: 400 12px/1.4 var(--mono); color: var(--ds-surface-dim); }
+/* ---------- 01.2 Figma and code: one stage, two sources ---------- */
+.ds-f2c { display: grid; gap: 12px; }
+.ds-f2c > .ds-seg { justify-self: start; }
+.ds-f2c-stage { position: relative; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px var(--case-rule); }
+.ds-f2c-figma { display: block; width: 100%; height: auto; }
+.ds-f2c-code { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; container-type: inline-size; }
+.ds-f2c-stage[data-show="figma"] .ds-f2c-code { visibility: hidden; }
+.ds-f2c-stage[data-show="code"] .ds-f2c-figma { visibility: hidden; }
+.ds-f2c-pane { background: var(--bg); color: var(--fg); padding: 2.45cqw 2.45cqw; display: grid; align-content: start; gap: 1.5cqw; }
+.ds-f2c-pane > span { font: 500 0.82cqw/1 var(--mono); color: var(--muted-fg); }
+.ds-f2c-row { display: flex; gap: 0.7cqw; align-items: flex-start; flex-wrap: nowrap; }
+.ds-f2c-pane .ui-btn { font-size: 0.9cqw; padding: 0.82cqw 0.98cqw; border-radius: 0.55cqw; }
+.ds-f2c-pane .ui-field { width: 14.3cqw; gap: 0.3cqw; }
+.ds-f2c-pane .ui-field > span, .ds-f2c-pane .ui-field small { font-size: 0.82cqw; }
+.ds-f2c-pane .ui-field > span { font-size: 0.87cqw; }
+.ds-f2c-pane .ui-input { font-size: 0.9cqw; padding: 0.7cqw 0.7cqw; border-radius: 0.55cqw; }
+.ds-f2c-pane .ui-badge { font-size: 0.78cqw; padding: 0.3cqw 0.6cqw; }
+.ds-f2c-pane .ui-badge::before { width: 0.4cqw; height: 0.4cqw; }
+.ds-f2c-pane .ui-alert { width: 20.4cqw; font-size: 0.85cqw; padding: 0.7cqw 0.82cqw; border-radius: 0.55cqw; grid-template-columns: 1fr; gap: 0.15cqw; }
+.ds-f2c-pane .ui-pages { font-size: 0.9cqw; gap: 0.27cqw; }
+.ds-f2c-pane .ui-pages span { min-width: 2.2cqw; height: 2.2cqw; border-radius: 0.55cqw; }
+@media (max-width: 760px) {
+  .ds-f2c-code { position: static; grid-template-columns: minmax(0, 1fr); container-type: normal; }
+  .ds-f2c-pane { zoom: 1; }
+  .ds-f2c-stage[data-show="figma"] .ds-f2c-code, .ds-f2c-stage[data-show="code"] .ds-f2c-figma { display: none; }
+}
 
 /* ---------- the invented product's components (used by 01.2, the work and 02.4) ---------- */
 .ui { --r: 0.5rem; --font: "Geist", var(--sans); font-family: var(--font); color: var(--fg); }
@@ -159,6 +175,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ui-btn:focus-visible, .ui-input:focus-visible, .ui-select:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 .ui-field { display: grid; gap: 5px; min-width: 0; }
 .ui-field > span { font: 600 12.5px/1.2 var(--font); }
+.ui-field > span.ui-input { font-weight: 400; }
 .ui-field > span b { color: var(--destructive-text); font-weight: 600; }
 .ui-field small { font: 400 11.5px/1.3 var(--font); color: var(--muted-fg); }
 .ui-input, .ui-select { font: 400 13px/1.2 var(--font); color: var(--fg); background: var(--input-bg); border: 1px solid var(--input); border-radius: var(--r); padding: 8px 10px; min-width: 0; width: 100%; box-sizing: border-box; }
@@ -319,3 +336,13 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 :root[data-theme="dark"] .ds-spec .is-darkset { display: table-row-group; }
 :root[data-theme="dark"] .ds-spec th .is-darkset { display: inline; }
 @media (max-width: 600px) { .proto-bar { right: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); } .proto-bar button { padding: 7px 9px; } }
+
+/* phones: wide evidence scrolls sideways inside its own box instead of shrinking past reading size */
+@media (max-width: 760px) {
+  .ds-f2c-stage { overflow-x: auto; }
+  .ds-f2c-figma { min-width: 760px; }
+  .ds-f2c-stage[data-show="code"] { overflow-x: auto; }
+  .ds-f2c-code { min-width: 760px; position: static; display: grid; grid-template-columns: 1fr 1fr; container-type: inline-size; }
+  #light-chart { overflow-x: auto; }
+  #light-chart svg { min-width: 640px; }
+}

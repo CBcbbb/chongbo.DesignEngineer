@@ -156,14 +156,14 @@
         </div>
         <div class="cf-evidence" data-fit="fill">
           <div class="ds-ev ds-f2c">
-            <figure>
-              <span class="ds-label">Figma</span>
-              <div class="ds-shot" id="figma-shot"><p class="ds-missing">[Figma: component sets and variables, rebuilt on the invented brand. Screenshot to come from the Figma file.]</p></div>
-            </figure>
-            <figure>
-              <span class="ds-label">Code</span>
-              <div class="ds-code-side ui" id="code-side"></div>
-            </figure>
+            <div class="ds-seg" role="radiogroup" aria-label="Show the library in">
+              <label><input type="radio" name="f2c" id="f2c-figma" value="figma" checked>Figma</label>
+              <label><input type="radio" name="f2c" id="f2c-code" value="code">Code</label>
+            </div>
+            <div class="ds-f2c-stage" id="f2c-stage" data-show="figma">
+              <img class="ds-f2c-figma" src="{{FIGMA_COMPONENTS}}" width="1468" height="447" alt="The Figma library's components, light and dark: buttons, inputs with focus and error, badges, alerts and pagination.">
+              <div class="ds-f2c-code" id="code-side" aria-label="The same components, rendered from the shared code"></div>
+            </div>
           </div>
         </div>
       </section>
