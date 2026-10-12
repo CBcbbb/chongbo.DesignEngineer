@@ -111,3 +111,13 @@ You said the project is text-heavy, so the Nike anatomy (claim on the left, body
 - **01.6 shows the dual view as the accessibility decision.** Pick how you're using it (Keyboard · Screen reader · Mouse) and each view says whether it works: by keyboard or screen reader the network is "Hard to use" (red, greyed) and the table "Works" (green); with a mouse both work. Ctrl + E sits between the two views, as the switch. The network is first, the table second.
 - **The closing card is now the takeaway**, "One person, two points of view": *Bringing accessibility in at the start saved a lot of rework later.* Then: I helped collect the data, then designed and built the platform myself, so there was a lot to weigh at once. Because I could plan as the designer and the developer at the same time, accessibility shaped the data and the layout from the start, rather than being fixed afterwards. "Helped collect" matches the cover (with the VOICE team). Its contents label is "Takeaway". Tell me if you'd word it differently.
 
+## The workshop card, laid out again (12 Oct, morning)
+
+From the seven card originals you sent:
+
+- **The role cards are a hand of cards** beside the text. When the card scrolls into view they are dealt from one stack into a fan (once; with reduced motion they are simply fanned). Point at a card, click it or use the arrow keys: it lifts and straightens, and its words are set beside or under the hand as live text, so it reads at any size ("04 / 07 · The Local Councillor wants to work with an artist…"). The middle card (The Local Councillor) is picked first, so the fan is symmetrical. The words are the cards' own, unchanged.
+- **The three walls are back in a row across the foot**, as you preferred: photo, wall, finding. Each photo still opens larger.
+- The cards have a soft shadow, since they overlap like real cards; everything else on the page keeps one edge.
+- The originals are 362 × 602, so the cards are shown at most about 140px wide, sharp on high-density screens; the live text carries the reading.
+- `workshop-cards.png` (the old composite) is no longer used; the file stays in `public/assets/hhcd`.
+

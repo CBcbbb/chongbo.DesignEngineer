@@ -106,6 +106,18 @@ export type Media =
     }
   | {
       /**
+       * A set of physical cards (e.g. a workshop's role cards), dealt as a fanned hand when the card comes into view.
+       * The reader picks one: it lifts, and its words are set as live text under the hand. `title` and `text` are the
+       * card's own words; the images are decorative copies of them.
+       */
+      kind: "deck";
+      label: string;
+      items: { asset: string; title: string; text: string }[];
+      need: string;
+      caption?: string;
+    }
+  | {
+      /**
        * Two views of the same data side by side, joined by the shortcut that switches between them (shown as keycaps),
        * and a choice of how the reader is using it (`modes`): each view then says whether it works or is hard to use
        * that way. The reader sees why both views exist.

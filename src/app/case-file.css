@@ -410,6 +410,118 @@
   margin-inline: auto;
 }
 
+/* a hand of role cards: dealt into a fan when it comes into view; the picked card lifts, its words under the hand */
+.cf-deck {
+  container-type: inline-size;
+}
+.cf-deck-in {
+  display: grid;
+  gap: 12px;
+}
+.cf-deck-hand {
+  --cw: min(104px, 21cqi);
+  /* room for the outer cards' tilt, so no corner leaves the card */
+  --pad: calc(var(--cw) * 0.55);
+  position: relative;
+  height: calc(var(--cw) * var(--ar) + 86px);
+}
+.cf-evidence[data-split="deck"] {
+  row-gap: clamp(1.5rem, 3vw, 2.25rem);
+}
+.cf-evidence[data-fit] > .cf-figure.cf-deck {
+  height: auto;
+  grid-template-rows: auto auto;
+}
+.cf-deck-card {
+  position: absolute;
+  bottom: 26px;
+  left: calc(var(--pad) + var(--i) * (100% - 2 * var(--pad) - var(--cw)) / (var(--n) - 1));
+  z-index: calc(var(--i) + 1);
+  width: var(--cw);
+  padding: 0;
+  border: 0;
+  border-radius: 9% / 5.4%;
+  background: none;
+  cursor: pointer;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.08)) drop-shadow(0 8px 12px rgb(0 0 0 / 0.12));
+  transform-origin: 50% 150%;
+  transform: translateY(calc(var(--o2) * 2.2px)) rotate(calc(var(--o) * 3.5deg));
+  transition:
+    transform 0.45s var(--ease),
+    left 0.6s var(--ease),
+    filter 0.3s var(--ease);
+}
+.cf-deck-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.cf-deck-card:hover {
+  transform: translateY(calc(var(--o2) * 2.2px - 10px)) rotate(calc(var(--o) * 3.5deg));
+}
+.cf-deck-card[aria-checked="true"] {
+  z-index: 20;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 16px 22px rgb(0 0 0 / 0.2));
+  transform: translateY(-22px) rotate(0deg) scale(1.1);
+}
+.cf-deck-card:focus-visible {
+  outline: 2px solid var(--case-ink);
+  outline-offset: 4px;
+}
+/* before the deal: one stack in the middle, slightly fanned like a pile; then each card goes to its place in turn */
+.cf-deck-hand.is-stacked .cf-deck-card {
+  left: calc(50% - var(--cw) / 2);
+  transform: translateY(24px) rotate(calc(var(--o) * 1.6deg));
+}
+.cf-deck-hand.is-dealing .cf-deck-card {
+  transition-duration: 0.55s, 0.6s, 0.3s;
+  transition-delay: calc(var(--i) * 70ms);
+}
+.cf-deck-read {
+  display: grid;
+  justify-items: center;
+}
+.cf-deck-read p {
+  grid-area: 1 / 1;
+  max-width: 46ch;
+  font-size: 15.5px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--case-body);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease), visibility 0.25s;
+}
+.cf-deck-read p[data-on] {
+  visibility: visible;
+  opacity: 1;
+}
+.cf-deck-read strong {
+  font-weight: 600;
+  color: var(--case-ink);
+}
+/* a wide figure: the words beside the hand, not under it */
+@container (min-width: 36rem) {
+  .cf-deck-in {
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: clamp(1.25rem, 3cqi, 2.25rem);
+    align-items: center;
+  }
+  .cf-deck-read {
+    justify-items: start;
+  }
+  .cf-deck-read p {
+    text-align: left;
+  }
+}
+.cf-deck-count {
+  display: block;
+  margin-bottom: 4px;
+  font: 500 11px/1.4 var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--case-dim);
+}
+
 /* the data pipeline, stepped through: one stage, the same sample entries moving between five shapes */
 .cf-pipe {
   display: grid;
@@ -1821,50 +1933,50 @@
   color: var(--case-body);
 }
 
-/* a picture beside its steps (the workshop: the stakeholder cards, then the three walls, each a row) */
+/* a picture beside its steps, each step a row */
 @media (min-width: 761px) {
-  .cf-evidence[data-split] {
+  .cf-evidence[data-split=""] {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: clamp(1.25rem, 2.6vw, 2rem);
     align-items: center;
   }
   /* the picture keeps its own size on a mount that hugs it, centred against the steps */
-  .cf-evidence[data-split] > .cf-figure {
+  .cf-evidence[data-split=""] > .cf-figure {
     height: auto !important;
     align-self: center;
   }
-  .cf-evidence[data-split] .cf-plate,
-  .cf-evidence[data-split] .cf-plate-shot {
+  .cf-evidence[data-split=""] .cf-plate,
+  .cf-evidence[data-split=""] .cf-plate-shot {
     height: auto !important;
   }
-  .cf-evidence[data-split] .cf-plate-shot img {
+  .cf-evidence[data-split=""] .cf-plate-shot img {
     width: 100% !important;
     max-height: none !important;
   }
-  .cf-evidence[data-split] > .cf-steps {
+  .cf-evidence[data-split=""] > .cf-steps {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: none;
     row-gap: clamp(0.75rem, 1.6vw, 1.1rem);
     align-content: center;
   }
-  .cf-evidence[data-split] > .cf-steps li {
+  .cf-evidence[data-split=""] > .cf-steps li {
     grid-row: auto;
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
     grid-template-rows: auto auto 1fr;
     column-gap: 14px;
     align-content: start;
   }
-  .cf-evidence[data-split] .cf-step-img {
+  .cf-evidence[data-split=""] .cf-step-img {
     grid-row: 1 / span 3;
     align-self: start;
   }
-  .cf-evidence[data-split] .cf-step-label {
+  .cf-evidence[data-split=""] .cf-step-label {
     margin-top: 0 !important;
   }
-  .cf-evidence[data-split] .cf-steps h4 {
+  .cf-evidence[data-split=""] .cf-steps h4 {
     margin-top: 2px;
   }
-  .cf-evidence[data-split] .cf-steps p:not(.cf-step-label) {
+  .cf-evidence[data-split=""] .cf-steps p:not(.cf-step-label) {
     font-size: 14px;
     line-height: 1.45;
   }
@@ -2403,18 +2515,37 @@
     margin-top: 0;
     padding-top: 0;
   }
-  /* the workshop: the stakeholder cards under the text, the walls down the right */
+  /* a picture under the text, its steps down the right */
   .cf-sheet.is-card.is-side .cf-evidence[data-split] {
     display: contents;
   }
-  .is-side .cf-evidence[data-split] > .cf-figure {
+  .is-side .cf-evidence[data-split=""] > .cf-figure {
     grid-column: 1;
     grid-row: 2;
     margin-top: clamp(1.25rem, 2.6vw, 2rem);
   }
-  .is-side .cf-evidence[data-split] > .cf-steps {
+  .is-side .cf-evidence[data-split=""] > .cf-steps {
     grid-column: 2;
     grid-row: 1 / span 2;
+  }
+  /* the workshop: the hand of role cards beside the text, the three walls in a row across the foot */
+  .cf-sheet.is-card.is-side:has(.cf-evidence[data-split="deck"]) {
+    grid-template-columns: minmax(0, 0.47fr) minmax(0, 0.53fr);
+  }
+  .is-side .cf-deck-hand {
+    --cw: min(128px, 27cqi);
+  }
+  .is-side .cf-evidence[data-split="deck"] > .cf-figure {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
+    height: auto;
+    grid-template-rows: auto auto;
+  }
+  .is-side .cf-evidence[data-split="deck"] > .cf-steps {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: clamp(1.5rem, 3vw, 2.25rem);
   }
   /* images stacked down the right at one shared width (so their edges line up), as wide as the column and the
      screen allow: --inv is the sum of their height-to-width ratios */
@@ -2553,12 +2684,26 @@
   .cf-spec-row {
     padding-block: 12px;
   }
-  .cf-evidence[data-split] > .cf-steps {
+  .cf-evidence[data-split=""] > .cf-steps {
     row-gap: 0.6rem;
   }
   .cf-evidence[data-split] .cf-steps p:not(.cf-step-label) {
     font-size: 13.5px;
     line-height: 1.4;
+  }
+  .cf-deck-hand,
+  .cf-sheet.is-side .cf-deck-hand {
+    --cw: min(100px, 21cqi);
+    height: calc(var(--cw) * var(--ar) + 66px);
+  }
+  .cf-deck-card {
+    bottom: 16px;
+  }
+  .is-side .cf-evidence[data-split="deck"] > .cf-steps {
+    margin-top: 1rem;
+  }
+  .cf-evidence[data-split="deck"] .cf-step-label {
+    margin-top: 10px !important;
   }
 }
 

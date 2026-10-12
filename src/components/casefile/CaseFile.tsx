@@ -89,7 +89,7 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
       )}
       {section.facts && <Facts items={section.facts} />}
       {hasEvidence && (
-        <div className="cf-evidence" data-fit={fitOf(section)} data-split={section.media && section.steps?.length ? "" : undefined}>
+        <div className="cf-evidence" data-fit={fitOf(section)} data-split={section.media && section.steps?.length ? (section.media.kind === "deck" ? "deck" : "") : undefined}>
           {section.media && <CaseMedia media={section.media} index={idx} url={url} bleed={!section.steps?.length} />}
           {section.steps && section.steps.length > 0 && <StepsRow steps={section.steps} />}
         </div>

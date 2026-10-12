@@ -207,6 +207,7 @@ export function MediaSlot({ media, priority = false, compact = false }: { media:
     case "stepper":
     case "specimens":
     case "module":
+    case "deck":
       return null;
     case "metrics":
       return (

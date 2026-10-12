@@ -141,11 +141,18 @@ export const hhcd: Project = {
       lenses: { ux: "in" },
       layout: "pair",
       media: {
-        kind: "image",
-        asset: "hhcd/workshop-cards.png",
-        alt: "Seven stakeholder cards, from the Eco-Social Artist to the EU Cluster Coordinator, each with a short motivation.",
-        need: "Paper figure: stakeholder cards.",
-        ratio: "4:3",
+        kind: "deck",
+        label: "Stakeholder cards",
+        need: "The seven stakeholder cards (originals, 362 × 602).",
+        items: [
+          { asset: "hhcd/stakeholder-eco-social-artist.png", title: "The Eco-Social Artist", text: "applying for funding for a new project and seeking ideas for digital methods." },
+          { asset: "hhcd/stakeholder-digital-artist.png", title: "The Digital Artist", text: "has just got a new commission to work with their local community and they are looking to learn more about social arts methods." },
+          { asset: "hhcd/stakeholder-community-leader.png", title: "The Community Leader", text: "just received funding to create a community garden and wants to work with an artist to create a sound installation for the site, but has never commissioned an artist before and wants to learn more about this type of work." },
+          { asset: "hhcd/stakeholder-local-councillor.png", title: "The Local Councillor", text: "wants to work with an artist to encourage local people to get involved in a consultation on a new plan for a public transport network." },
+          { asset: "hhcd/stakeholder-student.png", title: "The Student", text: "writing their dissertation on the history of digital arts and needs information about past projects." },
+          { asset: "hhcd/stakeholder-academic-researcher.png", title: "The Academic Researcher", text: "beginning a new research project about the role of local citizens in environmental governance projects across Europe, and wants to find some arts-based case studies." },
+          { asset: "hhcd/stakeholder-eu-cluster-coordinator.png", title: "The EU Cluster Coordinator", text: "writing-up an evidence report for justifications for a potential new call-out for arts-based approaches to environmental governance, and is looking for case studies." },
+        ],
       },
       steps: [
         {

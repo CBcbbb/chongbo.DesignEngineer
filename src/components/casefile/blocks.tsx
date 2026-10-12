@@ -5,6 +5,7 @@ import { assetExists, imageSize } from "@/lib/assets";
 import { CodeBlock } from "@/components/media/CodeBlock";
 import { CaseModule } from "./modules";
 import { ComparePlate } from "./ComparePlate";
+import { CardDeck } from "./CardDeck";
 import { DataFlow } from "./DataFlow";
 import { ViewToggle } from "./ViewToggle";
 import { VideoPlate } from "./VideoPlate";
@@ -321,6 +322,14 @@ export function CaseMedia({
           <Shot asset={media.asset} alt={media.alt} need={media.need} priority={priority} />
         </figure>
       );
+    }
+    case "deck": {
+      const cards = media.items.flatMap((it) => {
+        const d = imageSize(it.asset);
+        return d && assetExists(it.asset) ? [{ src: src(it.asset), width: d.width, height: d.height, title: it.title, text: it.text }] : [];
+      });
+      if (!cards.length) return <Missing asset={media.items[0]?.asset ?? ""} need={media.need} />;
+      return <CardDeck label={media.label} cards={cards} />;
     }
     case "toggle": {
       const da = imageSize(media.a.asset);
