@@ -20,3 +20,17 @@ Things built on a best guess, or still open. Each says what was done and what to
 - **Old address (item 4).** Nothing on the site links to `/work/component-store`; only old docs mention it. No redirect unless Chongbo has sent that link out (CV, applications).
 - **"74" (item 2).** Kept; Chongbo will be ready to say where it comes from.
 - **Table view (item 8).** The work sheet's chart switch has a fourth option, Table: the same totals with exact values, visible without hovering.
+
+## 12 October 2026 · card redesign (branch `case/components-for-any-data`)
+
+Words unchanged; layout and evidence redone. To decide:
+
+- **Three parts, with openers** like Nike's: 01 The model (shapes, contract, pipeline), 02 The interface (fit, axis pickers), 03 Outcome (takeaway). The part titles are new copy; card numbers change (stream fit was 01.4, now 02.1).
+- **01.1** Three streams as strips: each field that plays a role carries the role's colour, so the same meaning lands in different columns; the missing value is a dashed cell.
+- **01.2** The code block became a Contract / Code switch: the contract's three roles across the top, the four components that declare it (bar, pie, treemap, waterfall) drawn from the sample data below. The code is unchanged, one tab away.
+- **01.3** On the dark sheet: one record down five numbered layers, each role a coloured wire from the adapter to the chart, and a line for what charts, filters and forms read.
+- **02.1** Before and after: "74 streams, by row count" beside "Grouped by fit", the server as one line under them. Stream names in this card are invented and new (telematics.pings, depot_b.scans and so on); counts add up to 74 (2 + 2 + 70).
+- **02.2** On the blue field: the pickers sit on the chart's own axes (value by the y axis, category under the x axis, period top right), with a switch between three streams. partner_carrier.feed shows the empty state.
+- **03.1** The takeaway's three points as three columns with large numbers; the empty gap under the title is gone.
+- **Height.** At 1440 × 900 every card fits one screen. At 1280 × 720 the shapes, pipeline, fit and axis cards run 25 to 70px past it, mostly because of three-paragraph bodies; cutting a sentence from 01.3 and 02.1 would close it.
+- **Not checked here:** the production build (Google Fonts can't be fetched from this sandbox, an existing WildEcho dependency), so the e2e suite didn't run. Typecheck, lint, unit tests, contrast (193 pairs) and axe in both modes pass.

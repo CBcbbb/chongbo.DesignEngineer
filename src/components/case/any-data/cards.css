@@ -1,0 +1,944 @@
+/*
+ * Components for Any Data: the cards' evidence (01.1 to 02.2). One language: a role is a colour with its name beside
+ * it; a field that plays a role carries the role's colour as a bar along its top (or, in the pipeline, a wire).
+ * Light and dark follow the --ad-* and --case-* tokens; the pipeline sits on the project's dark.
+ */
+
+/* ---------- 01.1 three streams, three shapes ---------- */
+.ac-shapes {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+.ac-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0 0 2px;
+  padding: 0;
+  list-style: none;
+  font: 500 12.5px/1.2 var(--mono);
+  color: var(--case-body);
+}
+.ac-key li {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+}
+.ac-key .is-none i {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1.5px var(--ad-line);
+}
+.ac-strip {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  border: 1px solid var(--ad-rule);
+  border-radius: 12px;
+  background: var(--ad-bg);
+  overflow: hidden;
+}
+.ac-strip header {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--ad-rule);
+  background: var(--ad-inset);
+}
+.ac-strip-name {
+  font: 500 12.5px/1.3 var(--mono);
+  color: var(--ad-ink);
+  overflow-wrap: anywhere;
+}
+.ac-strip-rows {
+  font: 400 12px var(--mono);
+  color: var(--ad-dim);
+}
+.ac-strip dl {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin: 0;
+}
+.ac-cell {
+  position: relative;
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 15px 12px 13px;
+}
+.ac-cell + .ac-cell {
+  border-left: 1px solid var(--ad-rule);
+}
+/* the role's colour runs along the top of the field that plays it */
+.ac-cell[data-role]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--sw);
+}
+.ac-cell dt {
+  font: 500 12px/1.2 var(--mono);
+  color: var(--ad-dim);
+  white-space: nowrap;
+}
+.ac-cell[data-role] dt {
+  color: var(--ad-ink);
+}
+.ac-cell dd {
+  margin: 0;
+  white-space: nowrap;
+  font-size: 15.5px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ad-ink);
+  overflow-wrap: anywhere;
+}
+.ac-cell:not([data-role]) dd {
+  color: var(--ad-dim);
+  font-weight: 400;
+}
+.ac-cell.is-missing {
+  margin: 8px;
+  padding: 8px 10px;
+  border: 1.5px dashed var(--sw);
+  border-radius: 8px;
+}
+.ac-cell.is-missing + .ac-cell,
+.ac-cell + .ac-cell.is-missing {
+  border-left: 0;
+}
+.ac-cell.is-missing::before {
+  display: none;
+}
+.ac-cell.is-missing dt {
+  color: var(--ad-ink);
+}
+.ac-cell.is-missing dd {
+  font: 400 12.5px/1.3 var(--sans);
+  color: var(--ad-body);
+}
+@media (max-width: 760px) {
+  .ac-strip dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ac-cell + .ac-cell {
+    border-left: 0;
+  }
+  .ac-cell:nth-child(even):not(.is-missing) {
+    border-left: 1px solid var(--ad-rule);
+  }
+  .ac-cell:nth-child(n + 3) {
+    border-top: 1px solid var(--ad-rule);
+  }
+  .ac-cell.is-missing {
+    border-top: 1.5px dashed var(--sw);
+  }
+}
+
+/* ---------- 01.2 the contract and the components on it ---------- */
+.ac-contract {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+.ac-tabs {
+  justify-self: start;
+}
+.ac-contract-stage {
+  display: grid;
+  min-height: 21.5rem;
+}
+.ac-contract-stage > * {
+  min-height: 0;
+}
+.ac-spec-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--ad-rule);
+  border-radius: 12px;
+  background: var(--ad-bg);
+  overflow: hidden;
+}
+.ac-spec {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 14px 22px 16px;
+  border-bottom: 1px solid var(--ad-rule);
+}
+.ac-spec-id {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  font: 500 15px/1.3 var(--mono);
+  color: var(--ad-ink);
+}
+.ac-spec ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ad-ink);
+}
+.ac-spec li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 8px;
+  align-items: center;
+  padding: 12px 0 0;
+}
+.ac-spec-role {
+  grid-column: 1 / -1;
+}
+.ac-spec-role {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--ad-ink);
+}
+.ac-spec-role .ad-sw {
+  width: 12px;
+  height: 12px;
+}
+.ac-spec-type {
+  font: 400 13px var(--mono);
+  color: var(--ad-body);
+}
+.ac-spec-req {
+  min-width: 5.6rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--ad-line);
+  font: 500 12px var(--mono);
+  text-align: center;
+  color: var(--ad-dim);
+}
+.ac-spec-req.is-req {
+  background: var(--ad-ink);
+  box-shadow: none;
+  color: var(--ad-bg);
+}
+.ac-bus {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 16px 22px 18px;
+  background: var(--ad-inset);
+}
+.ac-uses {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ac-uses li {
+  display: grid;
+  gap: 8px;
+  padding: 12px 12px 9px;
+  border: 1px solid var(--ad-rule);
+  border-radius: 10px;
+  background: var(--ad-bg);
+}
+.ac-uses svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 120 / 72;
+}
+.ac-uses span {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--ad-ink);
+}
+.ac-mini-base {
+  stroke: var(--ad-line);
+  stroke-width: 1;
+}
+.ac-mini-slice {
+  stroke: var(--ad-bg);
+  stroke-width: 1.5;
+}
+.ac-mini-total {
+  fill: var(--ad-ink);
+}
+.ac-sample {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  font-size: 13px;
+  color: var(--ad-body);
+}
+.ac-code {
+  max-height: 21.5rem;
+  margin: 0;
+  padding: 22px 24px;
+  overflow: auto;
+  border-radius: 12px;
+  background: #0e1730;
+  color: #e6ecfb;
+  font: 400 13.5px/1.75 var(--mono);
+  tab-size: 2;
+}
+.ac-code .is-comment {
+  color: #93a0bd;
+}
+@media (max-width: 760px) {
+  .ac-spec-wrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ac-spec ul,
+  .ac-uses {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ac-contract-stage {
+    min-height: 0;
+  }
+  .ac-spec-role {
+    font-size: 18px;
+  }
+  .ac-contract-stage {
+    min-height: 0;
+  }
+}
+
+/* ---------- 01.3 the pipeline, on the project's dark ---------- */
+.ac-pipe {
+  --pipe-ink: var(--on-dark);
+  --pipe-body: var(--on-dark-body);
+  --pipe-dim: var(--on-dark-2);
+  --pipe-rule: var(--dark-line);
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  color: var(--pipe-body);
+}
+.ac-faint {
+  color: var(--pipe-dim);
+}
+.ac-pipe-grid {
+  display: grid;
+  grid-template-columns: 1.6rem 8rem repeat(3, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--pipe-rule);
+}
+.ac-pipe-row {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: center;
+  min-height: 3.1rem;
+  border-bottom: 1px solid var(--pipe-rule);
+}
+.ac-pipe-n {
+  align-self: start;
+  padding-top: 0.85rem;
+  font: 500 12px var(--mono);
+  color: var(--accent-on-dark);
+}
+.ac-pipe-k {
+  display: grid;
+  gap: 1px;
+  padding: 7px 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--pipe-ink);
+}
+.ac-pipe-k small {
+  font: 400 12px var(--mono);
+  letter-spacing: 0;
+  color: var(--pipe-dim);
+}
+.ac-pipe-span {
+  grid-column: 3 / -1;
+  min-width: 0;
+  padding: 10px 0;
+}
+.ac-pipe-json {
+  display: block;
+  font: 400 13px/1.5 var(--mono);
+  color: var(--pipe-ink);
+  overflow-wrap: anywhere;
+}
+.ac-pipe-cell {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  padding: 7px 8px 7px 18px;
+  font: 400 12.5px/1.4 var(--mono);
+  color: var(--pipe-ink);
+  overflow-wrap: anywhere;
+}
+.ac-pipe-cell b {
+  font-weight: 500;
+  color: var(--pipe-body);
+}
+/* each role's wire: from the adapter's row down into the chart */
+.ac-wire {
+  grid-row: 2 / 5;
+  position: relative;
+  pointer-events: none;
+}
+.ac-wire::before {
+  content: "";
+  position: absolute;
+  top: 1.55rem;
+  bottom: 0;
+  left: 4px;
+  width: 2px;
+  border-radius: 2px 2px 0 0;
+  background: linear-gradient(var(--sw), var(--sw) 70%, transparent);
+}
+.ac-pipe-cell::before {
+  content: "";
+  position: absolute;
+  top: calc(50% - 4px);
+  left: 1px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sw);
+  box-shadow: 0 0 0 3px var(--dark);
+}
+.ac-pipe-bars {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: 10px;
+  align-items: end;
+  height: 88px;
+  padding-top: 20px;
+}
+.ac-pipe-bars > div {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-items: end;
+  justify-items: center;
+  height: 100%;
+}
+.ac-pipe-bar {
+  width: min(100%, 44px);
+  border-radius: 4px 4px 0 0;
+  background: var(--accent-on-dark);
+}
+.ac-pipe-bar-v {
+  position: absolute;
+  top: -18px;
+  font: 500 12.5px var(--mono);
+  color: var(--pipe-ink);
+}
+.ac-pipe-bar-k {
+  padding-top: 6px;
+  font-size: 12.5px;
+  color: var(--pipe-body);
+}
+.ac-inputs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ac-inputs li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  align-items: baseline;
+  padding: 9px 12px;
+  border: 1px solid var(--pipe-rule);
+  border-radius: 10px;
+}
+.ac-inputs strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pipe-ink);
+}
+.ac-inputs span {
+  font: 400 12.5px var(--mono);
+  color: var(--pipe-dim);
+}
+@media (max-width: 760px) {
+  .ac-pipe-grid {
+    grid-template-columns: 1.6rem minmax(0, 1fr);
+  }
+  .ac-pipe-row {
+    grid-template-columns: 1.6rem minmax(0, 1fr);
+    padding-bottom: 8px;
+  }
+  .ac-pipe-k,
+  .ac-pipe-span,
+  .ac-pipe-cell {
+    grid-column: 2;
+  }
+  .ac-pipe-span {
+    padding-top: 0;
+  }
+  .ac-pipe-cell {
+    padding: 3px 0 3px 18px;
+  }
+  .ac-wire {
+    display: none;
+  }
+  .ac-inputs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- 02.1 by row count, then by fit ---------- */
+.ac-fit {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+.ac-fit-cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2.2rem minmax(0, 1fr);
+  align-items: stretch;
+}
+.ac-fit-turn {
+  align-self: center;
+  justify-self: center;
+  font-size: 20px;
+  color: var(--case-dim);
+}
+.ac-fit-col {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  padding: 14px 16px 12px;
+  border: 1px solid var(--ad-rule);
+  border-radius: 12px;
+  background: var(--ad-bg);
+}
+.ac-fit-col.is-before {
+  background: var(--ad-inset);
+}
+.ac-fit-col header {
+  display: grid;
+  gap: 4px;
+  min-height: 4.1rem;
+}
+.ac-fit-col.is-after header {
+  min-height: 0;
+}
+.ac-fit-big {
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ad-ink);
+}
+.ac-fit-big span {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ad-dim);
+}
+.ac-fit-list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ac-fit-list li {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 29px;
+  border-top: 1px solid var(--ad-rule);
+  font-size: 13px;
+}
+.ac-fit-list .is-more {
+  color: var(--ad-dim);
+}
+.ac-fit-name {
+  min-width: 0;
+  overflow: hidden;
+  font: 400 12.5px var(--mono);
+  color: var(--ad-ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.is-before .ac-fit-name {
+  color: var(--ad-body);
+}
+.ac-fit-meta {
+  flex: none;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font: 400 12px var(--mono);
+  color: var(--ad-dim);
+}
+.ac-fit-meta.is-good {
+  color: var(--ad-good);
+}
+.ac-fit-meta svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ac-fit-dots {
+  display: inline-flex;
+  gap: 2px;
+}
+.ac-fit-dots b {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--ad-line);
+}
+.ac-fit-dots b[data-on] {
+  background: var(--ad-ink);
+}
+.ac-fit-group {
+  display: grid;
+  gap: 4px;
+}
+.ac-fit-g {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ad-ink);
+}
+.ac-fit-search {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--ad-line);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--ad-dim);
+}
+.ac-fit-search svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+/* the server, as one line: a picker asks, one endpoint answers, two phases behind it */
+.ac-srv {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--case-ink);
+}
+.ac-srv li {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 3px;
+  padding: 10px 14px 0 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--case-body);
+}
+.ac-srv li + li {
+  padding-left: 14px;
+  border-left: 1px solid var(--case-rule);
+}
+.ac-srv strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--case-ink);
+}
+.ac-srv .ad-label {
+  color: var(--accent);
+}
+@media (max-width: 760px) {
+  .ac-fit-cols {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .ac-fit-turn {
+    transform: rotate(90deg);
+  }
+  .ac-fit-col header {
+    min-height: 0;
+  }
+  .ac-srv {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 14px;
+  }
+  .ac-srv li:nth-child(3) {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* ---------- 02.2 the pickers on the chart's own axes, on the project's field ---------- */
+[data-palette="components-for-any-data"] #axis-pickers .cf-evidence::before {
+  background-color: var(--field);
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.08) 1px, transparent 1px);
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+[data-palette="components-for-any-data"] #axis-pickers .cf-evidence {
+  padding-top: clamp(1.25rem, 3vw, 2rem);
+}
+.ac-axis {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+.ac-axis-streams {
+  justify-self: start;
+  background: rgb(255 255 255 / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.22);
+}
+.ac-axis-streams button {
+  color: var(--on-field);
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+.ac-axis-streams button:hover {
+  color: var(--on-field);
+  background: rgb(255 255 255 / 0.1);
+}
+.ac-axis-streams button[aria-pressed="true"] {
+  background: #ffffff;
+  color: #1747b8;
+}
+.ac-axis-card {
+  display: grid;
+  grid-template-columns: 9.5rem minmax(0, 1fr);
+  grid-template-areas:
+    "head head"
+    "y    plot"
+    ".    x";
+  gap: 6px 10px;
+  padding: 18px 20px 16px;
+  border-radius: 14px;
+  border: 0;
+}
+.ac-axis-head {
+  grid-area: head;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 6px;
+}
+.ac-axis-head h4 {
+  font-size: 16px;
+}
+.ac-axis-y {
+  grid-area: y;
+  align-self: start;
+  padding-top: 4px;
+}
+.ac-axis-plot {
+  grid-area: plot;
+  min-width: 0;
+}
+.ac-axis-x {
+  grid-area: x;
+  justify-self: center;
+  padding-top: 2px;
+}
+.ac-ax {
+  display: grid;
+  gap: 5px;
+  justify-items: start;
+}
+.ac-axis-head .ac-ax,
+.ac-axis-x .ac-ax {
+  grid-auto-flow: column;
+  align-items: center;
+  gap: 8px;
+}
+.ac-ax-role {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  font: 500 12.5px var(--mono);
+  color: var(--ad-ink);
+}
+.ac-ax-sel {
+  position: relative;
+  display: inline-grid;
+}
+.ac-ax-sel select {
+  appearance: none;
+  min-height: 34px;
+  max-width: 100%;
+  padding: 0 30px 0 11px;
+  border: 1px solid var(--ad-line);
+  border-left: 3px solid var(--sw);
+  border-radius: 8px;
+  background: var(--ad-bg);
+  color: var(--ad-ink);
+  font: 500 13px var(--mono);
+  cursor: pointer;
+}
+.ac-ax-sel select:hover {
+  background: var(--ad-hover);
+}
+.ac-ax-sel::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 6px;
+  height: 6px;
+  margin-top: -5px;
+  border-right: 1.5px solid var(--ad-dim);
+  border-bottom: 1.5px solid var(--ad-dim);
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+@media (max-width: 760px) {
+  .ac-axis-card {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "head" "y" "plot" "x";
+    padding: 14px;
+  }
+  .ac-axis-x {
+    justify-self: start;
+  }
+  .ac-axis-streams button {
+    font-size: 12px;
+    padding: 0 10px;
+  }
+}
+
+/* ---------- part openers and the takeaway ---------- */
+[data-palette="components-for-any-data"] #takeaway .cf-head {
+  margin-bottom: 0;
+}
+[data-palette="components-for-any-data"] #takeaway .cf-points {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 clamp(1rem, 2.6vw, 2rem);
+  margin-top: clamp(1.5rem, 4vw, 2.75rem);
+  border-top-color: var(--dark-line);
+}
+[data-palette="components-for-any-data"] #takeaway .cf-points li {
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(0.9rem, 2.4vw, 1.75rem);
+  align-content: start;
+  padding: 1.25rem 0 0;
+  border-bottom: 0;
+  font-size: clamp(1.125rem, 1.9vw, 1.4rem);
+}
+[data-palette="components-for-any-data"] #takeaway .cf-points-n {
+  font: 600 clamp(2.75rem, 6vw, 4.5rem) / 0.8 var(--sans);
+  letter-spacing: -0.06em;
+  color: var(--accent-on-dark);
+}
+@media (max-width: 760px) {
+  [data-palette="components-for-any-data"] #takeaway .cf-points {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  [data-palette="components-for-any-data"] #takeaway .cf-points li {
+    gap: 0.75rem;
+    padding-bottom: 1.25rem;
+  }
+}
+[data-palette="components-for-any-data"] #takeaway .cf-body {
+  display: none;
+}
+
+/* phones: the contract's roles one per row; the axis pickers wrap rather than run off the card */
+@media (max-width: 760px) {
+  .ac-spec ul {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ac-spec li {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--ad-rule);
+  }
+  .ac-spec-role {
+    grid-column: auto;
+  }
+  .ac-axis-head .ac-ax,
+  .ac-axis-x .ac-ax {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+/* wide but short windows (1280 × 720, 1366 × 768): tighter evidence, so each card stays close to one screen */
+@media (min-width: 761px) and (max-height: 800px) {
+  .ac-shapes {
+    gap: 10px;
+  }
+  .ac-cell {
+    padding: 11px 12px 10px;
+  }
+  .ac-strip header {
+    padding: 6px 14px;
+  }
+  .ac-contract-stage {
+    min-height: 19rem;
+  }
+  .ac-code {
+    max-height: 19rem;
+    line-height: 1.6;
+  }
+  .ac-spec li {
+    padding-top: 8px;
+  }
+  .ac-uses li {
+    padding: 9px 10px 7px;
+  }
+  .ac-pipe-row {
+    min-height: 2.7rem;
+  }
+  .ac-pipe-k,
+  .ac-pipe-cell {
+    padding-block: 5px;
+  }
+  .ac-pipe-bars {
+    height: 74px;
+  }
+  .ac-pipe {
+    gap: 10px;
+  }
+  .ac-fit-col {
+    padding: 12px 14px 10px;
+  }
+  .ac-fit-list li {
+    min-height: 26px;
+  }
+  .ac-fit-big {
+    font-size: 34px;
+  }
+  .ac-axis-card {
+    padding: 14px 16px 12px;
+  }
+}

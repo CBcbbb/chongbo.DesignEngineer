@@ -1,12 +1,13 @@
 import { Demo } from "./Demo";
-import { AxisPickers, Phases, Pipeline, Shapes } from "./Modules";
+import { AxisPickers, Contract, Fit, Pipeline, Shapes } from "./Modules";
 
 /** Components for Any Data's interactive evidence, by the name its content file uses (`media.kind: "module"`). */
 export const ANY_DATA_MODULES = {
   "any-data/demo": Demo,
   "any-data/shapes": Shapes,
+  "any-data/contract": Contract,
   "any-data/pipeline": Pipeline,
-  "any-data/phases": Phases,
+  "any-data/fit": Fit,
   "any-data/axis-pickers": AxisPickers,
 } as const;
 

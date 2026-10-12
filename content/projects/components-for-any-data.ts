@@ -32,12 +32,18 @@ export const anyData: Project = {
     { capability: "D", label: "Data-binding UX", section: "axis-pickers", icon: "picker" },
   ],
   cover: { kind: "module", module: "any-data/demo" },
+  parts: [
+    { id: "model", label: "Part 1", title: "The model" },
+    { id: "interface", label: "Part 2", title: "The interface" },
+    { id: "outcome", label: "Part 3", title: "Outcome" },
+  ],
   sections: [
     {
       id: "shapes",
       nav: "Different shapes",
       kind: "problem",
-      layout: "pair",
+      part: "model",
+      layout: "stack",
       title: "Every customer's data has a different shape",
       body: [
         "Customers build their own products on our platform, from our components. But each component showed the demo data written into its settings, and none could take a customer's real stream.",
@@ -52,7 +58,8 @@ export const anyData: Project = {
       id: "contract",
       nav: "A shape, not field names",
       kind: "decision",
-      layout: "pair",
+      part: "model",
+      layout: "stack",
       title: "A component promises a shape, not field names",
       body: [
         "I based the model on ECharts' dataset: a chart names the roles it draws, and each page maps its data onto them. A contract lists those roles, their types and which are required.",
@@ -61,33 +68,15 @@ export const anyData: Project = {
       signals: ["design-eng-gap", "data-architecture", "reusable-components", "design-systems"],
       capabilities: ["C", "B"],
       lenses: { ux: "in", engineer: "lead" },
-      media: {
-        kind: "code",
-        language: "ts",
-        code: `// A contract names the roles a component draws,
-// not the fields a stream happens to have.
-export const totalsByCategory = defineContract({
-  id: "totals-by-category",
-  key: "category",
-  roles: {
-    category: { type: "text",   required: true },
-    value:    { type: "number", required: true },
-    period:   { type: "date",   required: false },
-  },
-});
-
-// Bar, pie, treemap and waterfall
-// all declare the same contract.
-export const BarChart = component({
-  contract: totalsByCategory,
-  settings: { sort: "desc" },
-});`,
-      },
+      media: { kind: "module", module: "any-data/contract" },
     },
     {
       id: "pipeline",
       nav: "One pipeline",
       kind: "decision",
+      part: "model",
+      layout: "stack",
+      surface: "dark",
       title: "One pipeline from stream to chart",
       body: [
         "An adapter turns each producer's format into flat rows, a binding maps one slot's fields onto the contract's roles, and the component draws the roles. Components never subscribe to streams, and settings never carry data.",
@@ -103,6 +92,8 @@ export const BarChart = component({
       id: "stream-fit",
       nav: "Ranked by fit",
       kind: "decision",
+      part: "interface",
+      layout: "stack",
       title: "Streams ranked by fit, judged on the server",
       body: [
         "The first answer was to list every stream in the organisation by row count. A test organisation already had 74, most didn't fit, and users found out after reading a stream's rows.",
@@ -111,12 +102,14 @@ export const BarChart = component({
       signals: ["data-architecture", "judgement", "end-to-end"],
       capabilities: ["B", "D"],
       lenses: { ux: "lead", engineer: "in", web: "in" },
-      media: { kind: "module", module: "any-data/phases" },
+      media: { kind: "module", module: "any-data/fit" },
     },
     {
       id: "axis-pickers",
       nav: "Fields like chart axes",
       kind: "decision",
+      part: "interface",
+      layout: "stack",
       title: "Each field picked like a chart axis",
       body: [
         "The people connecting data aren't always engineers, so mapping can't read as configuration. Each role has a dropdown of the stream's fields, the way you pick a chart's axes.",
@@ -131,8 +124,9 @@ export const BarChart = component({
       id: "takeaway",
       nav: "Takeaway",
       kind: "outcome",
-      surface: "dark",
       bodyStyle: "list",
+      part: "outcome",
+      surface: "dark",
       title: "Takeaway",
       body: [
         "A preview problem turned out to be a data problem. Once each component declared its shape, the interface followed from it.",
