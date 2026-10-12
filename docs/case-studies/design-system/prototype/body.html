@@ -1,3 +1,4 @@
+<style id="ds-palette"></style>
 <div class="proto-bar" role="group" aria-label="Theme for review">
   <button type="button" data-theme-set="system" aria-pressed="true">System</button>
   <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
@@ -7,7 +8,7 @@
 <div class="cf" data-palette="design-system">
   <div class="cf-frame">
     <nav class="cf-toc" aria-label="Contents">
-      <a class="cf-toc-proj" href="#top" aria-current="step">One Design System, Three Products</a>
+      <a class="cf-toc-proj" href="#top" aria-current="step">One Design System, Three Products, Any Brand</a>
       <ol>
         <li class="cf-toc-part" data-active="false">
           <a href="#one-system"><span class="cf-n">01</span>One system for three products</a>
@@ -31,16 +32,17 @@
     </nav>
 
     <article class="cf-sheets" aria-labelledby="case-title">
-      <!-- ============ cover ============ -->
-      <header id="top" class="cf-sheet is-field cf-cover has-art-scales">
+      <!-- ============ cover: the page wears a customer's brand ============ -->
+      <header id="top" class="cf-sheet is-field cf-cover has-art-brand">
         <div class="cf-cover-top">
-          <div class="ds-cover-scales" aria-hidden="true" id="cover-scales"></div>
+          <div class="ds-cover-layers" id="cover-layers" aria-hidden="true"></div>
           <p class="cf-client"><span>Logistics infrastructure company</span></p>
-          <h1 id="case-title" class="cf-h1">One Design System, Three Products</h1>
+          <h1 id="case-title" class="cf-h1">One Design System,<br>Three Products,<br>Any Brand</h1>
         </div>
         <div class="cf-cover-line">
           <p class="cf-lede">The shared colours and components behind three products, and every customer's brand on top.</p>
         </div>
+        <div class="ds-seen" role="radiogroup" aria-label="See this case file in a customer's brand" id="seen-as"></div>
         <dl class="cf-facts has-split">
           <div>
             <dt>Role</dt>
@@ -99,49 +101,10 @@
           </div>
         </div>
         <div class="cf-evidence" data-fit="fill">
-          <div class="ds-ev ds-drift" role="group" aria-label="The same screen in three products: same colours, different corners, buttons, type and spacing">
-            <figure>
-              <span class="ds-label">First product</span>
-              <div class="mp mp-1" aria-hidden="true">
-                <div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
-                <div class="mp-main">
-                  <div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
-                  <ul class="mp-list">
-                    <li><span>Run 4821</span><span class="mp-badge">On time</span></li>
-                    <li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li>
-                    <li><span>Run 4823</span><span class="mp-badge">On time</span></li>
-                  </ul>
-                </div>
-              </div>
-            </figure>
-            <figure>
-              <span class="ds-label">Second product</span>
-              <div class="mp mp-2" aria-hidden="true">
-                <div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
-                <div class="mp-main">
-                  <div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
-                  <ul class="mp-list">
-                    <li><span>Run 4821</span><span class="mp-badge">On time</span></li>
-                    <li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li>
-                    <li><span>Run 4823</span><span class="mp-badge">On time</span></li>
-                  </ul>
-                </div>
-              </div>
-            </figure>
-            <figure>
-              <span class="ds-label">Third product</span>
-              <div class="mp mp-3" aria-hidden="true">
-                <div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
-                <div class="mp-main">
-                  <div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
-                  <ul class="mp-list">
-                    <li><span>Run 4821</span><span class="mp-badge">On time</span></li>
-                    <li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li>
-                    <li><span>Run 4823</span><span class="mp-badge">On time</span></li>
-                  </ul>
-                </div>
-              </div>
-            </figure>
+          <div class="ds-ev ds-fan" role="group" aria-label="The same screen in three products: the same colours, with different corners, buttons, type and spacing">
+            <figure class="ds-fan-card is-1"><span class="ds-tag">First product</span><div class="mp mp-1" aria-hidden="true" data-mp></div></figure>
+            <figure class="ds-fan-card is-2"><span class="ds-tag">Second product</span><div class="mp mp-2" aria-hidden="true" data-mp></div></figure>
+            <figure class="ds-fan-card is-3"><span class="ds-tag">Third product</span><div class="mp mp-3" aria-hidden="true" data-mp></div></figure>
           </div>
         </div>
       </section>
@@ -177,7 +140,7 @@
           </div>
         </div>
         <div class="cf-evidence" data-fit="foot">
-          <div class="ds-ev ds-layers" id="layers"></div>
+          <div class="ds-ev ds-stack" id="layers"></div>
         </div>
       </section>
 
@@ -199,11 +162,11 @@
           </div>
         </div>
         <div class="cf-evidence" data-fit="foot">
-          <div class="ds-ev ds-spec" id="spec"></div>
+          <div class="ds-ev ds-wall" id="wall"></div>
         </div>
       </section>
 
-      <section id="fixed-lightness" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="fixed-lightness-title">
+      <section id="fixed-lightness" class="cf-sheet is-card is-dark" data-size="auto" data-layout="stack" aria-labelledby="fixed-lightness-title">
         <div class="cf-head">
           <div><p class="cf-meta"><span class="cf-idx">02.2</span></p><h3 id="fixed-lightness-title" class="cf-h3">The same lightness on every hue</h3></div>
           <div class="cf-body">
@@ -216,7 +179,7 @@
             <ul class="ds-metrics">
               <li><b>30/30</b><span>text pairings pass WCAG AA</span></li>
               <li><b>5.16:1</b><span>lowest: amber text on white</span></li>
-              <li><b>2</b><span>modes checked: light and dark</span></li>
+              <li><b>2</b><span>modes: light and dark</span></li>
             </ul>
           </div>
         </div>
@@ -231,7 +194,7 @@
           </div>
         </div>
         <div class="cf-evidence" data-fit="foot">
-          <div class="ds-ev ds-modes" id="modes"></div>
+          <div class="ds-ev ds-split" id="split"></div>
         </div>
       </section>
 

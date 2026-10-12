@@ -9,7 +9,7 @@ root = pathlib.Path(__file__).resolve().parents[4]
 here = pathlib.Path(__file__).resolve().parent
 out = root / "docs/design/case-design-system.html"
 
-head = """<title>One Design System, Three Products</title>
+head = """<title>One Design System, Any Brand</title>
 <meta name="description" content="Prototype of the design-system case file: a theme panel, colour scales and the cards, on an invented brand.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

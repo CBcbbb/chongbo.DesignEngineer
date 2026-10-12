@@ -1,4 +1,4 @@
-<title>One Design System, Three Products</title>
+<title>One Design System, Any Brand</title>
 <meta name="description" content="Prototype of the design-system case file: a theme panel, colour scales and the cards, on an invented brand.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2872,10 +2872,11 @@
 
 /* ===== project: design-system ===== */
 /* ===================================================================================================
-   One Design System, Three Products — the project's own layer on top of the shared case-file template.
-   Layout concept: the shared case file (contents left, one sheet per card). The project's colour is ochre,
-   the colour that broke the first version of the customer layer. Evidence is the system itself, drawn in code
-   on an invented brand: specimens, a lightness chart, three mini products and a live theme panel.
+   One Design System, Three Products — the project's layer on top of the shared case-file template.
+   Concept: the page wears a customer's brand. The field, accent and openers are derived from one brand
+   colour by the system's own rule ("Seen as" on the cover); the default is the courier's yellow, the colour
+   that broke the first version. Titles stay Geist, as on every case file; the brand's font and button shape
+   show only in its own buttons and in the theme panel.
    =================================================================================================== */
 
 /* next/font sets these on the site; the prototype names the faces directly */
@@ -2884,131 +2885,114 @@ html { background: var(--studio); }
 body { margin: 0; background: var(--studio); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
-/* ---------- palette: design-system (ochre) ---------- */
+/* ---------- palette: default values = the courier's yellow (JS rewrites them for "Seen as") ---------- */
 [data-palette="design-system"] {
-  --accent: #7a5800;
-  --accent-strong: #6b4d00;
-  --on-accent: #ffffff;
-  --accent-2: #f3e7c4;
-  --accent-tint: #faf3e1;
-  --field: #e0b12a;
-  --on-field: #1c1b19;
-  --on-field-2: #4d3c0c;
-  --dark: #1d1810;
-  --on-dark: #f6efe0;
-  --on-dark-body: #d6cdb9;
-  --on-dark-2: #a89f8b;
-  --dark-rule: #2e2719;
-  --dark-line: #51472f;
-  --dark-inset: #262014;
-  --accent-on-dark: #e9c25a;
-  /* the review switch and the evidence surfaces */
-  --ds-surface: #ffffff;
-  --ds-surface-ink: #18181b;
-  --ds-surface-dim: #6b6b74;
-  --ds-surface-rule: #e4e4e7;
-  --ds-pass: #13703a;
-  --ds-fail: #b3261e;
+  --accent: #1c1b19; --accent-strong: #1c1b19; --on-accent: #f2c94c; --accent-2: #f7efd6; --accent-tint: #fbf6e6;
+  --field: #f2c94c; --on-field: #1c1b19; --on-field-2: #4a3d18;
+  --dark: #1b1912; --on-dark: #f5f3ee; --on-dark-body: #d4d0c7; --on-dark-2: #a29e95;
+  --dark-rule: #2c2a22; --dark-line: #4a4738; --dark-inset: #24221a; --accent-on-dark: #f2c94c;
+  --ds-mark: #f2c94c; --ds-btn-font: "Archivo", var(--sans); --ds-btn-r: 0px;
+  --ds-surface: #ffffff; --ds-surface-ink: #18181b; --ds-surface-dim: #6b6b74; --ds-surface-rule: #e4e4e7;
+  --ds-pass: #13703a; --ds-fail: #b3261e;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) [data-palette="design-system"] {
-    --accent: #e9c25a;
-    --accent-strong: #f0cf75;
-    --on-accent: #1f1a0e;
-    --accent-2: #2a2416;
-    --accent-tint: #2e2717;
-    --field: #6e4f04;
-    --on-field: #fbf3dc;
-    --on-field-2: #f0e2b8;
-    --dark: #15110a;
-    --dark-rule: #262014;
-    --dark-inset: #1d180f;
-    --ds-surface: #18181b;
-    --ds-surface-ink: #f4f4f5;
-    --ds-surface-dim: #a1a1aa;
-    --ds-surface-rule: #2e2e33;
-    --ds-pass: #6fd08f;
-    --ds-fail: #ff8a80;
+    --accent: #f2c94c; --accent-strong: #f2c94c; --on-accent: #1c1b19; --accent-2: #2b2818; --accent-tint: #29261a;
+    --field: #ecbd2f; --on-field: #1c1b19; --on-field-2: #4a3d18; --dark: #14130e; --ds-mark: #f2c94c;
+    --ds-surface: #18181b; --ds-surface-ink: #f4f4f5; --ds-surface-dim: #a1a1aa; --ds-surface-rule: #2e2e33;
+    --ds-pass: #6fd08f; --ds-fail: #ff8a80;
   }
 }
 :root[data-theme="dark"] [data-palette="design-system"] {
-  --accent: #e9c25a;
-  --accent-strong: #f0cf75;
-  --on-accent: #1f1a0e;
-  --accent-2: #2a2416;
-  --accent-tint: #2e2717;
-  --field: #6e4f04;
-  --on-field: #fbf3dc;
-  --on-field-2: #f0e2b8;
-  --dark: #15110a;
-  --dark-rule: #262014;
-  --dark-inset: #1d180f;
-  --ds-surface: #18181b;
-  --ds-surface-ink: #f4f4f5;
-  --ds-surface-dim: #a1a1aa;
-  --ds-surface-rule: #2e2e33;
-  --ds-pass: #6fd08f;
-  --ds-fail: #ff8a80;
+  --accent: #f2c94c; --accent-strong: #f2c94c; --on-accent: #1c1b19; --accent-2: #2b2818; --accent-tint: #29261a;
+  --field: #ecbd2f; --on-field: #1c1b19; --on-field-2: #4a3d18; --dark: #14130e; --ds-mark: #f2c94c;
+  --ds-surface: #18181b; --ds-surface-ink: #f4f4f5; --ds-surface-dim: #a1a1aa; --ds-surface-rule: #2e2e33;
+  --ds-pass: #6fd08f; --ds-fail: #ff8a80;
 }
-[data-palette="design-system"] .cf-shows li { background: var(--on-field); color: var(--field); }
+[data-palette="design-system"] .cf-sheet.is-field { transition: background-color 0.35s var(--ease), color 0.35s var(--ease); }
+[data-palette="design-system"] .cf-shows li { background: var(--on-field); color: var(--field); transition: background-color 0.35s var(--ease), color 0.35s var(--ease); }
+/* the contents marker and the card indexes take the brand as a mark when the accent is ink */
+[data-palette="design-system"] .cf-idx { display: inline-block; padding: 3px 6px; margin-left: -6px; border-radius: 4px; background: var(--ds-mark); color: var(--ds-mark-ink, #1c1b19); }
+[data-palette="design-system"] .cf-sheet.is-dark .cf-idx { background: var(--accent-on-dark); color: var(--dark); }
 
-/* ---------- review bar (prototype only): theme switch ---------- */
+/* ---------- review bar (prototype only) ---------- */
 .proto-bar { position: fixed; z-index: 50; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 2px; padding: 3px; border-radius: 999px; background: var(--ink); box-shadow: 0 6px 24px rgb(0 0 0 / 0.18); }
 .proto-bar button { font: 500 12px/1 var(--mono); padding: 8px 12px; border: 0; border-radius: 999px; background: transparent; color: var(--studio); cursor: pointer; }
 .proto-bar button[aria-pressed="true"] { background: var(--studio); color: var(--ink); }
 .proto-bar button:focus-visible { outline: 2px solid var(--studio); outline-offset: 2px; }
+@media (max-width: 600px) { .proto-bar { right: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); } .proto-bar button { padding: 7px 9px; } }
 
-/* ---------- cover art "scales": six columns of five swatches in the top-right corner ---------- */
-.ds-cover-scales { position: absolute; z-index: 0; top: calc(-1 * clamp(1.75rem, 4.2vw, 3rem)); right: calc(-1 * var(--cf-pad)); width: min(calc((100% + 2 * var(--cf-pad)) * 0.3), 300px); aspect-ratio: 6 / 5; display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(5, 1fr); pointer-events: none;
-  -webkit-mask-image: linear-gradient(225deg, #000 22%, rgb(0 0 0 / 0.5) 50%, transparent 78%); mask-image: linear-gradient(225deg, #000 22%, rgb(0 0 0 / 0.5) 50%, transparent 78%); }
-.ds-cover-scales i { display: block; }
-.cf-cover-top > .ds-cover-scales { position: absolute; }
-@media (max-width: 900px) { .ds-cover-scales { display: none; } }
+/* ---------- cover: the brand's own buttons in the corner, and "Seen as" ---------- */
+/* cover art: the three layers, stacked in the corner; the top one wears the brand */
+.cf-cover-top > .ds-cover-layers { position: absolute; z-index: 0; top: calc(-1 * clamp(0.5rem, 1.6vw, 1rem)); right: calc(-1 * var(--cf-pad) + 12px); width: min(36%, 320px); pointer-events: none;
+  -webkit-mask-image: linear-gradient(250deg, #000 52%, rgb(0 0 0 / 0.4) 78%, transparent 96%); mask-image: linear-gradient(250deg, #000 52%, rgb(0 0 0 / 0.4) 78%, transparent 96%); }
+.ds-cover-layers svg { display: block; width: 100%; height: auto; overflow: visible; }
+.ds-cover-layers .pl { stroke: var(--on-field); stroke-width: 1.4; stroke-linejoin: round; transition: fill 0.35s var(--ease), stroke 0.35s var(--ease); }
+.ds-cover-layers .pl-shared { fill: none; stroke-dasharray: 4 4; }
+.ds-cover-layers .pl-product { fill: color-mix(in srgb, var(--on-field) 14%, transparent); }
+.ds-cover-layers .pl-customer { fill: var(--on-field); }
+.ds-cover-layers .btn { fill: var(--field); transition: fill 0.35s var(--ease); }
+.ds-cover-layers .tick { stroke: var(--on-field-2); stroke-width: 1; }
+.ds-cover-layers text { font: 500 14px var(--mono); fill: var(--on-field-2); }
+.ds-cover-layers text.is-brand { font: 600 16px var(--ds-btn-font); fill: var(--on-field); }
+.ds-cover-layers .rail { stroke: var(--on-field-2); stroke-width: 1; stroke-dasharray: 2 4; }
+@media (max-width: 900px) { .cf-cover-top > .ds-cover-layers { display: none; } }
+.cf-cover-top .cf-h1 { max-width: none; }
+.ds-seen { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 3px; border-radius: 22px; width: fit-content; max-width: 100%; margin-top: clamp(1rem, 2.4vw, 1.5rem); background: color-mix(in srgb, var(--on-field) 10%, transparent); }
+.ds-seen > span { font: 500 12px/1 var(--mono); padding: 0 8px 0 10px; color: var(--on-field-2); }
+.ds-seen label { position: relative; display: inline-flex; align-items: center; gap: 7px; font: 500 13px/1 var(--sans); padding: 8px 12px; border-radius: 999px; color: var(--on-field); cursor: pointer; }
+.ds-seen input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.ds-seen label:has(input:checked) { background: var(--on-field); color: var(--field); }
+.ds-seen label:has(input:focus-visible) { outline: 2px solid var(--on-field); outline-offset: 2px; }
+.ds-dot { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.18), 0 0 0 1.5px rgb(255 255 255 / 0.5); flex: none; }
 
 /* ---------- shared evidence pieces ---------- */
 .ds-ev { width: 100%; min-width: 0; }
-.ds-label { font: 500 12px/1.2 var(--mono); letter-spacing: 0.02em; color: var(--case-dim); }
+.ds-label, .ds-tag { font: 500 12px/1.2 var(--mono); letter-spacing: 0.02em; color: var(--case-dim); }
 .ds-seg { display: inline-flex; flex-wrap: wrap; max-width: 100%; padding: 3px; gap: 2px; border-radius: 20px; background: var(--case-inset); box-shadow: inset 0 0 0 1px var(--case-rule); }
-.ds-seg label { position: relative; font: 500 12.5px/1 var(--sans); padding: 7px 12px; border-radius: 999px; color: var(--case-dim); cursor: pointer; white-space: nowrap; }
+.ds-seg label { position: relative; font: 500 12.5px/1 var(--sans); padding: 7px 12px; border-radius: 999px; color: var(--case-dim); cursor: pointer; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
 .ds-seg input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
 .ds-seg label:has(input:checked) { background: var(--case-bg); color: var(--case-ink); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12), inset 0 0 0 1px var(--case-rule); }
-.ds-seg label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: 1px; }
+.ds-seg label:has(input:focus-visible) { outline: 2px solid var(--case-ink); outline-offset: 1px; }
 .ds-check { display: inline-flex; align-items: center; gap: 8px; font: 500 12.5px/1 var(--sans); color: var(--case-dim); cursor: pointer; }
-.ds-check input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+.ds-check input { accent-color: var(--case-ink); width: 16px; height: 16px; margin: 0; }
 
-/* ---------- 01.1 three products ---------- */
-.ds-drift { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(10px, 1.6vw, 18px); }
-@media (max-width: 760px) { .ds-drift { grid-template-columns: minmax(0, 1fr); } }
-.ds-drift figure { margin: 0; display: grid; gap: 8px; min-width: 0; align-content: start; }
-.mp { --mp-brand: #0b7a8f; --mp-ink: #18181b; --mp-dim: #6b6b74; --mp-rule: #e4e4e7; --mp-bg: #ffffff; --mp-tint: #eef8fa;
-  background: var(--mp-bg); color: var(--mp-ink); border-radius: 10px; box-shadow: 0 0 0 1px var(--case-rule); overflow: hidden; font-family: var(--mp-font); font-size: 13px; min-width: 0; }
+/* ---------- 01.1 three products, fanned like printouts on a desk ---------- */
+.ds-fan { position: relative; height: clamp(300px, 34vw, 380px); margin-top: 8px; }
+.ds-fan-card { position: absolute; top: 0; width: 46%; margin: 0; display: grid; gap: 8px; transition: transform 0.35s var(--ease); }
+.ds-fan-card.is-1 { left: 0; transform: rotate(-4deg) translateY(18px); z-index: 1; }
+.ds-fan-card.is-2 { left: 27%; transform: rotate(0.5deg); z-index: 2; }
+.ds-fan-card.is-3 { left: 54%; transform: rotate(4.5deg) translateY(26px); z-index: 3; }
+.ds-fan-card .mp { box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08), 0 18px 40px -18px rgb(0 0 0 / 0.35); }
+.ds-tag { justify-self: start; padding: 4px 7px; border-radius: 4px; background: var(--case-ink); color: var(--case-bg); }
+@media (max-width: 760px) {
+  .ds-fan { height: auto; display: grid; gap: 18px; }
+  .ds-fan-card { position: static; width: 100%; transform: none !important; }
+}
+.mp { --mp-brand: #0b7a8f; --mp-ink: #18181b; --mp-dim: #6b6b74; --mp-rule: #e4e4e7; --mp-bg: #ffffff; --mp-tint: #e6f6f9;
+  background: var(--mp-bg); color: var(--mp-ink); border-radius: 10px; overflow: hidden; font-family: var(--mp-font); font-size: 13px; min-width: 0; }
 .mp-bar { display: flex; align-items: center; gap: 8px; padding: var(--mp-pad); border-bottom: 1px solid var(--mp-rule); }
 .mp-logo { width: 14px; height: 14px; border-radius: var(--mp-logo-r); background: var(--mp-brand); flex: none; }
-.mp-bar b { font-weight: 600; font-size: 12.5px; }
-.mp-bar span { margin-left: auto; color: var(--mp-dim); font-size: 11.5px; }
+.mp-bar b { font-weight: 600; font-size: 13px; }
+.mp-bar span { margin-left: auto; color: var(--mp-dim); font-size: 12px; }
 .mp-main { padding: var(--mp-pad); display: grid; gap: var(--mp-gap); }
 .mp-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .mp-top h4 { margin: 0; font: var(--mp-title); letter-spacing: var(--mp-title-track); }
-.mp-btn { font: inherit; font-weight: 600; font-size: 11.5px; padding: var(--mp-btn-pad); border-radius: var(--mp-r); background: var(--mp-btn-bg); color: var(--mp-btn-ink); border: 1px solid var(--mp-brand); text-transform: var(--mp-btn-case); letter-spacing: var(--mp-btn-track); white-space: nowrap; }
+.mp-btn { font: inherit; font-weight: 600; font-size: 12px; padding: var(--mp-btn-pad); border-radius: var(--mp-r); background: var(--mp-btn-bg); color: var(--mp-btn-ink); border: 1px solid var(--mp-brand); text-transform: var(--mp-btn-case); letter-spacing: var(--mp-btn-track); white-space: nowrap; }
 .mp-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--mp-row-gap); }
 .mp-list li { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: var(--mp-row-pad); border-radius: var(--mp-row-r); background: var(--mp-row-bg); border: var(--mp-row-border); }
-.mp-list li span:first-child { font-variant-numeric: tabular-nums; }
-.mp-badge { font-size: 10.5px; font-weight: 600; padding: 3px 7px; border-radius: var(--mp-badge-r); background: var(--mp-tint); color: #0a5c6b; }
-.mp-badge.is-warn { background: #fdf5e4; color: #7a5200; }
-/* the first product */
+.mp-badge { font-size: 11px; font-weight: 600; padding: 3px 7px; border-radius: var(--mp-badge-r); background: var(--mp-tint); color: #0a5c6b; }
+.mp-badge.is-warn { background: #fdf3e0; color: #7a5200; }
 .mp-1 { --mp-font: "Geist", var(--sans); --mp-pad: 12px 14px; --mp-gap: 12px; --mp-logo-r: 4px; --mp-title: 600 15px/1.2 var(--mp-font); --mp-title-track: -0.01em;
   --mp-r: 8px; --mp-btn-pad: 6px 10px; --mp-btn-bg: var(--mp-brand); --mp-btn-ink: #fff; --mp-btn-case: none; --mp-btn-track: 0;
   --mp-row-gap: 0; --mp-row-pad: 8px 0; --mp-row-r: 0; --mp-row-bg: transparent; --mp-row-border: 0; --mp-badge-r: 6px; }
 .mp-1 .mp-list li + li { border-top: 1px solid var(--mp-rule); }
-/* the second: pills, a condensed face, loose spacing, outline buttons */
 .mp-2 { --mp-font: "Archivo", var(--sans); --mp-pad: 16px 18px; --mp-gap: 18px; --mp-logo-r: 999px; --mp-title: 700 17px/1.1 var(--mp-font); --mp-title-track: -0.02em;
   --mp-r: 999px; --mp-btn-pad: 7px 14px; --mp-btn-bg: transparent; --mp-btn-ink: var(--mp-brand); --mp-btn-case: none; --mp-btn-track: 0;
   --mp-row-gap: 8px; --mp-row-pad: 10px 12px; --mp-row-r: 999px; --mp-row-bg: #f4f4f5; --mp-row-border: 0; --mp-badge-r: 999px; }
-/* the third: square corners, a serif title, tight spacing, upper-case buttons */
 .mp-3 { --mp-font: "IBM Plex Sans", var(--sans); --mp-pad: 9px 10px; --mp-gap: 8px; --mp-logo-r: 0; --mp-title: 500 16px/1.15 "Fraunces", Georgia, serif; --mp-title-track: 0;
   --mp-r: 0; --mp-btn-pad: 5px 9px; --mp-btn-bg: var(--mp-brand); --mp-btn-ink: #fff; --mp-btn-case: uppercase; --mp-btn-track: 0.06em;
-  --mp-row-gap: 4px; --mp-row-pad: 6px 8px; --mp-row-r: 0; --mp-row-bg: transparent; --mp-row-border: 1px solid var(--mp-rule); --mp-badge-r: 0; }
-.mp-3 { border-radius: 2px; }
+  --mp-row-gap: 4px; --mp-row-pad: 6px 8px; --mp-row-r: 0; --mp-row-bg: transparent; --mp-row-border: 1px solid var(--mp-rule); --mp-badge-r: 0; border-radius: 2px; }
 
 /* ---------- 01.2 Figma and code: one stage, two sources ---------- */
 .ds-f2c { display: grid; gap: 12px; }
@@ -3018,32 +3002,33 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-f2c-code { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; container-type: inline-size; }
 .ds-f2c-stage[data-show="figma"] .ds-f2c-code { visibility: hidden; }
 .ds-f2c-stage[data-show="code"] .ds-f2c-figma { visibility: hidden; }
-.ds-f2c-pane { background: var(--bg); color: var(--fg); padding: 2.45cqw 2.45cqw; display: grid; align-content: start; gap: 1.5cqw; }
+.ds-f2c-pane { background: var(--bg); color: var(--fg); padding: 2.45cqw; display: grid; align-content: start; gap: 1.5cqw; }
 .ds-f2c-pane > span { font: 500 0.82cqw/1 var(--mono); color: var(--muted-fg); }
 .ds-f2c-row { display: flex; gap: 0.7cqw; align-items: flex-start; flex-wrap: nowrap; }
 .ds-f2c-pane .ui-btn { font-size: 0.9cqw; padding: 0.82cqw 0.98cqw; border-radius: 0.55cqw; }
 .ds-f2c-pane .ui-field { width: 14.3cqw; gap: 0.3cqw; }
 .ds-f2c-pane .ui-field > span, .ds-f2c-pane .ui-field small { font-size: 0.82cqw; }
 .ds-f2c-pane .ui-field > span { font-size: 0.87cqw; }
-.ds-f2c-pane .ui-input { font-size: 0.9cqw; padding: 0.7cqw 0.7cqw; border-radius: 0.55cqw; }
+.ds-f2c-pane .ui-input { font-size: 0.9cqw; padding: 0.7cqw; border-radius: 0.55cqw; }
 .ds-f2c-pane .ui-badge { font-size: 0.78cqw; padding: 0.3cqw 0.6cqw; }
 .ds-f2c-pane .ui-badge::before { width: 0.4cqw; height: 0.4cqw; }
 .ds-f2c-pane .ui-alert { width: 20.4cqw; font-size: 0.85cqw; padding: 0.7cqw 0.82cqw; border-radius: 0.55cqw; grid-template-columns: 1fr; gap: 0.15cqw; }
 .ds-f2c-pane .ui-pages { font-size: 0.9cqw; gap: 0.27cqw; }
 .ds-f2c-pane .ui-pages span { min-width: 2.2cqw; height: 2.2cqw; border-radius: 0.55cqw; }
 @media (max-width: 760px) {
-  .ds-f2c-code { position: static; grid-template-columns: minmax(0, 1fr); container-type: normal; }
-  .ds-f2c-pane { zoom: 1; }
+  .ds-f2c-stage { overflow-x: auto; }
+  .ds-f2c-figma { min-width: 760px; }
+  .ds-f2c-code { min-width: 760px; position: static; }
   .ds-f2c-stage[data-show="figma"] .ds-f2c-code, .ds-f2c-stage[data-show="code"] .ds-f2c-figma { display: none; }
 }
 
-/* ---------- the invented product's components (used by 01.2, the work and 02.4) ---------- */
+/* ---------- the invented product's components (01.2, the work, 01.3, 02.4) ---------- */
 .ui { --r: 0.5rem; --font: "Geist", var(--sans); font-family: var(--font); color: var(--fg); }
-.ui-btn { font: 600 13px/1 var(--font); padding: 9px 14px; border-radius: var(--btn-r, var(--r)); border: 1px solid transparent; cursor: pointer; white-space: nowrap; transition: background-color 0.15s var(--ease), color 0.15s var(--ease); }
+.ui-btn { font: 600 13px/1 var(--font); padding: 9px 14px; border-radius: var(--btn-r, var(--r)); border: 1px solid transparent; cursor: pointer; white-space: nowrap; display: inline-block; transition: background-color 0.15s var(--ease), color 0.15s var(--ease), border-radius 0.35s var(--ease); }
 .ui-btn.is-primary { background: var(--primary); color: var(--primary-fg); }
 .ui-btn.is-outline { background: transparent; color: var(--fg); border-color: var(--border); }
 .ui-btn.is-ghost { background: transparent; color: var(--fg); }
-.ui-btn.is-destructive { background: var(--destructive); color: #fff; }
+.ui-btn.is-destructive { background: var(--destructive); color: var(--destructive-fg, #fff); }
 .ui-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .ui-btn:focus-visible, .ui-input:focus-visible, .ui-select:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 .ui-field { display: grid; gap: 5px; min-width: 0; }
@@ -3053,7 +3038,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ui-field small { font: 400 11.5px/1.3 var(--font); color: var(--muted-fg); }
 .ui-input, .ui-select { font: 400 13px/1.2 var(--font); color: var(--fg); background: var(--input-bg); border: 1px solid var(--input); border-radius: var(--r); padding: 8px 10px; min-width: 0; width: 100%; box-sizing: border-box; }
 .ui-input.is-error { border-color: var(--destructive-text); box-shadow: 0 0 0 3px color-mix(in oklch, var(--destructive-text) 18%, transparent); }
-.ui-input.is-focus { border-color: var(--primary-border); box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary) 22%, transparent); }
+.ui-input.is-focus { border-color: var(--primary-text); box-shadow: 0 0 0 3px color-mix(in oklch, var(--primary-text) 22%, transparent); }
 .ui-err { color: var(--destructive-text) !important; }
 .ui-badge { display: inline-flex; align-items: center; gap: 5px; font: 600 11.5px/1 var(--font); padding: 4px 8px; border-radius: 999px; border: 1px solid var(--b-border); background: var(--b-bg); color: var(--b-fg); white-space: nowrap; }
 .ui-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--b-dot); }
@@ -3064,30 +3049,27 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ui-pages { display: flex; gap: 4px; align-items: center; font: 500 12.5px/1 var(--font); }
 .ui-pages span { min-width: 28px; height: 28px; display: grid; place-items: center; border-radius: var(--r); color: var(--muted-fg); font-variant-numeric: tabular-nums; }
 .ui-pages span.is-on { background: var(--primary-container); color: var(--primary-container-fg); box-shadow: inset 0 0 0 1px var(--primary-border); }
-
-/* role sets for badges and alerts */
 .r-success { --b-bg: var(--success-container); --b-fg: var(--success-container-fg); --b-border: var(--success-border); --b-dot: var(--success); }
 .r-warning { --b-bg: var(--warning-container); --b-fg: var(--warning-container-fg); --b-border: var(--warning-border); --b-dot: var(--warning); }
 .r-destructive { --b-bg: var(--destructive-container); --b-fg: var(--destructive-container-fg); --b-border: var(--destructive-border); --b-dot: var(--destructive); }
 .r-info { --b-bg: var(--info-container); --b-fg: var(--info-container-fg); --b-border: var(--info-border); --b-dot: var(--info); }
 .r-primary { --b-bg: var(--primary-container); --b-fg: var(--primary-container-fg); --b-border: var(--primary-border); --b-dot: var(--primary); }
 
-/* ---------- the work: theme panel ---------- */
+/* ---------- the work: theme panel (follows "Seen as") ---------- */
 .tp { display: grid; gap: 12px; width: 100%; min-width: 0; }
 .tp-controls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; justify-content: space-between; }
 .tp-controls .ds-seg { background: color-mix(in srgb, var(--on-field) 10%, transparent); box-shadow: none; }
 .tp-controls .ds-seg label { color: var(--on-field); }
-.tp-controls .ds-seg label:has(input:checked) { background: var(--case-bg); color: var(--case-ink); box-shadow: none; }
+.tp-controls .ds-seg label:has(input:checked) { background: var(--on-field); color: var(--field); box-shadow: none; }
+.tp-controls .ds-seg label:has(input:focus-visible) { outline-color: var(--on-field); }
 .tp-controls .ds-check { color: var(--on-field); }
+.tp-controls .ds-check input { accent-color: var(--on-field); }
 .tp-left, .tp-right { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-.tp-own { display: inline-flex; align-items: center; gap: 6px; }
-.tp-own input[type="color"] { width: 26px; height: 26px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
+.tp-own input[type="color"] { width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
 .tp-own input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-.tp-own input[type="color"]::-webkit-color-swatch { border: 2px solid var(--case-bg); border-radius: 50%; }
-.tp-own input[type="color"]::-moz-color-swatch { border: 2px solid var(--case-bg); border-radius: 50%; }
+.tp-own input[type="color"]::-webkit-color-swatch { border: 2px solid var(--on-field); border-radius: 50%; }
+.tp-own input[type="color"]::-moz-color-swatch { border: 2px solid var(--on-field); border-radius: 50%; }
 .tp-own input:focus-visible { outline: 2px solid var(--on-field); outline-offset: 2px; }
-.tp-swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: -1px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15); }
-
 .tp-app { background: var(--bg); color: var(--fg); border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.12), 0 18px 50px -20px rgb(0 0 0 / 0.35); min-width: 0; transition: background-color 0.2s var(--ease); }
 .tp-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--card); }
 .tp-logo { width: 22px; height: 22px; border-radius: calc(var(--r) * 0.75); background: var(--primary); display: grid; place-items: center; color: var(--primary-fg); font: 700 12px/1 var(--font); flex: none; }
@@ -3109,118 +3091,106 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .tp-rows li .ui-badge { grid-row: 1 / span 2; grid-column: 2; }
 .tp-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
 .tp-actions > div { display: flex; flex-wrap: wrap; gap: 8px; }
-
-/* contrast chips (Show ratios) */
 .ds-ratio { display: none; font: 600 10.5px/1 var(--mono); padding: 3px 5px; border-radius: 4px; background: #111; color: #fff; vertical-align: middle; margin-left: 6px; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .ds-ratio.is-fail { background: #b3261e; }
 .ds-ratio.is-pass { background: #13703a; }
 .show-ratios .ds-ratio { display: inline-block; }
 
-/* ---------- 01.3 three layers ---------- */
-.ds-layers { display: grid; gap: 0; border-radius: 10px; box-shadow: 0 0 0 1px var(--case-rule); overflow: hidden; background: var(--case-bg); }
-.ds-layer { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr) minmax(0, 15rem); gap: 16px; align-items: center; padding: 16px 18px; }
-.ds-layer + .ds-layer { border-top: 1px dashed var(--case-line); }
-.ds-layer:nth-child(1) { background: var(--case-inset); }
-.ds-layer h4 { margin: 0; font: 600 14px/1.2 var(--sans); color: var(--case-ink); }
-.ds-layer h4 small { display: block; font: 500 11.5px/1.3 var(--mono); color: var(--case-dim); margin-top: 4px; }
-.ds-layer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-.ds-layer li code { font: 400 12px/1 var(--mono); padding: 5px 7px; border-radius: 6px; background: var(--case-bg); color: var(--case-body); box-shadow: inset 0 0 0 1px var(--case-rule); display: inline-block; }
-.ds-layer:nth-child(1) li code { background: var(--case-bg); }
-.ds-layer-demo { display: flex; justify-content: flex-end; gap: 8px; align-items: center; min-width: 0; }
+/* ---------- 01.3 three layers, exploded ---------- */
+.ds-stack { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(16px, 3vw, 36px); align-items: center; }
+.ds-stack-legend { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.ds-stack-legend > li { display: grid; gap: 8px; padding: 16px 0; border-top: 1px solid var(--case-rule); }
+.ds-stack-legend > li:first-child { border-top: 0; }
+.ds-stack-legend h4 { margin: 0; display: flex; gap: 10px; align-items: baseline; font: 600 15px/1.2 var(--sans); color: var(--case-ink); }
+.ds-stack-legend h4 span { font: 500 11.5px/1 var(--mono); color: var(--case-dim); }
+.ds-stack-legend ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 5px; }
+.ds-stack-legend code { font: 400 12px/1 var(--mono); padding: 5px 7px; border-radius: 6px; background: var(--case-inset); color: var(--case-body); display: inline-block; }
+.ds-iso { position: relative; height: 420px; perspective: 1400px; }
+.ds-plane { position: absolute; left: 50%; width: 300px; height: 190px; margin-left: -150px; border-radius: 14px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-38deg); display: grid; place-items: center; box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08), 0 30px 40px -24px rgb(0 0 0 / 0.35); }
+.ds-plane.is-shared { top: 236px; background: #f4f4f5; }
+.ds-plane.is-product { top: 120px; background: #e4e4e7; }
+.ds-plane.is-customer { top: 4px; background: var(--field); }
+.ds-plane .ui-btn, .ds-plane .ds-mini-menu { transform: translateZ(1px); }
+.ds-plane-n { position: absolute; left: 14px; top: 12px; font: 600 12px/1 var(--mono); color: rgb(0 0 0 / 0.45); }
+.ds-plane.is-customer .ds-plane-n { color: var(--on-field-2); }
+.ds-iso::before { content: ""; position: absolute; left: 50%; top: 70px; bottom: 60px; border-left: 1.5px dashed var(--case-line); }
 .ds-mini-menu { width: 9.5rem; border-radius: 8px; padding: 4px; font: 400 12.5px/1 "Geist", var(--sans); background: #27272a; color: #f4f4f5; box-shadow: 0 0 0 1px #3f3f46; }
 .ds-mini-menu span { display: block; padding: 7px 8px; border-radius: 5px; }
 .ds-mini-menu span.is-hl { background: #3a3a40; }
 @media (max-width: 760px) {
-  .ds-layer { grid-template-columns: minmax(0, 1fr); gap: 10px; }
-  .ds-layer-demo { justify-content: flex-start; }
+  .ds-stack { grid-template-columns: minmax(0, 1fr); }
+  .ds-iso { height: 360px; transform: scale(0.82); transform-origin: top center; margin-bottom: -60px; }
 }
 
-/* ---------- 02.1 roles: specimens ---------- */
-.ds-spec { width: 100%; overflow-x: auto; }
-.ds-spec table { width: 100%; min-width: 600px; border-collapse: separate; border-spacing: 6px; font-family: var(--sans); }
-.ds-spec th { font: 500 12px/1.25 var(--mono); color: var(--case-dim); text-align: left; padding: 0 2px 4px; vertical-align: bottom; }
-.ds-spec th b { display: block; font: 600 13px/1.2 var(--sans); color: var(--case-ink); margin-bottom: 2px; }
-.ds-spec tbody th { font: 600 13px/1.2 var(--sans); color: var(--case-ink); padding-right: 8px; vertical-align: middle; white-space: nowrap; }
-.ds-spec tbody th small { display: block; font: 500 11.5px/1.2 var(--mono); color: var(--case-dim); margin-top: 3px; }
-.ds-spec { --sp-bg: #ffffff; --sp-rule: #e4e4e7; }
-.ds-spec td { height: 46px; border-radius: 7px; padding: 0 10px; font: 600 14px/1 var(--sans); background: var(--sp-bg); box-shadow: inset 0 0 0 1px var(--sp-rule); }
-.ds-spec td.is-fill { box-shadow: none; }
-.ds-spec td.is-border { box-shadow: inset 0 0 0 2px var(--c); background: var(--sp-bg); }
-.ds-spec .is-darkset { display: none; }
-.ds-spec th .is-darkset { display: none; }
-.ds-spec td.is-dot::before { content: ""; display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: var(--c); vertical-align: -2px; }
-.ds-spec td small { font: 500 11px/1 var(--mono); opacity: 0.85; margin-left: 6px; font-weight: 500; }
+/* ---------- 02.1 roles: a wall of the scales ---------- */
+.ds-wall { overflow-x: auto; margin-inline: calc(-1 * var(--cf-pad)); padding-inline: var(--cf-pad); }
+.ds-wall-grid { display: grid; grid-template-columns: 8.5rem repeat(5, minmax(4.5rem, 1fr)); gap: 3px; min-width: 620px; }
+.ds-wall-h { font: 500 12px/1.25 var(--mono); color: var(--case-dim); padding: 0 2px 8px; align-self: end; }
+.ds-wall-h b { display: block; font: 600 13px/1.2 var(--sans); color: var(--case-ink); margin-bottom: 2px; }
+.ds-wall-role { display: grid; align-content: center; padding-right: 10px; }
+.ds-wall-role b { font: 600 16px/1.1 var(--sans); color: var(--case-ink); letter-spacing: -0.01em; }
+.ds-wall-role span { font: 500 11.5px/1.3 var(--mono); color: var(--case-dim); }
+.ds-wall-c { height: 64px; display: flex; align-items: flex-end; justify-content: space-between; padding: 8px 9px; font: 600 15px/1 var(--sans); }
+.ds-wall-row > .ds-wall-c:nth-child(2) { border-radius: 10px 0 0 10px; }
+.ds-wall-row > .ds-wall-c:last-child { border-radius: 0 10px 10px 0; }
+.ds-wall-c small { font: 500 11px/1 var(--mono); }
+.ds-wall-row { display: contents; }
 
-/* ---------- 02.2 lightness chart ---------- */
+/* ---------- 02.2 lightness, on the dark sheet ---------- */
 .ds-light { display: grid; gap: clamp(18px, 3vw, 28px); }
 .ds-light svg { display: block; width: 100%; height: auto; overflow: visible; }
 .ds-light .ax { stroke: var(--case-rule); }
 .ds-light .tick text, .ds-light .lbl { font: 500 12px var(--mono); fill: var(--case-dim); }
 .ds-light .row-l { font: 600 13px var(--sans); fill: var(--case-ink); }
-.ds-light .band { fill: var(--accent-tint); }
-.ds-light circle { stroke: var(--case-line); stroke-width: 1; }
-.ds-metrics { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: 1px solid var(--case-rule); padding-top: 14px; }
+.ds-light .band { fill: none; stroke: var(--accent-on-dark); stroke-width: 1.5; }
+.ds-light circle { stroke: var(--dark); stroke-width: 1.5; }
+#light-chart { overflow-x: auto; }
+@media (max-width: 760px) { #light-chart svg { min-width: 640px; } }
+.ds-metrics { list-style: none; margin: 0; padding: 14px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: 1px solid var(--case-rule); }
 .ds-metrics li { display: grid; gap: 6px; min-width: 0; }
-.ds-metrics b { font: 600 clamp(2.4rem, 6vw, 4.6rem)/0.95 var(--sans); letter-spacing: -0.04em; color: var(--ds-pass); font-variant-numeric: tabular-nums; }
-.ds-metrics li:last-child b { color: var(--case-ink); }
+.cf-sheet .ds-metrics b { font: 600 clamp(2.6rem, 7vw, 5.4rem)/0.95 var(--sans); letter-spacing: -0.045em; color: var(--accent-on-dark); font-variant-numeric: tabular-nums; }
+.cf-sheet .ds-metrics li:last-child b { color: var(--on-dark); }
 .ds-metrics span { font: 500 12.5px/1.35 var(--mono); color: var(--case-dim); }
 @media (max-width: 600px) { .ds-metrics { grid-template-columns: minmax(0, 1fr); } }
 
-/* ---------- 02.3 dark: two surfaces side by side ---------- */
-.ds-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(10px, 1.6vw, 18px); }
-@media (max-width: 760px) { .ds-modes { grid-template-columns: minmax(0, 1fr); } }
-.ds-mode { border-radius: 10px; padding: 14px; display: grid; gap: 8px; box-shadow: 0 0 0 1px var(--case-rule); }
-.ds-mode.is-light { background: #ffffff; color: #18181b; }
-.ds-mode.is-dark { background: #18181b; color: #f4f4f5; }
-.ds-mode-h { display: flex; justify-content: space-between; font: 500 12px/1 var(--mono); opacity: 0.8; padding-bottom: 4px; }
-.ds-mode-row { display: grid; grid-template-columns: 4.6rem 1fr 1fr 1.2fr; gap: 6px; align-items: stretch; font: 600 13px/1 var(--sans); }
-.ds-mode-row > span:first-child { font: 500 12px/1 var(--mono); opacity: 0.8; align-self: center; }
-.ds-mode-row > i { font-style: normal; border-radius: 6px; padding: 9px 8px; display: flex; align-items: center; gap: 6px; min-width: 0; }
-.ds-mode-row .is-border { box-shadow: inset 0 0 0 2px var(--c); }
+/* ---------- 02.3 dark mode: one specimen, a split you drag ---------- */
+.ds-split { display: grid; gap: 10px; }
+.ds-split-stage { position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--case-rule); --split: 50%; }
+.ds-split-layer { padding: 18px; display: grid; gap: 8px; }
+.ds-split-layer.is-light { background: #ffffff; color: #18181b; }
+.ds-split-layer.is-dark { position: absolute; inset: 0; background: #18181b; color: #f4f4f5; clip-path: inset(0 0 0 var(--split)); }
+.ds-split-h { display: flex; justify-content: space-between; font: 500 12px/1 var(--mono); opacity: 0.8; padding-bottom: 4px; }
+.ds-split-row { display: grid; grid-template-columns: 5.5rem repeat(3, minmax(0, 1fr)); gap: 8px; align-items: stretch; font: 600 14px/1 var(--sans); }
+.ds-split-row > span:first-child { font: 500 12px/1 var(--mono); opacity: 0.8; align-self: center; }
+.ds-split-row > i { font-style: normal; border-radius: 7px; padding: 11px 10px; display: flex; align-items: center; gap: 6px; min-width: 0; }
+.ds-split-row .is-border { box-shadow: inset 0 0 0 2px var(--c); }
+.ds-split-row small { font: 500 11px/1 var(--mono); opacity: 0.85; }
+.ds-split-handle { position: absolute; top: 0; bottom: 0; left: var(--split); width: 0; border-left: 2px solid var(--ds-mark); pointer-events: none; }
+.ds-split-handle::after { content: "Light · Dark"; position: absolute; top: 50%; left: 0; transform: translate(-50%, -50%); font: 600 11px/1 var(--mono); white-space: nowrap; padding: 7px 10px; border-radius: 999px; background: var(--ds-mark); color: #1c1b19; box-shadow: 0 4px 14px rgb(0 0 0 / 0.25); }
+.ds-split input[type="range"] { width: 100%; accent-color: var(--case-ink); }
+.ds-split-legend { display: flex; justify-content: space-between; font: 500 12px/1 var(--mono); color: var(--case-dim); }
 
-/* ---------- 02.4 customer colour ---------- */
+/* ---------- 02.4 a customer's colour ---------- */
 .cc { display: grid; gap: 12px; }
 .cc-top { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; }
-.cc-chip { display: inline-flex; align-items: center; gap: 8px; font: 500 12.5px/1 var(--mono); color: var(--case-dim); }
-.cc-chip i { width: 16px; height: 16px; border-radius: 4px; display: inline-block; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15); }
 .cc-modes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(10px, 1.6vw, 18px); }
 @media (max-width: 760px) { .cc-modes { grid-template-columns: minmax(0, 1fr); } }
-.cc-pane { border-radius: 10px; padding: 16px; display: grid; gap: 12px; background: var(--bg); color: var(--fg); box-shadow: 0 0 0 1px var(--case-rule); }
+.cc-pane { border-radius: 10px; padding: 18px; display: grid; gap: 14px; background: var(--bg); color: var(--fg); box-shadow: 0 0 0 1px var(--case-rule); }
 .cc-pane .ds-label { color: var(--muted-fg); }
 .cc-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font: 400 13px/1.4 var(--font); }
 .cc-line .ds-ratio { display: inline-block; }
 
-/* ---------- outcome: list on the dark sheet ---------- */
+/* ---------- outcome ---------- */
 .ds-out { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(14px, 2vw, 22px); }
-.ds-out li { display: grid; grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr); gap: 16px; font: 400 clamp(1.05rem, 1.7vw, 1.35rem)/1.4 var(--sans); color: var(--on-dark); border-top: 1px solid var(--dark-rule); padding-top: clamp(12px, 1.6vw, 18px); }
-.ds-out li b { font: 500 13px/1.6 var(--mono); color: var(--accent-on-dark); letter-spacing: 0.02em; }
-.ds-role { margin: 0; font: 400 clamp(1rem, 1.4vw, 1.125rem)/1.5 var(--sans); color: var(--on-dark-body); max-width: 60ch; }
-@media (max-width: 600px) { .ds-out li { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+.cf-sheet .ds-out li { display: grid; grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr); gap: 16px; font: 400 clamp(1.1rem, 1.8vw, 1.45rem)/1.35 var(--sans); letter-spacing: -0.01em; color: var(--on-dark); border-top: 1px solid var(--dark-rule); padding-top: clamp(12px, 1.6vw, 18px); }
+.ds-out li b { font: 500 13px/1.8 var(--mono); color: var(--accent-on-dark); letter-spacing: 0.02em; }
+.cf-sheet .ds-role { margin: 0; font: 400 clamp(1rem, 1.4vw, 1.125rem)/1.5 var(--sans); color: var(--on-dark-body); max-width: 60ch; }
+@media (max-width: 600px) { .cf-sheet .ds-out li { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
 
-/* specimens: the dark set shows when the page is dark */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .ds-spec { --sp-bg: #18181b; --sp-rule: #2d2d31; }
-  :root:not([data-theme="light"]) .ds-spec .is-lightset { display: none; }
-  :root:not([data-theme="light"]) .ds-spec .is-darkset { display: table-row-group; }
-  :root:not([data-theme="light"]) .ds-spec th .is-darkset { display: inline; }
-}
-:root[data-theme="dark"] .ds-spec { --sp-bg: #18181b; --sp-rule: #2d2d31; }
-:root[data-theme="dark"] .ds-spec .is-lightset { display: none; }
-:root[data-theme="dark"] .ds-spec .is-darkset { display: table-row-group; }
-:root[data-theme="dark"] .ds-spec th .is-darkset { display: inline; }
-@media (max-width: 600px) { .proto-bar { right: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); } .proto-bar button { padding: 7px 9px; } }
-
-/* phones: wide evidence scrolls sideways inside its own box instead of shrinking past reading size */
-@media (max-width: 760px) {
-  .ds-f2c-stage { overflow-x: auto; }
-  .ds-f2c-figma { min-width: 760px; }
-  .ds-f2c-stage[data-show="code"] { overflow-x: auto; }
-  .ds-f2c-code { min-width: 760px; position: static; display: grid; grid-template-columns: 1fr 1fr; container-type: inline-size; }
-  #light-chart { overflow-x: auto; }
-  #light-chart svg { min-width: 640px; }
-}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
 
 </style>
+<style id="ds-palette"></style>
 <div class="proto-bar" role="group" aria-label="Theme for review">
   <button type="button" data-theme-set="system" aria-pressed="true">System</button>
   <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
@@ -3230,7 +3200,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 <div class="cf" data-palette="design-system">
   <div class="cf-frame">
     <nav class="cf-toc" aria-label="Contents">
-      <a class="cf-toc-proj" href="#top" aria-current="step">One Design System, Three Products</a>
+      <a class="cf-toc-proj" href="#top" aria-current="step">One Design System, Three Products, Any Brand</a>
       <ol>
         <li class="cf-toc-part" data-active="false">
           <a href="#one-system"><span class="cf-n">01</span>One system for three products</a>
@@ -3254,16 +3224,17 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     </nav>
 
     <article class="cf-sheets" aria-labelledby="case-title">
-      <!-- ============ cover ============ -->
-      <header id="top" class="cf-sheet is-field cf-cover has-art-scales">
+      <!-- ============ cover: the page wears a customer's brand ============ -->
+      <header id="top" class="cf-sheet is-field cf-cover has-art-brand">
         <div class="cf-cover-top">
-          <div class="ds-cover-scales" aria-hidden="true" id="cover-scales"></div>
+          <div class="ds-cover-layers" id="cover-layers" aria-hidden="true"></div>
           <p class="cf-client"><span>Logistics infrastructure company</span></p>
-          <h1 id="case-title" class="cf-h1">One Design System, Three Products</h1>
+          <h1 id="case-title" class="cf-h1">One Design System,<br>Three Products,<br>Any Brand</h1>
         </div>
         <div class="cf-cover-line">
           <p class="cf-lede">The shared colours and components behind three products, and every customer's brand on top.</p>
         </div>
+        <div class="ds-seen" role="radiogroup" aria-label="See this case file in a customer's brand" id="seen-as"></div>
         <dl class="cf-facts has-split">
           <div>
             <dt>Role</dt>
@@ -3322,49 +3293,10 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           </div>
         </div>
         <div class="cf-evidence" data-fit="fill">
-          <div class="ds-ev ds-drift" role="group" aria-label="The same screen in three products: same colours, different corners, buttons, type and spacing">
-            <figure>
-              <span class="ds-label">First product</span>
-              <div class="mp mp-1" aria-hidden="true">
-                <div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
-                <div class="mp-main">
-                  <div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
-                  <ul class="mp-list">
-                    <li><span>Run 4821</span><span class="mp-badge">On time</span></li>
-                    <li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li>
-                    <li><span>Run 4823</span><span class="mp-badge">On time</span></li>
-                  </ul>
-                </div>
-              </div>
-            </figure>
-            <figure>
-              <span class="ds-label">Second product</span>
-              <div class="mp mp-2" aria-hidden="true">
-                <div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
-                <div class="mp-main">
-                  <div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
-                  <ul class="mp-list">
-                    <li><span>Run 4821</span><span class="mp-badge">On time</span></li>
-                    <li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li>
-                    <li><span>Run 4823</span><span class="mp-badge">On time</span></li>
-                  </ul>
-                </div>
-              </div>
-            </figure>
-            <figure>
-              <span class="ds-label">Third product</span>
-              <div class="mp mp-3" aria-hidden="true">
-                <div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
-                <div class="mp-main">
-                  <div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
-                  <ul class="mp-list">
-                    <li><span>Run 4821</span><span class="mp-badge">On time</span></li>
-                    <li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li>
-                    <li><span>Run 4823</span><span class="mp-badge">On time</span></li>
-                  </ul>
-                </div>
-              </div>
-            </figure>
+          <div class="ds-ev ds-fan" role="group" aria-label="The same screen in three products: the same colours, with different corners, buttons, type and spacing">
+            <figure class="ds-fan-card is-1"><span class="ds-tag">First product</span><div class="mp mp-1" aria-hidden="true" data-mp></div></figure>
+            <figure class="ds-fan-card is-2"><span class="ds-tag">Second product</span><div class="mp mp-2" aria-hidden="true" data-mp></div></figure>
+            <figure class="ds-fan-card is-3"><span class="ds-tag">Third product</span><div class="mp mp-3" aria-hidden="true" data-mp></div></figure>
           </div>
         </div>
       </section>
@@ -3400,7 +3332,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           </div>
         </div>
         <div class="cf-evidence" data-fit="foot">
-          <div class="ds-ev ds-layers" id="layers"></div>
+          <div class="ds-ev ds-stack" id="layers"></div>
         </div>
       </section>
 
@@ -3422,11 +3354,11 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           </div>
         </div>
         <div class="cf-evidence" data-fit="foot">
-          <div class="ds-ev ds-spec" id="spec"></div>
+          <div class="ds-ev ds-wall" id="wall"></div>
         </div>
       </section>
 
-      <section id="fixed-lightness" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="fixed-lightness-title">
+      <section id="fixed-lightness" class="cf-sheet is-card is-dark" data-size="auto" data-layout="stack" aria-labelledby="fixed-lightness-title">
         <div class="cf-head">
           <div><p class="cf-meta"><span class="cf-idx">02.2</span></p><h3 id="fixed-lightness-title" class="cf-h3">The same lightness on every hue</h3></div>
           <div class="cf-body">
@@ -3439,7 +3371,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
             <ul class="ds-metrics">
               <li><b>30/30</b><span>text pairings pass WCAG AA</span></li>
               <li><b>5.16:1</b><span>lowest: amber text on white</span></li>
-              <li><b>2</b><span>modes checked: light and dark</span></li>
+              <li><b>2</b><span>modes: light and dark</span></li>
             </ul>
           </div>
         </div>
@@ -3454,7 +3386,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           </div>
         </div>
         <div class="cf-evidence" data-fit="foot">
-          <div class="ds-ev ds-modes" id="modes"></div>
+          <div class="ds-ev ds-split" id="split"></div>
         </div>
       </section>
 
@@ -3497,7 +3429,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 </div>
 
 <script>
-/* One Design System, Three Products — prototype evidence, rendered from one set of tokens.
+/* One Design System, Three Products, Any Brand — prototype: the page wears a brand; evidence, rendered from one set of tokens.
    The invented brand's scales follow the real system's rules (fixed lightness per step); the lightness chart uses
    the real system's lightness values, which carry no brand. */
 (() => {
@@ -3599,20 +3531,6 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   const chip = (r) => `<span class="ds-ratio ${r >= 4.5 ? "is-pass" : "is-fail"}">${r >= 4.5 ? "✓" : "✕"} ${r.toFixed(2)}:1</span>`;
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
-  /* ---------- cover art: the scales ---------- */
-  const cover = document.getElementById("cover-scales");
-  if (cover) {
-    const cols = ["brand", "blue", "green", "red", "purple", "amber"];
-    cover.innerHTML = ["700", "600", "500", "200", "50"].map((st) => cols.map((h) => `<i style="background:${SCALES.light[h][st]}"></i>`).join("")).join("");
-  }
-
-  /* ---------- the work: the theme panel ---------- */
-  const CUSTOMERS = [
-    { id: "default", name: "Platform default", colour: lchToHex({ l: 0.52, c: 0.1, h: 200 }), font: '"Geist", var(--sans)', r: "0.5rem", btn: "0.5rem", mark: "P" },
-    { id: "grocer", name: "A grocer", colour: "#2e7d3a", font: '"Fraunces", Georgia, serif', r: "0.75rem", btn: "999px", mark: "G" },
-    { id: "courier", name: "A courier", colour: "#f2c94c", font: '"Archivo", var(--sans)', r: "0", btn: "0", mark: "C" },
-    { id: "bank", name: "A bank", colour: "#1d2b5c", font: '"IBM Plex Sans", var(--sans)', r: "0.375rem", btn: "0.75rem", mark: "B" },
-  ];
   const ICON_WARN = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2.5 14 13H2z" stroke-linejoin="round"/><path d="M8 6.5v3M8 11.3v.2" stroke-linecap="round"/></svg>';
 
   function appHTML(c) {
@@ -3656,16 +3574,95 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     set("muted", ratio(t["--muted-fg"], t["--card"]));
   }
 
+  /* ---------- the page wears a brand: one colour in, the case file's palette out ---------- */
+  const INK = "#1c1b19", PAPER = "#fbfaf7", PAPER_D = "#1f1e1c", INSET_D = "#282624";
+  const pickPage = (f) => (ratio(NEAR_WHITE, f) >= AA ? NEAR_WHITE : INK);
+  const tone = (b, l, c) => lchToHex({ l, c: Math.min(b.c, c), h: b.h });
+  function secondOn(on, field) { for (const t of [0.74, 0.8, 0.86, 0.92]) { const m = mix(on, field, t); if (ratio(m, field) >= AA) return m; } return on; }
+  function pagePalette(hex) {
+    const b = hexToLch(hex);
+    const L = {}, D = {};
+    // light page
+    L.field = hex; L["on-field"] = pickPage(hex); L["on-field-2"] = secondOn(L["on-field"], hex);
+    const pale = L["on-field"] === INK;
+    L.accent = pale ? INK : readableOn(b, [PAPER, "#ffffff"], "darker");
+    L["accent-strong"] = L.accent; L["on-accent"] = pale ? hex : pickOn(L.accent);
+    L["ds-mark"] = hex; L["ds-mark-ink"] = pickPage(hex);
+    L["accent-2"] = tone(b, 0.94, 0.05); L["accent-tint"] = tone(b, 0.975, 0.03);
+    const dk = tone(b, 0.19, 0.016);
+    Object.assign(L, { dark: dk, "on-dark": "#f5f3ee", "on-dark-body": "#d4d0c7", "on-dark-2": "#a29e95", "dark-rule": tone(b, 0.27, 0.016), "dark-line": tone(b, 0.42, 0.02), "dark-inset": tone(b, 0.23, 0.016) });
+    L["accent-on-dark"] = ratio(hex, dk) >= AA ? hex : readableOn(b, [dk], "lighter");
+    // dark page: fields deeper or lifted just enough to sit on the dark studio; text by the same rule
+    const fd = b.l > 0.8 ? lchToHex({ ...b, l: 0.8 }) : b.l < 0.36 ? lchToHex({ ...b, l: 0.4 }) : hex;
+    D.field = fd; D["on-field"] = pickPage(fd); D["on-field-2"] = secondOn(D["on-field"], fd);
+    D.accent = ratio(hex, PAPER_D) >= AA && ratio(hex, INSET_D) >= AA ? hex : readableOn(b, [PAPER_D, INSET_D], "lighter");
+    D["accent-strong"] = D.accent; D["on-accent"] = pickOn(D.accent);
+    D["ds-mark"] = D.accent; D["ds-mark-ink"] = pickPage(D.accent);
+    D["accent-2"] = tone(b, 0.27, 0.04); D["accent-tint"] = tone(b, 0.25, 0.035);
+    const dd = tone(b, 0.15, 0.014);
+    Object.assign(D, { dark: dd, "dark-rule": tone(b, 0.23, 0.025), "dark-line": tone(b, 0.38, 0.03), "dark-inset": tone(b, 0.2, 0.025) });
+    D["accent-on-dark"] = ratio(hex, dd) >= AA ? hex : readableOn(b, [dd], "lighter");
+    return { L, D };
+  }
+  const vars = (o) => Object.entries(o).map(([k, v]) => `--${k}:${v}`).join(";");
+  const sheet = document.getElementById("ds-palette");
+
+  /* ---------- customers (invented) ---------- */
+  const CUSTOMERS = [
+    { id: "courier", name: "Courier", colour: "#f2c94c", font: '"Archivo", var(--sans)', r: "0", btn: "0", mark: "C" },
+    { id: "platform", name: "Platform", colour: "#0c5c63", font: '"Geist", var(--sans)', r: "0.5rem", btn: "0.5rem", mark: "P" },
+    { id: "grocer", name: "Grocer", colour: "#2e7d3a", font: '"Fraunces", Georgia, serif', r: "0.75rem", btn: "999px", mark: "G" },
+    { id: "bank", name: "Bank", colour: "#1d2b5c", font: '"IBM Plex Sans", var(--sans)', r: "0.375rem", btn: "0.75rem", mark: "B" },
+  ];
+  const state = { id: "courier", own: "#e85d9a", mode: "light", ratios: false };
+  const current = () => (state.id === "own" ? { ...CUSTOMERS[1], id: "own", name: "Your colour", colour: state.own, mark: "Y" } : CUSTOMERS.find((c) => c.id === state.id));
+  const listeners = [];
+  function setCustomer(id) {
+    state.id = id;
+    const c = current();
+    const { L, D } = pagePalette(c.colour);
+    const extra = `--ds-btn-font:${c.font};--ds-btn-r:${c.btn}`;
+    sheet.textContent = `[data-palette="design-system"]{${vars(L)};${extra}}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) [data-palette="design-system"]{${vars(D)}}}
+:root[data-theme="dark"] [data-palette="design-system"]{${vars(D)}}`;
+    document.querySelectorAll(`input[data-cust]`).forEach((i) => (i.checked = i.value === id));
+    listeners.forEach((fn) => fn(c));
+  }
+
+  /* ---------- cover: "Seen as" and the layers ---------- */
+  const seen = document.getElementById("seen-as");
+  if (seen) {
+    seen.innerHTML = `<span>Seen as</span>` + CUSTOMERS.map((c) => `<label><input type="radio" name="seen" data-cust value="${c.id}" id="seen-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${c.name}</label>`).join("");
+    seen.addEventListener("change", (e) => { if (e.target.name === "seen") setCustomer(e.target.value); });
+  }
+  const layersArt = document.getElementById("cover-layers");
+  if (layersArt) {
+    const plane = (cx, cy, w, h) => `${cx - w / 2},${cy} ${cx},${cy - h / 2} ${cx + w / 2},${cy} ${cx},${cy + h / 2}`;
+    const cx = 140, w = 210, h = 105, ys = [66, 128, 190];
+    const draw = (c) => {
+      layersArt.innerHTML = `<svg viewBox="0 0 400 260" role="img" aria-label="Three layers: shared, product, customer">
+        <line class="rail" x1="${cx}" x2="${cx}" y1="${ys[0]}" y2="${ys[2]}"/>
+        <polygon class="pl pl-shared" points="${plane(cx, ys[2], w, h)}"/>
+        <polygon class="pl pl-product" points="${plane(cx, ys[1], w, h)}"/>
+        <polygon class="pl pl-customer" points="${plane(cx, ys[0], w, h)}"/>
+        <polygon class="btn" points="${plane(cx, ys[0], 84, 42)}"/>
+        ${[["Customer", c.name, ys[0]], ["Product", "", ys[1]], ["Shared", "", ys[2]]].map(([t, n, y]) => `<line class="tick" x1="${cx + w / 2 + 6}" x2="${cx + w / 2 + 22}" y1="${y}" y2="${y}"/><text x="${cx + w / 2 + 28}" y="${y + 4}">${t}</text>${n ? `<text class="is-brand" x="${cx + w / 2 + 28}" y="${y + 22}">${esc(n)}</text>` : ""}`).join("")}
+      </svg>`;
+    };
+    listeners.push(draw);
+  }
+
+  /* ---------- the work: the theme panel follows "Seen as" ---------- */
   const work = document.getElementById("work-panel");
   if (work) {
     work.innerHTML = `
       <div class="tp-controls">
         <div class="tp-left">
           <div class="ds-seg" role="radiogroup" aria-label="Customer">
-            ${CUSTOMERS.map((c, i) => `<label><input type="radio" name="tp-customer" id="tp-c-${c.id}" value="${c.id}" ${i === 0 ? "checked" : ""}><span class="tp-swatch" style="background:${c.colour}"></span>${esc(c.name)}</label>`).join("")}
-            <label class="tp-own"><input type="radio" name="tp-customer" id="tp-c-own" value="own"><span>Your colour</span></label>
+            ${CUSTOMERS.map((c) => `<label><input type="radio" name="tp-customer" data-cust value="${c.id}" id="tp-c-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${esc(c.name)}</label>`).join("")}
+            <label class="tp-own"><input type="radio" name="tp-customer" data-cust value="own" id="tp-c-own"><span>Your colour</span></label>
           </div>
-          <span class="tp-own"><input type="color" id="tp-own-colour" value="#fff29a" aria-label="Pick your own brand colour"></span>
+          <span class="tp-own"><input type="color" id="tp-own-colour" value="${state.own}" aria-label="Pick your own brand colour"></span>
         </div>
         <div class="tp-right">
           <div class="ds-seg" role="radiogroup" aria-label="Mode">
@@ -3677,25 +3674,31 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
       </div>
       <div class="tp-app ui" id="tp-app"></div>`;
     const app = work.querySelector("#tp-app");
-    const colourInput = work.querySelector("#tp-own-colour");
-    const render = () => {
-      const id = work.querySelector('input[name="tp-customer"]:checked').value;
-      const mode = work.querySelector('input[name="tp-mode"]:checked').value;
-      const c = id === "own" ? { ...CUSTOMERS[0], id: "own", name: "Your colour", colour: colourInput.value, mark: "Y" } : CUSTOMERS.find((x) => x.id === id);
+    const render = (c) => {
       app.innerHTML = appHTML(c);
-      const t = theme(c.colour, mode);
+      const t = theme(c.colour, state.mode);
       apply(app, t);
-      app.style.setProperty("--font", c.font);
-      app.style.setProperty("--r", c.r);
-      app.style.setProperty("--btn-r", c.btn);
-      app.style.colorScheme = mode;
+      app.style.setProperty("--font", c.font); app.style.setProperty("--r", c.r); app.style.setProperty("--btn-r", c.btn);
+      app.style.colorScheme = state.mode;
       fillRatios(app, t);
-      app.classList.toggle("show-ratios", work.querySelector("#tp-ratios").checked);
+      app.classList.toggle("show-ratios", state.ratios);
     };
-    work.addEventListener("change", render);
-    colourInput.addEventListener("input", () => { work.querySelector("#tp-c-own").checked = true; render(); });
-    render();
+    listeners.push(render);
+    work.addEventListener("change", (e) => {
+      if (e.target.name === "tp-customer") return setCustomer(e.target.value);
+      if (e.target.name === "tp-mode") state.mode = e.target.value;
+      if (e.target.id === "tp-ratios") state.ratios = e.target.checked;
+      render(current());
+    });
+    work.querySelector("#tp-own-colour").addEventListener("input", (e) => { state.own = e.target.value; setCustomer("own"); });
   }
+
+  /* ---------- 01.1: the same screen, three products ---------- */
+  document.querySelectorAll("[data-mp]").forEach((el) => {
+    el.innerHTML = `<div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
+      <div class="mp-main"><div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
+      <ul class="mp-list"><li><span>Run 4821</span><span class="mp-badge">On time</span></li><li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li><li><span>Run 4823</span><span class="mp-badge">On time</span></li><li><span>Run 4824</span><span class="mp-badge">On time</span></li></ul></div>`;
+  });
 
   /* ---------- 01.2: the same library, rendered from code; one stage with a Figma / Code switch ---------- */
   const codeSide = document.getElementById("code-side");
@@ -3723,44 +3726,53 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     document.querySelectorAll('input[name="f2c"]').forEach((r) => r.addEventListener("change", () => { stage.dataset.show = r.value; }));
   }
 
-  /* ---------- 01.3: three layers ---------- */
+  /* ---------- 01.3: three layers, exploded; the top plane wears the current brand ---------- */
   const layers = document.getElementById("layers");
   if (layers) {
-    const base = theme(CUSTOMERS[0].colour, "light"), bank = theme(CUSTOMERS[3].colour, "light");
-    const btn = (t, font, r, label) => `<span class="ui" style="${Object.entries(t).map(([k, v]) => `${k}:${v}`).join(";")};--font:${font};--btn-r:${r}"><span class="ui-btn is-primary" style="display:inline-block">${label}</span></span>`;
     layers.innerHTML = `
-      <div class="ds-layer"><h4>Shared package<small>every product</small></h4>
-        <ul><li><code>scales 50–700</code></li><li><code>--success</code></li><li><code>--warning-text</code></li><li><code>--radius</code></li><li><code>Button</code></li><li><code>Input</code></li></ul>
-        <div class="ds-layer-demo">${btn(base, '"Geist", var(--sans)', "0.5rem", "New run")}</div></div>
-      <div class="ds-layer"><h4>Product<small>only what it needs</small></h4>
-        <ul><li><code>--menu-highlight: mix(--hover, --active)</code></li><li><code>--card (dark)</code></li></ul>
-        <div class="ds-layer-demo"><span class="ds-mini-menu" aria-hidden="true"><span>Rename</span><span class="is-hl">Duplicate</span><span>Archive</span></span></div></div>
-      <div class="ds-layer"><h4>Customer<small>their brand</small></h4>
-        <ul><li><code>colour</code></li><li><code>font</code></li><li><code>button shape</code></li></ul>
-        <div class="ds-layer-demo">${btn(bank, '"IBM Plex Sans", var(--sans)', "0.75rem", "New run")}</div></div>`;
+      <ol class="ds-stack-legend">
+        <li><h4>Customer <span>their brand</span></h4><ul><li><code>colour</code></li><li><code>font</code></li><li><code>button shape</code></li></ul></li>
+        <li><h4>Product <span>only what it needs</span></h4><ul><li><code>--menu-highlight: mix(--hover, --active)</code></li><li><code>--card (dark)</code></li></ul></li>
+        <li><h4>Shared package <span>every product</span></h4><ul><li><code>scales 50–700</code></li><li><code>--success</code></li><li><code>--warning-text</code></li><li><code>--radius</code></li><li><code>Button</code></li><li><code>Input</code></li></ul></li>
+      </ol>
+      <div class="ds-iso" aria-hidden="true">
+        <div class="ds-plane is-shared"><span class="ds-plane-n">Shared</span><span class="ui" data-btn="base"><span class="ui-btn is-primary">New run</span></span></div>
+        <div class="ds-plane is-product"><span class="ds-plane-n">Product</span><span class="ds-mini-menu"><span>Rename</span><span class="is-hl">Duplicate</span><span>Archive</span></span></div>
+        <div class="ds-plane is-customer"><span class="ds-plane-n" data-cname></span><span class="ui" data-btn="cust"><span class="ui-btn is-primary">New run</span></span></div>
+      </div>`;
+    const base = layers.querySelector('[data-btn="base"]');
+    apply(base, theme(CUSTOMERS[1].colour, "light"));
+    const cust = layers.querySelector('[data-btn="cust"]');
+    listeners.push((c) => {
+      const t = theme(c.colour, "light");
+      cust.style.setProperty("--primary", pickPage(c.colour) === INK ? INK : NEAR_WHITE);
+      cust.style.setProperty("--primary-fg", c.colour);
+      cust.style.setProperty("--font", c.font); cust.style.setProperty("--btn-r", c.btn);
+      layers.querySelector("[data-cname]").textContent = c.name;
+      void t;
+    });
   }
 
-  /* ---------- 02.1: roles (specimens) ---------- */
-  const spec = document.getElementById("spec");
-  if (spec) {
-    const cellFor = (mode) => (h, st) => {
-      const S = SCALES[mode], c = S[h][st], ground = NEUTRAL[mode].card;
-      if (st === "50") return `<td class="is-fill" style="background:${c}"><span class="sr-only">${c}</span></td>`;
-      if (st === "200") return `<td class="is-border" style="--c:${c}"><span class="sr-only">${c}</span></td>`;
-      if (st === "500") return `<td class="is-dot" style="--c:${c}"><span class="sr-only">${c}</span></td>`;
-      if (st === "600") return `<td style="color:${c}">Aa<small>${ratio(c, ground).toFixed(1)}</small></td>`;
-      return `<td class="is-fill" style="background:${S[h]["50"]};color:${c}">Aa<small>${ratio(c, S[h]["50"]).toFixed(1)}</small></td>`;
+  /* ---------- 02.1: a wall of the scales ---------- */
+  const wall = document.getElementById("wall");
+  if (wall) {
+    const L = SCALES.light;
+    const cell = (h, st) => {
+      const c = L[h][st];
+      if (st === "600") return `<div class="ds-wall-c" style="background:${c};color:#fff"><small>on white</small><span>${ratio(c, "#ffffff").toFixed(1)}</span></div>`;
+      if (st === "700") return `<div class="ds-wall-c" style="background:${c};color:${L[h]["50"]}"><small>on its 50</small><span>${ratio(c, L[h]["50"]).toFixed(1)}</span></div>`;
+      return `<div class="ds-wall-c" style="background:${c}"><span class="sr-only">${h} ${st}</span></div>`;
     };
-    const body = (mode) => `<tbody class="is-${mode}set">${HUES.map(([h, name, role]) => `<tr><th scope="row">${name}<small>${role}</small></th>${STEPS.map(([st]) => cellFor(mode)(h, st)).join("")}</tr>`).join("")}</tbody>`;
-    spec.innerHTML = `<table aria-label="Six hues, five steps, each step with one job">
-      <thead><tr><th scope="col"><span class="sr-only">Hue and role</span></th>${STEPS.map(([st, job]) => `<th scope="col"><b>${st === "600" ? `<span class="is-lightset">${job}</span><span class="is-darkset">Text on the page</span>` : job}</b>${st}</th>`).join("")}</tr></thead>
-      ${body("light")}${body("dark")}</table>`;
+    wall.innerHTML = `<div class="ds-wall-grid" role="table" aria-label="Six roles, five steps, each step with one job">
+      <div role="row" class="ds-wall-row"><div class="ds-wall-h" role="columnheader"><span class="sr-only">Role</span></div>${STEPS.map(([st, job]) => `<div class="ds-wall-h" role="columnheader"><b>${job}</b>${st}</div>`).join("")}</div>
+      ${HUES.map(([h, name, role]) => `<div role="row" class="ds-wall-row"><div class="ds-wall-role" role="rowheader"><b>${role}</b><span>${name.toLowerCase()}</span></div>${STEPS.map(([st]) => cell(h, st)).join("")}</div>`).join("")}
+    </div>`;
   }
 
-  /* ---------- 02.2: lightness chart ---------- */
+  /* ---------- 02.2: lightness chart (on the dark sheet) ---------- */
   const chart = document.getElementById("light-chart");
   if (chart) {
-    const W = 760, left = 150, right = 20, rowH = 40, top = 14, x0 = 0.4, x1 = 1.0;
+    const W = 760, left = 150, right = 20, rowH = 42, top = 14, x0 = 0.4, x1 = 1.0;
     const rows = [["50", "Surface"], ["200", "Border"], ["500", "Charts, icons"], ["600", "Text on white"], ["700", "Text on a tint"]];
     const H = top + rows.length * rowH + 34;
     const X = (l) => left + ((l - x0) / (x1 - x0)) * (W - left - right);
@@ -3772,9 +3784,9 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
       const mn = Math.min(...ls), mx = Math.max(...ls);
       g += `<text class="row-l" x="0" y="${y + 4}">${job}</text><text class="lbl" x="${left - 12}" y="${y + 4}" text-anchor="end">${st}</text>`;
       g += `<line class="ax" x1="${left}" x2="${W - right}" y1="${y}" y2="${y}"/>`;
-      g += `<rect class="band" x="${X(mn) - 9}" y="${y - 15}" width="${X(mx) - X(mn) + 18}" height="30" rx="15"/>`;
+      g += `<rect class="band" x="${X(mn) - 11}" y="${y - 16}" width="${X(mx) - X(mn) + 22}" height="32" rx="16"/>`;
       order.filter((h) => REAL_L[st][h] != null).forEach((h, j, arr) => {
-        const dy = (j - (arr.length - 1) / 2) * 4.2;
+        const dy = (j - (arr.length - 1) / 2) * 4.4;
         g += `<circle cx="${X(REAL_L[st][h]).toFixed(1)}" cy="${(y + dy).toFixed(1)}" r="6.5" fill="${SCALES.light[h][st]}"><title>${h} ${st}: L ${REAL_L[st][h]}</title></circle>`;
       });
     });
@@ -3784,19 +3796,22 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     chart.innerHTML = g;
   }
 
-  /* ---------- 02.3: light and dark ---------- */
-  const modes = document.getElementById("modes");
-  if (modes) {
-    const pane = (mode) => {
+  /* ---------- 02.3: one specimen, light and dark, split by a slider ---------- */
+  const split = document.getElementById("split");
+  if (split) {
+    const layer = (mode) => {
       const S = SCALES[mode], bg = NEUTRAL[mode].card;
-      return `<div class="ds-mode is-${mode}"><div class="ds-mode-h"><span>${mode === "light" ? "Light" : "Dark"}</span><span>border · text · text on tint</span></div>
-        ${HUES.map(([h, name]) => `<div class="ds-mode-row"><span>${name}</span>
+      return `<div class="ds-split-layer is-${mode}" ${mode === "dark" ? 'aria-hidden="true"' : ""}><div class="ds-split-h"><span>${mode === "light" ? "Light" : "Dark"}</span><span>border · text · text on a tint</span></div>
+        ${HUES.map(([h, name]) => `<div class="ds-split-row"><span>${name}</span>
           <i class="is-border" style="--c:${S[h]["200"]}"><span class="sr-only">border</span></i>
-          <i style="color:${S[h]["600"]}">Aa <small style="font:500 11px var(--mono);opacity:.85">${ratio(S[h]["600"], bg).toFixed(1)}</small></i>
-          <i style="background:${S[h]["50"]};color:${S[h]["700"]}">Aa <small style="font:500 11px var(--mono);opacity:.85">${ratio(S[h]["700"], S[h]["50"]).toFixed(1)}</small></i></div>`).join("")}
-      </div>`;
+          <i style="color:${S[h]["600"]}">Aa <small>${ratio(S[h]["600"], bg).toFixed(1)}</small></i>
+          <i style="background:${S[h]["50"]};color:${S[h]["700"]}">Aa <small>${ratio(S[h]["700"], S[h]["50"]).toFixed(1)}</small></i></div>`).join("")}</div>`;
     };
-    modes.innerHTML = pane("light") + pane("dark");
+    split.innerHTML = `<div class="ds-split-stage" id="split-stage">${layer("light")}${layer("dark")}<span class="ds-split-handle"></span></div>
+      <input type="range" id="split-range" min="0" max="100" value="50" aria-label="Move between the light and dark versions of the same specimen">
+      <div class="ds-split-legend"><span>Light</span><span>Dark</span></div>`;
+    const stage = split.querySelector("#split-stage");
+    split.querySelector("#split-range").addEventListener("input", (e) => stage.style.setProperty("--split", `${e.target.value}%`));
   }
 
   /* ---------- 02.4: a customer's colour, passed through or derived ---------- */
@@ -3869,6 +3884,8 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     };
     bar.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) set(b.dataset.themeSet); });
   }
+
+  setCustomer("courier");
 })();
 
 </script>

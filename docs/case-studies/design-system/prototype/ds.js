@@ -1,4 +1,4 @@
-/* One Design System, Three Products — prototype evidence, rendered from one set of tokens.
+/* One Design System, Three Products, Any Brand — prototype: the page wears a brand; evidence, rendered from one set of tokens.
    The invented brand's scales follow the real system's rules (fixed lightness per step); the lightness chart uses
    the real system's lightness values, which carry no brand. */
 (() => {
@@ -100,20 +100,6 @@
   const chip = (r) => `<span class="ds-ratio ${r >= 4.5 ? "is-pass" : "is-fail"}">${r >= 4.5 ? "✓" : "✕"} ${r.toFixed(2)}:1</span>`;
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
-  /* ---------- cover art: the scales ---------- */
-  const cover = document.getElementById("cover-scales");
-  if (cover) {
-    const cols = ["brand", "blue", "green", "red", "purple", "amber"];
-    cover.innerHTML = ["700", "600", "500", "200", "50"].map((st) => cols.map((h) => `<i style="background:${SCALES.light[h][st]}"></i>`).join("")).join("");
-  }
-
-  /* ---------- the work: the theme panel ---------- */
-  const CUSTOMERS = [
-    { id: "default", name: "Platform default", colour: lchToHex({ l: 0.52, c: 0.1, h: 200 }), font: '"Geist", var(--sans)', r: "0.5rem", btn: "0.5rem", mark: "P" },
-    { id: "grocer", name: "A grocer", colour: "#2e7d3a", font: '"Fraunces", Georgia, serif', r: "0.75rem", btn: "999px", mark: "G" },
-    { id: "courier", name: "A courier", colour: "#f2c94c", font: '"Archivo", var(--sans)', r: "0", btn: "0", mark: "C" },
-    { id: "bank", name: "A bank", colour: "#1d2b5c", font: '"IBM Plex Sans", var(--sans)', r: "0.375rem", btn: "0.75rem", mark: "B" },
-  ];
   const ICON_WARN = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2.5 14 13H2z" stroke-linejoin="round"/><path d="M8 6.5v3M8 11.3v.2" stroke-linecap="round"/></svg>';
 
   function appHTML(c) {
@@ -157,16 +143,95 @@
     set("muted", ratio(t["--muted-fg"], t["--card"]));
   }
 
+  /* ---------- the page wears a brand: one colour in, the case file's palette out ---------- */
+  const INK = "#1c1b19", PAPER = "#fbfaf7", PAPER_D = "#1f1e1c", INSET_D = "#282624";
+  const pickPage = (f) => (ratio(NEAR_WHITE, f) >= AA ? NEAR_WHITE : INK);
+  const tone = (b, l, c) => lchToHex({ l, c: Math.min(b.c, c), h: b.h });
+  function secondOn(on, field) { for (const t of [0.74, 0.8, 0.86, 0.92]) { const m = mix(on, field, t); if (ratio(m, field) >= AA) return m; } return on; }
+  function pagePalette(hex) {
+    const b = hexToLch(hex);
+    const L = {}, D = {};
+    // light page
+    L.field = hex; L["on-field"] = pickPage(hex); L["on-field-2"] = secondOn(L["on-field"], hex);
+    const pale = L["on-field"] === INK;
+    L.accent = pale ? INK : readableOn(b, [PAPER, "#ffffff"], "darker");
+    L["accent-strong"] = L.accent; L["on-accent"] = pale ? hex : pickOn(L.accent);
+    L["ds-mark"] = hex; L["ds-mark-ink"] = pickPage(hex);
+    L["accent-2"] = tone(b, 0.94, 0.05); L["accent-tint"] = tone(b, 0.975, 0.03);
+    const dk = tone(b, 0.19, 0.016);
+    Object.assign(L, { dark: dk, "on-dark": "#f5f3ee", "on-dark-body": "#d4d0c7", "on-dark-2": "#a29e95", "dark-rule": tone(b, 0.27, 0.016), "dark-line": tone(b, 0.42, 0.02), "dark-inset": tone(b, 0.23, 0.016) });
+    L["accent-on-dark"] = ratio(hex, dk) >= AA ? hex : readableOn(b, [dk], "lighter");
+    // dark page: fields deeper or lifted just enough to sit on the dark studio; text by the same rule
+    const fd = b.l > 0.8 ? lchToHex({ ...b, l: 0.8 }) : b.l < 0.36 ? lchToHex({ ...b, l: 0.4 }) : hex;
+    D.field = fd; D["on-field"] = pickPage(fd); D["on-field-2"] = secondOn(D["on-field"], fd);
+    D.accent = ratio(hex, PAPER_D) >= AA && ratio(hex, INSET_D) >= AA ? hex : readableOn(b, [PAPER_D, INSET_D], "lighter");
+    D["accent-strong"] = D.accent; D["on-accent"] = pickOn(D.accent);
+    D["ds-mark"] = D.accent; D["ds-mark-ink"] = pickPage(D.accent);
+    D["accent-2"] = tone(b, 0.27, 0.04); D["accent-tint"] = tone(b, 0.25, 0.035);
+    const dd = tone(b, 0.15, 0.014);
+    Object.assign(D, { dark: dd, "dark-rule": tone(b, 0.23, 0.025), "dark-line": tone(b, 0.38, 0.03), "dark-inset": tone(b, 0.2, 0.025) });
+    D["accent-on-dark"] = ratio(hex, dd) >= AA ? hex : readableOn(b, [dd], "lighter");
+    return { L, D };
+  }
+  const vars = (o) => Object.entries(o).map(([k, v]) => `--${k}:${v}`).join(";");
+  const sheet = document.getElementById("ds-palette");
+
+  /* ---------- customers (invented) ---------- */
+  const CUSTOMERS = [
+    { id: "courier", name: "Courier", colour: "#f2c94c", font: '"Archivo", var(--sans)', r: "0", btn: "0", mark: "C" },
+    { id: "platform", name: "Platform", colour: "#0c5c63", font: '"Geist", var(--sans)', r: "0.5rem", btn: "0.5rem", mark: "P" },
+    { id: "grocer", name: "Grocer", colour: "#2e7d3a", font: '"Fraunces", Georgia, serif', r: "0.75rem", btn: "999px", mark: "G" },
+    { id: "bank", name: "Bank", colour: "#1d2b5c", font: '"IBM Plex Sans", var(--sans)', r: "0.375rem", btn: "0.75rem", mark: "B" },
+  ];
+  const state = { id: "courier", own: "#e85d9a", mode: "light", ratios: false };
+  const current = () => (state.id === "own" ? { ...CUSTOMERS[1], id: "own", name: "Your colour", colour: state.own, mark: "Y" } : CUSTOMERS.find((c) => c.id === state.id));
+  const listeners = [];
+  function setCustomer(id) {
+    state.id = id;
+    const c = current();
+    const { L, D } = pagePalette(c.colour);
+    const extra = `--ds-btn-font:${c.font};--ds-btn-r:${c.btn}`;
+    sheet.textContent = `[data-palette="design-system"]{${vars(L)};${extra}}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) [data-palette="design-system"]{${vars(D)}}}
+:root[data-theme="dark"] [data-palette="design-system"]{${vars(D)}}`;
+    document.querySelectorAll(`input[data-cust]`).forEach((i) => (i.checked = i.value === id));
+    listeners.forEach((fn) => fn(c));
+  }
+
+  /* ---------- cover: "Seen as" and the layers ---------- */
+  const seen = document.getElementById("seen-as");
+  if (seen) {
+    seen.innerHTML = `<span>Seen as</span>` + CUSTOMERS.map((c) => `<label><input type="radio" name="seen" data-cust value="${c.id}" id="seen-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${c.name}</label>`).join("");
+    seen.addEventListener("change", (e) => { if (e.target.name === "seen") setCustomer(e.target.value); });
+  }
+  const layersArt = document.getElementById("cover-layers");
+  if (layersArt) {
+    const plane = (cx, cy, w, h) => `${cx - w / 2},${cy} ${cx},${cy - h / 2} ${cx + w / 2},${cy} ${cx},${cy + h / 2}`;
+    const cx = 140, w = 210, h = 105, ys = [66, 128, 190];
+    const draw = (c) => {
+      layersArt.innerHTML = `<svg viewBox="0 0 400 260" role="img" aria-label="Three layers: shared, product, customer">
+        <line class="rail" x1="${cx}" x2="${cx}" y1="${ys[0]}" y2="${ys[2]}"/>
+        <polygon class="pl pl-shared" points="${plane(cx, ys[2], w, h)}"/>
+        <polygon class="pl pl-product" points="${plane(cx, ys[1], w, h)}"/>
+        <polygon class="pl pl-customer" points="${plane(cx, ys[0], w, h)}"/>
+        <polygon class="btn" points="${plane(cx, ys[0], 84, 42)}"/>
+        ${[["Customer", c.name, ys[0]], ["Product", "", ys[1]], ["Shared", "", ys[2]]].map(([t, n, y]) => `<line class="tick" x1="${cx + w / 2 + 6}" x2="${cx + w / 2 + 22}" y1="${y}" y2="${y}"/><text x="${cx + w / 2 + 28}" y="${y + 4}">${t}</text>${n ? `<text class="is-brand" x="${cx + w / 2 + 28}" y="${y + 22}">${esc(n)}</text>` : ""}`).join("")}
+      </svg>`;
+    };
+    listeners.push(draw);
+  }
+
+  /* ---------- the work: the theme panel follows "Seen as" ---------- */
   const work = document.getElementById("work-panel");
   if (work) {
     work.innerHTML = `
       <div class="tp-controls">
         <div class="tp-left">
           <div class="ds-seg" role="radiogroup" aria-label="Customer">
-            ${CUSTOMERS.map((c, i) => `<label><input type="radio" name="tp-customer" id="tp-c-${c.id}" value="${c.id}" ${i === 0 ? "checked" : ""}><span class="tp-swatch" style="background:${c.colour}"></span>${esc(c.name)}</label>`).join("")}
-            <label class="tp-own"><input type="radio" name="tp-customer" id="tp-c-own" value="own"><span>Your colour</span></label>
+            ${CUSTOMERS.map((c) => `<label><input type="radio" name="tp-customer" data-cust value="${c.id}" id="tp-c-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${esc(c.name)}</label>`).join("")}
+            <label class="tp-own"><input type="radio" name="tp-customer" data-cust value="own" id="tp-c-own"><span>Your colour</span></label>
           </div>
-          <span class="tp-own"><input type="color" id="tp-own-colour" value="#fff29a" aria-label="Pick your own brand colour"></span>
+          <span class="tp-own"><input type="color" id="tp-own-colour" value="${state.own}" aria-label="Pick your own brand colour"></span>
         </div>
         <div class="tp-right">
           <div class="ds-seg" role="radiogroup" aria-label="Mode">
@@ -178,25 +243,31 @@
       </div>
       <div class="tp-app ui" id="tp-app"></div>`;
     const app = work.querySelector("#tp-app");
-    const colourInput = work.querySelector("#tp-own-colour");
-    const render = () => {
-      const id = work.querySelector('input[name="tp-customer"]:checked').value;
-      const mode = work.querySelector('input[name="tp-mode"]:checked').value;
-      const c = id === "own" ? { ...CUSTOMERS[0], id: "own", name: "Your colour", colour: colourInput.value, mark: "Y" } : CUSTOMERS.find((x) => x.id === id);
+    const render = (c) => {
       app.innerHTML = appHTML(c);
-      const t = theme(c.colour, mode);
+      const t = theme(c.colour, state.mode);
       apply(app, t);
-      app.style.setProperty("--font", c.font);
-      app.style.setProperty("--r", c.r);
-      app.style.setProperty("--btn-r", c.btn);
-      app.style.colorScheme = mode;
+      app.style.setProperty("--font", c.font); app.style.setProperty("--r", c.r); app.style.setProperty("--btn-r", c.btn);
+      app.style.colorScheme = state.mode;
       fillRatios(app, t);
-      app.classList.toggle("show-ratios", work.querySelector("#tp-ratios").checked);
+      app.classList.toggle("show-ratios", state.ratios);
     };
-    work.addEventListener("change", render);
-    colourInput.addEventListener("input", () => { work.querySelector("#tp-c-own").checked = true; render(); });
-    render();
+    listeners.push(render);
+    work.addEventListener("change", (e) => {
+      if (e.target.name === "tp-customer") return setCustomer(e.target.value);
+      if (e.target.name === "tp-mode") state.mode = e.target.value;
+      if (e.target.id === "tp-ratios") state.ratios = e.target.checked;
+      render(current());
+    });
+    work.querySelector("#tp-own-colour").addEventListener("input", (e) => { state.own = e.target.value; setCustomer("own"); });
   }
+
+  /* ---------- 01.1: the same screen, three products ---------- */
+  document.querySelectorAll("[data-mp]").forEach((el) => {
+    el.innerHTML = `<div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
+      <div class="mp-main"><div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
+      <ul class="mp-list"><li><span>Run 4821</span><span class="mp-badge">On time</span></li><li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li><li><span>Run 4823</span><span class="mp-badge">On time</span></li><li><span>Run 4824</span><span class="mp-badge">On time</span></li></ul></div>`;
+  });
 
   /* ---------- 01.2: the same library, rendered from code; one stage with a Figma / Code switch ---------- */
   const codeSide = document.getElementById("code-side");
@@ -224,44 +295,53 @@
     document.querySelectorAll('input[name="f2c"]').forEach((r) => r.addEventListener("change", () => { stage.dataset.show = r.value; }));
   }
 
-  /* ---------- 01.3: three layers ---------- */
+  /* ---------- 01.3: three layers, exploded; the top plane wears the current brand ---------- */
   const layers = document.getElementById("layers");
   if (layers) {
-    const base = theme(CUSTOMERS[0].colour, "light"), bank = theme(CUSTOMERS[3].colour, "light");
-    const btn = (t, font, r, label) => `<span class="ui" style="${Object.entries(t).map(([k, v]) => `${k}:${v}`).join(";")};--font:${font};--btn-r:${r}"><span class="ui-btn is-primary" style="display:inline-block">${label}</span></span>`;
     layers.innerHTML = `
-      <div class="ds-layer"><h4>Shared package<small>every product</small></h4>
-        <ul><li><code>scales 50–700</code></li><li><code>--success</code></li><li><code>--warning-text</code></li><li><code>--radius</code></li><li><code>Button</code></li><li><code>Input</code></li></ul>
-        <div class="ds-layer-demo">${btn(base, '"Geist", var(--sans)', "0.5rem", "New run")}</div></div>
-      <div class="ds-layer"><h4>Product<small>only what it needs</small></h4>
-        <ul><li><code>--menu-highlight: mix(--hover, --active)</code></li><li><code>--card (dark)</code></li></ul>
-        <div class="ds-layer-demo"><span class="ds-mini-menu" aria-hidden="true"><span>Rename</span><span class="is-hl">Duplicate</span><span>Archive</span></span></div></div>
-      <div class="ds-layer"><h4>Customer<small>their brand</small></h4>
-        <ul><li><code>colour</code></li><li><code>font</code></li><li><code>button shape</code></li></ul>
-        <div class="ds-layer-demo">${btn(bank, '"IBM Plex Sans", var(--sans)', "0.75rem", "New run")}</div></div>`;
+      <ol class="ds-stack-legend">
+        <li><h4>Customer <span>their brand</span></h4><ul><li><code>colour</code></li><li><code>font</code></li><li><code>button shape</code></li></ul></li>
+        <li><h4>Product <span>only what it needs</span></h4><ul><li><code>--menu-highlight: mix(--hover, --active)</code></li><li><code>--card (dark)</code></li></ul></li>
+        <li><h4>Shared package <span>every product</span></h4><ul><li><code>scales 50–700</code></li><li><code>--success</code></li><li><code>--warning-text</code></li><li><code>--radius</code></li><li><code>Button</code></li><li><code>Input</code></li></ul></li>
+      </ol>
+      <div class="ds-iso" aria-hidden="true">
+        <div class="ds-plane is-shared"><span class="ds-plane-n">Shared</span><span class="ui" data-btn="base"><span class="ui-btn is-primary">New run</span></span></div>
+        <div class="ds-plane is-product"><span class="ds-plane-n">Product</span><span class="ds-mini-menu"><span>Rename</span><span class="is-hl">Duplicate</span><span>Archive</span></span></div>
+        <div class="ds-plane is-customer"><span class="ds-plane-n" data-cname></span><span class="ui" data-btn="cust"><span class="ui-btn is-primary">New run</span></span></div>
+      </div>`;
+    const base = layers.querySelector('[data-btn="base"]');
+    apply(base, theme(CUSTOMERS[1].colour, "light"));
+    const cust = layers.querySelector('[data-btn="cust"]');
+    listeners.push((c) => {
+      const t = theme(c.colour, "light");
+      cust.style.setProperty("--primary", pickPage(c.colour) === INK ? INK : NEAR_WHITE);
+      cust.style.setProperty("--primary-fg", c.colour);
+      cust.style.setProperty("--font", c.font); cust.style.setProperty("--btn-r", c.btn);
+      layers.querySelector("[data-cname]").textContent = c.name;
+      void t;
+    });
   }
 
-  /* ---------- 02.1: roles (specimens) ---------- */
-  const spec = document.getElementById("spec");
-  if (spec) {
-    const cellFor = (mode) => (h, st) => {
-      const S = SCALES[mode], c = S[h][st], ground = NEUTRAL[mode].card;
-      if (st === "50") return `<td class="is-fill" style="background:${c}"><span class="sr-only">${c}</span></td>`;
-      if (st === "200") return `<td class="is-border" style="--c:${c}"><span class="sr-only">${c}</span></td>`;
-      if (st === "500") return `<td class="is-dot" style="--c:${c}"><span class="sr-only">${c}</span></td>`;
-      if (st === "600") return `<td style="color:${c}">Aa<small>${ratio(c, ground).toFixed(1)}</small></td>`;
-      return `<td class="is-fill" style="background:${S[h]["50"]};color:${c}">Aa<small>${ratio(c, S[h]["50"]).toFixed(1)}</small></td>`;
+  /* ---------- 02.1: a wall of the scales ---------- */
+  const wall = document.getElementById("wall");
+  if (wall) {
+    const L = SCALES.light;
+    const cell = (h, st) => {
+      const c = L[h][st];
+      if (st === "600") return `<div class="ds-wall-c" style="background:${c};color:#fff"><small>on white</small><span>${ratio(c, "#ffffff").toFixed(1)}</span></div>`;
+      if (st === "700") return `<div class="ds-wall-c" style="background:${c};color:${L[h]["50"]}"><small>on its 50</small><span>${ratio(c, L[h]["50"]).toFixed(1)}</span></div>`;
+      return `<div class="ds-wall-c" style="background:${c}"><span class="sr-only">${h} ${st}</span></div>`;
     };
-    const body = (mode) => `<tbody class="is-${mode}set">${HUES.map(([h, name, role]) => `<tr><th scope="row">${name}<small>${role}</small></th>${STEPS.map(([st]) => cellFor(mode)(h, st)).join("")}</tr>`).join("")}</tbody>`;
-    spec.innerHTML = `<table aria-label="Six hues, five steps, each step with one job">
-      <thead><tr><th scope="col"><span class="sr-only">Hue and role</span></th>${STEPS.map(([st, job]) => `<th scope="col"><b>${st === "600" ? `<span class="is-lightset">${job}</span><span class="is-darkset">Text on the page</span>` : job}</b>${st}</th>`).join("")}</tr></thead>
-      ${body("light")}${body("dark")}</table>`;
+    wall.innerHTML = `<div class="ds-wall-grid" role="table" aria-label="Six roles, five steps, each step with one job">
+      <div role="row" class="ds-wall-row"><div class="ds-wall-h" role="columnheader"><span class="sr-only">Role</span></div>${STEPS.map(([st, job]) => `<div class="ds-wall-h" role="columnheader"><b>${job}</b>${st}</div>`).join("")}</div>
+      ${HUES.map(([h, name, role]) => `<div role="row" class="ds-wall-row"><div class="ds-wall-role" role="rowheader"><b>${role}</b><span>${name.toLowerCase()}</span></div>${STEPS.map(([st]) => cell(h, st)).join("")}</div>`).join("")}
+    </div>`;
   }
 
-  /* ---------- 02.2: lightness chart ---------- */
+  /* ---------- 02.2: lightness chart (on the dark sheet) ---------- */
   const chart = document.getElementById("light-chart");
   if (chart) {
-    const W = 760, left = 150, right = 20, rowH = 40, top = 14, x0 = 0.4, x1 = 1.0;
+    const W = 760, left = 150, right = 20, rowH = 42, top = 14, x0 = 0.4, x1 = 1.0;
     const rows = [["50", "Surface"], ["200", "Border"], ["500", "Charts, icons"], ["600", "Text on white"], ["700", "Text on a tint"]];
     const H = top + rows.length * rowH + 34;
     const X = (l) => left + ((l - x0) / (x1 - x0)) * (W - left - right);
@@ -273,9 +353,9 @@
       const mn = Math.min(...ls), mx = Math.max(...ls);
       g += `<text class="row-l" x="0" y="${y + 4}">${job}</text><text class="lbl" x="${left - 12}" y="${y + 4}" text-anchor="end">${st}</text>`;
       g += `<line class="ax" x1="${left}" x2="${W - right}" y1="${y}" y2="${y}"/>`;
-      g += `<rect class="band" x="${X(mn) - 9}" y="${y - 15}" width="${X(mx) - X(mn) + 18}" height="30" rx="15"/>`;
+      g += `<rect class="band" x="${X(mn) - 11}" y="${y - 16}" width="${X(mx) - X(mn) + 22}" height="32" rx="16"/>`;
       order.filter((h) => REAL_L[st][h] != null).forEach((h, j, arr) => {
-        const dy = (j - (arr.length - 1) / 2) * 4.2;
+        const dy = (j - (arr.length - 1) / 2) * 4.4;
         g += `<circle cx="${X(REAL_L[st][h]).toFixed(1)}" cy="${(y + dy).toFixed(1)}" r="6.5" fill="${SCALES.light[h][st]}"><title>${h} ${st}: L ${REAL_L[st][h]}</title></circle>`;
       });
     });
@@ -285,19 +365,22 @@
     chart.innerHTML = g;
   }
 
-  /* ---------- 02.3: light and dark ---------- */
-  const modes = document.getElementById("modes");
-  if (modes) {
-    const pane = (mode) => {
+  /* ---------- 02.3: one specimen, light and dark, split by a slider ---------- */
+  const split = document.getElementById("split");
+  if (split) {
+    const layer = (mode) => {
       const S = SCALES[mode], bg = NEUTRAL[mode].card;
-      return `<div class="ds-mode is-${mode}"><div class="ds-mode-h"><span>${mode === "light" ? "Light" : "Dark"}</span><span>border · text · text on tint</span></div>
-        ${HUES.map(([h, name]) => `<div class="ds-mode-row"><span>${name}</span>
+      return `<div class="ds-split-layer is-${mode}" ${mode === "dark" ? 'aria-hidden="true"' : ""}><div class="ds-split-h"><span>${mode === "light" ? "Light" : "Dark"}</span><span>border · text · text on a tint</span></div>
+        ${HUES.map(([h, name]) => `<div class="ds-split-row"><span>${name}</span>
           <i class="is-border" style="--c:${S[h]["200"]}"><span class="sr-only">border</span></i>
-          <i style="color:${S[h]["600"]}">Aa <small style="font:500 11px var(--mono);opacity:.85">${ratio(S[h]["600"], bg).toFixed(1)}</small></i>
-          <i style="background:${S[h]["50"]};color:${S[h]["700"]}">Aa <small style="font:500 11px var(--mono);opacity:.85">${ratio(S[h]["700"], S[h]["50"]).toFixed(1)}</small></i></div>`).join("")}
-      </div>`;
+          <i style="color:${S[h]["600"]}">Aa <small>${ratio(S[h]["600"], bg).toFixed(1)}</small></i>
+          <i style="background:${S[h]["50"]};color:${S[h]["700"]}">Aa <small>${ratio(S[h]["700"], S[h]["50"]).toFixed(1)}</small></i></div>`).join("")}</div>`;
     };
-    modes.innerHTML = pane("light") + pane("dark");
+    split.innerHTML = `<div class="ds-split-stage" id="split-stage">${layer("light")}${layer("dark")}<span class="ds-split-handle"></span></div>
+      <input type="range" id="split-range" min="0" max="100" value="50" aria-label="Move between the light and dark versions of the same specimen">
+      <div class="ds-split-legend"><span>Light</span><span>Dark</span></div>`;
+    const stage = split.querySelector("#split-stage");
+    split.querySelector("#split-range").addEventListener("input", (e) => stage.style.setProperty("--split", `${e.target.value}%`));
   }
 
   /* ---------- 02.4: a customer's colour, passed through or derived ---------- */
@@ -370,4 +453,6 @@
     };
     bar.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) set(b.dataset.themeSet); });
   }
+
+  setCustomer("courier");
 })();

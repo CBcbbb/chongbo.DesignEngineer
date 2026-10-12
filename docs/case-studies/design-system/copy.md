@@ -14,7 +14,7 @@ Playbook §8 step 4. Every line traces to "Facts and their sources" in `inventor
 
 Logistics infrastructure company
 
-# One Design System, Three Products
+# One Design System, Three Products, Any Brand
 
 The shared colours and components behind three products, and every customer's brand on top.
 
