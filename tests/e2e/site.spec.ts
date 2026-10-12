@@ -48,7 +48,7 @@ test.describe("printing", () => {
     await expect(title).toHaveText("Accessibility", { timeout: 10_000 });
     await expect(title).toBeFocused();
     await expect(page.getByRole("status")).toHaveText(await title.innerText());
-    await expect(page.locator(".sheets .sheet").first()).toContainText("A table view beside the network");
+    await expect(page.locator(".sheets .sheet").first()).toContainText("A dual view: the network and a list");
     await expect(page.locator(".sheets .sheet").first().locator(".full")).toHaveAttribute("href", "/work/hhcd-data-platform#dual-view");
     // The cards reset after printing.
     await expect(card).toHaveAttribute("aria-pressed", "false");
@@ -177,11 +177,11 @@ test.describe("layout", () => {
 
   test("case files deep-link to section anchors", async ({ page }) => {
     await page.goto("/work/hhcd-data-platform#dual-view");
-    await expect(page.locator("section#dual-view h3")).toHaveText(/A table view beside the network/);
+    await expect(page.locator("section#dual-view h3")).toHaveText(/A dual view: the network and a list/);
     await expect(page.locator("section#dual-view")).toHaveClass(/is-current/);
     const cardLink = page.locator('.cf-toc a[href="#arrangements"]');
     if (await cardLink.isVisible()) {
-      await expect(page.locator('.cf-toc a[aria-current="step"]')).toHaveText("Table view");
+      await expect(page.locator('.cf-toc a[aria-current="step"]')).toHaveText("Dual view");
       await cardLink.click();
       await expect(page.locator('.cf-toc a[aria-current="step"]')).toHaveText("Two arrangements");
     } else {
