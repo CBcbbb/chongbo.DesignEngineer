@@ -1,6 +1,6 @@
 # One Design System, Five Products: card inventory
 
-Playbook §8 step 3. Draft 1, 12 October 2026, for Chongbo's approval. Headings are working claims, finished in step 4 (copy). Every fact traces to "Facts and their sources" below.
+Playbook §8 step 3. Draft 1, 12 October 2026. Chongbo's decisions of 12 October are under "Decisions". Headings are working claims, finished in step 4 (copy). Every fact traces to "Facts and their sources" below.
 
 Capabilities: **C systems and reuse (lead)** · E accessible, fast, findable · B idea to production · D craft and interaction.
 
@@ -46,7 +46,7 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 |---|---|---|---|---|---|---|---|---|
 | | | **Part 1 · Five products** | | | | | | |
 | 01.1 | `drift` | The same colours, five different products | C | in | in | · | Drawn: one screen five times, the same palette in each, with different corner radii, buttons, type and spacing | |
-| 01.2 | `extend-shadcn` | Extending shadcn instead of replacing it | C B | in | in | · | Code: shadcn's own tokens, then what the system adds in shadcn's own naming (status roles, scales, dark, customer layer) | `[confirm: copies drifted]` |
+| 01.2 | `extend-shadcn` | Extending shadcn instead of replacing it | C B | in | in | · | Code: shadcn's own tokens, then what the system adds in shadcn's own naming (status roles, scales, dark, customer layer) | |
 | | | **Part 2 · Figma to code** | | | | | | |
 | 02.1 | `figma-first` | Components and colours drawn in Figma first | C B D | in | in | lead | Rebuilt Figma: component sets with variants and states (button, input, select, pagination); a switch to the variables (Light / Dark modes) | |
 | 02.2 | `three-layers` | Three layers: shared, product, customer | C B | · | lead | in | Diagram, redrawn: the shared package → one product's overrides (real kinds: a dark-mode menu fix derived from tokens, no raw values) → a customer's colour, font and button shape | |
@@ -160,15 +160,21 @@ Copy may only use these, or what Chongbo adds later.
 ## Gaps
 
 1. `[the fix ships]`: `customer-colour` and the Outcome's second half are written as done only once the derivation is live in the product. Until then, they're drafted both ways.
-2. `[confirm: copies drifted]`: shadcn copies components into each app, so edits stay local and updates don't spread ([Vercel Academy](https://vercel.com/academy/shadcn-ui/updating-and-maintaining-components)). Was that why the five products drifted, and does the shared package ship the components as well as the tokens (the product's stylesheet scans the package's `dist` for classes)? If yes, it's the reason behind `extend-shadcn`.
-
-Resolved 12 Oct: what differed (radii, buttons, type, spacing); variables (yes); numbers (none); package and init script (not claimed).
+Resolved 12 Oct: what differed (radii, buttons, type, spacing); variables (yes); numbers (none); package and init script (not claimed). The guess that the five products drifted because each edited its own shadcn copies is **not used** (Chongbo: not right, or not sure).
 
 ### What extending shadcn cost (from the CSS, for `extend-shadcn`)
 
 - shadcn's `--accent` is a quiet hover fill, not a brand accent. In dark mode a menu's highlight on `--secondary` was nearly invisible; the product layer re-derives it from the hover and active tokens.
 - shadcn's components carry their own radii (the select menu's `rounded-2xl`); matching them meant overrides per component through `data-slot` selectors, a few with `!important`.
 - shadcn has one status colour (`destructive`). Success, warning, info and categorical were added in its naming pattern (`-foreground`, plus `-container`, `-border`, `-text`), so the new roles read like shadcn's own.
+
+## Decisions (12 October 2026)
+
+- **Name:** One Design System, Five Products. Slug `design-system`.
+- **Colour:** ochre.
+- **Size:** 9 cards, kept apart (no merges), so each prints on its own.
+- **`extend-shadcn`:** the reason is that the products already used shadcn; its cost is the three points above, all from the CSS. No claim about why the products drifted.
+- **Evidence:** rebuilt in a Figma file in Chongbo's personal team (variables, Light and Dark modes) and in code on the site, on an invented brand.
 
 ## Shared files (proposed in `SHARED-CHANGES.md` at the build)
 
