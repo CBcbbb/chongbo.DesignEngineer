@@ -3336,19 +3336,19 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 
 /* ---------- 01.1 three products: one blue, nothing else shared. Each drawn at 560 × 360, scaled to its card ---------- */
 .pfw { position: relative; aspect-ratio: 560 / 360; overflow: hidden; border-radius: 12px; box-shadow: 0 0 0 1px rgb(0 0 0 / .09), 0 18px 40px -18px rgb(0 0 0 / .38); background: #fff; }
+.pfw[data-pf="1"] { border-radius: 18px; } .pfw[data-pf="2"] { border-radius: 3px; } .pfw[data-pf="3"] { border-radius: 14px; }
 .pf { position: absolute; left: 0; top: 0; width: 560px; height: 360px; transform: scale(var(--k, 1)); transform-origin: 0 0; --b: #3453d3; overflow: hidden; text-align: left; }
 .pf, .pf * { box-sizing: border-box; }
 .pf .pi { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .pf b, .pf small, .pf p { font-style: normal; }
+.pf-mark { width: 20px; height: 20px; flex: none; display: block; }
 
 /* 1 · light workspace (Geist): quiet sidebar, one title, four cards. Pill buttons, 14px cards, grey fills */
 .pf-1 { display: grid; grid-template-columns: 148px 1fr; background: #fff; color: #18181b; font: 400 12px/1.3 "Geist", sans-serif; }
 .p1-side { background: #fafafa; border-right: 1px solid #ededf0; padding: 18px 12px 14px; display: flex; flex-direction: column; gap: 14px; }
-.p1-logo { display: flex; align-items: center; gap: 8px; font: 600 15px/1 "Geist", sans-serif; letter-spacing: -.02em; padding: 0 6px; }
-.p1-logo i { width: 18px; height: 18px; border-radius: 6px; background: #18181b; position: relative; }
-.p1-logo i::after { content: ""; position: absolute; left: 5px; top: 5px; width: 8px; height: 8px; border-radius: 2px; background: var(--b); }
+.p1-logo { display: flex; align-items: center; gap: 9px; font: 600 15px/1 "Geist", sans-serif; letter-spacing: -.025em; padding: 0 8px; }
 .p1-side nav { display: grid; gap: 2px; }
-.p1-side nav span { display: flex; align-items: center; gap: 9px; padding: 8px 9px; border-radius: 9px; color: #52525b; }
+.p1-side nav span { display: flex; align-items: center; gap: 9px; padding: 8px 12px; border-radius: 999px; color: #52525b; }
 .p1-side nav span.is-on { background: #fff; color: #18181b; font-weight: 600; box-shadow: 0 0 0 1px #ededf0, 0 1px 2px rgb(0 0 0 / .04); }
 .p1-side nav span.is-on .pi { color: var(--b); }
 .p1-me { margin-top: auto; display: flex; align-items: center; gap: 8px; padding: 0 6px; color: #52525b; font-weight: 500; }
@@ -3364,53 +3364,57 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .p1-seg b { background: #fff; color: #18181b; box-shadow: 0 1px 2px rgb(0 0 0 / .08); }
 .p1-tools small { font-size: 11.5px; }
 .p1-grid { display: grid; grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr; gap: 12px; min-height: 0; }
-.p1-card { border: 1px solid #ededf0; border-radius: 14px; padding: 14px; display: grid; align-content: start; gap: 4px; }
+.p1-card { border: 1px solid #ededf0; border-radius: 18px; padding: 16px; box-shadow: 0 6px 16px -10px rgb(0 0 0 / .12); display: grid; align-content: start; gap: 4px; }
 .p1-ch { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-.p1-ic { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; background: color-mix(in srgb, var(--b) 10%, #fff); color: var(--b); }
+.p1-ic { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 999px; background: color-mix(in srgb, var(--b) 10%, #fff); color: var(--b); }
 .p1-ic .pi { width: 16px; height: 16px; }
 .p1-tag { background: #f4f4f5; border-radius: 999px; padding: 3px 9px; font-size: 10.5px; font-weight: 500; color: #3f3f46; }
 .p1-card b { font-weight: 600; font-size: 13.5px; letter-spacing: -.01em; }
 .p1-card small { color: #71717a; font-size: 11.5px; }
 
-/* 2 · light network map (IBM Plex Sans): a tree, a few nodes on a dot grid, one floating control. Square-ish 8px corners */
-.pf-2 { display: grid; grid-template-columns: 160px 1fr; background: #fff; color: #1f2937; font: 400 12px/1.3 "IBM Plex Sans", sans-serif; }
-.p2-tree { border-right: 1px solid #e5e7eb; padding: 16px 12px; display: grid; align-content: start; gap: 8px; }
-.p2-search { display: flex; align-items: center; gap: 7px; background: #f3f4f6; border-radius: 8px; padding: 8px 10px; color: #9ca3af; }
-.p2-sel { display: flex; align-items: center; gap: 7px; background: color-mix(in srgb, var(--b) 9%, #fff); color: var(--b); border-radius: 8px; padding: 8px 10px; font-weight: 600; }
-.p2-tree ul { list-style: none; margin: 6px 0 0; padding: 0; display: grid; gap: 7px; }
-.p2-tree li { padding-left: 26px; color: #6b7280; }
-.p2-tree li.h { padding-left: 4px; display: flex; align-items: center; gap: 6px; color: #111827; font-weight: 600; margin-top: 6px; }
-.p2-tree li.h .pi { width: 12px; height: 12px; }
-.p2-tree li.is-on { color: var(--b); font-weight: 500; }
-.p2-canvas { position: relative; background: #fbfbfd radial-gradient(circle, #dde1e8 1px, transparent 1.3px) 0 0 / 16px 16px; overflow: hidden; }
+/* 2 · Compass, network map (IBM Plex Sans): square 2–3px corners, tight spacing, hairlines, no shadows, small caps */
+.pf-2 { display: grid; grid-template-columns: 158px 1fr; background: #fff; color: #1f2937; font: 400 11.5px/1.25 "IBM Plex Sans", sans-serif; }
+.p2-tree { border-right: 1px solid #d9dde3; padding: 12px 10px; display: grid; align-content: start; gap: 6px; background: #f7f8fa; }
+.p2-logo { display: flex; align-items: center; gap: 8px; padding: 0 2px 8px; margin-bottom: 2px; border-bottom: 1px solid #e3e6ea; }
+.p2-logo b { font: 600 11px/1 "IBM Plex Sans", sans-serif; letter-spacing: .18em; text-transform: uppercase; }
+.p2-search { display: flex; align-items: center; gap: 6px; background: #fff; border: 1px solid #d9dde3; border-radius: 2px; padding: 5px 7px; color: #9ca3af; }
+.p2-search .pi { width: 11px; height: 11px; }
+.p2-sel { display: flex; align-items: center; gap: 6px; background: #fff; color: var(--b); border: 1px solid var(--b); border-radius: 2px; padding: 5px 7px; font-weight: 600; }
+.p2-sel .pi { width: 12px; height: 12px; }
+.p2-tree ul { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 4px; }
+.p2-tree li { padding-left: 20px; color: #6b7280; }
+.p2-tree li.h { padding-left: 2px; display: flex; align-items: center; gap: 5px; color: #374151; font-size: 9.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; margin-top: 6px; }
+.p2-tree li.h .pi { width: 10px; height: 10px; }
+.p2-tree li.is-on { color: var(--b); font-weight: 600; }
+.p2-canvas { position: relative; background: #fff linear-gradient(#eef0f3 1px, transparent 1px) 0 0 / 20px 20px, #fff linear-gradient(90deg, #eef0f3 1px, transparent 1px) 0 0 / 20px 20px; overflow: hidden; }
 .p2-lines { position: absolute; inset: 0; width: 400px; height: 360px; }
-.p2-lines path { fill: none; stroke: #d1d5db; stroke-width: 1.5; }
-.p2-lines path.is-on { stroke: var(--b); stroke-width: 2; }
-.p2-node { position: absolute; width: 104px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 8px 10px; display: grid; gap: 2px; box-shadow: 0 1px 3px rgb(0 0 0 / .05); }
-.p2-node small { font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: #9ca3af; font-weight: 500; }
-.p2-node b { font-weight: 600; font-size: 13px; }
-.p2-node.is-root { background: var(--b); border-color: var(--b); color: #fff; box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--b) 70%, transparent); padding: 11px 12px; }
-.p2-node.is-root small { color: rgb(255 255 255 / .7); }
-.p2-node.is-hl { border-color: var(--b); box-shadow: 0 0 0 3px color-mix(in srgb, var(--b) 15%, transparent); }
-.p2-node:not(.is-root) { width: 96px; }
-.p2-leaf { position: absolute; display: flex; align-items: center; gap: 7px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 7px 10px; font-weight: 500; }
-.p2-leaf em { width: 7px; height: 7px; border-radius: 50%; background: #22a55a; }
-.p2-ctrl { position: absolute; right: 14px; bottom: 14px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 10px; display: grid; gap: 7px; box-shadow: 0 10px 24px -14px rgb(0 0 0 / .25); }
-.p2-ctrl small { font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: #9ca3af; font-weight: 500; }
-.p2-seg { display: grid; grid-template-columns: 1fr 1fr; background: #f3f4f6; border-radius: 8px; padding: 3px; gap: 2px; }
-.p2-seg i { font-style: normal; text-align: center; padding: 5px 12px; border-radius: 6px; color: #4b5563; font-weight: 500; }
-.p2-seg i.is-on { background: #fff; color: var(--b); box-shadow: 0 1px 2px rgb(0 0 0 / .08); }
-.p2-zoom { position: absolute; left: 14px; bottom: 14px; display: flex; align-items: center; background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; box-shadow: 0 10px 24px -14px rgb(0 0 0 / .25); }
-.p2-zoom i { font-style: normal; width: 28px; text-align: center; padding: 6px 0; color: #4b5563; font-weight: 500; }
-.p2-zoom span { padding: 0 6px; font: 500 11px/1 "Geist Mono", monospace; color: #374151; border-left: 1px solid #f0f1f3; border-right: 1px solid #f0f1f3; line-height: 28px; }
+.p2-lines path { fill: none; stroke: #b8bec8; stroke-width: 1; }
+.p2-lines path.is-on { stroke: var(--b); stroke-width: 1.6; }
+.p2-node { position: absolute; width: 96px; background: #fff; border: 1px solid #c9ced6; border-radius: 2px; padding: 6px 8px; display: grid; gap: 2px; }
+.p2-node small { font-size: 8.5px; letter-spacing: .14em; text-transform: uppercase; color: #8b93a0; font-weight: 600; }
+.p2-node b { font-weight: 600; font-size: 12px; }
+.p2-node.is-root { width: 104px; background: var(--b); border-color: var(--b); color: #fff; padding: 9px 10px; }
+.p2-node.is-root small { color: rgb(255 255 255 / .72); }
+.p2-node.is-hl { border-color: var(--b); outline: 2px solid color-mix(in srgb, var(--b) 18%, transparent); }
+.p2-leaf { position: absolute; display: flex; align-items: center; gap: 6px; background: #fff; border: 1px solid #c9ced6; border-radius: 2px; padding: 5px 8px; font-weight: 500; }
+.p2-leaf em { width: 6px; height: 6px; background: #22a55a; }
+.p2-ctrl { position: absolute; right: 10px; bottom: 10px; background: #fff; border: 1px solid #c9ced6; border-radius: 2px; padding: 7px; display: grid; gap: 5px; }
+.p2-ctrl small { font-size: 8.5px; letter-spacing: .14em; text-transform: uppercase; color: #8b93a0; font-weight: 600; }
+.p2-seg { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #c9ced6; border-radius: 2px; }
+.p2-seg i { font-style: normal; text-align: center; padding: 4px 12px; color: #4b5563; font-weight: 500; }
+.p2-seg i + i { border-left: 1px solid #c9ced6; }
+.p2-seg i.is-on { background: var(--b); color: #fff; }
+.p2-zoom { position: absolute; left: 10px; bottom: 10px; display: flex; align-items: center; background: #fff; border: 1px solid #c9ced6; border-radius: 2px; }
+.p2-zoom i { font-style: normal; width: 24px; text-align: center; padding: 4px 0; color: #4b5563; font-weight: 500; }
+.p2-zoom span { padding: 0 6px; font: 500 10px/1 "Geist Mono", monospace; color: #374151; border-left: 1px solid #e3e6ea; border-right: 1px solid #e3e6ea; line-height: 24px; }
 
 /* 3 · dark builder (Inter): segmented tabs, one status line, four blocks on a dark dot grid. 12px blocks, coloured kinds */
 .pf-3 { background: #08080a; color: #ececf0; font: 400 12px/1.3 "Inter", sans-serif; display: grid; grid-template-rows: 48px 46px 1fr; }
 .p3-top { display: flex; align-items: center; gap: 18px; padding: 0 16px; border-bottom: 1px solid #1c1c21; }
-.p3-logo { font: 600 13px/1 "Inter", sans-serif; letter-spacing: .02em; color: #fff; }
+.p3-logo { display: flex; align-items: center; gap: 9px; font: 600 14px/1 "Inter", sans-serif; letter-spacing: -.01em; color: #fff; }
 .p3-top nav { display: flex; gap: 2px; background: #121216; border: 1px solid #222228; border-radius: 10px; padding: 3px; }
 .p3-top nav > * { padding: 6px 12px; border-radius: 7px; color: #9d9da6; font-weight: 500; }
-.p3-top nav b { background: var(--b); color: #fff; }
+.p3-top nav b { background: var(--b); color: #fff; box-shadow: 0 0 14px -2px color-mix(in srgb, var(--b) 75%, transparent); }
 .p3-av { margin-left: auto; width: 26px; height: 26px; border-radius: 50%; background: #1d1d23; color: #c4c4cc; font: 600 10px/26px "Inter", sans-serif; text-align: center; }
 .p3-bar { display: flex; align-items: center; gap: 10px; padding: 0 16px; border-bottom: 1px solid #1c1c21; }
 .p3-dd { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; color: #fff; }
@@ -3418,12 +3422,12 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .p3-st { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; padding: 4px 9px; border-radius: 999px; }
 .p3-st.is-g { color: #57d28f; background: #0d2117; } .p3-st em { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .p3-sp { flex: 1; }
-.p3-btn { border: 1px solid #26262c; border-radius: 9px; padding: 6px 13px; color: #ececf0; font-weight: 500; }
-.p3-btn.is-blue { background: var(--b); border-color: var(--b); color: #fff; }
+.p3-btn { border: 1px solid #26262c; border-radius: 10px; padding: 6px 13px; color: #ececf0; font-weight: 500; }
+.p3-btn.is-blue { background: var(--b); border-color: var(--b); color: #fff; box-shadow: 0 0 18px -2px color-mix(in srgb, var(--b) 70%, transparent); }
 .p3-canvas { position: relative; background: #050506 radial-gradient(circle, #1b1b21 1px, transparent 1.3px) 0 0 / 18px 18px; overflow: hidden; }
 .p3-wire { position: absolute; inset: 0; width: 560px; height: 270px; }
-.p3-wire path { fill: none; stroke: var(--b); stroke-width: 1.6; stroke-dasharray: 4 4; }
-.p3-blk { position: absolute; width: 140px; height: 90px; align-content: start; background: #101014; border: 1px solid #25252c; border-radius: 12px; padding: 11px 12px; display: grid; gap: 6px; box-shadow: 0 12px 28px -14px rgb(0 0 0 / .8); }
+.p3-wire path { fill: none; stroke: color-mix(in srgb, var(--b) 80%, #fff); stroke-width: 1.6; stroke-dasharray: 4 4; filter: drop-shadow(0 0 3px color-mix(in srgb, var(--b) 80%, transparent)); }
+.p3-blk { position: absolute; width: 140px; height: 90px; align-content: start; background: linear-gradient(180deg, #131318, #0e0e12); border: 1px solid #25252c; border-radius: 12px; padding: 11px 12px; display: grid; gap: 6px; box-shadow: 0 12px 28px -14px rgb(0 0 0 / .8); }
 .p3-bh { display: flex; align-items: center; gap: 8px; }
 .p3-bh i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 7px; }
 .p3-bh b { font-weight: 600; font-size: 12.5px; color: #fff; }
@@ -4008,12 +4012,14 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     up: "M6 15l6-6 6 6",
   };
   const pi = (n, c = "") => `<svg class="pi ${c}" viewBox="0 0 24 24" aria-hidden="true"><path d="${PI[n]}"/></svg>`;
+  // one company, one mark: every product carries the same logo; only the name after it changes
+  const MARK = `<svg class="pf-mark" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="#3453d3"/><path d="M7.5 7l5 5-5 5M12.5 7l5 5-5 5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   const PF = {
     // 1 · light workspace (Geist): a quiet sidebar, one page title, four record cards; pill buttons, 14px cards
     1: () => {
       const card = (ic, tag, t, m) => `<div class="p1-card"><div class="p1-ch"><i class="p1-ic">${pi(ic)}</i><span class="p1-tag">${tag}</span></div><b>${t}</b><small>${m}</small></div>`;
       return `<div class="pf pf-1">
-        <aside class="p1-side"><div class="p1-logo"><i></i>Lading</div>
+        <aside class="p1-side"><div class="p1-logo">${MARK}Manifest</div>
           <nav><span class="is-on">${pi("folder")}Shipments</span><span>${pi("route")}Routes</span><span>${pi("file")}Contracts</span><span>${pi("pin")}Depots</span><span>${pi("chart")}Reports</span></nav>
           <div class="p1-me"><i>OT</i>Ops team</div></aside>
         <main class="p1-main"><header><h5>Shipments</h5><span class="p1-btn">${pi("plus")}New shipment</span></header>
@@ -4027,7 +4033,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
       const R = [24, 150], H = [[176, 62], [176, 150], [176, 238]], L = [[300, 118], [300, 182]];
       const lines = H.map(([x, y], i) => curve(R[0] + 104, R[1], x, y, i === 1)).join("") + L.map(([x, y]) => curve(H[1][0] + 96, H[1][1], x, y, true)).join("");
       return `<div class="pf pf-2">
-        <aside class="p2-tree"><div class="p2-search">${pi("search")}Search</div><div class="p2-sel">${pi("tree")}Network</div>
+        <aside class="p2-tree"><div class="p2-logo">${MARK}<b>Compass</b></div><div class="p2-search">${pi("search")}Search</div><div class="p2-sel">${pi("tree")}Network</div>
           <ul><li class="h">${pi("chev")}Inbound</li><li>Harbour</li><li>Customs</li><li class="h">${pi("chev")}Outbound</li><li class="is-on">Inland hubs</li><li>Last mile</li></ul></aside>
         <div class="p2-canvas"><svg class="p2-lines" viewBox="0 0 400 360" aria-hidden="true">${lines}</svg>
           <div class="p2-node is-root" style="left:${R[0]}px;top:${R[1] - 22}px"><small>12 lanes</small><b>North network</b></div>
@@ -4042,7 +4048,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     3: () => {
       const blk = (x, y, ic, t, kind, k, body) => `<div class="p3-blk" style="left:${x}px;top:${y}px"><div class="p3-bh"><i class="k-${k}">${pi(ic)}</i><b>${t}</b><em></em></div><span class="p3-kind k-${k}">${kind}</span><p>${body}</p><u class="l"></u><u class="r"></u></div>`;
       return `<div class="pf pf-3">
-        <header class="p3-top"><span class="p3-logo">✦ Relay</span><nav><b>Builder</b><span>Sources</span><span>Jobs</span></nav><span class="p3-av">VP</span></header>
+        <header class="p3-top"><span class="p3-logo">${MARK}Beacon</span><nav><b>Builder</b><span>Sources</span><span>Jobs</span></nav><span class="p3-av">VP</span></header>
         <div class="p3-bar"><span class="p3-dd">Nightly rate sync ${pi("chev")}</span><span class="p3-st is-g"><em></em>Deployed</span><span class="p3-sp"></span><span class="p3-btn">Test</span><span class="p3-btn is-blue">Save</span></div>
         <div class="p3-canvas"><svg class="p3-wire" viewBox="0 0 560 270" aria-hidden="true"><path d="M164 145 C187 145 187 90 210 90"/><path d="M164 145 C187 145 187 200 210 200"/><path d="M350 90 C373 90 373 145 396 145"/><path d="M350 200 C373 200 373 145 396 145"/></svg>
           ${blk(24, 100, "clock", "Schedule", "Trigger", "a", "Every 5 minutes")}${blk(210, 45, "db", "New rates", "Cache", "r", "Read the latest")}${blk(210, 155, "db", "Old rates", "Cache", "r", "Read the last run")}${blk(396, 100, "merge", "Merge", "Join", "p", "When both arrive")}

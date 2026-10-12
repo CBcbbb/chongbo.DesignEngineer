@@ -308,12 +308,14 @@
     up: "M6 15l6-6 6 6",
   };
   const pi = (n, c = "") => `<svg class="pi ${c}" viewBox="0 0 24 24" aria-hidden="true"><path d="${PI[n]}"/></svg>`;
+  // one company, one mark: every product carries the same logo; only the name after it changes
+  const MARK = `<svg class="pf-mark" viewBox="0 0 24 24" aria-hidden="true"><rect width="24" height="24" rx="6" fill="#3453d3"/><path d="M7.5 7l5 5-5 5M12.5 7l5 5-5 5" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   const PF = {
     // 1 · light workspace (Geist): a quiet sidebar, one page title, four record cards; pill buttons, 14px cards
     1: () => {
       const card = (ic, tag, t, m) => `<div class="p1-card"><div class="p1-ch"><i class="p1-ic">${pi(ic)}</i><span class="p1-tag">${tag}</span></div><b>${t}</b><small>${m}</small></div>`;
       return `<div class="pf pf-1">
-        <aside class="p1-side"><div class="p1-logo"><i></i>Lading</div>
+        <aside class="p1-side"><div class="p1-logo">${MARK}Manifest</div>
           <nav><span class="is-on">${pi("folder")}Shipments</span><span>${pi("route")}Routes</span><span>${pi("file")}Contracts</span><span>${pi("pin")}Depots</span><span>${pi("chart")}Reports</span></nav>
           <div class="p1-me"><i>OT</i>Ops team</div></aside>
         <main class="p1-main"><header><h5>Shipments</h5><span class="p1-btn">${pi("plus")}New shipment</span></header>
@@ -327,7 +329,7 @@
       const R = [24, 150], H = [[176, 62], [176, 150], [176, 238]], L = [[300, 118], [300, 182]];
       const lines = H.map(([x, y], i) => curve(R[0] + 104, R[1], x, y, i === 1)).join("") + L.map(([x, y]) => curve(H[1][0] + 96, H[1][1], x, y, true)).join("");
       return `<div class="pf pf-2">
-        <aside class="p2-tree"><div class="p2-search">${pi("search")}Search</div><div class="p2-sel">${pi("tree")}Network</div>
+        <aside class="p2-tree"><div class="p2-logo">${MARK}<b>Compass</b></div><div class="p2-search">${pi("search")}Search</div><div class="p2-sel">${pi("tree")}Network</div>
           <ul><li class="h">${pi("chev")}Inbound</li><li>Harbour</li><li>Customs</li><li class="h">${pi("chev")}Outbound</li><li class="is-on">Inland hubs</li><li>Last mile</li></ul></aside>
         <div class="p2-canvas"><svg class="p2-lines" viewBox="0 0 400 360" aria-hidden="true">${lines}</svg>
           <div class="p2-node is-root" style="left:${R[0]}px;top:${R[1] - 22}px"><small>12 lanes</small><b>North network</b></div>
@@ -342,7 +344,7 @@
     3: () => {
       const blk = (x, y, ic, t, kind, k, body) => `<div class="p3-blk" style="left:${x}px;top:${y}px"><div class="p3-bh"><i class="k-${k}">${pi(ic)}</i><b>${t}</b><em></em></div><span class="p3-kind k-${k}">${kind}</span><p>${body}</p><u class="l"></u><u class="r"></u></div>`;
       return `<div class="pf pf-3">
-        <header class="p3-top"><span class="p3-logo">✦ Relay</span><nav><b>Builder</b><span>Sources</span><span>Jobs</span></nav><span class="p3-av">VP</span></header>
+        <header class="p3-top"><span class="p3-logo">${MARK}Beacon</span><nav><b>Builder</b><span>Sources</span><span>Jobs</span></nav><span class="p3-av">VP</span></header>
         <div class="p3-bar"><span class="p3-dd">Nightly rate sync ${pi("chev")}</span><span class="p3-st is-g"><em></em>Deployed</span><span class="p3-sp"></span><span class="p3-btn">Test</span><span class="p3-btn is-blue">Save</span></div>
         <div class="p3-canvas"><svg class="p3-wire" viewBox="0 0 560 270" aria-hidden="true"><path d="M164 145 C187 145 187 90 210 90"/><path d="M164 145 C187 145 187 200 210 200"/><path d="M350 90 C373 90 373 145 396 145"/><path d="M350 200 C373 200 373 145 396 145"/></svg>
           ${blk(24, 100, "clock", "Schedule", "Trigger", "a", "Every 5 minutes")}${blk(210, 45, "db", "New rates", "Cache", "r", "Read the latest")}${blk(210, 155, "db", "Old rates", "Cache", "r", "Read the last run")}${blk(396, 100, "merge", "Merge", "Join", "p", "When both arrive")}
