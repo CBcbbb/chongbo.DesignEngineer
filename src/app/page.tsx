@@ -39,6 +39,14 @@ function storyThumbs(): Record<string, string> {
   return out;
 }
 
+/** Sections whose evidence needs the slide's full width (figures, diagrams, comparisons, modules): text above, evidence below. */
+function wideEvidence(): string[] {
+  const out: string[] = [];
+  for (const p of projects)
+    for (const s of p.sections) if (s.media && s.media.kind !== "image" && s.media.kind !== "video") out.push(cardKey(p.slug, s.id));
+  return out;
+}
+
 export default function Home() {
   const jsonLd = {
     "@context": "https://schema.org",
@@ -63,6 +71,7 @@ export default function Home() {
           cards={buildCardIndex()}
           media={slideMedia()}
           thumbs={storyThumbs()}
+          wide={wideEvidence()}
           questions={suggestedQuestions}
           name={profile.name}
           location={profile.location}

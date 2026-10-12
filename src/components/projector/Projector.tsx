@@ -38,6 +38,8 @@ type Props = {
   media: Record<string, ReactNode>;
   /** A picture for each section's story card, where one exists, keyed by cardKey. */
   thumbs: Record<string, string>;
+  /** Sections whose evidence takes the open slide's full width (text above it), by cardKey. */
+  wide: string[];
   /** The printed cards, as a recruiter would ask. */
   questions: string[];
   name: string;
@@ -109,11 +111,13 @@ async function ask(brief: string): Promise<Outcome> {
   }
 }
 
-/** A card's face: the question, and its number in the corner. Used in the hand, in flight and in the magazine. */
+/** A card's face: the question in its top band, and its number. Used in the file, in flight and in the magazine. */
 function Face({ text, no, typed }: { text: string; no: string; typed?: boolean }) {
   return (
     <>
-      <span className={typed ? "pj-q pj-q-typed" : "pj-q"}>{text}</span>
+      <span className={typed ? "pj-q pj-q-typed" : "pj-q"}>
+        <span>{text}</span>
+      </span>
       <span className="pj-no" aria-hidden="true">
         {no}
       </span>
@@ -121,7 +125,7 @@ function Face({ text, no, typed }: { text: string; no: string; typed?: boolean }
   );
 }
 
-export function Projector({ cards, media, thumbs, questions, name, location }: Props) {
+export function Projector({ cards, media, thumbs, wide, questions, name, location }: Props) {
   const [phase, setPhase] = useState<Phase>("light");
   const [stage, setStage] = useState<Stage>("think");
   const [step, setStep] = useState(0);
@@ -214,30 +218,36 @@ export function Projector({ cards, media, thumbs, questions, name, location }: P
     const b = m ? { left: m.left, top: m.bottom - h * 1.08, width: m.width } : null;
     if (!b || !a.width) return;
     const fly = document.createElement("div");
-    fly.className = `pj-card pj-fly${typed ? " pj-fly-typed" : ""}`;
+    fly.className = "pj-card pj-fly";
     fly.setAttribute("aria-hidden", "true");
     const q = document.createElement("span");
     q.className = typed ? "pj-q pj-q-typed" : "pj-q";
-    q.textContent = text;
+    const qt = document.createElement("span");
+    qt.textContent = text;
+    q.append(qt);
     const n = document.createElement("span");
     n.className = "pj-no";
     n.textContent = no;
     fly.append(q, n);
-    Object.assign(fly.style, { left: `${a.left}px`, top: `${a.top}px`, width: `${a.width}px`, height: `${a.height}px` });
+    const bh = b.width / CARD_RATIO;
+    Object.assign(fly.style, { left: "0px", top: "0px", width: `${a.width}px`, height: `${a.height}px` });
     document.body.appendChild(fly);
-    const s = b.width / a.width;
-    const dx = b.left - a.left;
-    const dy = b.top - a.top;
-    const lift = Math.min(150, Math.abs(dy) * 0.3 + 48);
-    const tilt = rnd(-6, 6);
+    const lift = Math.min(150, Math.abs(b.top - a.top) * 0.3 + 48);
+    const tilt = rnd(-5, 5);
+    const midW = (a.width + b.width) / 2;
     await fly
       .animate(
         [
-          { transform: "translate(0, 0) scale(1) rotate(0deg)" },
-          { transform: `translate(${dx * 0.5}px, ${Math.min(dy, 0) * 0.5 - lift}px) scale(${(1 + s) / 2}) rotate(${tilt}deg)`, offset: 0.5 },
-          { transform: `translate(${dx}px, ${dy}px) scale(${s}) rotate(0deg)` },
+          { transform: `translate(${a.left}px, ${a.top}px) rotate(0deg)`, width: `${a.width}px`, height: `${a.height}px`, borderRadius: "12px" },
+          {
+            transform: `translate(${(a.left + b.left) / 2}px, ${Math.min(a.top, b.top) - lift}px) rotate(${tilt}deg)`,
+            width: `${midW}px`,
+            height: `${midW / CARD_RATIO}px`,
+            offset: 0.5,
+          },
+          { transform: `translate(${b.left}px, ${b.top}px) rotate(0deg)`, width: `${b.width}px`, height: `${bh}px`, borderRadius: `${b.width * 0.028}px` },
         ],
-        { duration: 700, easing: "cubic-bezier(0.45, 0, 0.2, 1)", fill: "forwards" },
+        { duration: 720, easing: "cubic-bezier(0.45, 0, 0.2, 1)", fill: "forwards" },
       )
       .finished.catch(() => undefined);
     fly.remove();
@@ -783,7 +793,15 @@ export function Projector({ cards, media, thumbs, questions, name, location }: P
               ref={(el) => {
                 cardRefs.current[BLANK] = el;
               }}
+              onClick={() => blankRef.current?.focus()}
             >
+              <span className="pj-q pj-q-blank" aria-hidden="true">
+                <span className="pj-plus">+</span>
+                <span>Write your own question</span>
+              </span>
+              <span className="pj-no" aria-hidden="true">
+                {pad2(BLANK + 1)}
+              </span>
               <label htmlFor="brief" className="sr-only">
                 Write your own question, or paste a job description.
               </label>
@@ -794,15 +812,10 @@ export function Projector({ cards, media, thumbs, questions, name, location }: P
                 maxLength={BRIEF_MAX}
                 value={brief}
                 spellCheck
+                placeholder={BLANK_HINT}
                 onChange={(e) => onBrief(e.target.value)}
                 onKeyDown={onBlankKey}
               />
-              <span className="pj-hint" aria-hidden="true">
-                {BLANK_HINT}
-              </span>
-              <span className="pj-no" aria-hidden="true">
-                {pad2(BLANK + 1)}
-              </span>
             </div>
           </li>
         </ol>
@@ -976,7 +989,7 @@ export function Projector({ cards, media, thumbs, questions, name, location }: P
               {/* the card in the light, open as the full slide */}
               {open && cur && (
                 <article
-                  className={`pj-slide pj-open${curMedia ? "" : " is-text"}`}
+                  className={`pj-slide pj-open${curMedia ? (wide.includes(cardKey(cur.project, cur.section)) ? " is-stack" : "") : " is-text"}`}
                   ref={openRef}
                   data-current
                   aria-labelledby="pj-open-title"

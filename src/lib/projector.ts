@@ -20,7 +20,7 @@ export const ERRORS = {
 } as const;
 
 /** The blank card's hint. It disappears as soon as you write. */
-export const BLANK_HINT = "Write your own question, or paste a job description.";
+export const BLANK_HINT = "…or paste a job description";
 
 /** The card's text quoted beside the wall's heading, cut at 80 characters. */
 export function quoteCard(text: string): string {
