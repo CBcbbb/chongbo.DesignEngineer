@@ -215,6 +215,14 @@
     showOwn();
     ownWell.addEventListener("click", () => { if (state.id !== "own") setCustomer("own"); });
     ownWell.addEventListener("input", (e) => { state.own = e.target.value; showOwn(); setCustomer("own"); });
+    // a nudge: the next brand breathes a halo in its own colour until the visitor tries any option, then never again
+    let hinted = false;
+    try { hinted = localStorage.getItem("ds-seen-tried") === "1"; } catch (e) {}
+    const hintEl = seen.querySelector('label:has(#seen-platform)');
+    if (!hinted && hintEl) { hintEl.classList.add("is-hint"); hintEl.style.setProperty("--hint", CUSTOMERS[1].colour); }
+    const tried = () => { if (hintEl) hintEl.classList.remove("is-hint"); try { localStorage.setItem("ds-seen-tried", "1"); } catch (e) {} };
+    document.addEventListener("change", (e) => { if (e.target.matches && e.target.matches("input[data-cust]")) tried(); });
+    seen.querySelector("#seen-own-colour").addEventListener("click", tried);
     seen.addEventListener("change", (e) => { if (e.target.name === "seen") setCustomer(e.target.value); });
   }
   const layersArt = document.getElementById("cover-layers");

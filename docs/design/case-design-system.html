@@ -2966,6 +2966,20 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-seen-own:has(input[type="radio"]:checked) .ds-own-t { font-size: 0; }
 .ds-seen-own:has(input[type="radio"]:checked) .ds-own-t::before { content: "Your own"; font-size: 13.5px; }
 .ds-seen-own:has(input[type="color"]:focus-visible) { outline: 2px solid var(--on-field); outline-offset: 2px; }
+/* the nudge on the next brand: a halo in that brand's colour breathes out, then rests; it stops once any option is tried */
+.ds-seen label.is-hint { animation: ds-hint 3.2s ease-out 1.4s infinite; }
+.ds-seen label.is-hint .ds-dot { animation: ds-hint-dot 3.2s ease-out 1.4s infinite; }
+@keyframes ds-hint {
+  0%, 100% { box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--hint) 0%, transparent), 0 0 0 0 transparent; }
+  18% { box-shadow: 0 0 0 2px var(--hint), 0 0 16px 3px color-mix(in srgb, var(--hint) 55%, transparent); }
+  50% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--hint) 60%, transparent), 0 0 22px 6px color-mix(in srgb, var(--hint) 0%, transparent); }
+  75% { box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--hint) 0%, transparent), 0 0 0 0 transparent; }
+}
+@keyframes ds-hint-dot { 0%, 100% { transform: scale(1); } 20% { transform: scale(1.35); } 45% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .ds-seen label.is-hint, .ds-seen label.is-hint .ds-dot { animation: none; }
+  .ds-seen label.is-hint { box-shadow: 0 0 0 2px color-mix(in srgb, var(--hint) 70%, transparent); }
+}
 .ds-dot { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.18), 0 0 0 1.5px rgb(255 255 255 / 0.5); flex: none; }
 
 /* ---------- shared evidence pieces ---------- */
@@ -3769,6 +3783,14 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     showOwn();
     ownWell.addEventListener("click", () => { if (state.id !== "own") setCustomer("own"); });
     ownWell.addEventListener("input", (e) => { state.own = e.target.value; showOwn(); setCustomer("own"); });
+    // a nudge: the next brand breathes a halo in its own colour until the visitor tries any option, then never again
+    let hinted = false;
+    try { hinted = localStorage.getItem("ds-seen-tried") === "1"; } catch (e) {}
+    const hintEl = seen.querySelector('label:has(#seen-platform)');
+    if (!hinted && hintEl) { hintEl.classList.add("is-hint"); hintEl.style.setProperty("--hint", CUSTOMERS[1].colour); }
+    const tried = () => { if (hintEl) hintEl.classList.remove("is-hint"); try { localStorage.setItem("ds-seen-tried", "1"); } catch (e) {} };
+    document.addEventListener("change", (e) => { if (e.target.matches && e.target.matches("input[data-cust]")) tried(); });
+    seen.querySelector("#seen-own-colour").addEventListener("click", tried);
     seen.addEventListener("change", (e) => { if (e.target.name === "seen") setCustomer(e.target.value); });
   }
   const layersArt = document.getElementById("cover-layers");
