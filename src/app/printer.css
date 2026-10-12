@@ -727,7 +727,7 @@
     grid-template-columns: 1fr;
     gap: var(--s3);
   }
-  .sheets .sheet p {
+  .sheets .s-body p {
     max-width: none;
   }
 }
@@ -817,7 +817,8 @@
   gap: var(--s3);
   padding-top: 4px;
 }
-.sheet p {
+/* the sheet's own words (projects without whole cards); a printed card keeps its own type */
+.s-body p {
   margin: 0;
   max-width: 60ch;
   font-size: 15px;
