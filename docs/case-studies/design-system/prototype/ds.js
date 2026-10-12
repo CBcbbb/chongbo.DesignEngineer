@@ -97,7 +97,7 @@
     return t;
   }
   const apply = (el, t) => { for (const [k, v] of Object.entries(t)) el.style.setProperty(k, v); };
-  const chip = (r) => `<span class="ds-ratio ${r >= 4.5 ? "is-pass" : "is-fail"}">${r >= 4.5 ? "✓" : "✕"} ${r.toFixed(2)}:1</span>`;
+  const chip = (r) => { const ok = r >= 4.5; return `<span class="ds-ratio ${ok ? "is-pass" : "is-fail"}" title="Text contrast ${r.toFixed(2)}:1, ${ok ? "passes" : "fails"} AA"><i>Aa</i>${r.toFixed(2)}:1<b aria-label="${ok ? "passes" : "fails"}">${ok ? "✓" : "✕"}</b></span>`; };
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
   const ICON_WARN = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2.5 14 13H2z" stroke-linejoin="round"/><path d="M8 6.5v3M8 11.3v.2" stroke-linecap="round"/></svg>';
@@ -262,7 +262,7 @@
             <label><input type="radio" name="tp-mode" id="tp-m-light" value="light" checked>Light</label>
             <label><input type="radio" name="tp-mode" id="tp-m-dark" value="dark">Dark</label>
           </div>
-          <label class="ds-check"><input type="checkbox" id="tp-ratios"> Show ratios</label>
+          <label class="ds-check"><input type="checkbox" id="tp-ratios"> Show text contrast</label>
         </div>
       </div>
       <div class="tp-app ui" id="tp-app"></div>`;

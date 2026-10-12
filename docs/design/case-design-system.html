@@ -3091,11 +3091,11 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .tp-logo { width: 22px; height: 22px; border-radius: calc(var(--r) * 0.75); background: var(--primary); display: grid; place-items: center; color: var(--primary-fg); font: 700 12px/1 var(--font); flex: none; }
 .tp-head b { font: 600 14px/1 var(--font); }
 .tp-tabs { display: flex; gap: 4px; margin-left: 8px; }
-.tp-tabs span { font: 500 12.5px/1 var(--font); padding: 7px 10px; border-radius: var(--r); color: var(--muted-fg); }
-.tp-tabs span.is-on { background: var(--primary-container); color: var(--primary-container-fg); }
+.tp-tabs > span { font: 500 12.5px/1 var(--font); padding: 7px 10px; border-radius: var(--r); color: var(--muted-fg); }
+.tp-tabs > span.is-on { background: var(--primary-container); color: var(--primary-container-fg); }
 .tp-user { margin-left: auto; width: 26px; height: 26px; border-radius: 50%; background: var(--muted); flex: none; }
 .tp-body { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; padding: 16px; }
-@media (max-width: 760px) { .tp-body { grid-template-columns: minmax(0, 1fr); } .tp-tabs span:nth-child(n+3) { display: none; } }
+@media (max-width: 760px) { .tp-body { grid-template-columns: minmax(0, 1fr); } .tp-tabs > span:nth-child(n+3) { display: none; } }
 .tp-card { background: var(--card); border: 1px solid var(--border); border-radius: calc(var(--r) * 1.5); padding: 14px; display: grid; gap: 12px; align-content: start; min-width: 0; }
 .tp-card h4 { margin: 0; font: 600 15px/1.2 var(--font); }
 .tp-card p { margin: 0; font: 400 12.5px/1.45 var(--font); color: var(--muted-fg); }
@@ -3107,10 +3107,22 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .tp-rows li .ui-badge { grid-row: 1 / span 2; grid-column: 2; }
 .tp-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
 .tp-actions > div { display: flex; flex-wrap: wrap; gap: 8px; }
-.ds-ratio { display: none; font: 600 10.5px/1 var(--mono); padding: 3px 5px; border-radius: 4px; background: #111; color: #fff; vertical-align: middle; margin-left: 6px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.ds-ratio.is-fail { background: #b3261e; }
-.ds-ratio.is-pass { background: #13703a; }
-.show-ratios .ds-ratio { display: inline-block; }
+/* contrast callouts: an annotation layer over the UI, never part of it. Fixed ink and white so they read on any
+   brand, light or dark; "Aa" says what is measured (text on its background). Pinned to the element's top-right
+   corner so switching them on doesn't move the layout. */
+.ds-ratio { display: none; align-items: center; gap: 5px; font: 600 10.5px/1 var(--mono); letter-spacing: 0; padding: 4px 6px 4px 5px; border-radius: 4px;
+  background: #151515; color: #fff; white-space: nowrap; font-variant-numeric: tabular-nums; text-transform: none;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / .22), 0 2px 6px rgb(0 0 0 / .18); pointer-events: none; }
+.ds-ratio i { font: 600 10px/1 var(--sans); font-style: normal; padding: 1px 3px; border-radius: 2px; background: #fff; color: #151515; }
+.ds-ratio b { font: 700 11px/1 var(--sans); }
+.ds-ratio.is-pass b { color: #6ee79a; }
+.ds-ratio.is-fail b { color: #ff9b91; }
+.show-ratios .ds-ratio { display: inline-flex; }
+.show-ratios :has(> [data-r]) { position: relative; }
+.show-ratios .tp-tabs [data-r], .show-ratios .ui-btn [data-r], .show-ratios .ui-badge [data-r] { position: absolute; z-index: 2; right: -2px; bottom: calc(100% + 5px); line-height: 0; }
+.show-ratios .tp-tabs [data-r] .ds-ratio::after, .show-ratios .ui-btn [data-r] .ds-ratio::after, .show-ratios .ui-badge [data-r] .ds-ratio::after {
+  content: ""; position: absolute; right: 10px; top: 100%; border: 4px solid transparent; border-top-color: #151515; border-bottom: 0; }
+.show-ratios .ui-link + [data-r], .show-ratios p [data-r] { margin-left: 6px; }
 
 /* ---------- 01.3 three layers, exploded ---------- */
 .ds-stack { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(16px, 3vw, 36px); align-items: center; }
@@ -3194,7 +3206,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .cc-pane { border-radius: 10px; padding: 18px; display: grid; gap: 14px; background: var(--bg); color: var(--fg); box-shadow: 0 0 0 1px var(--case-rule); }
 .cc-pane .ds-label { color: var(--muted-fg); }
 .cc-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font: 400 13px/1.4 var(--font); }
-.cc-line .ds-ratio { display: inline-block; }
+.cc-line .ds-ratio { display: inline-flex; }
 
 /* ---------- outcome ---------- */
 .ds-out { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(14px, 2vw, 22px); }
@@ -3264,6 +3276,9 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-layers2 .o-numt { font: 600 11.5px var(--mono); fill: var(--case-ink); }
 .ds-layers2 .o-ln { font: 600 15.5px var(--sans); fill: var(--case-ink); }
 .ds-layers2 .o-ls { font: 500 12px var(--mono); fill: var(--case-dim); }
+/* the nav sits at the top of the app frame: its callout hangs below the tab instead */
+.show-ratios .tp-tabs [data-r] { bottom: auto; top: calc(100% + 5px); }
+.show-ratios .tp-tabs [data-r] .ds-ratio::after { top: auto; bottom: 100%; border-top: 0; border-bottom: 4px solid #151515; }
 
 </style>
 <style id="ds-palette"></style>
@@ -3608,7 +3623,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     return t;
   }
   const apply = (el, t) => { for (const [k, v] of Object.entries(t)) el.style.setProperty(k, v); };
-  const chip = (r) => `<span class="ds-ratio ${r >= 4.5 ? "is-pass" : "is-fail"}">${r >= 4.5 ? "✓" : "✕"} ${r.toFixed(2)}:1</span>`;
+  const chip = (r) => { const ok = r >= 4.5; return `<span class="ds-ratio ${ok ? "is-pass" : "is-fail"}" title="Text contrast ${r.toFixed(2)}:1, ${ok ? "passes" : "fails"} AA"><i>Aa</i>${r.toFixed(2)}:1<b aria-label="${ok ? "passes" : "fails"}">${ok ? "✓" : "✕"}</b></span>`; };
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
   const ICON_WARN = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 2.5 14 13H2z" stroke-linejoin="round"/><path d="M8 6.5v3M8 11.3v.2" stroke-linecap="round"/></svg>';
@@ -3773,7 +3788,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
             <label><input type="radio" name="tp-mode" id="tp-m-light" value="light" checked>Light</label>
             <label><input type="radio" name="tp-mode" id="tp-m-dark" value="dark">Dark</label>
           </div>
-          <label class="ds-check"><input type="checkbox" id="tp-ratios"> Show ratios</label>
+          <label class="ds-check"><input type="checkbox" id="tp-ratios"> Show text contrast</label>
         </div>
       </div>
       <div class="tp-app ui" id="tp-app"></div>`;
