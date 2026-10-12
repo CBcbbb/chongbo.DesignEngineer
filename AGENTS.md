@@ -7,3 +7,10 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Deployments (Vercel)
+
+- Every push to `main` creates one production deployment. Pushes to any other branch create none: `vercel.json` sets `git.deploymentEnabled` so only `main` deploys.
+- Batch commits and push once. Don't push after every small commit; finish a set of changes, check them locally (`npm run build`), then push them together.
+- Don't push empty commits or click Redeploy just to retry. If a deployment fails, read the build log first.
+- The project is on a Vercel Pro trial team until 26 October 2026, then falls back to Hobby (100 deployments a day). If a push is rate limited, wait rather than retrying.
