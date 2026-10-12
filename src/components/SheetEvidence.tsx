@@ -3,6 +3,7 @@ import type { Project, Section } from "@content";
 import { CaseMedia } from "@/components/casefile/blocks";
 import { Card, cardIndexOf, paletteOf, workUrlOf } from "@/components/casefile/CaseFile";
 import { MediaSlot } from "@/components/media/MediaSlot";
+import { nikeCard } from "@/components/case/nike/NikeCase";
 import { printedTitleId } from "@/lib/cards";
 
 /**
@@ -24,6 +25,12 @@ export function sheetEvidence(p: Project, s: Section, i: number): ReactNode {
  * so a printed sheet is the card as he laid it out, not its parts re-flowed into another template.
  */
 export function sheetCard(p: Project, s: Section, as: "h2" | "h3" = "h3"): ReactNode {
+  if (p.slug === "nike-athletes-closet") {
+    const card = nikeCard(p, s.id);
+    return card ? (
+      <div className="nk nk-print">{card}</div>
+    ) : undefined;
+  }
   if (p.template !== "case-file") return undefined;
   return (
     <div className="cf cf-print" data-palette={paletteOf(p)}>

@@ -688,6 +688,9 @@
     height: var(--cf-card-h);
     margin-top: 0;
   }
+  .sheets .nk-print {
+    --nk-card-h: var(--cf-card-h);
+  }
   .sheets .sheet.has-card {
     padding: var(--sheet-pad);
   }
@@ -822,7 +825,8 @@
 .s-card {
   margin-top: 0;
 }
-.cf-print .cf-sheet.is-card {
+.cf-print .cf-sheet.is-card,
+.nk-print .nk-sheet.is-card {
   border: 0;
   border-radius: 0;
   scroll-margin-top: 0;
