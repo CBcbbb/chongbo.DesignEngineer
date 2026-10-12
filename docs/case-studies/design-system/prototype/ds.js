@@ -292,28 +292,120 @@
       <ul class="mp-list"><li><span>Run 4821</span><span class="mp-badge">On time</span></li><li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li><li><span>Run 4823</span><span class="mp-badge">On time</span></li><li><span>Run 4824</span><span class="mp-badge">On time</span></li></ul></div>`;
   });
 
-  /* ---------- 01.2: the same library, rendered from code; one stage with a Figma / Code switch ---------- */
+  /* ---------- 01.2: the same library in code. Figma shows the file; Code shows the source (tokens, two components)
+     beside what it renders, light and dark. Choosing a file lights up the parts it draws. ---------- */
   const codeSide = document.getElementById("code-side");
   if (codeSide) {
+    const FILES = {
+      "tokens.css": { part: "all", src: `/* shared package: every product imports this */
+:root {
+  --brand-50:  oklch(0.97 0.014 268);
+  --brand-200: oklch(0.82 0.089 268);
+  --brand-600: oklch(0.5 0.2 268);
+  --brand-700: oklch(0.44 0.17 268);
+
+  /* roles: components ask for these, never a hue */
+  --primary: var(--brand-600);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: var(--brand-200);
+  --success-text: var(--green-600);
+  --warning-text: var(--amber-700);
+}
+
+.dark {
+  /* text steps re-tuned, not inverted */
+  --brand-600: oklch(0.76 0.122 268);
+  --primary: oklch(0.5 0.2 268);
+}` },
+      "button.tsx": { part: "btn", src: `import { cva } from "class-variance-authority"
+
+export const buttonVariants = cva(
+  ["inline-flex items-center rounded-md",
+   "text-sm font-medium",
+   "focus-visible:ring-[3px] ring-ring"],
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground",
+        outline: "border bg-background",
+        ghost: "hover:bg-accent",
+        destructive: "bg-destructive text-white",
+      },
+    },
+    defaultVariants: { variant: "default" },
+  },
+)` },
+      "badge.tsx": { part: "badge", src: `import { cva } from "class-variance-authority"
+
+// a badge takes a role; the role picks the colours
+export const badgeVariants = cva(
+  "rounded-full border px-2 text-xs font-medium",
+  {
+    variants: {
+      role: {
+        success: "bg-success-container text-success-text",
+        warning: "bg-warning-container text-warning-text",
+        danger:  "bg-danger-container text-danger-text",
+        info:    "bg-info-container text-info-text",
+        primary: "bg-primary-container text-primary-text",
+      },
+    },
+  },
+)
+
+<Badge role="success">Delivered</Badge>` },
+    };
+    const RX_CODE = /(\/\*[\s\S]*?\*\/|\/\/[^\n]*)|("[^"\n]*")|(oklch\([^)]*\))|(--[\w-]+)|\b(import|from|export|const)\b|(<\/?[A-Z][\w.]*|\/?>)|(\b[\w-]+(?=:\s))/g;
+    const hl = (src) => {
+      let out = "", last = 0, m;
+      RX_CODE.lastIndex = 0;
+      while ((m = RX_CODE.exec(src))) {
+        out += esc(src.slice(last, m.index));
+        const [t] = m;
+        if (m[1]) out += `<span class="c">${esc(t)}</span>`;
+        else if (m[2]) out += `<span class="s">${esc(t)}</span>`;
+        else if (m[3]) out += `<i class="sw" style="background:${t}"></i><span class="n">${esc(t)}</span>`;
+        else if (m[4]) out += `<span class="v">${esc(t)}</span>`;
+        else if (m[5]) out += `<span class="k">${esc(t)}</span>`;
+        else if (m[6]) out += `<span class="t">${esc(t)}</span>`;
+        else out += `<span class="p">${esc(t)}</span>`;
+        last = m.index + t.length;
+      }
+      out += esc(src.slice(last));
+      return out.split("\n").map((l) => `<span class="ln">${l || " "}</span>`).join("");
+    };
+    const pane = (mode) => `<div class="ds-f2c-pane ui" data-mode="${mode}">
+        <span class="ds-f2c-mode">${mode === "light" ? "Light" : "Dark"}</span>
+        <div class="ds-f2c-row" data-part="btn"><span class="ui-btn is-primary">Settings</span><span class="ui-btn is-outline">Settings</span><span class="ui-btn is-ghost">Settings</span><span class="ui-btn is-destructive">Settings</span></div>
+        <div class="ds-f2c-row" data-part="btn"><span class="ui-input is-focus">Placeholder text</span></div>
+        <div class="ds-f2c-row" data-part="badge"><span class="ui-badge r-success">Delivered</span><span class="ui-badge r-warning">Delayed</span><span class="ui-badge r-destructive">Failed</span><span class="ui-badge r-info">On the road</span><span class="ui-badge r-primary">Today</span></div>
+      </div>`;
+    const names = Object.keys(FILES);
+    codeSide.innerHTML = `<div class="ds-f2c-editor">
+        <div class="ds-f2c-tabs" role="tablist" aria-label="Source files">${names.map((n, i) => `<button type="button" role="tab" id="f2c-tab-${i}" aria-selected="${i === 0}" aria-controls="f2c-src" data-file="${n}">${n}</button>`).join("")}</div>
+        <pre class="ds-f2c-src" id="f2c-src" role="tabpanel" tabindex="0"><code></code></pre>
+      </div>
+      <div class="ds-f2c-out" aria-label="What this code renders"><span class="ds-f2c-cap">Rendered from this code</span>${pane("light")}${pane("dark")}</div>`;
     const brand = SCALES.light.brand["600"];
-    codeSide.innerHTML = ["light", "dark"].map((mode) => `<div class="ds-f2c-pane ui" data-mode="${mode}">
-        <span>${mode === "light" ? "Light" : "Dark"}</span>
-        <div class="ds-f2c-row"><span class="ui-btn is-primary">Settings</span><span class="ui-btn is-outline">Settings</span><span class="ui-btn is-ghost">Settings</span><span class="ui-btn is-destructive">Settings</span><span class="ui-btn is-primary" style="opacity:.45">Settings</span></div>
-        <div class="ds-f2c-row">
-          <span class="ui-field"><span>Label <b>*</b></span><small>This is a description</small><span class="ui-input" style="color:var(--muted-fg)">Placeholder text</span></span>
-          <span class="ui-field"><span>Label <b>*</b></span><small>This is a description</small><span class="ui-input is-focus">Placeholder text</span></span>
-          <span class="ui-field"><span>Label <b>*</b></span><small>This is a description</small><span class="ui-input is-error">Placeholder text</span><small class="ui-err">A note is required.</small></span>
-        </div>
-        <div class="ds-f2c-row"><span class="ui-badge r-success">Delivered</span><span class="ui-badge r-warning">Delayed</span><span class="ui-badge r-destructive">Failed</span><span class="ui-badge r-info">On the road</span><span class="ui-badge r-primary">Today</span></div>
-        <div class="ds-f2c-row"><span class="ui-alert r-warning"><strong>Delayed</strong><span>Running 25 minutes late at Harbour depot.</span></span><span class="ui-alert r-info"><strong>On the road</strong><span>Next stop in 12 minutes.</span></span></div>
-        <div class="ui-pages"><span>1</span><span class="is-on">2</span><span>3</span><span>…</span><span style="opacity:.4">10</span></div>
-      </div>`).join("");
     codeSide.querySelectorAll(".ds-f2c-pane").forEach((p) => {
       const t = theme(brand, p.dataset.mode);
       if (p.dataset.mode === "dark") { t["--primary-fg"] = "#fafafa"; t["--destructive-text"] = SCALES.dark.red["600"]; }
       apply(p, t);
       p.querySelectorAll(".ui-btn.is-destructive").forEach((b) => (b.style.color = p.dataset.mode === "dark" ? "#09090b" : "#fafafa"));
     });
+    const code = codeSide.querySelector("#f2c-src code"), out = codeSide.querySelector(".ds-f2c-out");
+    const show = (name) => {
+      code.innerHTML = hl(FILES[name].src);
+      out.dataset.part = FILES[name].part;
+      codeSide.querySelectorAll('[role="tab"]').forEach((b) => b.setAttribute("aria-selected", String(b.dataset.file === name)));
+    };
+    codeSide.querySelector(".ds-f2c-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-file]"); if (b) show(b.dataset.file); });
+    codeSide.querySelector(".ds-f2c-tabs").addEventListener("keydown", (e) => {
+      const i = names.indexOf(document.activeElement.dataset.file); if (i < 0) return;
+      const j = e.key === "ArrowRight" ? (i + 1) % names.length : e.key === "ArrowLeft" ? (i + names.length - 1) % names.length : -1;
+      if (j >= 0) { e.preventDefault(); show(names[j]); codeSide.querySelector(`#f2c-tab-${j}`).focus(); }
+    });
+    show(names[0]);
     const stage = document.getElementById("f2c-stage");
     document.querySelectorAll('input[name="f2c"]').forEach((r) => r.addEventListener("change", () => { stage.dataset.show = r.value; }));
   }

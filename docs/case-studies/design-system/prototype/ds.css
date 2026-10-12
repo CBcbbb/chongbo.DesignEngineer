@@ -147,28 +147,38 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-f2c > .ds-seg { justify-self: start; }
 .ds-f2c-stage { position: relative; border-radius: 10px; overflow: hidden; box-shadow: 0 0 0 1px var(--case-rule); }
 .ds-f2c-figma { display: block; width: 100%; height: auto; }
-.ds-f2c-code { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; container-type: inline-size; }
-.ds-f2c-stage[data-show="figma"] .ds-f2c-code { visibility: hidden; }
-.ds-f2c-stage[data-show="code"] .ds-f2c-figma { visibility: hidden; }
-.ds-f2c-pane { background: var(--bg); color: var(--fg); padding: 2.45cqw; display: grid; align-content: start; gap: 1.5cqw; }
-.ds-f2c-pane > span { font: 500 0.82cqw/1 var(--mono); color: var(--muted-fg); }
-.ds-f2c-row { display: flex; gap: 0.7cqw; align-items: flex-start; flex-wrap: nowrap; }
-.ds-f2c-pane .ui-btn { font-size: 0.9cqw; padding: 0.82cqw 0.98cqw; border-radius: 0.55cqw; }
-.ds-f2c-pane .ui-field { width: 14.3cqw; gap: 0.3cqw; }
-.ds-f2c-pane .ui-field > span, .ds-f2c-pane .ui-field small { font-size: 0.82cqw; }
-.ds-f2c-pane .ui-field > span { font-size: 0.87cqw; }
-.ds-f2c-pane .ui-input { font-size: 0.9cqw; padding: 0.7cqw; border-radius: 0.55cqw; }
-.ds-f2c-pane .ui-badge { font-size: 0.78cqw; padding: 0.3cqw 0.6cqw; }
-.ds-f2c-pane .ui-badge::before { width: 0.4cqw; height: 0.4cqw; }
-.ds-f2c-pane .ui-alert { width: 20.4cqw; font-size: 0.85cqw; padding: 0.7cqw 0.82cqw; border-radius: 0.55cqw; grid-template-columns: 1fr; gap: 0.15cqw; }
-.ds-f2c-pane .ui-pages { font-size: 0.9cqw; gap: 0.27cqw; }
-.ds-f2c-pane .ui-pages span { min-width: 2.2cqw; height: 2.2cqw; border-radius: 0.55cqw; }
-@media (max-width: 760px) {
-  .ds-f2c-stage { overflow-x: auto; }
-  .ds-f2c-figma { min-width: 760px; }
-  .ds-f2c-code { min-width: 760px; position: static; }
-  .ds-f2c-stage[data-show="figma"] .ds-f2c-code, .ds-f2c-stage[data-show="code"] .ds-f2c-figma { display: none; }
-}
+.ds-f2c-stage[data-show="figma"] .ds-f2c-code { display: none; }
+.ds-f2c-stage[data-show="code"] .ds-f2c-figma { display: none; }
+@media (max-width: 760px) { .ds-f2c-stage[data-show="figma"] { overflow-x: auto; } .ds-f2c-figma { min-width: 760px; } }
+/* Code: the source beside what it renders */
+.ds-f2c-code { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); background: #0d1117; min-height: 420px; }
+.ds-f2c-editor { display: grid; grid-template-rows: auto 1fr; min-width: 0; border-right: 1px solid #222a35; }
+.ds-f2c-tabs { display: flex; gap: 2px; padding: 8px 10px 0; background: #0a0d12; border-bottom: 1px solid #222a35; overflow-x: auto; }
+.ds-f2c-tabs button { font: 500 12px/1 var(--mono); color: #8b949e; background: none; border: 0; padding: 9px 12px 10px; border-radius: 6px 6px 0 0; cursor: pointer; white-space: nowrap; }
+.ds-f2c-tabs button[aria-selected="true"] { color: #e6edf3; background: #0d1117; box-shadow: inset 0 2px 0 var(--ds-mark), 1px 0 0 #222a35, -1px 0 0 #222a35; }
+.ds-f2c-tabs button:focus-visible { outline: 2px solid var(--ds-mark); outline-offset: -2px; }
+.ds-f2c-src { margin: 0; padding: 14px 0; overflow: auto; font: 400 12.5px/1.6 var(--mono); color: #e6edf3; counter-reset: ln; tab-size: 2; }
+.ds-f2c-src:focus-visible { outline: 2px solid var(--ds-mark); outline-offset: -2px; }
+.ds-f2c-src .ln { display: block; padding: 0 16px 0 52px; position: relative; white-space: pre; }
+.ds-f2c-src .ln::before { counter-increment: ln; content: counter(ln); position: absolute; left: 0; width: 36px; text-align: right; color: #484f58; }
+.ds-f2c-src .c { color: #8b949e; font-style: italic; }
+.ds-f2c-src .s { color: #a5d6ff; }
+.ds-f2c-src .k { color: #ff7b72; }
+.ds-f2c-src .v { color: #d2a8ff; }
+.ds-f2c-src .p { color: #79c0ff; }
+.ds-f2c-src .t { color: #7ee787; }
+.ds-f2c-src .n { color: #ffa657; }
+.ds-f2c-src .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; box-shadow: 0 0 0 1px rgb(255 255 255 / .25); }
+.ds-f2c-out { display: grid; grid-template-rows: auto 1fr 1fr; min-width: 0; }
+.ds-f2c-cap { font: 500 11.5px/1 var(--mono); color: #8b949e; padding: 14px 16px 10px; background: #0a0d12; border-bottom: 1px solid #222a35; }
+.ds-f2c-pane { background: var(--bg); color: var(--fg); padding: 14px 16px; display: grid; align-content: center; gap: 10px; }
+.ds-f2c-mode { font: 500 11px/1 var(--mono); color: var(--muted-fg); }
+.ds-f2c-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; transition: opacity .2s ease; }
+.ds-f2c-pane .ui-btn { font-size: 12px; padding: 6px 10px; border-radius: 6px; }
+.ds-f2c-pane .ui-input { font-size: 12px; padding: 7px 9px; border-radius: 6px; width: min(100%, 220px); }
+.ds-f2c-pane .ui-badge { font-size: 11px; padding: 2px 7px; }
+.ds-f2c-out[data-part="btn"] .ds-f2c-row:not([data-part="btn"]), .ds-f2c-out[data-part="badge"] .ds-f2c-row:not([data-part="badge"]) { opacity: .28; }
+@media (max-width: 760px) { .ds-f2c-code { grid-template-columns: minmax(0, 1fr); } .ds-f2c-editor { border-right: 0; border-bottom: 1px solid #222a35; } .ds-f2c-src { max-height: 320px; } }
 
 /* ---------- the invented product's components (01.2, the work, 01.3, 02.4) ---------- */
 .ui { --r: 0.5rem; --font: "Geist", var(--sans); font-family: var(--font); color: var(--fg); }
