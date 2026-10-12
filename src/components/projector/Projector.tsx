@@ -18,7 +18,7 @@ import { flushSync } from "react-dom";
 import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, type AskResponse } from "@/lib/ask/schema";
 import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
 import { SIGNAL_SHORT, missingLine, pad2, provenanceLine } from "@/lib/printed";
-import { BLANK_HINT, ERRORS, STATUS, beamPlacement, firstSentence, quoteCard, storyPose } from "@/lib/projector";
+import { BEAM, BEAM_REAR, BLANK_HINT, ERRORS, STATUS, beamPlacement, firstSentence, quoteCard, storyPose } from "@/lib/projector";
 
 /*
  * The projector. Four stages, each a behaviour of the machine rather than a screen:
@@ -26,7 +26,8 @@ import { BLANK_HINT, ERRORS, STATUS, beamPlacement, firstSentence, quoteCard, st
  *   2. Thinking – the red button: the card drops into the gate, the room goes dark and we move in on the machine. The
  *                 lens lights, the beam finds the wall, and a list of steps follows the real request (never a fake
  *                 progress bar) while the light on the wall is still out of focus.
- *   3. Browsing – the light comes into focus as a row of story cards, one per section chosen: the one in the light is
+ *   3. Browsing – a cut through the dark to behind the machine, looking at the wall with it; the light comes into
+ *                 focus as a row of story cards, one per section chosen: the one in the light is
  *                 sharp, the others turn away into the dark. Open a card and it becomes the full slide.
  *   4. Again    – change the card: the lights come up, we step back, and the card comes back out.
  * Plain Web Animations API, no library. With reduced motion everything happens at once (the room still darkens).
@@ -146,6 +147,9 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   const [live, setLive] = useState("");
 
   const busy = useRef(false);
+  /** While a slide is opening, changing or closing: resolves when it is done, so a press meanwhile waits, not drops. */
+  const motion = useRef<Promise<void> | null>(null);
+  const activeRef = useRef(0);
   const rootRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const handRef = useRef<HTMLFormElement>(null);
@@ -154,13 +158,18 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   const machineRef = useRef<HTMLDivElement>(null);
   const slotRef = useRef<HTMLDivElement>(null);
   const magRef = useRef<HTMLDivElement>(null);
-  const lensRef = useRef<HTMLSpanElement>(null);
   const wallRef = useRef<HTMLElement>(null);
   const areaRef = useRef<HTMLDivElement>(null);
   const aimRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
   const openRef = useRef<HTMLElement>(null);
-  const beamRef = useRef<HTMLImageElement>(null);
+  const beamRef = useRef<HTMLDivElement>(null);
+  /** The dark room's camera: the three-quarter view while it thinks, the view from behind it while we browse. */
+  const camRef = useRef<HTMLDivElement>(null);
+  const view34Ref = useRef<HTMLDivElement>(null);
+  const lens34Ref = useRef<HTMLSpanElement>(null);
+  const lensRearRef = useRef<HTMLSpanElement>(null);
+  const viewRef = useRef<"34" | "rear">("34");
   const titleRef = useRef<HTMLHeadingElement>(null);
   const openTitleRef = useRef<HTMLHeadingElement>(null);
   const blankRef = useRef<HTMLTextAreaElement>(null);
@@ -351,13 +360,15 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
 
   // ---------- the beam: the photograph of the light, from the lens to whatever is lit on the wall ----------
   const aim = useCallback(() => {
-    const lens = lensRef.current?.getBoundingClientRect();
+    const rear = viewRef.current === "rear";
+    const lens = (rear ? lensRearRef : lens34Ref).current?.getBoundingClientRect();
     const target = (open ? openRef.current : aimRef.current)?.getBoundingClientRect();
-    if (!lens || !target || !lens.width || !target.width) return;
+    if (!lens || !target || !target.width) return;
     const p = beamPlacement(
-      { x: lens.left + lens.width * 0.42, y: lens.top + lens.height / 2 },
+      { x: lens.left + lens.width / 2, y: lens.top + lens.height / 2 },
       { x: target.left + target.width / 2, y: target.top + target.height / 2 },
-      target.height * 0.92,
+      target.height * (rear ? 1.05 : 0.92),
+      rear ? BEAM_REAR : BEAM,
     );
     setBeam({ left: p.left, top: p.top, width: p.width, transformOrigin: p.origin, transform: p.transform });
   }, [open]);
@@ -372,8 +383,14 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   /** Bring the lights up again: the wall goes, we step back from the machine, and the hand comes back. */
   const lightsUp = useCallback(async () => {
     rootRef.current?.removeAttribute("data-lens");
-    await play(wallRef.current, [{ opacity: 1 }, { opacity: 0 }], { duration: 280, easing: "ease-in", fill: "forwards" });
+    rootRef.current?.removeAttribute("data-beam");
+    await Promise.all(
+      [wallRef.current, camRef.current].map((el) =>
+        play(el, [{ opacity: 1 }, { opacity: 0 }], { duration: 320, easing: "ease-in", fill: "forwards" }),
+      ),
+    );
     const first = stageRef.current?.getBoundingClientRect();
+    viewRef.current = "34";
     flushSync(() => {
       setPhase("light");
       setResult(null);
@@ -396,6 +413,8 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       fill: "backwards",
     });
     void play(allRef.current, [{ opacity: 0 }, { opacity: 1 }], { duration: 400, delay: 600, fill: "backwards" });
+    // we step back out to the front of the machine, and it comes up out of the dark
+    void play(stageRef.current, [{ opacity: 0 }, { opacity: 1 }], { duration: 700, easing: "ease-out" });
     await flip(stageRef.current, first, 950);
   }, []);
 
@@ -447,8 +466,10 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       ),
     );
 
-    // The room goes dark and we move in on the machine.
+    // The room goes dark and we move in and round the machine: the front view hands over to the three-quarter view.
     const first = stageRef.current?.getBoundingClientRect();
+    const front = machineRef.current?.getBoundingClientRect();
+    viewRef.current = "34";
     flushSync(() => {
       setStep(0);
       setStage("think");
@@ -460,6 +481,10 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     window.scrollTo({ top: 0, behavior: "instant" });
     [introRef.current, handRef.current, allRef.current].forEach((el) => el?.getAnimations().forEach((x) => x.cancel()));
     const moving = flip(stageRef.current, first, 1150);
+    // the new view comes in over the old one, and only then does the old one go, so the two never show through each other
+    void play(stageRef.current, [{ opacity: 1 }, { opacity: 1, offset: 0.5 }, { opacity: 0, offset: 0.72 }, { opacity: 0 }], { duration: 1150 });
+    void flip(view34Ref.current, front, 1150);
+    void play(view34Ref.current, [{ opacity: 0 }, { opacity: 0, offset: 0.12 }, { opacity: 1, offset: 0.5 }, { opacity: 1 }], { duration: 1150, easing: "ease-in-out" });
     const lensOn = sleep(520).then(() => rootRef.current?.setAttribute("data-lens", "on"));
     const second = setTimeout(() => setStep((s) => Math.max(s, 1)), reduced() ? 0 : 1100);
     await Promise.all([moving, lensOn]);
@@ -504,6 +529,12 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     await sleep(420);
     setStep(3);
     await sleep(380);
+
+    // A cut through the dark: the three-quarter view goes, and we are behind the machine, looking at the wall.
+    rootRef.current?.removeAttribute("data-beam");
+    if (camRef.current) camRef.current.dataset.view = "cut";
+    await sleep(380);
+    viewRef.current = "rear";
     const r: Result = {
       line: outcome.data.line,
       quote: quoteCard(text),
@@ -516,7 +547,9 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       setActive(0);
       setStage("show");
     });
+    if (camRef.current) camRef.current.dataset.view = "rear";
     aim();
+    setTimeout(() => rootRef.current?.setAttribute("data-beam", "on"), reduced() ? 0 : 260);
     void play(
       rowRef.current,
       [
@@ -571,10 +604,24 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     if (phase === "dark" && stage === "show") aim();
   }, [phase, stage, active, open, aim]);
 
+  useLayoutEffect(() => {
+    activeRef.current = active;
+  }, [active]);
+  const begin = useCallback(() => {
+    busy.current = true;
+    let done = () => {};
+    motion.current = new Promise<void>((r) => (done = r));
+    return () => {
+      busy.current = false;
+      motion.current = null;
+      done();
+    };
+  }, []);
+
   /** Open the card in the light as the full slide: it grows out of the card. */
   const openStory = useCallback(async () => {
     if (!result || open || busy.current) return;
-    busy.current = true;
+    const end = begin();
     const from = storyRefs.current[active]?.getBoundingClientRect();
     flushSync(() => setOpen(true));
     const el = openRef.current;
@@ -596,14 +643,16 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     openTitleRef.current?.focus({ preventScroll: true });
     const s = result.slides[active]!;
     setLive(`Open: ${s.title}, ${s.projectTitle}.`);
-    busy.current = false;
-  }, [result, open, active]);
+    end();
+  }, [result, open, active, begin]);
 
   const closeStory = useCallback(async () => {
+    if (motion.current) await motion.current;
     if (!open || busy.current) return;
-    busy.current = true;
+    const end = begin();
+    const at = activeRef.current;
     const el = openRef.current;
-    const to = storyRefs.current[active]?.getBoundingClientRect();
+    const to = storyRefs.current[at]?.getBoundingClientRect();
     if (el && to && !reduced()) {
       const from = el.getBoundingClientRect();
       await play(
@@ -620,18 +669,20 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       );
     }
     flushSync(() => setOpen(false));
-    storyRefs.current[active]?.focus({ preventScroll: true });
-    busy.current = false;
-  }, [open, active]);
+    storyRefs.current[at]?.focus({ preventScroll: true });
+    end();
+  }, [open, begin]);
 
   /** With a slide open, the next story replaces it: the light dips, the slide changes, the light comes back. */
   const step2 = useCallback(
     async (k: number) => {
+      // a press while the slide is still moving is kept, not dropped
+      if (motion.current) await motion.current;
       if (!result || busy.current) return;
       const j = Math.max(0, Math.min(n - 1, k));
-      if (j === active) return;
-      busy.current = true;
-      const dir = j > active ? 1 : -1;
+      if (j === activeRef.current) return;
+      const end = begin();
+      const dir = j > activeRef.current ? 1 : -1;
       knock(0.4);
       await play(openRef.current, [{ opacity: 1 }, { opacity: 0.06 }], { duration: 150, easing: "ease-in", fill: "forwards" });
       flushSync(() => setActive(j));
@@ -649,9 +700,9 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
         { duration: 360, easing: OUT },
       );
       openTitleRef.current?.focus({ preventScroll: true });
-      busy.current = false;
+      end();
     },
-    [result, n, active, knock],
+    [result, n, knock, begin],
   );
 
   const go = useCallback((k: number) => (open ? void step2(k) : move(k)), [open, step2, move]);
@@ -857,7 +908,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
             <span>DESIGN ENGINEER</span>
           </div>
           <span className="pj-lamp" aria-hidden="true" />
-          <span className="pj-lens" ref={lensRef} aria-hidden="true" />
+          <span className="pj-lens" aria-hidden="true" />
           <button className="pj-go" type="submit" form="pj-form" aria-label="Project" disabled={phase === "dark"} />
           <span className="pj-go-label" aria-hidden="true">
             Project
@@ -872,8 +923,27 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       {/* 2–3. The dark room: the beam, the steps, the wall */}
       {phase === "dark" && (
         <>
-          {/* eslint-disable-next-line @next/next/no-img-element -- placed and turned per frame, not a content image */}
-          <img className="pj-beam" ref={beamRef} src="/projector/beam.webp" alt="" aria-hidden="true" style={beam ?? { opacity: 0 }} />
+          {/* The camera in the dark: the machine close in the foreground, from the side while it thinks, from behind once
+              the light is on the wall. Two photographs of each view's light, placed and turned in JS, with dust in it. */}
+          <div className="pj-cam" ref={camRef} data-view={stage === "show" ? "rear" : "34"} aria-hidden="true">
+            <div className="pj-view pj-view-34" ref={view34Ref}>
+              <Image className="pj-shot" src="/projector/machine-34-off.webp" alt="" width={1620} height={775} draggable={false} sizes="(min-width: 1000px) 62vw, 420px" />
+              <Image className="pj-shot pj-shot-on" src="/projector/machine-34-on.webp" alt="" width={1620} height={775} draggable={false} sizes="(min-width: 1000px) 62vw, 420px" />
+              <span className="pj-anchor" ref={lens34Ref} />
+            </div>
+            <div className="pj-view pj-view-rear">
+              <Image className="pj-shot" src="/projector/machine-rear.webp" alt="" width={1420} height={862} draggable={false} sizes="(min-width: 1000px) 44vw, 340px" />
+              <span className="pj-anchor" ref={lensRearRef} />
+            </div>
+          </div>
+          <div className="pj-beam" ref={beamRef} data-view={stage === "show" ? "rear" : "34"} aria-hidden="true" style={beam ?? { opacity: 0 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element -- placed and turned per frame, not a content image */}
+            <img className="pj-beam-34" src="/projector/beam.webp" alt="" />
+            {/* eslint-disable-next-line @next/next/no-img-element -- placed and turned per frame, not a content image */}
+            <img className="pj-beam-rear" src="/projector/beam-rear.webp" alt="" />
+            <span className="pj-dust" />
+            <span className="pj-dust pj-dust-2" />
+          </div>
           <section className="pj-wall" ref={wallRef} aria-labelledby={result ? "r-title" : undefined} aria-label={result ? undefined : "Projecting"} data-open={open || undefined}>
             <header className="pj-wallhead">
               <ol className="pj-steps" aria-hidden="true" data-done={stage === "show" || undefined}>

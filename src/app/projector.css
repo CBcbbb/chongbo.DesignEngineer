@@ -586,12 +586,16 @@ body:has(.pj) {
 }
 
 /* ---------- the dark room ----------
- * We move in on the machine: it becomes the close, slightly soft foreground in the bottom-left corner, its lens lit,
- * and the beam (public/projector/beam.webp, aimed in JS) reaches the wall. The wall fills the window under the header.
+ * We move in and round the machine. While it thinks it is the close foreground in the bottom-left corner seen from
+ * the side (three-quarter view, public/projector/machine-34-*.webp), its lens lit and the beam reaching the wall.
+ * When the light comes into focus we cut through the dark to behind the machine (machine-rear.webp), looking at the
+ * wall with it. Stacking, back to front: wall, beam, machine; an open slide comes forward over the machine.
  */
 .pj {
   --bar: 68px;
+  /* the three-quarter view's width, and the view from behind */
   --mw: clamp(520px, 62vw, 1000px);
+  --rw: clamp(460px, 48vw, 940px);
   --ch: min(52vh, 450px);
   --cwid: calc(var(--ch) * 0.7527);
   --cx: 7vw;
@@ -614,54 +618,118 @@ body:has(.pj) {
 .pj[data-phase="dark"] .pj-note {
   display: none;
 }
+/* the front view hands over to the three-quarter view as we move in: it ends where that view stands, unseen */
 .pj[data-phase="dark"] .pj-stage {
   position: fixed;
-  z-index: 30;
+  z-index: 29;
   width: var(--mw);
   max-width: none;
-  left: calc(var(--mw) * -0.4);
-  bottom: calc(var(--mw) * -0.07);
+  left: calc(var(--mw) * -0.36);
+  bottom: calc(var(--mw) * -0.05);
   margin: 0;
+  opacity: 0;
   pointer-events: none;
 }
 .pj[data-phase="dark"] .pj-machine::before {
   opacity: 0;
 }
-/* the foreground: a little soft, and darker away from the lens */
-.pj[data-phase="dark"] .pj-photo,
-.pj[data-phase="dark"] .pj-mag,
-.pj[data-phase="dark"] .pj-plate,
-.pj[data-phase="dark"] .pj-go-label {
-  filter: brightness(0.82) saturate(0.92);
-}
-.pj[data-phase="dark"] .pj-machine {
-  /* it melts into the dark away from the lens */
-  -webkit-mask-image: radial-gradient(115% 120% at 96% 48%, #000 42%, rgba(0, 0, 0, 0.55) 66%, transparent 92%);
-  mask-image: radial-gradient(115% 120% at 96% 48%, #000 42%, rgba(0, 0, 0, 0.55) 66%, transparent 92%);
-}
-/* a slide open: the focus moves to the wall, the machine goes softer */
-.pj[data-phase="dark"]:has(.pj-wall[data-open]) .pj-photo {
-  filter: brightness(0.55) saturate(0.85);
-}
+
+/* the front view's lit photograph, for the moment the lens lights before it hands over */
 .pj-photo-on {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition:
-    opacity 0.7s ease,
-    filter 0.9s ease;
+  transition: opacity 0.7s ease;
 }
 .pj[data-lens="on"] .pj-photo-on {
   opacity: 1;
 }
 
+.pj-cam {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+  pointer-events: none;
+  transition: filter 0.8s ease;
+}
+.pj-view {
+  position: absolute;
+  opacity: 0;
+}
+.pj-view :where(img) {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+}
+.pj-shot-on {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.pj[data-lens="on"] .pj-shot-on {
+  opacity: 1;
+}
+/* the lens of each view, measured on the photograph: the beam starts here */
+.pj-anchor {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  translate: -50% -50%;
+}
+
+/* while it thinks: close, from the side, the lens to the right */
+.pj-view-34 {
+  width: var(--mw);
+  left: calc(var(--mw) * -0.36);
+  bottom: calc(var(--mw) * -0.05);
+  transition: opacity 0.36s ease-in;
+  /* it melts into the dark away from the lens */
+  -webkit-mask-image: radial-gradient(120% 130% at 92% 46%, #000 46%, rgba(0, 0, 0, 0.6) 70%, transparent 96%);
+  mask-image: radial-gradient(120% 130% at 92% 46%, #000 46%, rgba(0, 0, 0, 0.6) 70%, transparent 96%);
+}
+.pj-view-34 .pj-anchor {
+  left: 92.6%;
+  top: 45.2%;
+}
+.pj-cam[data-view="34"] .pj-view-34 {
+  opacity: 1;
+}
+
+/* once the light is on the wall: behind the machine, low in the corner, cut off by the frame, lit only by the wall */
+.pj-view-rear {
+  width: var(--rw);
+  left: calc(var(--rw) * -0.34);
+  bottom: calc(var(--rw) * -0.17);
+  transform-origin: 0 100%;
+  scale: 1.06;
+  filter: brightness(0.56) sepia(0.2) saturate(1.05);
+  transition:
+    opacity 0.8s ease 0.1s,
+    scale 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-mask-image: radial-gradient(130% 140% at 100% 0%, #000 40%, rgba(0, 0, 0, 0.7) 66%, transparent 100%);
+  mask-image: radial-gradient(130% 140% at 100% 0%, #000 40%, rgba(0, 0, 0, 0.7) 66%, transparent 100%);
+}
+.pj-view-rear .pj-anchor {
+  left: 99.6%;
+  top: 26.4%;
+}
+.pj-cam[data-view="rear"] .pj-view-rear {
+  opacity: 1;
+  scale: 1;
+}
+/* a slide open: the focus moves to the wall, the machine goes darker */
+.pj:has(.pj-wall[data-open]) .pj-cam {
+  filter: brightness(0.6);
+}
+
+/* the light: a photograph per view, placed and turned in JS so it runs from the lens to what is lit */
 .pj-beam {
   position: fixed;
   z-index: 15;
-  max-width: none;
-  height: auto;
+  aspect-ratio: 1536 / 1024;
   pointer-events: none;
-  user-select: none;
   mix-blend-mode: screen;
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -669,13 +737,60 @@ body:has(.pj) {
   -webkit-mask-image: linear-gradient(to right, #000 48%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
   mask-image: linear-gradient(to right, #000 48%, rgba(0, 0, 0, 0.5) 72%, transparent 94%);
 }
+.pj-beam img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  user-select: none;
+}
+.pj-beam[data-view="34"] .pj-beam-rear,
+.pj-beam[data-view="rear"] .pj-beam-34 {
+  display: none;
+}
 .pj[data-beam="on"] .pj-beam {
   opacity: 0.92;
   animation: pj-beam-breathe 5s ease-in-out infinite;
 }
+/* from behind, the light is quieter: we read by it */
+.pj[data-beam="on"] .pj-beam[data-view="rear"] {
+  opacity: 0.62;
+  animation-name: pj-beam-breathe-low;
+}
 @keyframes pj-beam-breathe {
   50% {
     opacity: 0.8;
+  }
+}
+@keyframes pj-beam-breathe-low {
+  50% {
+    opacity: 0.52;
+  }
+}
+/* dust, only where the light is: the specks drift through the beam's own shape */
+.pj-dust {
+  position: absolute;
+  inset: 0;
+  background: url(/projector/dust.webp) 0 0 / 46% auto repeat;
+  opacity: 0.85;
+  -webkit-mask: url(/projector/beam.webp) 0 0 / 100% 100% no-repeat;
+  mask: url(/projector/beam.webp) 0 0 / 100% 100% no-repeat;
+  animation: pj-dust 38s linear infinite;
+}
+.pj-dust-2 {
+  background-size: 29% auto;
+  opacity: 0.5;
+  animation-duration: 61s;
+  animation-direction: reverse;
+}
+.pj-beam[data-view="rear"] .pj-dust {
+  -webkit-mask-image: url(/projector/beam-rear.webp);
+  mask-image: url(/projector/beam-rear.webp);
+}
+@keyframes pj-dust {
+  to {
+    background-position: 46% -12%;
   }
 }
 
@@ -1452,7 +1567,11 @@ body:has(.pj) {
     font-size: 16px;
   }
   /* on a phone the machine sits lower and smaller, and the wall keeps clear of it */
-  .pj[data-phase="dark"] .pj-stage {
+  .pj {
+    --rw: 330px;
+  }
+  .pj[data-phase="dark"] .pj-stage,
+  .pj-view-34 {
     left: calc(var(--mw) * -0.46);
     bottom: calc(var(--mw) * -0.09);
   }

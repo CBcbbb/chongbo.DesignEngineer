@@ -3,7 +3,7 @@ import { projects, suggestedQuestions } from "@content";
 import { fallbackAnswer } from "@/lib/ask/fallback";
 import { AskRequestSchema } from "@/lib/ask/schema";
 import { buildCardIndex, cardKey } from "@/lib/cards";
-import { BEAM, beamPlacement, beamPolygon, firstSentence, quoteCard, slideHasMedia, storyPose, thumbCandidates } from "@/lib/projector";
+import { BEAM, BEAM_REAR, beamPlacement, beamPolygon, firstSentence, quoteCard, slideHasMedia, storyPose, thumbCandidates } from "@/lib/projector";
 
 describe("the cards in the hand", () => {
   it("are the four suggested questions, each short enough for one line on a card", () => {
@@ -86,5 +86,14 @@ describe("the beam photograph", () => {
     expect(p.top + BEAM.apex.y * s).toBeCloseTo(lens.y);
     // its length is the distance from the lens to the target
     expect(Math.hypot(BEAM.end.x - BEAM.apex.x, BEAM.end.y - BEAM.apex.y) * s).toBeCloseTo(Math.hypot(500, 300));
+  });
+
+  it("does the same for the light seen from behind the machine", () => {
+    const lens = { x: 440, y: 640 };
+    const p = beamPlacement(lens, { x: 820, y: 470 }, 450, BEAM_REAR);
+    const s = p.width / BEAM_REAR.w;
+    expect(p.left + BEAM_REAR.apex.x * s).toBeCloseTo(lens.x);
+    expect(p.top + BEAM_REAR.apex.y * s).toBeCloseTo(lens.y);
+    expect(Math.hypot(BEAM_REAR.end.x - BEAM_REAR.apex.x, BEAM_REAR.end.y - BEAM_REAR.apex.y) * s).toBeCloseTo(Math.hypot(380, 170));
   });
 });

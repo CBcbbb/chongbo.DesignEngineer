@@ -11,11 +11,24 @@ How the home page plays, stage by stage, and the renders it needs. Built on `she
 | 2 | Press | The button goes in, the machine knocks, the card drops into the gate. The question is sent now. | Front | (optional) pressed-button crop |
 | 3 | Lights down, move in | The room goes dark; we move in and round the machine until it is a close, sharp foreground at the left, lens facing the wall on the right. The lens lights; the beam reaches the wall. | Front → **¾ view** (cross-fade during the move) | **A** and **B** (¾ renders), **C** (beam) |
 | 4 | Thinking | Top left, four steps: Reading your card → Finding the work that answers it → Choosing the sections to show → Projecting. The first two follow the request; the last two follow the answer. On the wall, the light is out of focus. At least about 2 s. | ¾, still | A, C, **D** (dust) |
-| 5 | Selected for you | The light comes into focus as a row of story cards; the one in the light faces us, the others turn away. Arrows, dots, keys, drag. | ¾, still | v6 story panel and glow |
-| 6 | A story | The card grows into the full slide: claim, reasoning, evidence (full width for figures and diagrams), Open full project, Next story, Back to the selection. The machine darkens. | ¾ | `slide.webp` |
-| 7 | Change the card | The wall goes, we move back out to the front view, the lights come up, the card comes back to the file. | ¾ → front | B, then front |
+| 5 | Selected for you | A cut through the dark to behind the machine; the light comes into focus as a row of story cards; the one in the light faces us, the others turn away. Arrows, dots, keys, drag. | **behind**, still | rear render, rear beam, dust, v6 story panel |
+| 6 | A story | The card grows into the full slide: claim, reasoning, evidence (full width for figures and diagrams), Open full project, Next story, Back to the selection. The machine darkens. | behind | `slide.webp` |
+| 7 | Change the card | The wall goes, we move back out to the front view, the lights come up, the card comes back to the file. | behind → front | front |
 
-## Material needed (in order of importance)
+## Material in use (the cream series pack)
+
+| File | From | Used for |
+|---|---|---|
+| `machine.webp`, `machine-on.webp` | V5 front, off and lit | light room; the start of the move in |
+| `machine-34-off.webp`, `machine-34-on.webp` | three-quarter, low-key, 2400 × 1600, cropped to 1620 × 775 | stages 3–4; lens at 92.6% / 45.2% |
+| `beam.webp` | `01-beam-diagonal-right` | the light while it thinks |
+| `machine-rear.webp` | `02-rear-quarter-on`, cropped to 1420 × 862 | stages 5–6; lens at 99.6% / 26.4% |
+| `beam-rear.webp` | `v7-01-beam-diagonal-away` | the light from behind; apex (195, 893), far end (1390, 380) |
+| `dust.webp` | `dust-only`, cropped and halved | dust, masked by whichever beam is showing |
+
+Nice to have, not blocking: a rear render with a single card in the magazine (the pack's has five); a pressed-button crop of the front view for stage 2.
+
+## Material that was asked for
 
 All on a transparent background, the same V5 machine (cream body, narrow card magazine at top left, round red button, knurled silver lens ring, black vented base, blank brushed name plate), the same render style as the V5/v6 set.
 
@@ -39,4 +52,4 @@ All on a transparent background, the same V5 machine (cream body, narrow card ma
 ## Notes
 
 - The light room keeps the front-view render: the overlays (magazine, lamp, button, plate) are placed on it in % and it reads clearly at a glance.
-- Until A–C exist, the dark room uses the front-view lit render as the foreground. That is why the angle reads wrong: the light leaves a lens that faces us.
+- Stage 5 onwards is seen from behind the machine (rear-quarter render), not from the side: we cut to it through the dark when the light comes into focus.

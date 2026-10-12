@@ -114,27 +114,34 @@ export function storyPose(i: number, active: number, drag = 0) {
   };
 }
 
-/** The beam photograph (public/projector/beam.webp, 1536 × 1024): where the light leaves the lens, where it lands. */
-export const BEAM = { w: 1536, apex: { x: 229, y: 691 }, end: { x: 1500, y: 430 }, endWidth: 307 } as const;
+export type BeamSpec = { w: number; apex: Point; end: Point; endWidth: number };
 
 /**
- * Places the beam photograph so its apex sits on the lens and its far end covers the target (a box on the wall):
+ * The beam photographs (1536 × 1024 each): where the light leaves the lens, where it lands, and how wide it is there.
+ * `BEAM` is the light from the three-quarter view (public/projector/beam.webp), `BEAM_REAR` the light going away from
+ * us from the view behind the machine (public/projector/beam-rear.webp).
+ */
+export const BEAM: BeamSpec = { w: 1536, apex: { x: 229, y: 691 }, end: { x: 1500, y: 430 }, endWidth: 307 };
+export const BEAM_REAR: BeamSpec = { w: 1536, apex: { x: 195, y: 893 }, end: { x: 1390, y: 380 }, endWidth: 540 };
+
+/**
+ * Places a beam photograph so its apex sits on the lens and its far end covers the target (a box on the wall):
  * returns the image's left, top and width, and a transform about the apex.
  */
-export function beamPlacement(lens: Point, target: Point, targetHeight: number) {
-  const bx = BEAM.end.x - BEAM.apex.x;
-  const by = BEAM.end.y - BEAM.apex.y;
+export function beamPlacement(lens: Point, target: Point, targetHeight: number, spec: BeamSpec = BEAM) {
+  const bx = spec.end.x - spec.apex.x;
+  const by = spec.end.y - spec.apex.y;
   const base = Math.hypot(bx, by);
   const a0 = Math.atan2(by, bx);
   const dist = Math.hypot(target.x - lens.x, target.y - lens.y);
   const s = dist / base;
   const phi = Math.atan2(target.y - lens.y, target.x - lens.x);
-  const k = Math.max(0.6, Math.min(3.2, targetHeight / (BEAM.endWidth * s)));
+  const k = Math.max(0.6, Math.min(3.2, targetHeight / (spec.endWidth * s)));
   return {
-    left: lens.x - BEAM.apex.x * s,
-    top: lens.y - BEAM.apex.y * s,
-    width: BEAM.w * s,
-    origin: `${BEAM.apex.x * s}px ${BEAM.apex.y * s}px`,
+    left: lens.x - spec.apex.x * s,
+    top: lens.y - spec.apex.y * s,
+    width: spec.w * s,
+    origin: `${spec.apex.x * s}px ${spec.apex.y * s}px`,
     transform: `rotate(${phi}rad) scale(1, ${k}) rotate(${-a0}rad)`,
   };
 }
