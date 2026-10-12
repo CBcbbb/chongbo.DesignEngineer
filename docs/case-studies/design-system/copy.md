@@ -16,7 +16,7 @@ Logistics infrastructure company
 
 # One Design System, Three Products, Any Brand
 
-The shared colours and components behind three products, and every customer's brand on top.
+The colours, roles and components three products are built from, kept in code.
 
 - **Role:** Design Engineer · Figma library, colour scales and code · on my own
 - **Outcome:** One design system across the company's products, which every client and user can customise on top.
@@ -34,13 +34,11 @@ Built fast by different teams, much of it with AI coding tools, each product cha
 
 Even within one product, our customers are companies with brands of their own, and each wants it to feel like theirs: their colour, their typeface, the shape of their buttons.
 
-So the system lets every client change those few things, and only those. The screens underneath stay the same for everyone.
-
 ### 01.3 Each level overrides only what it needs
 
-I split the system into levels. The shared package sets every colour, role and component, so a fix there reaches all three products. Each product overrides only what it needs, from tokens rather than new colours.
+I split the system into levels. The shared package is the foundation: it sets every colour, role and component and runs through everything, so a fix there reaches all three products. What only one product needs sits in the second level, built from existing tokens rather than new colours.
 
-Each client sets its own colour, font and button shape for all its users, and each user can adjust their own look again.
+Within one product, each client sets its own colour, font and button shape for all its users, and each user can adjust their own look again as they need.
 
 ## Part 2 · From Figma to code
 
@@ -48,21 +46,17 @@ Each client sets its own colour, font and button shape for all its users, and ea
 
 I built the system in Figma first, from the main product's shadcn components: colour variables with Light and Dark modes, and components with their variants and states.
 
-It's still where I sketch new ideas quickly, on the same foundations.
-
 ### 02.2 Now it lives in code
 
-I shipped the system as a code package, so teams build with its parts instead of redrawing them from a file.
+In the end I shipped it as a code package, so teams build with its parts instead of redrawing them from a design file.
 
-Now I build it directly in code with AI coding tools. One shared tokens file sets every colour and role, and each product's globals.css overrides only what that product needs.
+With AI coding tools I built one shared tokens file that sets every colour and role. Each product imports it, and its own globals.css overrides only what that product's interface needs.
 
-## Part 3 · Accessibility built into the colours
+## Part 3 · Accessibility that holds in any colours
 
 ### 03.1 Components ask for a role, not a colour
 
 Every hue has five steps, each with one job: surfaces, borders, charts and icons, text on white, and text on a tint. Components ask for success or warning, never a hue and a step, so a hue can change without touching a component.
-
-I kept amber for warnings only, so a warning never reads as a chart series.
 
 ### 03.2 The same lightness on every hue
 
@@ -76,7 +70,7 @@ Tinted surfaces turn deep, so text on a tint still sits on something darker than
 
 ### 03.4 Readable with any customer's colour
 
-Customers could pick any colour, and the first version passed it straight through. A pale yellow put white text on it at 1.07:1, and navy text on the dark background read at 2.99:1.
+If customers can pick any colour, a pale yellow, say, can easily put white text on its button at 1.07:1, and navy text on the dark background reads at 2.99:1.
 
 I applied the scales' own rule to the customer's colour. The fill stays theirs, and text on it turns dark or light. Used as text, their colour keeps its hue and moves in lightness until it reaches 4.5:1.
 
@@ -86,17 +80,17 @@ I applied the scales' own rule to the customer's colour. The fill stays theirs, 
 
 **Title:** Try it: the system, rebuilt with invented data
 
-The real products are confidential, so this is a rebuild. Every brand, name and number is made up; the colour rules and contrast checks are the system's own. Switch the brand, the mode and the contrast labels.
+The real products are confidential, so this is a rebuild. Switch the brand, the light and dark modes and the contrast labels.
 
 ## Close
 
 ### Outcome
 
-- **Consistency:** three products built from one set of colours, roles and components.
+- **Consistency:** three products built from one set of role definitions, base colours and components, each keeping its own character.
 - **Delivery:** teams build new screens from shared code instead of redrawing them.
 - **Accessibility:** every role passes AA in light and dark, under any customer's brand. `[the last clause once the fix ships]`
 
-As the company's only designer, I designed the system in Figma and shipped it as code on my own.
+I designed the system in Figma on my own and shipped it as code for different teams to use.
 
 **Fallback if the fix isn't live** (replaces card 02.4 and the last clause above):
 

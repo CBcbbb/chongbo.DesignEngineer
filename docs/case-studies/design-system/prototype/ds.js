@@ -385,14 +385,14 @@
   const codeSide = document.getElementById("code-side");
   if (codeSide) {
     const FILES = {
-      "tokens.css": { part: "all", src: `/* shared package: every product imports this */
+      "tokens.css": { part: "all", src: `/* shared package: the foundation */
 :root {
   --brand-50:  oklch(0.97 0.014 268);
   --brand-200: oklch(0.82 0.089 268);
   --brand-600: oklch(0.5 0.2 268);
   --brand-700: oklch(0.44 0.17 268);
 
-  /* roles: components ask for these, never a hue */
+  /* roles: for components */
   --primary: var(--brand-600);
   --primary-foreground: oklch(0.985 0 0);
   --ring: var(--brand-200);

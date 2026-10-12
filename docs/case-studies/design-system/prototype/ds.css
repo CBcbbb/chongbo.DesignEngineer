@@ -622,3 +622,17 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-f2c-editor, .ide-browser, .ide { grid-template-columns: minmax(0, 1fr); }
 .ide { display: block; }
 @media (max-width: 760px) { .ide-nav { display: none; } }
+
+/* 03.2: one OKLCH value read part by part; the lightness is the part that stays */
+.ds-oklch { display: grid; gap: 8px; padding-bottom: 16px; margin-bottom: 4px; border-bottom: 1px solid var(--case-rule); }
+.ok-row { display: grid; grid-template-columns: 22px auto 1fr; align-items: center; gap: 12px; }
+.ok-row i { width: 22px; height: 22px; border-radius: 6px; box-shadow: 0 0 0 1px rgb(255 255 255 / .15); }
+.ok-row code { font: 500 clamp(15px, 1.9vw, 19px)/1 var(--mono); color: var(--case-ink); letter-spacing: -.01em; }
+.ok-row code b { font-weight: 600; padding: 2px 3px; border-radius: 4px; }
+.ok-row code b.l { background: color-mix(in srgb, var(--accent-on-dark) 22%, transparent); color: var(--accent-on-dark); }
+.ok-row code b.c, .ok-row code b.h { opacity: .7; }
+.ok-row span { font: 400 13px/1.3 var(--sans); color: var(--case-dim); justify-self: end; }
+.ok-row em { font: 600 13px/1 var(--mono); font-style: normal; color: var(--case-ink); margin-left: 8px; }
+.ok-key { display: flex; gap: 18px; padding-left: 34px; font: 500 11px/1 var(--mono); color: var(--case-dim); }
+.ok-key .l { color: var(--accent-on-dark); }
+@media (max-width: 760px) { .ok-row { grid-template-columns: 22px 1fr; } .ok-row span { grid-column: 2; justify-self: start; } .ok-key { padding-left: 0; flex-wrap: wrap; } }

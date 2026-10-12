@@ -3497,6 +3497,20 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ide { display: block; }
 @media (max-width: 760px) { .ide-nav { display: none; } }
 
+/* 03.2: one OKLCH value read part by part; the lightness is the part that stays */
+.ds-oklch { display: grid; gap: 8px; padding-bottom: 16px; margin-bottom: 4px; border-bottom: 1px solid var(--case-rule); }
+.ok-row { display: grid; grid-template-columns: 22px auto 1fr; align-items: center; gap: 12px; }
+.ok-row i { width: 22px; height: 22px; border-radius: 6px; box-shadow: 0 0 0 1px rgb(255 255 255 / .15); }
+.ok-row code { font: 500 clamp(15px, 1.9vw, 19px)/1 var(--mono); color: var(--case-ink); letter-spacing: -.01em; }
+.ok-row code b { font-weight: 600; padding: 2px 3px; border-radius: 4px; }
+.ok-row code b.l { background: color-mix(in srgb, var(--accent-on-dark) 22%, transparent); color: var(--accent-on-dark); }
+.ok-row code b.c, .ok-row code b.h { opacity: .7; }
+.ok-row span { font: 400 13px/1.3 var(--sans); color: var(--case-dim); justify-self: end; }
+.ok-row em { font: 600 13px/1 var(--mono); font-style: normal; color: var(--case-ink); margin-left: 8px; }
+.ok-key { display: flex; gap: 18px; padding-left: 34px; font: 500 11px/1 var(--mono); color: var(--case-dim); }
+.ok-key .l { color: var(--accent-on-dark); }
+@media (max-width: 760px) { .ok-row { grid-template-columns: 22px 1fr; } .ok-row span { grid-column: 2; justify-self: start; } .ok-key { padding-left: 0; flex-wrap: wrap; } }
+
 </style>
 <style id="ds-palette"></style>
 <div class="proto-bar" role="group" aria-label="Theme for review">
@@ -3514,8 +3528,8 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           <a href="#one-system"><span class="cf-n">01</span>One system for every product and client</a>
           <ol>
             <li><a href="#drift">Drifting apart</a></li>
-            <li><a href="#client-looks">Client looks</a></li>
-            <li><a href="#three-layers">Four levels</a></li>
+            <li><a href="#client-looks">Custom branding</a></li>
+            <li><a href="#three-layers">A four-level solution</a></li>
           </ol>
         </li>
         <li class="cf-toc-part" data-active="false">
@@ -3526,7 +3540,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           </ol>
         </li>
         <li class="cf-toc-part" data-active="false">
-          <a href="#accessibility"><span class="cf-n">03</span>Accessibility built into the colours</a>
+          <a href="#accessibility"><span class="cf-n">03</span>Accessibility that holds in any colours</a>
           <ol>
             <li><a href="#roles">Roles, not colours</a></li>
             <li><a href="#fixed-lightness">One lightness per step</a></li>
@@ -3548,7 +3562,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           <h1 id="case-title" class="cf-h1">One Design System,<br>Three Products,<br>Any Brand</h1>
         </div>
         <div class="cf-cover-line">
-          <p class="cf-lede">The shared colours and components behind three products, and every customer's brand on top.</p>
+          <p class="cf-lede">The colours, roles and components three products are built from, kept in code.</p>
         </div>
         <div class="ds-seen" role="radiogroup" aria-label="See this case file in a customer's brand" id="seen-as"></div>
         <dl class="cf-facts has-split">
@@ -3587,7 +3601,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
         <span class="cf-num" aria-hidden="true">01</span>
         <div>
           <h2 id="one-system-h"><span class="sr-only">Part 01: </span>One system for every product and client</h2>
-          <p class="cf-cards">Drifting apart · Client looks · Four levels</p>
+          <p class="cf-cards">Drifting apart · Custom branding · A four-level solution</p>
         </div>
       </section>
 
@@ -3610,10 +3624,9 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 
       <section id="client-looks" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="client-looks-title">
         <div class="cf-head">
-          <div><p class="cf-meta"><span class="cf-idx">01.2</span><span class="ds-kind">Problem</span></p><h3 id="client-looks-title" class="cf-h3">Every client wants its own look</h3></div>
+          <div><p class="cf-meta"><span class="cf-idx">01.2</span><span class="ds-kind">Need</span></p><h3 id="client-looks-title" class="cf-h3">Every client wants its own look</h3></div>
           <div class="cf-body">
             <p>Even within one product, our customers are companies with brands of their own, and each wants it to feel like theirs: their colour, their typeface, the shape of their buttons.</p>
-            <p>So the system lets every client change those few things, and only those. The screens underneath stay the same for everyone.</p>
           </div>
         </div>
         <div class="cf-evidence" data-fit="fill">
@@ -3629,8 +3642,8 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
         <div class="cf-head">
           <div><p class="cf-meta"><span class="cf-idx">01.3</span><span class="ds-kind is-solution">Solution</span></p><h3 id="three-layers-title" class="cf-h3">Each level overrides only what it needs</h3></div>
           <div class="cf-body">
-            <p>I split the system into levels. The shared package sets every colour, role and component, so a fix there reaches all three products. Each product overrides only what it needs, from tokens rather than new colours.</p>
-            <p>Each client sets its own colour, font and button shape for all its users, and each user can adjust their own look again.</p>
+            <p>I split the system into levels. The shared package is the foundation: it sets every colour, role and component and runs through everything, so a fix there reaches all three products. What only one product needs sits in the second level, built from existing tokens rather than new colours.</p>
+            <p>Within one product, each client sets its own colour, font and button shape for all its users, and each user can adjust their own look again as they need.</p>
           </div>
         </div>
         <div class="cf-evidence" data-fit="foot">
@@ -3653,7 +3666,6 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           <div><p class="cf-meta"><span class="cf-idx">02.1</span></p><h3 id="figma-library-title" class="cf-h3">It started as a Figma library</h3></div>
           <div class="cf-body">
             <p>I built the system in Figma first, from the main product's shadcn components: colour variables with Light and Dark modes, and components with their variants and states.</p>
-            <p>It's still where I sketch new ideas quickly, on the same foundations.</p>
           </div>
         </div>
         <div class="cf-evidence" data-fit="fill">
@@ -3679,8 +3691,8 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
         <div class="cf-head">
           <div><p class="cf-meta"><span class="cf-idx">02.2</span></p><h3 id="in-code-title" class="cf-h3">Now it lives in code</h3></div>
           <div class="cf-body">
-            <p>I shipped the system as a code package, so teams build with its parts instead of redrawing them from a file.</p>
-            <p>Now I build it directly in code with AI coding tools. One shared tokens file sets every colour and role, and each product's globals.css overrides only what that product needs.</p>
+            <p>In the end I shipped it as a code package, so teams build with its parts instead of redrawing them from a design file.</p>
+            <p>With AI coding tools I built one shared tokens file that sets every colour and role. Each product imports it, and its own globals.css overrides only what that product's interface needs.</p>
           </div>
         </div>
         <div class="cf-evidence" data-fit="fill">
@@ -3696,7 +3708,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
       <section id="accessibility" class="cf-sheet is-field cf-opener" aria-labelledby="accessibility-h">
         <span class="cf-num" aria-hidden="true">03</span>
         <div>
-          <h2 id="accessibility-h"><span class="sr-only">Part 03: </span>Accessibility built into the colours</h2>
+          <h2 id="accessibility-h"><span class="sr-only">Part 03: </span>Accessibility that holds in any colours</h2>
           <p class="cf-cards">Roles, not colours · One lightness per step · Dark mode · Customer colours · Try it · Outcome</p>
         </div>
       </section>
@@ -3706,7 +3718,6 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           <div><p class="cf-meta"><span class="cf-idx">03.1</span></p><h3 id="roles-title" class="cf-h3">Components ask for a role, not a colour</h3></div>
           <div class="cf-body">
             <p>Every hue has five steps, each with one job: surfaces, borders, charts and icons, text on white, and text on a tint. Components ask for success or warning, never a hue and a step, so a hue can change without touching a component.</p>
-            <p>I kept amber for warnings only, so a warning never reads as a chart series.</p>
           </div>
         </div>
         <div class="cf-evidence" data-fit="foot">
@@ -3723,6 +3734,11 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
         </div>
         <div class="cf-evidence" data-fit="foot">
           <div class="ds-ev ds-light">
+            <div class="ds-oklch" aria-label="Two text colours, read part by part">
+              <div class="ok-row"><i style="background:oklch(0.5 0.2 268)"></i><code>oklch(<b class="l">0.50</b> <b class="c">0.20</b> <b class="h">268</b>)</code><span>Brand text on white <em>6.3:1</em></span></div>
+              <div class="ok-row"><i style="background:oklch(0.5 0.145 148)"></i><code>oklch(<b class="l">0.50</b> <b class="c">0.145</b> <b class="h">148</b>)</code><span>Green text on white <em>5.6:1</em></span></div>
+              <div class="ok-key"><span class="l">L lightness, the same</span><span class="c">C chroma</span><span class="h">H hue</span></div>
+            </div>
             <div id="light-chart"></div>
             <ul class="ds-metrics">
               <li><b>30/30</b><span>text pairings pass WCAG AA</span></li>
@@ -3750,7 +3766,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
         <div class="cf-head">
           <div><p class="cf-meta"><span class="cf-idx">03.4</span></p><h3 id="customer-colour-title" class="cf-h3">Readable with any customer's colour</h3></div>
           <div class="cf-body">
-            <p>Customers could pick any colour, and the first version passed it straight through. A pale yellow put white text on it at 1.07:1, and navy text on the dark background read at 2.99:1.</p>
+            <p>If customers can pick any colour, a pale yellow, say, can easily put white text on its button at 1.07:1, and navy text on the dark background reads at 2.99:1.</p>
             <p>I applied the scales' own rule to the customer's colour. The fill stays theirs, and text on it turns dark or light. Used as text, their colour keeps its hue and moves in lightness until it reaches 4.5:1.</p>
           </div>
         </div>
@@ -3763,7 +3779,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
       <section id="try-it" class="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
         <div class="cf-work-head">
           <h2 id="cf-work-title">Try it: the system, rebuilt with invented data</h2>
-          <p class="ds-work-note">The real products are confidential, so this is a rebuild. Every brand, name and number is made up; the colour rules and contrast checks are the system's own. Switch the brand, the mode and the contrast labels.</p>
+          <p class="ds-work-note">The real products are confidential, so this is a rebuild. Switch the brand, the light and dark modes and the contrast labels.</p>
         </div>
         <div class="cf-plate">
           <div class="tp" id="work-panel"></div>
@@ -3773,11 +3789,11 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
       <section id="outcome" class="cf-sheet is-card is-dark" data-size="auto" data-layout="stack" aria-labelledby="outcome-title">
         <div class="cf-head">
           <div><p class="cf-meta"><span class="cf-idx">03.5</span></p><h3 id="outcome-title" class="cf-h3">Outcome</h3></div>
-          <div class="cf-body"><p class="ds-role">As the company's only designer, I designed the system in Figma and shipped it as code on my own.</p></div>
+          <div class="cf-body"><p class="ds-role">I designed the system in Figma on my own and shipped it as code for different teams to use.</p></div>
         </div>
         <div class="cf-evidence" data-fit="foot">
           <ul class="ds-out">
-            <li><b>Consistency</b><span>Three products built from one set of colours, roles and components.</span></li>
+            <li><b>Consistency</b><span>Three products built from one set of role definitions, base colours and components, each keeping its own character.</span></li>
             <li><b>Delivery</b><span>Teams build new screens from shared code instead of redrawing them.</span></li>
             <li><b>Accessibility</b><span>Every role passes AA in light and dark, under any customer's brand.</span></li>
           </ul>
@@ -4183,14 +4199,14 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   const codeSide = document.getElementById("code-side");
   if (codeSide) {
     const FILES = {
-      "tokens.css": { part: "all", src: `/* shared package: every product imports this */
+      "tokens.css": { part: "all", src: `/* shared package: the foundation */
 :root {
   --brand-50:  oklch(0.97 0.014 268);
   --brand-200: oklch(0.82 0.089 268);
   --brand-600: oklch(0.5 0.2 268);
   --brand-700: oklch(0.44 0.17 268);
 
-  /* roles: components ask for these, never a hue */
+  /* roles: for components */
   --primary: var(--brand-600);
   --primary-foreground: oklch(0.985 0 0);
   --ring: var(--brand-200);
