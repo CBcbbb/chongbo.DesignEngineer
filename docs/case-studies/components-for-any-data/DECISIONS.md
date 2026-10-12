@@ -8,7 +8,7 @@ Things built on a best guess, or still open. Each says what was done and what to
 4. **Old address.** `/work/component-store` now returns 404. Any link already sent out (CV, applications) breaks. A redirect would keep the product's name in a URL that resolves. Decide: add a redirect in `next.config.ts` (shared file), or leave it.
 5. **ECharts named (02.1, and in the project's stack).** You approved naming it. The stack also lists React, TypeScript and Tailwind; it's only shown by the AI catalogue, not on the page.
 6. **Design system:** no longer mentioned on this page (the closing role card became a Takeaway). It gets its own project (`PROMPT-design-system.md`).
-7. **Printer routing.** "Have you built a design system?" now prints another project first; the test checks only that the sheet shows design systems. A question about back-end work is still reported as missing by the fallback (`src/lib/ask/fallback.ts`), though this project now shows front end to server: see SHARED-CHANGES.
+7. **Printer routing.** "Have you built a design system?" now prints another project first; the test checks only that the sheet shows design systems. Back-end and API questions now route to the pipeline card (`data-architecture` signal, 12 Oct); only "databases" is still reported as missing.
 8. **Hover-only values.** Exact chart values show on hover and in a table for screen readers; a sighted keyboard user sees the axis, the largest value and (donut, treemap) the labels. A "Show as table" switch would close that gap.
 9. **Not tested here:** VoiceOver with Safari (playbook §8 step 7). The automated checks (axe, every text contrast pair, keyboard walk of the demo) pass.
 10. **Site-wide, not this project:** there is no favicon (`/favicon.ico` returns 404 on every page).
