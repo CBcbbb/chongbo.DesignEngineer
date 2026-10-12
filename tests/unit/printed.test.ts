@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { projects, SIGNALS } from "@content";
 import { fallbackAnswer } from "@/lib/ask/fallback";
 import { AskRequestSchema } from "@/lib/ask/schema";
+import { shownTopics } from "@/lib/cards";
 import { missingLine, quoteBrief, resultTitle, TOPICS, topicsToSignals } from "@/lib/printed";
 
 describe("skills cards", () => {
@@ -19,12 +20,16 @@ describe("skills cards", () => {
   });
 
   it("maps every card to real signal keys that some project shows", () => {
-    const shown = new Set(projects.flatMap((p) => p.sections.flatMap((s) => s.signals)));
     for (const t of TOPICS) {
       expect(t.signals.length, t.id).toBeGreaterThan(0);
       for (const s of t.signals) expect(Object.keys(SIGNALS), t.id).toContain(s);
-      expect(t.signals.some((s) => shown.has(s)), t.id).toBe(true);
     }
+    // Only cards some shown project has work for are offered; the rest wait for their project to come back.
+    const shown = new Set(projects.flatMap((p) => p.sections.flatMap((s) => s.signals)));
+    const offered = shownTopics();
+    expect(offered.length).toBeGreaterThan(0);
+    for (const t of offered) expect(t.signals.some((s) => shown.has(s)), t.id).toBe(true);
+    for (const t of TOPICS.filter((x) => !offered.includes(x))) expect(t.signals.some((s) => shown.has(s)), t.id).toBe(false);
   });
 
   it("turns chosen cards into de-duplicated signals, first card first", () => {
@@ -35,8 +40,9 @@ describe("skills cards", () => {
 
   it("every combination the cards can send is a valid API request", () => {
     const all = topicsToSignals(TOPICS.map((t) => t.id));
+    const offered = shownTopics();
     expect(AskRequestSchema.safeParse({ topics: all }).success).toBe(true);
-    for (const t of TOPICS) {
+    for (const t of offered) {
       const req = AskRequestSchema.parse({ topics: topicsToSignals([t.id]) });
       const r = fallbackAnswer(req);
       expect(r.sheets.length, t.id).toBeGreaterThan(0);

@@ -70,13 +70,14 @@ describe("fallback: one capability", () => {
     }
   });
 
-  it("routes design systems, brand and this site sensibly", () => {
+  it("routes design systems and brand sensibly, and never prints a hidden project", () => {
     const ds = fallbackAnswer("Have you built a design system?").sheets[0]!;
     expect(projects.find((p) => p.slug === ds.project)!.sections.find((x) => x.id === ds.section)!.signals).toContain("design-systems");
     expect(fallbackAnswer("Have you built a design system?").asked[0]).toBe("design-systems");
     expect(fallbackAnswer("Show me brand or marketing work.").sheets[0]!.project).toBe("nike-athletes-closet");
-    expect(fallbackAnswer("How does this site work?").sheets[0]!.project).toBe("this-site");
-    expect(fallbackAnswer("What did you use to build this?").sheets[0]!.project).toBe("this-site");
+    const shown = new Set(projects.map((p) => p.slug));
+    for (const q of ["How does this site work?", "What did you use to build this?", "Show me your WildEcho prototype."])
+      for (const s of fallbackAnswer(q).sheets) expect(shown.has(s.project), q).toBe(true);
   });
 
   it("matches AI as a whole word only", () => {

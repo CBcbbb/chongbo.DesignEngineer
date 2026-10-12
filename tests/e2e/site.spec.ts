@@ -104,7 +104,7 @@ test.describe("printing", () => {
     await page.goto("/");
     await printAccessibility(page);
     const sheets = page.locator(".sheets .sheet");
-    expect(await sheets.count()).toBeGreaterThan(1);
+    expect(await sheets.count()).toBeGreaterThan(0);
     for (const sheet of await sheets.all()) {
       await expect(sheet.locator(".sheet-title")).toBeVisible();
       await expect(sheet.locator(".full")).toHaveAttribute("href", /^\/work\/[a-z-]+#[a-z-]+$/);

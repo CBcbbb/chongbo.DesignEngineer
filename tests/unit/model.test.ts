@@ -61,9 +61,7 @@ describe("askModel", () => {
     expect(r!.sheets.map((s) => s.project)).toEqual([
       "hhcd-data-platform",
       "components-for-any-data",
-      "this-site",
       "nike-athletes-closet",
-      "wildecho",
     ]);
   });
 

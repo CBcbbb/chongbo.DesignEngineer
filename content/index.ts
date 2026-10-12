@@ -7,8 +7,14 @@ import { wildecho } from "./projects/wildecho";
 
 export * from "./schema";
 
+/**
+ * Hidden for now (Chongbo, 12 Oct 2026: no time to rework them before they go out). A hidden project is left out of
+ * everything: the work list, its page (404), the printer, the sitemap. Remove a slug to bring the project back.
+ */
+const HIDDEN = new Set(["this-site", "wildecho"]);
+
 /** Order is the dealing order on the table. */
-export const projects: Project[] = [hhcd, anyData, nike, thisSite, wildecho];
+export const projects: Project[] = [hhcd, anyData, nike, thisSite, wildecho].filter((p) => !HIDDEN.has(p.slug));
 
 export const mainProjects = projects.filter((p) => p.tier === "main");
 export const earlierProjects = projects.filter((p) => p.tier === "earlier");

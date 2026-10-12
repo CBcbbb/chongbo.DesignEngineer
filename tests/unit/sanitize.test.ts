@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { sanitizeAsked, sanitizeLine, sanitizeMissing, sanitizeSheets } from "@/lib/ask/sanitize";
 
 describe("sanitizeSheets", () => {
-  it("drops unknown ids, keeps one sheet per project and at most five", () => {
+  it("drops unknown and hidden ids, keeps one sheet per project and at most five", () => {
     const sheets = sanitizeSheets([
       { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "a" },
       { project: "hhcd-data-platform", section: "keyboard", signal: "accessibility", reason: "second from same project" },
@@ -10,6 +10,7 @@ describe("sanitizeSheets", () => {
       { project: "components-for-any-data", section: "nope", signal: "data", reason: "c" },
       { project: "components-for-any-data", section: "contract", signal: "design-eng-gap", reason: "d" },
       { project: "nike-athletes-closet", section: "graphic-system", signal: "reusable-components", reason: "e" },
+      // Hidden projects (content/index.ts) are not in the catalogue, so they're unknown ids too.
       { project: "this-site", section: "idea", signal: "ai-tools", reason: "f" },
       { project: "wildecho", section: "prototype", signal: "prototyping", reason: "g" },
     ]);
@@ -17,8 +18,6 @@ describe("sanitizeSheets", () => {
       "hhcd-data-platform#dual-view",
       "components-for-any-data#contract",
       "nike-athletes-closet#graphic-system",
-      "this-site#idea",
-      "wildecho#prototype",
     ]);
   });
 
@@ -44,7 +43,7 @@ describe("sanitizeSheets", () => {
     const [a, b, c] = sanitizeSheets([
       { project: "hhcd-data-platform", section: "dual-view", signal: "accessibility", reason: "x".repeat(200) },
       { project: "components-for-any-data", section: "contract", signal: "design-eng-gap" },
-      { project: "this-site", section: "idea", signal: "ai-tools", reason: "<b>see https://evil.example</b>" },
+      { project: "nike-athletes-closet", section: "graphic-system", signal: "reusable-components", reason: "<b>see https://evil.example</b>" },
     ]);
     expect(a!.reason.length).toBeLessThanOrEqual(90);
     expect(b!.reason).toBeTruthy();

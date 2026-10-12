@@ -13,6 +13,7 @@ I'm Chongbo. The printer's AI is live now, but its answers don't give me what I 
 - The catalogue lists each project's stack, and each card's **full text** (not its first sentence).
 - A visitor who asks for a number of projects gets that many (`src/lib/ask/count.ts`, `limitTo` in `answer.ts`).
 - Printed sheets leave off evidence that doesn't fit instead of "[… to come]".
+- WildEcho and This site are hidden for now (`HIDDEN` in `content/index.ts`): they aren't in the catalogue, and the "AI tools" card isn't offered. `/ask` prints the same evidence as the home page.
 
 ## The problem
 

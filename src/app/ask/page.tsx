@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { MediaSlot } from "@/components/media/MediaSlot";
 import { Sheet } from "@/components/Sheet";
+import { sheetEvidence } from "@/components/SheetEvidence";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { answerAsk } from "@/lib/ask/answer";
@@ -75,7 +75,8 @@ export default async function AskPage({ searchParams }: Props) {
             </div>
             <ol className="sheet-list" aria-label="Printed sheets">
               {sheets.map((c, i) => {
-                const section = getProject(c.project)?.sections.find((s) => s.id === c.section);
+                const project = getProject(c.project);
+                const at = project?.sections.findIndex((s) => s.id === c.section) ?? -1;
                 return (
                   <li key={c.project} className="sheet">
                     <article aria-labelledby={`sh-${i}`}>
@@ -85,7 +86,7 @@ export default async function AskPage({ searchParams }: Props) {
                         total={sheets.length}
                         headingId={`sh-${i}`}
                         as="h2"
-                        media={section?.media ? <MediaSlot media={section.media} compact /> : undefined}
+                        media={project && at >= 0 ? sheetEvidence(project, project.sections[at]!, at) : undefined}
                       />
                     </article>
                   </li>

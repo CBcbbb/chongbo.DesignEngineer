@@ -51,7 +51,7 @@
 }
 .topics {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--topics, 8), minmax(0, 1fr));
   gap: 10px;
   width: 100%;
   margin: 0;

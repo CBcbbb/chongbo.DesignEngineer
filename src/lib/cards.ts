@@ -1,4 +1,5 @@
 import { projects, SIGNALS } from "@content";
+import { TOPICS, type Topic } from "./printed";
 import { caseHref } from "./site";
 
 /** The slice of a section a printed sheet needs. Passed to the client instead of the whole content tree. */
@@ -35,4 +36,10 @@ export function buildCardIndex(): CardIndex {
     }
   }
   return index;
+}
+
+/** The skills cards some shown project has work for. A card whose only work is in a hidden project isn't offered. */
+export function shownTopics(): Topic[] {
+  const shown = new Set(projects.flatMap((p) => p.sections.flatMap((s) => s.signals)));
+  return TOPICS.filter((t) => t.signals.some((s) => shown.has(s)));
 }

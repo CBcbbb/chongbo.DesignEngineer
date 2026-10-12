@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import { SIGNALS } from "@content/schema";
 import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type AskResponse } from "@/lib/ask/schema";
 import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
-import { EXAMPLES, NUM, PICKED_HINT, TOPICS, missingLine, pad2, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals } from "@/lib/printed";
+import { EXAMPLES, NUM, PICKED_HINT, TOPICS, missingLine, pad2, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
 import { Pill } from "./nav/Pill";
 import { Sheet } from "./Sheet";
 
@@ -15,6 +15,8 @@ type Props = {
   media: Record<string, ReactNode>;
   /** id of the page h1, which names the paper form. */
   labelledBy: string;
+  /** The skills cards to offer: those some shown project has work for (default: all). */
+  topics?: Topic[];
 };
 
 type Result = { title: string; asked: string; cards: SheetCard[]; missing: string; provenance: string; error?: boolean };
@@ -52,7 +54,7 @@ async function ask(brief: string, topics: string[]): Promise<Outcome> {
   }
 }
 
-export function PrintedToOrder({ cards, media, labelledBy }: Props) {
+export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Props) {
   const [brief, setBrief] = useState("");
   const [picked, setPicked] = useState<string[]>([]);
   const [focused, setFocused] = useState(false);
@@ -286,8 +288,8 @@ export function PrintedToOrder({ cards, media, labelledBy }: Props) {
         <h2 className="sr-only" id="skills-title">
           Skills
         </h2>
-        <ul className="topics">
-          {TOPICS.map((t, i) => (
+        <ul className="topics" style={{ "--topics": topics.length } as CSSProperties}>
+          {topics.map((t, i) => (
             <li key={t.id}>
               <button
                 type="button"
