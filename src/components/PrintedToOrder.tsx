@@ -102,13 +102,12 @@ export function PrintedToOrder({ cards, media, whole = {}, labelledBy, topics = 
   }, []);
 
   // ---------- skills cards ----------
-  /** A ticket is taken from the rack and put on the paper, or taken off the paper and put back. The rack never moves. */
-  const toggle = (id: string, from?: HTMLElement | null) => {
+  const toggle = (id: string, el?: HTMLElement | null) => {
     if (busyRef.current) return;
     setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
-    // the press: the ticket gives a little under the finger
-    if (from && !prefersReduced())
-      from.animate([{ scale: "1" }, { scale: "0.965", offset: 0.4 }, { scale: "1" }], { duration: 260, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" });
+    // A card picked up gets a small random tilt and settles; the layout never moves.
+    if (el && !prefersReduced())
+      el.animate([{ rotate: "0deg" }, { rotate: `${rnd(-2.4, 2.4)}deg`, offset: 0.35 }, { rotate: "0deg" }], { duration: 480, easing: SPRING });
   };
 
   /** The button goes down and the whole machine takes the knock, a little differently each time. */
@@ -288,8 +287,6 @@ export function PrintedToOrder({ cards, media, whole = {}, labelledBy, topics = 
                 className="topic"
                 data-topic={t.id}
                 aria-pressed={picked.includes(t.id)}
-                // the name stays the button's name while its place in the rack is empty
-                aria-label={t.label}
                 onClick={(e) => toggle(t.id, e.currentTarget)}
               >
                 <small aria-hidden="true">{pad2(i + 1)}</small>

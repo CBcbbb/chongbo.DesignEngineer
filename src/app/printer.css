@@ -58,53 +58,30 @@
   padding: var(--s3) 0 var(--s2);
   list-style: none;
 }
-/* Each skill is a ticket: paper, a punched notch each side, a perforation line between the number and the name.
-   Picking one takes it out of the rack and leaves its outline behind; the ticket itself turns up on the paper with the
-   same number. The rack never reflows. */
 .topic {
   --focus: var(--ink);
-  --notch: 7px;
-  /* where the perforation runs, and the notches sit, from the top of the ticket */
-  --perf: 28px;
   position: relative;
   width: 100%;
   min-height: 74px;
-  padding: 9px 12px 10px;
+  padding: 9px 10px 10px;
   border: 0;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 9px;
+  gap: 8px;
   background: var(--paper);
   color: var(--paper-ink);
-  /* the notches are cut out of the ticket, shadow and all */
-  mask-image:
-    radial-gradient(circle at 30px calc(30px + var(--perf)), transparent var(--notch), #000 calc(var(--notch) + 0.5px)),
-    radial-gradient(circle at calc(100% - 30px) calc(30px + var(--perf)), transparent var(--notch), #000 calc(var(--notch) + 0.5px));
-  mask-size: calc(100% + 60px) calc(100% + 60px);
-  mask-position: -30px -30px;
-  mask-repeat: no-repeat;
-  mask-clip: no-clip;
-  mask-composite: intersect;
-  filter: drop-shadow(0 2px 0 #d6d2ca) drop-shadow(0 12px 10px rgba(40, 30, 20, 0.2));
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.7) inset,
+    0 0 0 1px rgba(60, 50, 40, 0.1),
+    0 2px 0 #d6d2ca,
+    0 10px 18px -10px rgba(40, 30, 20, 0.35);
   transition:
     transform 0.25s var(--ease),
-    background-color 0.2s,
-    color 0.2s;
-}
-/* perforation between the stub (number) and the ticket (name) */
-.topic::before {
-  content: "";
-  position: absolute;
-  left: var(--notch);
-  right: var(--notch);
-  top: var(--perf);
-  border-top: 1.5px dashed rgba(60, 50, 40, 0.2);
-  pointer-events: none;
-  transition: border-color 0.25s;
+    box-shadow 0.25s;
 }
 .topic small {
   font: 500 10.5px var(--mono);
@@ -117,35 +94,23 @@
   overflow-wrap: anywhere;
 }
 .topic:hover {
-  transform: translateY(-4px) rotate(-0.6deg);
+  transform: translateY(-4px);
 }
-.topic:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 3px;
-}
-/* taken: the ticket has gone onto the paper; its place in the rack stays, an empty dashed outline with the ticket's
-   number, so the rack never reflows. Pressing the empty place puts the ticket back. */
 .topic[aria-pressed="true"] {
-  background: transparent;
-  color: var(--ink-2);
-  filter: none;
-  transform: none;
-  border: 1.5px dashed color-mix(in srgb, var(--ink-2) 55%, transparent);
-  padding: 7.5px 10.5px 8.5px;
-  mask-image: none;
-  transition: border-color 0.2s;
+  transform: translateY(-10px);
+  box-shadow:
+    0 0 0 1.5px var(--paper-ink),
+    0 18px 24px -12px rgba(40, 30, 20, 0.45);
 }
-.topic[aria-pressed="true"]::before {
-  border-top-color: transparent;
-}
-.topic[aria-pressed="true"] small {
-  color: var(--ink-2);
-}
-.topic[aria-pressed="true"] b {
-  visibility: hidden;
-}
-.topic[aria-pressed="true"]:hover {
-  border-color: var(--ink-2);
+.topic[aria-pressed="true"]::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--red);
 }
 
 /* ---------- the printer ----------
