@@ -25,8 +25,11 @@ export default function Home() {
     url: SITE_URL,
     email: `mailto:${profile.contact.email}`,
     address: { "@type": "PostalAddress", addressLocality: profile.location, addressCountry: "GB" },
-    alumniOf: { "@type": "CollegeOrUniversity", name: "Royal College of Art" },
-    sameAs: [profile.contact.linkedin, profile.contact.github],
+    alumniOf: [
+      { "@type": "CollegeOrUniversity", name: "Royal College of Art" },
+      { "@type": "CollegeOrUniversity", name: "Tongji University" },
+    ],
+    sameAs: [profile.contact.linkedin],
     knowsAbout: ["Design engineering", "Design systems", "Accessibility", "React", "TypeScript", "Data visualisation"],
     workExample: projects.map((p) => ({ "@type": "CreativeWork", name: p.title, url: `${SITE_URL}/work/${p.slug}` })),
   };

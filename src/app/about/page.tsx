@@ -16,7 +16,6 @@ export default function About() {
   const { contact } = profile;
   const elsewhere = [
     { label: "LinkedIn", href: contact.linkedin },
-    { label: "GitHub", href: contact.github },
     { label: "Older work (archive)", href: contact.archive },
   ];
   return (

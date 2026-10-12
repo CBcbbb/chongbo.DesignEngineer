@@ -352,6 +352,6 @@ export type Profile = {
   headline: string;
   summary: string[];
   education: string[];
-  contact: { email: string; linkedin: string; github: string; archive: string };
+  contact: { email: string; linkedin: string; archive: string };
 };
 
