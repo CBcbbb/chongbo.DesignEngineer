@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
+import { printedCards } from "@/components/PrintedCard";
 import { Sheet } from "@/components/Sheet";
-import { sheetEvidence } from "@/components/SheetEvidence";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { answerAsk } from "@/lib/ask/answer";
@@ -15,7 +15,7 @@ import {
   TOPICS_MAX,
   type AskResponse,
 } from "@/lib/ask/schema";
-import { getProject, type Signal } from "@content";
+import { projects, type Signal } from "@content";
 import { buildCardIndex, cardKey, type SheetCard } from "@/lib/cards";
 import { missingLine, projectRuns, provenanceLine, quoteBrief, resultTitle, topicsToLabels } from "@/lib/printed";
 
@@ -53,6 +53,7 @@ export default async function AskPage({ searchParams }: Props) {
   }
 
   const index = buildCardIndex();
+  const printed = printedCards(projects);
   const sheets = (result?.sheets ?? [])
     .map((s) => index[cardKey(s.project, s.section)])
     .filter((c): c is SheetCard => Boolean(c));
@@ -74,22 +75,16 @@ export default async function AskPage({ searchParams }: Props) {
               </div>
               <p className="provenance">{provenanceLine(result.source, sheets.length)}</p>
             </div>
-            <ol className="sheet-list" aria-label="Printed sheets">
+            <h2 id="sheets-title" className="sr-only">
+              Printed sheets
+            </h2>
+            <ol className="sheet-list" aria-labelledby="sheets-title">
               {sheets.map((c, i) => {
-                const project = getProject(c.project);
-                const at = project?.sections.findIndex((s) => s.id === c.section) ?? -1;
+                const pc = printed[cardKey(c.project, c.section)];
                 return (
                   <li key={cardKey(c.project, c.section)} className="sheet">
-                    <article aria-labelledby={`sh-${i}`}>
-                      <Sheet
-                        card={c}
-                        index={i}
-                        total={sheets.length}
-                        headingId={`sh-${i}`}
-                        as="h2"
-                        run={runs[i]}
-                        media={project && at >= 0 ? sheetEvidence(project, project.sections[at]!, at) : undefined}
-                      />
+                    <article className="s-paper" aria-labelledby={pc?.headingId ?? `sh-${i}`}>
+                      <Sheet card={c} index={i} total={sheets.length} headingId={`sh-${i}`} as="h2" run={runs[i]} printed={pc?.node} />
                     </article>
                   </li>
                 );

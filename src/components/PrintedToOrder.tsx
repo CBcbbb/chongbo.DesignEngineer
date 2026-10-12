@@ -1,18 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from "react";
 import { SIGNALS } from "@content/schema";
 import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type AskResponse } from "@/lib/ask/schema";
 import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
 import { EXAMPLES, PICKED_HINT, TOPICS, missingLine, pad2, printedCount, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
 import { Pill } from "./nav/Pill";
+import type { PrintedCard } from "./PrintedCard";
 import { Sheet } from "./Sheet";
 
 type Props = {
   cards: CardIndex;
-  /** Server-rendered media for each section (MediaSlot, compact), keyed by cardKey. */
-  media: Record<string, ReactNode>;
+  /** Each card as its case page renders it, in its project's shell, keyed by cardKey (`printedCards`). */
+  printed: Record<string, PrintedCard>;
   /** id of the page h1, which names the paper form. */
   labelledBy: string;
   /** The skills cards to offer: those some shown project has work for (default: all). */
@@ -24,6 +25,10 @@ type Result = { title: string; asked: string; cards: SheetCard[]; missing: strin
 /** Per step of the paper's checklist. Four steps plus the feed: under two seconds, long enough to read. */
 const STEP_MS = 320;
 const FEED_MS = 600;
+/** A sheet is never scaled below this to fit a short window: the card's type stays comfortable to read. */
+const MIN_SCALE = 0.85;
+/** Room kept under the sheet, so its foot doesn't touch the window's edge. */
+const FOOT_ROOM = 12;
 
 const prefersReduced = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -54,7 +59,7 @@ async function ask(brief: string, topics: string[]): Promise<Outcome> {
   }
 }
 
-export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Props) {
+export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: Props) {
   const [brief, setBrief] = useState("");
   const [picked, setPicked] = useState<string[]>([]);
   const [focused, setFocused] = useState(false);
@@ -234,6 +239,41 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
     resultsRef.current?.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
   }, [result]);
 
+  // Each sheet is the case page's card at its own size. Where the window is too short for the whole sheet under the
+  // results title, the sheet is scaled down evenly (never below MIN_SCALE), so the card keeps its proportions.
+  useLayoutEffect(() => {
+    const strip = stripRef.current;
+    const results = resultsRef.current;
+    if (!result || !strip || !results) return;
+    const fit = () => {
+      const doc = document.documentElement;
+      // the case page's column is measured without the scrollbar; so is the card here
+      doc.style.setProperty("--doc-w", `${doc.clientWidth}px`);
+      const papers = Array.from(strip.querySelectorAll<HTMLElement>(".s-paper"));
+      if (!papers.length) return;
+      if (window.innerWidth < 761) {
+        strip.style.removeProperty("--s");
+        strip.style.removeProperty("--sheet-h");
+        return;
+      }
+      const h = Math.max(...papers.map((el) => el.offsetHeight));
+      const above = papers[0]!.parentElement!.getBoundingClientRect().top - results.getBoundingClientRect().top;
+      const margin = parseFloat(getComputedStyle(results).scrollMarginTop) || 0;
+      const room = window.innerHeight - margin - above - FOOT_ROOM;
+      const scale = Math.max(MIN_SCALE, Math.min(1, room / h));
+      strip.style.setProperty("--s", scale.toFixed(4));
+      strip.style.setProperty("--sheet-h", `${h}px`);
+    };
+    fit();
+    const ro = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(fit);
+    strip.querySelectorAll(".s-paper").forEach((el) => ro?.observe(el));
+    window.addEventListener("resize", fit);
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener("resize", fit);
+    };
+  }, [result]);
+
   // The sheets sit side by side on wide screens: arrows, keys and swiping move along the strip; the counter follows the scroll.
   const n = result?.cards.length ?? 0;
   const runs = projectRuns(result?.cards ?? []);
@@ -243,7 +283,9 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
       if (!strip || !n) return;
       const k = Math.max(0, Math.min(n - 1, i));
       const el = strip.children[k] as HTMLElement | undefined;
-      el?.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", inline: "start", block: "nearest" });
+      const first = strip.children[0] as HTMLElement | undefined;
+      // along the strip only: the page itself stays where it is, with the title over the sheet
+      if (el && first) strip.scrollTo({ left: el.offsetLeft - first.offsetLeft, behavior: prefersReduced() ? "auto" : "smooth" });
       setCur(k);
       setLive(`Sheet ${k + 1} of ${n}: ${result?.cards[k]?.title ?? ""}`);
     },
@@ -401,20 +443,16 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
               onScroll={onStripScroll}
               onKeyDown={onStripKey}
             >
-              {result.cards.map((card, i) => (
-                <li key={cardKey(card.project, card.section)} className="sheet" style={{ animationDelay: `${80 + 110 * i}ms` }}>
-                  <article aria-labelledby={`sh-${i}`}>
-                    <Sheet
-                      card={card}
-                      index={i}
-                      total={result.cards.length}
-                      headingId={`sh-${i}`}
-                      run={runs[i]}
-                      media={card.hasMedia ? media[cardKey(card.project, card.section)] : undefined}
-                    />
-                  </article>
-                </li>
-              ))}
+              {result.cards.map((card, i) => {
+                const pc = printed[cardKey(card.project, card.section)];
+                return (
+                  <li key={cardKey(card.project, card.section)} className="sheet" style={{ animationDelay: `${80 + 110 * i}ms` }}>
+                    <article className="s-paper" aria-labelledby={pc?.headingId ?? `sh-${i}`}>
+                      <Sheet card={card} index={i} total={result.cards.length} headingId={`sh-${i}`} run={runs[i]} printed={pc?.node} />
+                    </article>
+                  </li>
+                );
+              })}
             </ol>
           )}
           {n > 1 && (

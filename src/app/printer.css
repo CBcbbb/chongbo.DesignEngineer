@@ -470,9 +470,10 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: baseline;
-  gap: 12px;
+  gap: 4px 16px;
   max-width: 1100px;
-  margin: 0 auto var(--s5);
+  /* one line over the sheet, so the whole sheet fits under it on a laptop screen */
+  margin: 0 auto var(--s2);
 }
 .rhead h2,
 .rhead h1 {
@@ -491,98 +492,88 @@
   overflow-wrap: anywhere;
 }
 .rhead .provenance {
-  flex-basis: 100%;
   margin: 0;
   font: 500 12.5px/1.5 var(--mono);
   color: var(--ink-2);
 }
-/* the printed sheets: the cards that answer best, each the case-file card it comes from. A column on phones; side by side,
-   swiped or stepped along, on wider screens, with the next sheet showing at the edge. */
-.sheets {
+/* ---------- the printed sheets ----------
+ * Each sheet is a piece of paper carrying the case-file card itself (Sheet.tsx, PrintedCard.tsx): the same markup,
+ * shell and CSS as on its case page, at the same width, so it is the same card. Nothing here reaches inside .s-card.
+ * The card's width follows the case page's column: the case frame (1180px at most, side padding clamp(16px, 4vw, 48px))
+ * less the contents column (12.5rem) and its gap (3rem); one column of the frame's width at 1000px and below.
+ * On tablets and computers the card has a fixed height of 40rem (case-file.css, nike.css), so every sheet is the same
+ * size; a shorter card sits at the top with paper below it. Where the window is too short for the whole sheet, the
+ * printer scales the sheet down evenly (PrintedToOrder.tsx, never below 0.85), which keeps the card's proportions.
+ */
+.sheets,
+.sheet-list {
+  --pad-x: clamp(16px, 4vw, 48px);
+  --case-card-w: calc(min(1180px, var(--doc-w, 100vw)) - 2 * var(--pad-x) - 15.5rem);
+  /* paper round the card */
+  --sp: clamp(16px, 2vw, 26px);
+  --sheet-w: calc(var(--case-card-w) + 2 * var(--sp));
   display: grid;
+  justify-items: center;
   gap: var(--s5);
-  max-width: 880px;
-  margin: 0 auto;
+  margin: 0;
   padding: 0;
   list-style: none;
   outline: none;
+}
+@media (max-width: 1000px) {
+  .sheets,
+  .sheet-list {
+    --case-card-w: calc(var(--doc-w, 100vw) - 2 * var(--pad-x));
+    /* the paper runs into the page's side padding, so the card keeps the case page's width */
+    --sp: calc(var(--pad-x) / 2);
+    margin-inline: calc(-1 * var(--sp));
+  }
 }
 .sheets:focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 6px;
   border-radius: 6px;
 }
-@media (min-width: 900px) {
+/* side by side, swiped or stepped along, with the next sheet showing at the edge */
+@media (min-width: 1001px) {
   .sheets {
     display: flex;
-    gap: var(--s5);
-    max-width: 1100px;
+    align-items: flex-start;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-padding-inline: 0;
-    padding: var(--s3) var(--s3) var(--s6);
+    padding: var(--s3) var(--s3) var(--s5);
     scrollbar-width: none;
   }
   .sheets::-webkit-scrollbar {
     display: none;
   }
   .sheets .sheet {
-    flex: 0 0 min(640px, 72%);
+    flex: none;
     scroll-snap-align: start;
-    display: flex;
-    flex-direction: column;
-  }
-  .sheets .s-foot {
-    margin-top: auto;
-    padding-top: var(--s4);
-  }
-  .sheets .s-media {
-    margin-bottom: var(--s4);
-  }
-  /* on a sheet this wide the claim sits above the reasoning */
-  .sheets .s-head {
-    grid-template-columns: 1fr;
-    gap: var(--s3);
-  }
-  .sheets .sheet p {
-    max-width: none;
   }
 }
-.deckbar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: var(--s3);
-  margin-top: var(--s3);
-  font: 500 13px var(--mono);
-  color: var(--ink-2);
-}
-.deckbar button {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--rule);
-  background: transparent;
-  color: var(--ink);
-  font: 400 18px var(--sans);
-  cursor: pointer;
-}
-.deckbar button:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
+/* --s (set on the strip by the printer) scales the sheet to fit a short window; 1 everywhere else */
 .sheet {
+  width: calc(var(--sheet-w) * var(--s, 1));
+  animation: deal 0.55s var(--ease-out) both;
+}
+.s-paper {
   --focus: var(--paper-ink);
-  position: relative;
+  width: var(--sheet-w);
+  box-sizing: border-box;
+  /* the scaled sheet takes only its scaled height */
+  margin-bottom: calc(var(--sheet-h, 0px) * (var(--s, 1) - 1));
+  padding: 0 var(--sp);
+  border-radius: 4px;
   background: var(--paper);
   color: var(--paper-ink);
-  border-radius: 3px;
-  padding: clamp(18px, 2.6vw, 28px) clamp(18px, 3vw, 32px) clamp(14px, 2vw, 20px);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.6) inset,
     0 1px 2px rgba(0, 0, 0, 0.06),
     0 24px 40px -28px rgba(30, 26, 20, 0.45);
-  animation: deal 0.55s var(--ease-out) both;
+  transform: scale(var(--s, 1));
+  transform-origin: 0 0;
 }
 @keyframes deal {
   from {
@@ -594,12 +585,14 @@
     translate: 0 0;
   }
 }
+/* the top line and the foot: clear of the paper's edges, in line with the card's */
 .s-top {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 10px;
-  margin-bottom: var(--s4);
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  padding: 18px 2px 14px;
   font: 500 11.5px var(--mono);
   letter-spacing: 0.06em;
   color: var(--paper-dim);
@@ -610,58 +603,43 @@
   text-transform: none;
   color: var(--paper-ink);
 }
-/* "2 of 3": this card's place among its project's cards in the print */
-.s-run {
+.s-run,
+.s-count {
   font: 500 11.5px var(--mono);
   letter-spacing: 0.06em;
+  white-space: nowrap;
   color: var(--paper-dim);
 }
-/* the claim on the left, the reasoning on the right, as on a case-file card */
-.s-head {
-  display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: var(--s3) clamp(var(--s5), 4vw, var(--s7));
-  align-items: start;
+@media (min-width: 761px) {
+  .s-card {
+    min-height: 40rem;
+  }
 }
-.sheet .sheet-title {
+/* a card with no case-file form (none is shown today): its words on the paper */
+.s-plain {
+  display: grid;
+  gap: var(--s3);
+  padding: var(--s4) 0;
+}
+.s-plain .sheet-title {
   margin: 0;
   font: 500 clamp(22px, 2.6vw, 30px) / 1.12 var(--sans);
   letter-spacing: -0.03em;
-  text-wrap: balance;
 }
-.s-body {
-  display: grid;
-  gap: var(--s3);
-  padding-top: 4px;
-}
-.sheet p {
+.s-plain p {
   margin: 0;
   max-width: 60ch;
   font-size: 15px;
   line-height: 1.55;
   color: var(--paper-body);
 }
-.s-media {
-  margin-top: var(--s5);
-}
-.s-media .slot-ph {
-  aspect-ratio: 16 / 7;
-  border: 1px dashed var(--paper-line);
-  border-radius: 2px;
-  background: transparent;
-  align-items: center;
-  justify-content: center;
-  font: 400 12px var(--mono);
-  color: var(--paper-dim);
-}
 .s-foot {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin-top: var(--s4);
-  padding-top: var(--s3);
-  border-top: 1px solid var(--paper-rule);
+  flex-wrap: wrap;
+  gap: 0 16px;
+  padding: 6px 2px 10px;
 }
 .s-from {
   font: 400 12px var(--mono);
@@ -708,14 +686,6 @@
 
 /* /ask without JavaScript: the same sheets, stacked */
 /* /ask (no JavaScript): the same sheets, the same column */
-.sheet-list {
-  display: grid;
-  gap: var(--s5);
-  max-width: 880px;
-  margin: 0 auto;
-  padding: 0;
-  list-style: none;
-}
 .ask-form {
   max-width: 620px;
   margin: 28px auto 0;
@@ -948,16 +918,7 @@
   }
 }
 
-@media (max-width: 760px) {
-  .s-head {
-    grid-template-columns: 1fr;
-  }
-  .s-foot {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-  }
-}
+
 
 @media (prefers-reduced-motion: reduce) {
   *,

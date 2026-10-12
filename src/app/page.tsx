@@ -1,19 +1,10 @@
-import type { ReactNode } from "react";
 import { profile, projects } from "@content";
+import { printedCards } from "@/components/PrintedCard";
 import { PrintedToOrder } from "@/components/PrintedToOrder";
-import { sheetEvidence } from "@/components/SheetEvidence";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { buildCardIndex, cardKey, shownTopics } from "@/lib/cards";
+import { buildCardIndex, shownTopics } from "@/lib/cards";
 import { SITE_URL } from "@/lib/site";
-
-/** Each section's evidence, rendered on the server and handed to the printed sheets. */
-function sheetMedia(): Record<string, ReactNode> {
-  const out: Record<string, ReactNode> = {};
-  for (const p of projects)
-    for (const [i, s] of p.sections.entries()) if (s.media) out[cardKey(p.slug, s.id)] = sheetEvidence(p, s, i);
-  return out;
-}
 
 export default function Home() {
   const jsonLd = {
@@ -43,7 +34,7 @@ export default function Home() {
           <b>I&apos;m {profile.name}, a design engineer in {profile.location}.</b> Pick the skills your role needs, describe what
           you&apos;re looking for, or paste the job description. The machine prints the parts of my work that match.
         </p>
-        <PrintedToOrder cards={buildCardIndex()} media={sheetMedia()} labelledBy="home-title" topics={shownTopics()} />
+        <PrintedToOrder cards={buildCardIndex()} printed={printedCards(projects)} labelledBy="home-title" topics={shownTopics()} />
       </main>
       <SiteFooter />
       <script
