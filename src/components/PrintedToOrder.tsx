@@ -31,7 +31,7 @@ const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, prefersRedu
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 /** The ticket's flight: from the rack into the slot (or back). The chip on the paper appears as it lands. */
-const FLY_MS = 600;
+const FLY_MS = 560;
 /** The empty paper swaps its example every so often, with a fade rather than a typewriter, so it reads as a hint, not output. */
 const EXAMPLE_MS = 3800;
 
@@ -59,15 +59,15 @@ function fly(source: HTMLElement, from: DOMRect, to: DOMRect) {
   const dx = to.left + to.width / 2 - (from.left + from.width / 2);
   const dy = to.top + to.height / 2 - (from.top + from.height / 2);
   const scale = Math.min(1, to.height / from.height);
-  const tilt = rnd(-9, 9);
+  const tilt = rnd(-6, 6);
   const anim = copy.animate(
     [
-      { translate: "0 0", scale: "1", rotate: "0deg", opacity: 1 },
-      { translate: `${dx * 0.45}px ${dy * 0.4}px`, scale: "0.8", rotate: `${tilt}deg`, opacity: 1, offset: 0.45 },
-      { translate: `${dx}px ${dy}px`, scale: `${scale}`, rotate: "0deg", opacity: 1, offset: 0.86 },
-      { translate: `${dx}px ${dy}px`, scale: `${scale}`, rotate: "0deg", opacity: 0 },
+      { transform: "translate(0, 0) scale(1) rotate(0deg)", opacity: 1 },
+      { transform: `translate(${dx * 0.5}px, ${dy * 0.42}px) scale(0.85) rotate(${tilt}deg)`, opacity: 1, offset: 0.5 },
+      { transform: `translate(${dx}px, ${dy}px) scale(${scale}) rotate(0deg)`, opacity: 1, offset: 0.88 },
+      { transform: `translate(${dx}px, ${dy}px) scale(${scale}) rotate(0deg)`, opacity: 0 },
     ],
-    { duration: FLY_MS, easing: "cubic-bezier(0.45, 0, 0.2, 1)", fill: "forwards" },
+    { duration: FLY_MS, easing: "cubic-bezier(0.3, 0, 0.1, 1)", fill: "forwards" },
   );
   anim.onfinish = () => copy.remove();
   anim.oncancel = () => copy.remove();
@@ -145,13 +145,14 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
   /** Where a ticket lands on the paper: beside the last chip, or the paper's bottom-left corner when there are none. */
   const slotOnPaper = (): DOMRect | null => {
     const chips = chipsRef.current;
-    const last = chips && !chips.hidden ? (chips.lastElementChild as HTMLElement | null) : null;
+    if (!chips || chips.hidden) return null;
+    const last = chips.lastElementChild as HTMLElement | null;
     if (last) {
       const r = last.getBoundingClientRect();
       return new DOMRect(r.right + 6, r.top, r.width, r.height);
     }
-    const paper = paperRef.current?.getBoundingClientRect();
-    return paper ? new DOMRect(paper.left + 22, paper.bottom - 14 - 28, 120, 28) : null;
+    const r = chips.getBoundingClientRect();
+    return new DOMRect(r.left, r.top, 120, r.height);
   };
 
   /** A ticket is taken from the rack and dropped into the slot, or taken off the paper and put back. */
@@ -348,9 +349,6 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
               >
                 <small aria-hidden="true">{pad2(i + 1)}</small>
                 <b>{t.label}</b>
-                <span className="taken" aria-hidden="true">
-                  In the machine
-                </span>
               </button>
             </li>
           ))}
@@ -400,7 +398,7 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
                 </div>
               </div>
               <input type="hidden" name="topics" value={topicsToSignals(picked).join(",")} />
-              <div className="chips" ref={chipsRef} aria-label="Selected skills" role="group" hidden={working || !picked.length}>
+              <div className="chips" ref={chipsRef} aria-label="Selected skills" role="group" hidden={working}>
                 {picked.map((id) => {
                   const label = topicById(id)?.label ?? id;
                   const n = topics.findIndex((t) => t.id === id);

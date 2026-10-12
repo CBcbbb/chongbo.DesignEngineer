@@ -90,11 +90,7 @@
   mask-clip: no-clip;
   mask-composite: intersect;
   filter: drop-shadow(0 2px 0 #d6d2ca) drop-shadow(0 12px 10px rgba(40, 30, 20, 0.2));
-  transition:
-    transform 0.25s var(--ease),
-    filter 0.25s,
-    background-color 0.25s,
-    color 0.25s;
+  transition: transform 0.25s var(--ease);
 }
 /* perforation between the stub (number) and the ticket (name) */
 .topic::before {
@@ -119,7 +115,6 @@
 }
 .topic:hover {
   transform: translateY(-4px) rotate(-0.6deg);
-  filter: drop-shadow(0 2px 0 #d6d2ca) drop-shadow(0 18px 14px rgba(40, 30, 20, 0.26));
 }
 .topic:focus-visible {
   outline: 2px solid var(--focus);
@@ -143,40 +138,28 @@
 .topic[aria-pressed="true"] b {
   opacity: 0.55;
 }
-.topic .taken {
-  display: none;
+.topic[aria-pressed="true"]:hover b {
+  opacity: 0.8;
 }
-.topic[aria-pressed="true"] .taken {
-  display: block;
-  position: absolute;
-  left: 12px;
-  bottom: 10px;
-  font: 500 10px var(--mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--red);
-  opacity: 0;
-  transition: opacity 0.2s;
-}
-.topic[aria-pressed="true"]:hover .taken,
-.topic[aria-pressed="true"]:focus-visible .taken {
-  opacity: 1;
-}
-.topic[aria-pressed="true"]:hover b,
-.topic[aria-pressed="true"]:focus-visible b {
-  opacity: 0;
-}
+/* the copy in flight: a plain stub (no notches or filter, which are costly to animate), lifted off the page */
 .topic.flying {
   transform: none;
   transition: none;
-  filter: drop-shadow(0 18px 16px rgba(40, 30, 20, 0.3));
+  mask-image: none;
+  filter: none;
+  box-shadow: 0 18px 24px -8px rgba(40, 30, 20, 0.35);
+  will-change: transform, opacity;
+}
+.topic.flying::before {
+  display: none;
 }
 
 /* ---------- the printer ----------
    Sized so the whole machine, with the paper above it, sits in the first screen on a laptop:
    the width follows the viewport height, between 440px and 680px, and the paper's idle height scales with it. */
 .stage {
-  --ph: clamp(100px, 13vh, 136px);
+  /* the paper's height before it is measured: label, three ruled lines and the row for tickets, so nothing jumps on load */
+  --ph: 170px;
   position: relative;
   width: clamp(440px, calc((100svh - 500px) * 2.2), 680px);
   max-width: 100%;
@@ -188,6 +171,8 @@
   position: relative;
   aspect-ratio: 1100 / 494;
   z-index: 2;
+  /* the engraved text is sized from the machine's width, so it fits the plate at every size */
+  container-type: inline-size;
 }
 .machine > img {
   position: absolute;
@@ -209,9 +194,9 @@
   flex-direction: column;
   justify-content: center;
   padding-left: 0.9%;
-  font: 500 clamp(5.5px, 0.82vw, 9px) / 1.3 var(--mono);
+  font: 500 1.2cqw / 1.35 var(--mono);
   color: #6e6a63;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   white-space: nowrap;
   overflow: hidden;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
@@ -303,7 +288,7 @@
   left: 86.1%;
   top: 74.2%;
   transform: translateX(-50%);
-  font: 600 clamp(6px, 0.8vw, 9px) / 1 var(--mono);
+  font: 600 1.1cqw / 1 var(--mono);
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #7c776f;
@@ -473,14 +458,13 @@
 .field.has-text .ghost {
   display: none;
 }
-/* tickets on the paper: the same stub, smaller, number and all */
+/* tickets on the paper: the same stub, smaller, number and all. The row is always there, so a ticket landing
+   never makes the sheet grow and the machine shift under it. */
 .paper .chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-}
-.paper .chips:empty {
-  display: none;
+  min-height: 28px;
 }
 .paper .chips button {
   --focus: var(--paper-ink);
@@ -681,11 +665,31 @@
   .sheets::-webkit-scrollbar {
     display: none;
   }
+  /* one screen per sheet: a fixed height, the evidence scaled to whatever room the words leave */
   .sheets .sheet {
     flex: 0 0 var(--sheet-w);
+    height: clamp(520px, calc(100svh - 200px), 720px);
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;
+  }
+  .sheets .sheet > article {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .sheets .s-media {
+    flex: 1;
+    min-height: 0;
+    margin-top: var(--s4);
+    margin-bottom: 0;
+  }
+  .sheets .fit {
+    height: 100%;
+  }
+  .sheets .s-foot {
+    flex: none;
   }
   /* room after the last sheet, so it too can come to the front */
   .sheets::after {
@@ -695,9 +699,6 @@
   .sheets .s-foot {
     margin-top: auto;
     padding-top: var(--s4);
-  }
-  .sheets .s-media {
-    margin-bottom: var(--s4);
   }
   /* on a sheet this wide the claim sits above the reasoning */
   .sheets .s-head {
@@ -803,6 +804,13 @@
 }
 .s-media {
   margin-top: var(--s5);
+}
+.fit {
+  position: relative;
+  overflow: hidden;
+}
+.fit-in {
+  transform-origin: top center;
 }
 .s-media .slot-ph {
   aspect-ratio: 16 / 7;
@@ -1070,7 +1078,7 @@
     display: none;
   }
   .stage {
-    --ph: 112px;
+    --ph: 180px;
     width: 100%;
     margin-top: calc(var(--pm, var(--ph)) + var(--s4));
   }

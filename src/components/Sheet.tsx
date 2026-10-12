@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { SheetCard } from "@/lib/cards";
 import { pad2 } from "@/lib/printed";
+import { FitMedia } from "./FitMedia";
 
 type Props = {
   card: SheetCard;
@@ -42,7 +43,11 @@ export function Sheet({ card, index, total, media, current = true, headingId, as
           ))}
         </div>
       </div>
-      {media && <div className="s-media">{media}</div>}
+      {media && (
+        <div className="s-media">
+          <FitMedia>{media}</FitMedia>
+        </div>
+      )}
       <div className="s-foot">
         <span className="s-from">Case file: {card.projectTitle}</span>
         <Link className="full" href={card.href} tabIndex={current ? 0 : -1}>
