@@ -320,3 +320,46 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 @media (max-width: 600px) { .cf-sheet .ds-out li { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
+
+/* ---------- overview: three translucent layers ---------- */
+.ds-layers2 { display: grid; gap: 12px; overflow-x: auto; }
+.ds-layers2 svg { display: block; width: 100%; height: auto; min-width: 620px; overflow: visible; }
+.ds-layers2 .sheet { stroke-width: 1.2; }
+.ds-layers2 .is-shared .sheet { fill: var(--case-inset); fill-opacity: 0.86; stroke: var(--case-line); }
+.ds-layers2 .is-product .sheet { fill: var(--case-inset); fill-opacity: 0.62; stroke: var(--case-line); }
+.ds-layers2 .is-customer .sheet { fill: var(--field); fill-opacity: 0.88; stroke: var(--field); }
+.ds-layers2 .pn { font: 600 12px var(--mono); letter-spacing: 0.08em; fill: var(--case-dim); }
+.ds-layers2 .is-customer .pn { fill: var(--on-field-2); }
+.ds-layers2 .chip text { font: 500 12px var(--mono); }
+.ds-layers2 .chip .v { font-size: 11.5px; }
+.ds-layers2 .chip.is-set rect { fill: var(--case-bg); stroke: var(--case-ink); stroke-width: 1; }
+.ds-layers2 .chip.is-set text { fill: var(--case-ink); }
+.ds-layers2 .chip.is-set .v { fill: var(--case-dim); }
+.ds-layers2 .is-customer .chip.is-set rect { fill: var(--on-field); stroke: var(--on-field); }
+.ds-layers2 .is-customer .chip.is-set text, .ds-layers2 .is-customer .chip.is-set .v { fill: var(--field); }
+.ds-layers2 .is-product .chip.is-set rect { fill: var(--case-ink); }
+.ds-layers2 .is-product .chip.is-set text, .ds-layers2 .is-product .chip.is-set .v { fill: var(--case-bg); }
+.ds-layers2 .chip.is-through rect { fill: none; stroke: var(--case-line); stroke-dasharray: 4 3; }
+.ds-layers2 .is-customer .chip.is-through rect { stroke: var(--on-field-2); }
+.ds-layers2 .btn-base { fill: #0c5c63; }
+.ds-layers2 .btn-base-t { font: 600 13px "Geist", sans-serif; fill: #fafafa; }
+.ds-layers2 .btn-cust { fill: var(--on-field); }
+.ds-layers2 .btn-cust-t { font-size: 13px; font-weight: 600; fill: var(--field); }
+.ds-layers2 .menu > rect:first-child { fill: #27272a; }
+.ds-layers2 .menu text { font: 400 12px "Geist", sans-serif; fill: #f4f4f5; }
+.ds-layers2 .menu .hl { fill: #45454c; }
+.ds-layers2 .pin { stroke: var(--case-ink); stroke-width: 1.5; stroke-dasharray: 3 3; }
+.ds-layers2 .pin-top { fill: var(--ds-mark); stroke: var(--case-ink); stroke-width: 1.5; }
+.ds-layers2 .pin-end { fill: var(--case-bg); stroke: var(--case-ink); stroke-width: 1.5; }
+.ds-layers2 .chip.is-over .v { text-decoration: line-through; opacity: 0.6; }
+.ds-layers2 .leader { stroke: var(--case-line); stroke-width: 1; }
+.ds-layers2 .leader-dot { fill: var(--case-ink); }
+.ds-layers2 .ln { font: 600 17px var(--sans); fill: var(--case-ink); }
+.ds-layers2 .ls { font: 500 12px var(--mono); fill: var(--case-dim); }
+.ds-layers2 .lt { font: 400 13px var(--sans); fill: var(--case-body); }
+.ds-layers-key { margin: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; font: 500 12px/1.4 var(--mono); color: var(--case-dim); }
+.ds-layers-key span { display: inline-block; width: 22px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
+.ds-layers-key .k-set { background: var(--case-bg); box-shadow: inset 0 0 0 1px var(--case-ink); }
+.ds-layers-key .k-through { box-shadow: inset 0 0 0 1px var(--case-line); background: repeating-linear-gradient(90deg, transparent 0 3px, var(--case-bg) 3px 6px); }
+.ds-layers-key .k-pin { height: 0; border-top: 1.5px dashed var(--case-ink); border-radius: 0; }
+.ds-layers-key .k-over { width: auto; height: auto; text-decoration: line-through; opacity: 0.7; margin: 0; }

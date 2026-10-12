@@ -296,31 +296,59 @@
     document.querySelectorAll('input[name="f2c"]').forEach((r) => r.addEventListener("change", () => { stage.dataset.show = r.value; }));
   }
 
-  /* ---------- 01.3: three layers, exploded; the top plane wears the current brand ---------- */
+  /* ---------- overview: three translucent layers; each token is set once and overridden from above ---------- */
   const layers = document.getElementById("layers");
   if (layers) {
-    layers.innerHTML = `
-      <ol class="ds-stack-legend">
-        <li><h4>Customer <span>their brand</span></h4><ul><li><code>colour</code></li><li><code>font</code></li><li><code>button shape</code></li></ul></li>
-        <li><h4>Product <span>only what it needs</span></h4><ul><li><code>--menu-highlight: mix(--hover, --active)</code></li><li><code>--card (dark)</code></li></ul></li>
-        <li><h4>Shared package <span>every product</span></h4><ul><li><code>scales 50–700</code></li><li><code>--success</code></li><li><code>--warning-text</code></li><li><code>--radius</code></li><li><code>Button</code></li><li><code>Input</code></li></ul></li>
-      </ol>
-      <div class="ds-iso" aria-hidden="true">
-        <div class="ds-plane is-shared"><span class="ds-plane-n">Shared</span><span class="ui" data-btn="base"><span class="ui-btn is-primary">New run</span></span></div>
-        <div class="ds-plane is-product"><span class="ds-plane-n">Product</span><span class="ds-mini-menu"><span>Rename</span><span class="is-hl">Duplicate</span><span>Archive</span></span></div>
-        <div class="ds-plane is-customer"><span class="ds-plane-n" data-cname></span><span class="ui" data-btn="cust"><span class="ui-btn is-primary">New run</span></span></div>
-      </div>`;
-    const base = layers.querySelector('[data-btn="base"]');
-    apply(base, theme(CUSTOMERS[1].colour, "light"));
-    const cust = layers.querySelector('[data-btn="cust"]');
-    listeners.push((c) => {
-      const t = theme(c.colour, "light");
-      cust.style.setProperty("--primary", pickPage(c.colour) === INK ? INK : NEAR_WHITE);
-      cust.style.setProperty("--primary-fg", c.colour);
-      cust.style.setProperty("--font", c.font); cust.style.setProperty("--btn-r", c.btn);
-      layers.querySelector("[data-cname]").textContent = c.name;
-      void t;
-    });
+    const COS = 0.866, SIN = 0.5, PW = 400, PH = 220, GAP = 172, OX = 206, OY = 14;
+    const P = (x, y, oy) => [OX + (x - y) * COS, oy + (x + y) * SIN];
+    const iso = (oy) => `matrix(${COS} ${SIN} ${-COS} ${SIN} ${OX} ${oy})`;
+    const TOKENS = ["--primary", "--radius", "--font", "--menu-highlight"];
+    const chipY = (i) => 50 + i * 38, CX = 18, CW = 236, CH = 28;
+    const draw = (c) => {
+      const brandFont = c.font.replace(/"/g, "'").replace("var(--sans)", "sans-serif");
+      const fontName = c.font.match(/"([^"]+)"/)[1];
+      const L = [
+        { key: "customer", name: "Customer", sub: "their brand", note: "colour · font · button shape", oy: OY,
+          set: { "--primary": c.colour, "--radius": c.btn === "999px" ? "pill" : c.btn === "0" ? "0" : c.btn, "--font": fontName } },
+        { key: "product", name: "Product", sub: "only what it needs", note: "fixes built from tokens", oy: OY + GAP,
+          set: { "--menu-highlight": "hover + active" } },
+        { key: "shared", name: "Shared package", sub: "every product", note: "scales · roles · components", oy: OY + 2 * GAP,
+          set: { "--primary": "brand-600", "--radius": "0.5rem", "--font": "Geist", "--menu-highlight": "accent" } },
+      ];
+      const plane = (l) => {
+        const chips = TOKENS.map((t, i) => {
+          const v = l.set[t];
+          if (v == null) return `<g class="chip is-through"><rect x="${CX}" y="${chipY(i)}" width="${CW}" height="${CH}" rx="6"/></g>`;
+          const over = L.indexOf(l) > 0 && L.slice(0, L.indexOf(l)).some((u) => u.set[t] != null);
+          return `<g class="chip is-set${over ? " is-over" : ""}"><rect x="${CX}" y="${chipY(i)}" width="${CW}" height="${CH}" rx="6"/><text x="${CX + 10}" y="${chipY(i) + 18}">${t}</text><text class="v" x="${CX + CW - 10}" y="${chipY(i) + 18}" text-anchor="end">${esc(v)}</text></g>`;
+        }).join("");
+        let art = "";
+        if (l.key === "shared") art = `<rect class="btn-base" x="280" y="80" width="100" height="36" rx="8"/><text class="btn-base-t" x="330" y="103" text-anchor="middle">New run</text>`;
+        if (l.key === "product") art = `<g class="menu"><rect x="274" y="60" width="108" height="100" rx="8"/><text x="286" y="84">Rename</text><rect class="hl" x="278" y="94" width="100" height="28" rx="5"/><text x="286" y="113">Duplicate</text><text x="286" y="144">Archive</text></g>`;
+        if (l.key === "customer") { const r = c.btn === "999px" ? 17 : parseFloat(c.btn) * 16 || 0; art = `<rect class="btn-cust" x="280" y="80" width="100" height="36" rx="${r}"/><text class="btn-cust-t" x="330" y="103" text-anchor="middle" style="font-family:${brandFont}">New run</text>`; }
+        return `<g class="plane is-${l.key}" transform="${iso(l.oy)}"><rect class="sheet" x="0" y="0" width="${PW}" height="${PH}" rx="16"/><text class="pn" x="18" y="32">${l.name.toUpperCase()}</text>${chips}${art}</g>`;
+      };
+      // pins: from the layer that sets a token down to the one it overrides
+      const centre = (i, oy) => P(CX + CW / 2, chipY(i) + CH / 2, oy);
+      const pins = TOKENS.map((t, i) => {
+        const setters = L.filter((l) => l.set[t] != null);
+        if (setters.length < 2) return "";
+        const [top, bottom] = [setters[0], setters[setters.length - 1]];
+        const [x1, y1] = centre(i, top.oy), [x2, y2] = centre(i, bottom.oy);
+        return `<line class="pin" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/><circle class="pin-top" cx="${x1}" cy="${y1}" r="4"/><circle class="pin-end" cx="${x2}" cy="${y2}" r="4"/>`;
+      }).join("");
+      // labels with leader lines from each plane's right corner
+      const LX = OX + PW * COS + 46;
+      const labels = L.map((l) => { const [x, y] = P(PW, 0, l.oy); return `<line class="leader" x1="${x + 6}" y1="${y}" x2="${LX - 10}" y2="${y}"/><circle class="leader-dot" cx="${x + 6}" cy="${y}" r="2.5"/><text class="ln" x="${LX}" y="${y - 6}">${l.name}</text><text class="ls" x="${LX}" y="${y + 13}">${l.sub}</text><text class="lt" x="${LX}" y="${y + 31}">${l.note}</text>`; }).join("");
+      const W = LX + 230, H = OY + 2 * GAP + (PW + PH) * SIN + 12;
+      layers.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Three layers stacked: the shared package sets every token; the product overrides only the menu highlight; the customer overrides colour, radius and font. Lines link each override to the value it replaces.">
+        ${[L[2], L[1], L[0]].map(plane).join("")}
+        <g class="pins">${pins}</g>
+        <g class="labels">${labels}</g>
+      </svg>
+      <p class="ds-layers-key"><span class="k-set"></span>set on this layer <span class="k-through"></span>comes through from below <span class="k-pin"></span>overrides the value below <span class="k-over">0.5rem</span> replaced</p>`;
+    };
+    listeners.push(draw);
   }
 
   /* ---------- 02.1: a wall of the scales ---------- */

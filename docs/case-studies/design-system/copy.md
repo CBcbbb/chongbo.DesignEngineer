@@ -22,6 +22,12 @@ The shared colours and components behind three products, and every customer's br
 - **Outcome:** Three products that read as one company again, in any customer's brand. `[the last clause once the fix ships]`
 - **What this shows:** Design system (C) · Accessibility in the colours (E) · Figma to code (B)
 
+### Overview · Three layers: shared, product, customer
+
+The shared package holds the colours, roles and component styles, so a fix there reaches all three products. Each product overrides only what it needs, from tokens rather than new colours.
+
+Customers add their own colour, font and button shape on top.
+
 ## The work
 
 The system, rebuilt on an invented brand.
@@ -41,12 +47,6 @@ Built fast by different teams, much of it with AI coding tools, each product cha
 I built the system in Figma first, from the main product's shadcn components: colour variables with Light and Dark modes, and components with their variants and states.
 
 Then I shipped it as a code package, so teams build with its parts instead of redrawing them from a file. I've since moved to building directly in code with AI coding tools; the Figma library keeps the foundations for quick sketches.
-
-### 01.3 Three layers: shared, product, customer
-
-The shared package holds the colours, roles and component styles, so a fix there reaches all three products. Each product overrides only what it needs, from tokens rather than new colours.
-
-Customers add their own colour, font and button shape on top.
 
 ## Part 2 · Accessibility built into the colours
 
@@ -95,7 +95,7 @@ As the company's only designer, I designed the system in Figma and shipped it as
 - **The work:** one panel of components (buttons, input, select, badges, alerts, pagination). Switch between three invented customers (colour, font, button shape), pick your own colour, switch Light / Dark; "Show ratios" puts the live contrast on every text pairing.
 - **01.1:** one screen drawn as the first product, then as the two later ones: same tokens, each with its own radii, buttons, type and spacing.
 - **01.2:** the rebuilt Figma file (component sets, variables with Light and Dark modes) beside the same components as code.
-- **01.3:** diagram. Shared package → one product's overrides (e.g. a menu highlight mixed from the hover and active tokens) → a customer's colour, font and button shape.
+- **Overview:** three translucent layers in perspective; each token chip is set once and struck through where a higher layer overrides it, with lines linking each override to the value it replaces; labels on leader lines. Was: Shared package → one product's overrides (e.g. a menu highlight mixed from the hover and active tokens) → a customer's colour, font and button shape.
 - **02.1:** colour specimens. Six hues × five steps, each step labelled with its job.
 - **02.2:** numbers set large: **30 of 30** text pairings pass WCAG AA · **5.16:1** lowest · **2** modes.
 - **02.3:** the specimens with a Light / Dark switch.

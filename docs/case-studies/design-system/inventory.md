@@ -182,6 +182,7 @@ Resolved 12 Oct: what differed (radii, buttons, type, spacing); variables (yes);
 - **Default: the courier's yellow**, the colour that broke the first version. The ochre palette is dropped.
 - **Title: One Design System, Three Products, Any Brand** (customisation in the name). Broken as "One Design System, / Three Products, / Any Brand".
 - **Cover art: the three layers**, stacked in the top-right corner; the top plane wears the brand.
+- **The three layers move under the cover as the overview** (Chongbo, 12 Oct): translucent planes, every token set once, overrides linked to the values they replace, labels on leader lines. Part 1 is now Drifting apart and Figma to code (01.1, 01.2).
 - Card compositions: 01.1 three products fanned; 01.2 Figma / Code on one stage; 01.3 an exploded stack of the three layers; 02.1 a wall of the scales; 02.2 on a dark sheet; 02.3 one specimen split between light and dark by a slider.
 
 ## Decisions (12 October 2026)
