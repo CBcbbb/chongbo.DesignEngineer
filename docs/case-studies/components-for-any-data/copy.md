@@ -44,6 +44,8 @@ An adapter turns each producer's format into flat rows, a binding maps one slot'
 
 Not every component takes a stream: filters and search read the page, and forms wait for the user.
 
+I wrote the front end and the server with Claude Code and Cursor.
+
 ### 01.4 Streams ranked by fit, judged on the server
 
 The first answer was to list every stream in the organisation by row count. A test organisation already had 74, most didn't fit, and users found out after reading a stream's rows.

@@ -12,3 +12,7 @@ Things built on a best guess, or still open. Each says what was done and what to
 8. **Hover-only values.** Exact chart values show on hover and in a table for screen readers; a sighted keyboard user sees the axis, the largest value and (donut, treemap) the labels. A "Show as table" switch would close that gap.
 9. **Not tested here:** VoiceOver with Safari (playbook §8 step 7). The automated checks (axe, every text contrast pair, keyboard walk of the demo) pass.
 10. **Site-wide, not this project:** there is no favicon (`/favicon.ico` returns 404 on every page).
+
+## 12 October 2026
+
+- **AI tools (01.3).** Chongbo: "I used Claude Code and Cursor to write the front end and the server." One sentence on the pipeline card, which covers both, and the `ai-tools` signal. The home page's "AI tools" card is offered again.

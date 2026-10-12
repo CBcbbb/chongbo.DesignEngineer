@@ -1,0 +1,301 @@
+<title>Printer Prompts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: the home page's first screen. Lines to borrow sit above the machine; one picked is typed onto the paper, which stays editable. */
+:root{
+  --studio:#e9e7e2; --studio-hi:#f5f4f0; --ink:#1c1b19; --ink-2:#5b5853; --rule:#d3d0c9;
+  --paper:#fbfaf7; --paper-ink:#1c1b19; --paper-dim:#5e5b55; --paper-ghost:#75716a; --paper-chip:#bdb9b1; --paper-rule:#e2dfd8;
+  --red:#c9372a; --lamp-ready:#6fcf7c; --lamp-busy:#ffc46b; --focus:#1c1b19;
+  --slip-edge:#d6d2ca;
+  --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --ease:cubic-bezier(.2,.8,.2,1);
+  --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:24px;--s6:32px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--studio:#1a1918;--studio-hi:#2a2826;--ink:#eeece8;--ink-2:#aba79f;--rule:#3a3835;--focus:#eeece8;--slip-edge:#0d0c0b;color-scheme:dark}}
+:root[data-theme="dark"]{--studio:#1a1918;--studio-hi:#2a2826;--ink:#eeece8;--ink-2:#aba79f;--rule:#3a3835;--focus:#eeece8;--slip-edge:#0d0c0b;color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background-color:var(--studio);background-image:radial-gradient(90% 55% at 50% 30%,var(--studio-hi),var(--studio) 70%);color:var(--ink);font:16px/1.5 var(--sans);-webkit-font-smoothing:antialiased;min-height:100%}
+.wrap{max-width:1200px;margin:0 auto;padding-inline:clamp(16px,4vw,48px);padding-block:0 var(--s6)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:var(--s3);font-size:14px}
+.who{display:flex;gap:10px;align-items:baseline}.who b{font-weight:600}.who span{color:var(--ink-2)}
+.bar nav{display:flex;gap:22px;color:var(--ink-2)}
+.proto{font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);border:1px dashed var(--rule);border-radius:999px;padding:3px 10px}
+
+.eyebrow{margin:var(--s5) 0 0;text-align:center;font:500 12px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
+h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var(--sans);letter-spacing:-.035em;text-wrap:balance}
+.intro{max-width:56ch;margin:var(--s3) auto 0;text-align:center;color:var(--ink-2);text-wrap:pretty}
+.intro b{font-weight:500;color:var(--ink)}
+
+/* ---------- lines to borrow ---------- */
+.lines{max-width:1120px;margin:var(--s5) auto 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.line{--focus:var(--ink);position:relative;display:inline-flex;align-items:baseline;gap:5px;min-height:36px;padding:7px 12px 8px;border:0;border-radius:5px;cursor:pointer;text-align:left;
+  background:var(--paper);color:var(--paper-ink);font:500 13.5px/1.3 var(--sans);letter-spacing:-.005em;
+  box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 0 0 1px rgba(60,50,40,.1),0 2px 0 var(--slip-edge),0 10px 18px -10px rgba(40,30,20,.35);
+  transition:transform .25s var(--ease),box-shadow .25s}
+.line i{font-style:normal;font-family:var(--mono);color:var(--paper-dim)}
+.line:hover{transform:translateY(-3px)}
+.line[aria-pressed="true"]{transform:translateY(-6px);box-shadow:0 0 0 1.5px var(--paper-ink),0 14px 20px -12px rgba(40,30,20,.45)}
+.line[aria-pressed="true"]::after{content:"";position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 2px var(--paper)}
+.line.jd{background:transparent;color:var(--ink);box-shadow:none;border:1.5px dashed var(--ink-2)}
+.line.jd:hover{border-style:solid}
+
+/* ---------- the printer (values from src/app/printer.css) ---------- */
+.stage{position:relative;width:clamp(440px,calc((100svh - 520px) * 2.2),680px);max-width:100%;margin:calc(var(--pm,130px) + var(--s5)) auto 0;transition:margin-top .4s var(--ease)}
+.machine{position:relative;aspect-ratio:1100/494;z-index:2}
+.machine>img{position:absolute;inset:0;width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none;filter:drop-shadow(0 30px 34px rgba(30,26,20,.22))}
+.plate{position:absolute;left:14.1%;top:52.4%;width:14.5%;height:10%;display:flex;flex-direction:column;justify-content:center;padding-left:.9%;font:500 clamp(5.5px,.82vw,9px)/1.3 var(--mono);color:#6e6a63;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-shadow:0 1px 0 rgba(255,255,255,.6);pointer-events:none}
+.led{position:absolute;left:9.9%;top:56.1%;width:1.1%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;transition:background .3s,box-shadow .3s}
+.machine[data-state="ready"] .led{background:var(--lamp-ready);box-shadow:0 0 9px 3px rgba(111,207,124,.65)}
+.machine[data-state="working"] .led{background:var(--lamp-busy);box-shadow:0 0 10px 4px rgba(255,180,80,.75);animation:blink .55s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.pk{position:absolute;left:86.1%;top:59.8%;width:max(10.4%,44px);aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);border:0;padding:0;cursor:pointer;background:transparent}
+.pk::after{content:"";position:absolute;inset:14%;border-radius:50%;transition:box-shadow .2s,background .1s,transform .1s}
+.pk:hover::after{box-shadow:0 0 0 3px rgba(201,55,42,.18),0 0 22px 4px rgba(201,55,42,.28)}
+.pk:active::after,.pk[aria-busy="true"]::after{background:radial-gradient(circle at 50% 40%,rgba(0,0,0,.08),rgba(60,0,0,.32));transform:translateY(2px) scale(.97)}
+.machine[data-state="ready"] .pk::after{animation:invite 1.8s ease-in-out infinite}
+@keyframes invite{0%,100%{box-shadow:0 0 0 0 rgba(201,55,42,0)}50%{box-shadow:0 0 0 5px rgba(201,55,42,.22),0 0 30px 8px rgba(201,55,42,.36)}}
+.pk:focus-visible{outline-offset:2px;border-radius:50%}
+.pk-label{position:absolute;left:86.1%;top:74.2%;transform:translateX(-50%);font:600 clamp(6px,.8vw,9px)/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:#7c776f;text-shadow:0 1px 0 rgba(255,255,255,.55);pointer-events:none;transition:color .3s}
+.machine[data-state="ready"] .pk-label{color:var(--red)}
+
+.paperbox{position:absolute;left:15.5%;width:69%;bottom:calc(100% - 7.7%);z-index:3;margin:0}
+.paperbox::after{content:"";position:absolute;left:-1%;right:-1%;bottom:-3px;height:7px;border-radius:4px;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,0));pointer-events:none}
+.paper{--focus:var(--paper-ink);position:relative;background:var(--paper);color:var(--paper-ink);border-radius:3px 3px 0 0;padding:18px 22px 16px;display:flex;flex-direction:column;gap:10px;
+  box-shadow:0 -1px 0 rgba(0,0,0,.04),0 10px 30px -14px rgba(0,0,0,.25);background-image:linear-gradient(180deg,rgba(0,0,0,0) 70%,rgba(0,0,0,.05))}
+.field{position:relative}
+.field textarea{display:block;width:100%;min-height:4.6em;max-height:16em;resize:none;border:0;background:transparent;color:var(--paper-ink);font:400 17px/1.5 var(--mono);padding:0;outline:none;caret-color:var(--red);overflow-y:auto}
+.ghost{position:absolute;inset:0;font:400 17px/1.5 var(--mono);color:var(--paper-ghost);pointer-events:none;white-space:pre-wrap}
+.ghost::after{content:"";display:inline-block;width:2px;height:1.1em;background:var(--red);vertical-align:-3px;margin-left:1px;animation:caret 1s steps(2) infinite}
+@keyframes caret{50%{opacity:0}}
+.field.on .ghost{display:none}
+.count{align-self:flex-end;font:500 11px var(--mono);letter-spacing:.06em;color:var(--paper-dim)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font:400 15px/1.4 var(--mono)}
+.steps li{display:flex;gap:12px;align-items:flex-start;opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s}
+.steps li::before{content:"";flex:none;margin-top:.42em;width:10px;height:10px;border-radius:50%;border:1.5px solid currentColor}
+.steps li.now,.steps li.done{opacity:1;transform:none}
+.steps li.done::before{background:currentColor}
+.steps li.now::before{border-color:currentColor transparent currentColor currentColor;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* what the site would do next */
+.out{max-width:680px;margin:var(--s5) auto 0;background:var(--paper);color:var(--paper-ink);border-radius:2px;padding:20px 22px;box-shadow:0 0 0 1px rgba(60,50,40,.08),0 16px 30px -18px rgba(40,30,20,.45)}
+.out .k{font:500 11.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--paper-dim)}
+.out h2{margin:6px 0 0;font:600 22px/1.2 var(--sans);letter-spacing:-.02em;text-wrap:balance}
+.out p{margin:10px 0 0;font-size:14px;color:var(--paper-dim)}
+.out ul{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 0;padding:0;list-style:none}
+.out li{border:1px solid var(--paper-chip);border-radius:999px;padding:2px 10px;font:500 12px var(--sans)}
+
+@media (max-width:640px){
+  .lines{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-inline:16px;margin-inline:-16px;padding:10px 16px 14px;scrollbar-width:none}
+  .lines li{flex:none;scroll-snap-align:start}
+  .line{max-width:260px}
+  .paper{padding:14px 14px 12px}
+  .field textarea,.ghost{font-size:15px}
+  .bar nav,.who span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="bar">
+    <span class="who"><b>Chongbo Ning</b><span>Design Engineer, London</span></span>
+    <nav><span>Work</span><span>About</span></nav>
+    <span class="proto">Prototype</span>
+  </header>
+
+  <main>
+    <p class="eyebrow">Printed to order</p>
+    <h1 id="h1">Who are you looking for?</h1>
+    <p class="intro"><b>I'm Chongbo Ning, a design engineer in London.</b> Tell the machine who you're hiring, or paste the job description. It prints the parts of my work that match.</p>
+
+    <h2 class="sr" id="lines-title">Lines to start from</h2>
+    <ul class="lines" id="lines" aria-labelledby="lines-title"></ul>
+
+    <div class="stage" id="stage">
+      <div class="machine" id="machine" data-state="idle">
+        <form class="paperbox" id="order" autocomplete="off" aria-labelledby="h1">
+          <div class="paper" id="paper">
+            <div class="field" id="field">
+              <label for="brief" class="sr">Describe who you're hiring, or paste a job description.</label>
+              <textarea id="brief" name="brief" rows="3" maxlength="6000"></textarea>
+              <div class="ghost" id="ghost" aria-hidden="true">We're looking for someone who</div>
+            </div>
+            <ul class="steps" id="steps" hidden aria-hidden="true"></ul>
+          </div>
+        </form>
+        <img src="printer.webp" alt="" width="1100" height="494" draggable="false">
+        <div class="plate" aria-hidden="true"><span>CHONGBO NING</span><span>DESIGN ENGINEER</span></div>
+        <span class="led" aria-hidden="true"></span>
+        <button class="pk" id="pk" type="submit" form="order" aria-label="Print"></button>
+        <span class="pk-label" aria-hidden="true">Print</span>
+      </div>
+    </div>
+
+    <section class="out" id="out" hidden aria-live="polite">
+      <span class="k">The site would print for</span>
+      <h2 id="out-title"></h2>
+      <p>Sent to the printer with these skills, so the AI and the keyword fallback both know what was asked:</p>
+      <ul id="out-signals"></ul>
+    </section>
+    <p class="sr" id="live" aria-live="polite"></p>
+  </main>
+</div>
+
+<script>
+(() => {
+  const FRAME = "We're looking for someone who";
+  // Each line continues the frame. Signals are the content keys the printer already understands.
+  const LINES = [
+    { id: "systems", text: "owns a design system from Figma to code", label: "Design systems", signals: ["design-systems", "reusable-components", "cross-platform"] },
+    { id: "e2e", text: "takes ideas from first sketch to production", label: "End-to-end delivery", signals: ["end-to-end", "judgement"] },
+    { id: "proto", text: "prototypes in code to find the right interaction", label: "Prototyping", signals: ["prototyping", "motion-interaction"] },
+    { id: "a11y", text: "builds interfaces that work with a keyboard or a screen reader", label: "Accessibility", signals: ["accessibility"] },
+    { id: "data", text: "designs the data layer as well as the interface", label: "Data architecture", signals: ["data-architecture", "data", "design-eng-gap"] },
+    { id: "brand", text: "builds marketing pages people remember", label: "Web and brand", signals: ["brand-storytelling", "conversion", "typography"] },
+    { id: "ai", text: "is fluent with AI coding tools", label: "AI tools", signals: ["ai-tools", "prototyping"] },
+  ];
+  const $ = (id) => document.getElementById(id);
+  const ta = $("brief"), ghost = $("ghost"), field = $("field"), machine = $("machine"), stage = $("stage"), box = $("order"), live = $("live");
+  const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+  $("lines").innerHTML =
+    LINES.map((l) => `<li><button type="button" class="line" aria-pressed="false" data-id="${l.id}"><i aria-hidden="true">…</i>${esc(l.text)}</button></li>`).join("") +
+    `<li><button type="button" class="line jd" id="jd">Paste a job description</button></li>`;
+
+  let picked = [];
+  let generated = ""; // the text the lines last wrote; if the paper still says exactly this, the lines own it
+  let busy = false;
+  let queue = Promise.resolve();
+
+  const compose = (ids) => {
+    if (!ids.length) return "";
+    const t = ids.map((id) => LINES.find((l) => l.id === id).text);
+    const list = t.length === 1 ? t[0] : `${t.slice(0, -1).join(", ")} and ${t[t.length - 1]}`;
+    return `${FRAME} ${list}.`;
+  };
+
+  /** Types the change: backspaces to where old and new agree, then types the rest. */
+  async function typeTo(next) {
+    const cur = ta.value;
+    if (reduced()) { ta.value = next; return sync(); }
+    let i = 0;
+    while (i < cur.length && i < next.length && cur[i] === next[i]) i++;
+    for (let k = cur.length; k > i; k = Math.max(i, k - 4)) { ta.value = cur.slice(0, k); sync(); await sleep(6); }
+    for (let k = i; k < next.length; k += 2) { ta.value = next.slice(0, k); sync(); await sleep(14); }
+    ta.value = next;
+    sync();
+  }
+
+  function sync() {
+    field.classList.toggle("on", ta.value.length > 0 || document.activeElement === ta);
+    ta.style.height = "auto";
+    ta.style.height = `${ta.scrollHeight}px`;
+    machine.dataset.state = busy ? "working" : ta.value.trim() ? "ready" : "idle";
+    stage.style.setProperty("--pm", `${box.offsetHeight}px`);
+  }
+
+  function setPressed() {
+    document.querySelectorAll(".line[data-id]").forEach((b) => b.setAttribute("aria-pressed", String(picked.includes(b.dataset.id))));
+  }
+
+  function toggle(id, byPointer) {
+    if (busy) return;
+    const line = LINES.find((l) => l.id === id);
+    const adding = !picked.includes(id);
+    picked = adding ? [...picked, id] : picked.filter((x) => x !== id);
+    setPressed();
+    const owned = !ta.value.trim() || ta.value.trim() === generated.trim();
+    let next;
+    if (owned) {
+      next = compose(picked);
+    } else if (adding) {
+      // The visitor has written their own words: add the line to the end of what they wrote.
+      const base = ta.value.replace(/\s+$/, "");
+      next = base ? `${base}${/[.!?]$/.test(base) ? "" : "."} Also someone who ${line.text}.` : compose([id]);
+    } else {
+      // Take the line out with the word that joined it, wherever the visitor left it.
+      const t = line.text;
+      const cuts = [[` Also someone who ${t}.`, ""], [`, ${t}`, ""], [` and ${t}`, ""], [`${t}, `, ""], [`${t} and `, ""], [t, ""]];
+      next = ta.value;
+      for (const [from, to] of cuts) if (next.includes(from)) { next = next.replace(from, to); break; }
+    }
+    queue = queue.then(async () => {
+      await typeTo(next);
+      if (owned) generated = next;
+      if (byPointer) { ta.focus({ preventScroll: true }); ta.setSelectionRange(ta.value.length, ta.value.length); }
+    });
+    live.textContent = adding ? `Added: ${line.text}.` : `Removed: ${line.text}.`;
+  }
+
+  $("lines").addEventListener("click", (e) => {
+    const b = e.target.closest(".line");
+    if (!b) return;
+    if (b.id === "jd") {
+      ghost.textContent = "Paste the job description here";
+      ta.focus();
+      return;
+    }
+    toggle(b.dataset.id, e.detail > 0);
+  });
+
+  ta.addEventListener("input", () => {
+    // Words the visitor removes take the line's mark with them.
+    picked = picked.filter((id) => ta.value.includes(LINES.find((l) => l.id === id).text));
+    setPressed();
+    sync();
+  });
+  ta.addEventListener("focus", sync);
+  ta.addEventListener("blur", () => { if (!ta.value) ghost.textContent = FRAME; sync(); });
+  ta.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); box.requestSubmit(); }
+  });
+
+  box.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const text = ta.value.trim();
+    if (busy) return;
+    if (!text) { ta.focus(); return; }
+    busy = true;
+    $("pk").setAttribute("aria-busy", "true");
+    const labels = picked.map((id) => LINES.find((l) => l.id === id).label);
+    const steps = [text.length > 200 ? "Reading the job description" : "Reading your request", labels.length ? labels.join(", ") : "Looking for a match", "Choosing where to start", "Printing"];
+    const ul = $("steps");
+    ul.innerHTML = steps.map((s) => `<li>${esc(s)}</li>`).join("");
+    field.hidden = true;
+    ul.hidden = false;
+    sync();
+    for (let i = 0; i <= steps.length; i++) {
+      [...ul.children].forEach((li, j) => (li.className = j < i ? "done" : j === i ? "now" : ""));
+      await sleep(reduced() ? 0 : 340);
+    }
+    const signals = [...new Set(picked.flatMap((id) => LINES.find((l) => l.id === id).signals))];
+    $("out-title").textContent = text.length > 160 ? `${text.slice(0, 157)}…` : text;
+    $("out-signals").innerHTML = (signals.length ? signals : ["read from the words alone"]).map((s) => `<li>${esc(s)}</li>`).join("");
+    $("out").hidden = false;
+    ul.hidden = true;
+    field.hidden = false;
+    ta.value = "";
+    generated = "";
+    picked = [];
+    setPressed();
+    busy = false;
+    $("pk").removeAttribute("aria-busy");
+    ghost.textContent = FRAME;
+    sync();
+    $("out").scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "nearest" });
+  });
+
+  addEventListener("resize", sync);
+  sync();
+})();
+</script>

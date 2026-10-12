@@ -93,8 +93,9 @@ export const BarChart = component({
       body: [
         "An adapter turns each producer's format into flat rows, a binding maps one slot's fields onto the contract's roles, and the component draws the roles. Components never subscribe to streams, and settings never carry data.",
         "Not every component takes a stream: filters and search read the page, and forms wait for the user.",
+        "I wrote the front end and the server with Claude Code and Cursor.",
       ],
-      signals: ["data-architecture", "design-eng-gap", "end-to-end"],
+      signals: ["data-architecture", "design-eng-gap", "end-to-end", "ai-tools"],
       capabilities: ["B", "C"],
       lenses: { engineer: "in" },
       media: { kind: "module", module: "any-data/pipeline" },
