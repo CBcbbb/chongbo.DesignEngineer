@@ -2,7 +2,7 @@
 <meta name="description" content="Prototype of the design-system case file: a theme panel, colour scales and the cards, on an invented brand.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 /* ===== shared: src/app/tokens.css (verbatim) ===== */
 /*
@@ -2891,7 +2891,8 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   --field: #f2c94c; --on-field: #1c1b19; --on-field-2: #4a3d18;
   --dark: #1b1912; --on-dark: #f5f3ee; --on-dark-body: #d4d0c7; --on-dark-2: #a29e95;
   --dark-rule: #2c2a22; --dark-line: #4a4738; --dark-inset: #24221a; --accent-on-dark: #f2c94c;
-  --ds-mark: #f2c94c; --ds-btn-font: "Archivo", var(--sans); --ds-btn-r: 0px; --ds-title-font: "Archivo", var(--sans); --ds-title-weight: 700; --ds-title-track: -0.035em;
+  --ds-mark: #f2c94c; --ds-btn-font: "Archivo", "Geist", sans-serif; --ds-btn-r: 0px; --ds-title-font: "Archivo", "Geist", sans-serif; --ds-title-weight: 700; --ds-title-track: -0.035em;
+  --sans: "Archivo", "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --ds-surface: #ffffff; --ds-surface-ink: #18181b; --ds-surface-dim: #6b6b74; --ds-surface-rule: #e4e4e7;
   --ds-pass: #13703a; --ds-fail: #b3261e;
 }
@@ -2909,7 +2910,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   --ds-surface: #18181b; --ds-surface-ink: #f4f4f5; --ds-surface-dim: #a1a1aa; --ds-surface-rule: #2e2e33;
   --ds-pass: #6fd08f; --ds-fail: #ff8a80;
 }
-/* brand surfaces set their titles in the brand's face (Chongbo, 12 Oct): the cover title and the part openers */
+/* the whole case file takes the brand's face (Chongbo, 12 Oct); labels and figures stay Geist Mono */
 [data-palette="design-system"] .cf-cover .cf-h1,
 [data-palette="design-system"] .cf-opener h2,
 [data-palette="design-system"] .cf-opener .cf-num { font-family: var(--ds-title-font, var(--sans)); font-weight: var(--ds-title-weight, 600); letter-spacing: var(--ds-title-track, -0.045em); }
@@ -3625,7 +3626,8 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     state.id = id;
     const c = current();
     const { L, D } = pagePalette(c.colour);
-    const extra = `--ds-btn-font:${c.font};--ds-btn-r:${c.btn};--ds-title-font:${c.font};--ds-title-weight:${c.weight};--ds-title-track:${c.track}`;
+    const stack = c.font.replace("var(--sans)", '"Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif');
+    const extra = `--sans:${stack};--ds-btn-font:${stack};--ds-btn-r:${c.btn};--ds-title-font:${stack};--ds-title-weight:${c.weight};--ds-title-track:${c.track}`;
     sheet.textContent = `[data-palette="design-system"]{${vars(L)};${extra}}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) [data-palette="design-system"]{${vars(D)}}}
 :root[data-theme="dark"] [data-palette="design-system"]{${vars(D)}}`;

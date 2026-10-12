@@ -190,7 +190,8 @@
     state.id = id;
     const c = current();
     const { L, D } = pagePalette(c.colour);
-    const extra = `--ds-btn-font:${c.font};--ds-btn-r:${c.btn};--ds-title-font:${c.font};--ds-title-weight:${c.weight};--ds-title-track:${c.track}`;
+    const stack = c.font.replace("var(--sans)", '"Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif');
+    const extra = `--sans:${stack};--ds-btn-font:${stack};--ds-btn-r:${c.btn};--ds-title-font:${stack};--ds-title-weight:${c.weight};--ds-title-track:${c.track}`;
     sheet.textContent = `[data-palette="design-system"]{${vars(L)};${extra}}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) [data-palette="design-system"]{${vars(D)}}}
 :root[data-theme="dark"] [data-palette="design-system"]{${vars(D)}}`;

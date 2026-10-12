@@ -18,7 +18,8 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   --field: #f2c94c; --on-field: #1c1b19; --on-field-2: #4a3d18;
   --dark: #1b1912; --on-dark: #f5f3ee; --on-dark-body: #d4d0c7; --on-dark-2: #a29e95;
   --dark-rule: #2c2a22; --dark-line: #4a4738; --dark-inset: #24221a; --accent-on-dark: #f2c94c;
-  --ds-mark: #f2c94c; --ds-btn-font: "Archivo", var(--sans); --ds-btn-r: 0px; --ds-title-font: "Archivo", var(--sans); --ds-title-weight: 700; --ds-title-track: -0.035em;
+  --ds-mark: #f2c94c; --ds-btn-font: "Archivo", "Geist", sans-serif; --ds-btn-r: 0px; --ds-title-font: "Archivo", "Geist", sans-serif; --ds-title-weight: 700; --ds-title-track: -0.035em;
+  --sans: "Archivo", "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --ds-surface: #ffffff; --ds-surface-ink: #18181b; --ds-surface-dim: #6b6b74; --ds-surface-rule: #e4e4e7;
   --ds-pass: #13703a; --ds-fail: #b3261e;
 }
@@ -36,7 +37,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   --ds-surface: #18181b; --ds-surface-ink: #f4f4f5; --ds-surface-dim: #a1a1aa; --ds-surface-rule: #2e2e33;
   --ds-pass: #6fd08f; --ds-fail: #ff8a80;
 }
-/* brand surfaces set their titles in the brand's face (Chongbo, 12 Oct): the cover title and the part openers */
+/* the whole case file takes the brand's face (Chongbo, 12 Oct); labels and figures stay Geist Mono */
 [data-palette="design-system"] .cf-cover .cf-h1,
 [data-palette="design-system"] .cf-opener h2,
 [data-palette="design-system"] .cf-opener .cf-num { font-family: var(--ds-title-font, var(--sans)); font-weight: var(--ds-title-weight, 600); letter-spacing: var(--ds-title-track, -0.045em); }
