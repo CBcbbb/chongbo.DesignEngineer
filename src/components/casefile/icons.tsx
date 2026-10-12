@@ -1,4 +1,8 @@
 import type { Capability, CapabilityIconName } from "@content";
+import { DESIGN_SYSTEM_ICONS } from "@/components/case/design-system/icons";
+
+/** Icons a project draws for itself (its own folder), by the name its content file gives a cover label. */
+const PROJECT_ICONS: Partial<Record<CapabilityIconName, () => React.ReactNode>> = { ...DESIGN_SYSTEM_ICONS };
 
 /*
  * Small, still icons for the cover's capability labels, one per capability and tied to what its cards show.
@@ -88,6 +92,8 @@ function BindingIcon() {
 
 /** One icon per capability (`icon` overrides it). Capabilities without one show none. */
 export function CapabilityIcon({ capability, icon }: { capability: Capability; icon?: CapabilityIconName }) {
+  const Own = icon ? PROJECT_ICONS[icon] : undefined;
+  if (Own) return <Own />;
   if (icon === "pipeline") return <PipelineIcon />;
   if (icon === "contract") return <ContractIcon />;
   if (icon === "binding") return <BindingIcon />;

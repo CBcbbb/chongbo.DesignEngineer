@@ -288,3 +288,58 @@
   background: var(--on-field);
   color: var(--field);
 }
+
+/* ---------- One Design System, Three Products, Any Brand ----------
+ * The page wears a customer's brand. These are the default, the courier's yellow, derived from #f2c94c by the
+ * system's own rule (src/components/case/design-system/tokens.ts, pagePalette): on a pale field the text and accent
+ * turn ink; on the dark studio the field deepens. "Seen as" on the cover writes the same tokens for another customer.
+ * The project's own tokens (the mark, the customer's face) are in design-system.css.
+ */
+[data-palette="design-system"] {
+  --accent: #1c1b19;
+  --accent-strong: #1c1b19;
+  --on-accent: #f2c94c;
+  --accent-2: #f8ebc6;
+  --accent-tint: #fef7e1;
+  --field: #f2c94c;
+  --on-field: #1c1b19;
+  --on-field-2: #4c432a;
+  --dark: #16140c;
+  --on-dark: #f5f3ee;
+  --on-dark-body: #d4d0c7;
+  --on-dark-2: #a29e95;
+  --dark-rule: #29261e;
+  --dark-line: #514d41;
+  --dark-inset: #201d14;
+  --accent-on-dark: #f2c94c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) [data-palette="design-system"] {
+    --accent: #f2c94c;
+    --accent-strong: #f2c94c;
+    --on-accent: #09090b;
+    --accent-2: #2e260e;
+    --accent-tint: #28210d;
+    --field: #e2b938;
+    --on-field-2: #494027;
+    --dark: #0d0b05;
+    --dark-rule: #211c0f;
+    --dark-line: #484230;
+    --dark-inset: #1a1608;
+  }
+}
+
+:root[data-theme="dark"] [data-palette="design-system"] {
+  --accent: #f2c94c;
+  --accent-strong: #f2c94c;
+  --on-accent: #09090b;
+  --accent-2: #2e260e;
+  --accent-tint: #28210d;
+  --field: #e2b938;
+  --on-field-2: #494027;
+  --dark: #0d0b05;
+  --dark-rule: #211c0f;
+  --dark-line: #484230;
+  --dark-inset: #1a1608;
+}

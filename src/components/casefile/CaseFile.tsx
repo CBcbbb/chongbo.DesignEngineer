@@ -8,8 +8,9 @@ import { imageSize } from "@/lib/assets";
 import { CaseMedia, CardTitle, Facts, Keys, StepsRow } from "./blocks";
 import { CaseContents, type ContentsPart } from "./CaseContents";
 import { CoverNetwork } from "./CoverNetwork";
-import { CaseModule } from "./modules";
+import { CaseModule, ProjectModule } from "./modules";
 import { CoverWires } from "@/components/case/any-data";
+import { CoverLayers } from "@/components/case/design-system";
 import { BrowserFrame } from "./Frame";
 import { CapabilityIcon, OutArrow, WhoIcon } from "./icons";
 
@@ -18,6 +19,7 @@ import { CapabilityIcon, OutArrow, WhoIcon } from "./icons";
  * screens; everything else sits on plain paper or runs to the card's edges.
  */
 function canvasOf(section: Section): "" | undefined {
+  if (section.canvas !== undefined) return section.canvas ? "" : undefined;
   const m = section.media;
   if (!m || section.steps?.length || (section.layout && section.layout !== "stack")) return undefined;
   return m.kind === "compare" || m.kind === "video" || m.kind === "module" || (m.kind === "group" && m.ratio === "9:16") ? "" : undefined;
@@ -62,6 +64,7 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
         <div>
           <p className="cf-meta">
             <span className="cf-idx">{idx}</span>
+            {section.tag && <span className={`cf-tag${section.tag.strong ? " is-strong" : ""}`}>{section.tag.label}</span>}
           </p>
           <h3 id={`${section.id}-title`} className="cf-h3">
             <CardTitle section={section} />
@@ -98,6 +101,57 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
   );
 }
 
+/** The work: the product itself, as a project module on the field (or the cover image in a browser frame). */
+function WorkSheet({ project }: { project: Project }) {
+  const work = project.work!;
+  const head = (
+    <div className="cf-work-head">
+      <h2 id="cf-work-title">{work.title}</h2>
+      {work.note && <p className="cf-work-note">{work.note}</p>}
+      {!work.module && project.legend && (
+        <ul className="cf-legend" aria-label="Key">
+          {project.legend.map((l) => (
+            <li key={l.type}>
+              <span className={`cf-mark cf-mark-${l.type}`} aria-hidden="true" />
+              {l.label}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+  if (work.module)
+    return (
+      <section id={work.id} className="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
+        {head}
+        <div className="cf-plate">
+          <CaseModule name={work.module} />
+        </div>
+      </section>
+    );
+  const cover = project.cover.kind === "image" ? project.cover : null;
+  const coverSize = cover ? imageSize(cover.asset) : undefined;
+  if (!work.url || !cover || !coverSize) return null;
+  return (
+    <section id={work.id} className="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
+      {head}
+      <div className="cf-plate">
+        <BrowserFrame url={work.url} ratio={coverSize.width / coverSize.height}>
+          <Image
+            src={`/assets/${cover.asset}`}
+            alt={cover.alt}
+            width={coverSize.width}
+            height={coverSize.height}
+            quality={90}
+            sizes="(min-width: 1180px) 860px, 100vw"
+            priority
+          />
+        </BrowserFrame>
+      </div>
+    </section>
+  );
+}
+
 /**
  * The shared case-file template (playbook §7), in the same system as the Nike case file:
  * contents on the left; on the right a stack of sheets: a compact cover, the work itself, then each part's opener
@@ -106,16 +160,19 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
 export function CaseFile({ project, next }: { project: Project; next: Project }) {
   const parts = project.parts ?? [{ id: "main", label: "", title: project.title }];
   const inPart = (id: string) => project.sections.filter((s) => (s.part ?? parts[0]!.id) === id);
+  // the work sits after the cover, or after one card as a showcase near the end (`work.after`)
+  const workAfter = project.work?.after;
+  const workEntry = workAfter && project.work?.id ? { id: project.work.id, label: project.work.nav ?? project.work.title } : null;
+  const withWork = (cards: { id: string; label: string }[]) =>
+    workEntry ? cards.flatMap((c) => (c.id === workAfter ? [c, workEntry] : [c])) : cards;
   const contents: ContentsPart[] = parts.map((p, i) => ({
     id: p.id,
     n: pad2(i + 1),
     label: p.title,
-    cards: inPart(p.id).map((s) => ({ id: s.id, label: s.nav ?? s.title })),
+    cards: withWork(inPart(p.id).map((s) => ({ id: s.id, label: s.nav ?? s.title }))),
   }));
   const live = project.links.find((l) => /live/i.test(l.label));
   const others = project.links.filter((l) => l !== live);
-  const cover = project.cover.kind === "image" ? project.cover : null;
-  const coverSize = cover ? imageSize(cover.asset) : undefined;
   const url = project.work?.url ?? (live ? new URL(live.href).host : "");
   const ground = project.openers === "ground";
 
@@ -130,6 +187,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
             <div className="cf-cover-top">
               {project.coverArt === "network" && <CoverNetwork />}
               {project.coverArt === "wires" && <CoverWires />}
+              {project.coverArt === "layers" && <CoverLayers />}
               <p className="cf-client">
                 {project.legend && (
                   <span className="cf-marks" aria-hidden="true">
@@ -141,7 +199,14 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                 <span>{project.client ?? project.context}</span>
               </p>
               <h1 id="case-title" className="cf-h1">
-                {project.title}
+                {project.titleLines
+                  ? project.titleLines.map((l, i) => (
+                      <Fragment key={l}>
+                        {i > 0 && <br />}
+                        {l}
+                      </Fragment>
+                    ))
+                  : project.title}
               </h1>
             </div>
             {/* the line under the title, with the live link at its right (under it on tablets and phones) */}
@@ -166,6 +231,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                 </p>
               )}
             </div>
+            {project.coverControl && <ProjectModule name={project.coverControl} />}
             <dl className={`cf-facts${project.roleSplit ? " has-split" : ""}`}>
               <div>
                 <dt>Role</dt>
@@ -214,47 +280,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
             )}
           </header>
 
-          {project.work?.module && (
-            <section className="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
-              <div className="cf-work-head">
-                <h2 id="cf-work-title">{project.work.title}</h2>
-              </div>
-              <div className="cf-plate">
-                <CaseModule name={project.work.module} />
-              </div>
-            </section>
-          )}
-
-          {project.work && !project.work.module && project.work.url && cover && coverSize && (
-            <section className="cf-sheet is-field cf-work" data-canvas="" aria-labelledby="cf-work-title">
-              <div className="cf-work-head">
-                <h2 id="cf-work-title">{project.work.title}</h2>
-                {project.legend && (
-                  <ul className="cf-legend" aria-label="Key">
-                    {project.legend.map((l) => (
-                      <li key={l.type}>
-                        <span className={`cf-mark cf-mark-${l.type}`} aria-hidden="true" />
-                        {l.label}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-              <div className="cf-plate">
-                <BrowserFrame url={project.work.url} ratio={coverSize.width / coverSize.height}>
-                  <Image
-                    src={`/assets/${cover.asset}`}
-                    alt={cover.alt}
-                    width={coverSize.width}
-                    height={coverSize.height}
-                    quality={90}
-                    sizes="(min-width: 1180px) 860px, 100vw"
-                    priority
-                  />
-                </BrowserFrame>
-              </div>
-            </section>
-          )}
+          {project.work && !workAfter && <WorkSheet project={project} />}
 
           {parts.map((p, pi) => {
             const cards = inPart(p.id);
@@ -275,7 +301,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                         <span className="sr-only">{p.label}: </span>
                         {p.title}
                       </h2>
-                      <p className="cf-cards">{cards.map((s) => s.nav ?? s.title).join(" · ")}</p>
+                      <p className="cf-cards">{withWork(cards.map((s) => ({ id: s.id, label: s.nav ?? s.title }))).map((c) => c.label).join(" · ")}</p>
                     </div>
                     {ground && project.legend && (
                       <span className="cf-opener-marks" aria-hidden="true">
@@ -287,7 +313,10 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
                   </section>
                 )}
                 {cards.map((s, ci) => (
-                  <Card key={s.id} section={s} idx={`${n}.${ci + 1}`} url={url} />
+                  <Fragment key={s.id}>
+                    <Card section={s} idx={`${n}.${ci + 1}`} url={url} />
+                    {workAfter === s.id && <WorkSheet project={project} />}
+                  </Fragment>
                 ))}
               </Fragment>
             );

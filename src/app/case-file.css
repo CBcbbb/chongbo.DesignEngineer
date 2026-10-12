@@ -235,6 +235,25 @@
   font: 400 0.75rem/1 var(--mono);
   color: var(--case-dim);
 }
+/* a short label beside the index, where a project's story turns on it (Section.tag) */
+.cf-tag {
+  align-self: center;
+  margin-left: 0.6rem;
+  padding: 4px 7px 3px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px currentColor;
+  font: 500 0.65625rem/1 var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--case-dim);
+}
+.cf-tag.is-strong {
+  box-shadow: none;
+  background: var(--accent-strong);
+  color: var(--on-accent);
+}
+.cf-sheet.is-dark .cf-tag {
+  color: var(--on-dark-2);
+}
 .cf-h3 {
   font-size: clamp(1.45rem, 2.6vw, 2rem);
   font-weight: 500 !important;
@@ -1243,6 +1262,17 @@
   gap: 0.75rem 2rem;
   align-items: baseline;
   justify-content: space-between;
+}
+/* a line under the work's title (Project.work.note), e.g. that it is a rebuild */
+.cf-work-head:has(.cf-work-note) {
+  display: block;
+}
+.cf-work-note {
+  max-width: 62ch;
+  margin: 0.6rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--on-field-2);
 }
 .cf-work-head h2 {
   font-size: clamp(1.35rem, 2.4vw, 1.75rem);
@@ -2307,6 +2337,25 @@
 .cf-next .cf-kind {
   font: 400 0.75rem/1 var(--mono);
   color: var(--case-dim);
+}
+/* a short label beside the index, where a project's story turns on it (Section.tag) */
+.cf-tag {
+  align-self: center;
+  margin-left: 0.6rem;
+  padding: 4px 7px 3px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px currentColor;
+  font: 500 0.65625rem/1 var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--case-dim);
+}
+.cf-tag.is-strong {
+  box-shadow: none;
+  background: var(--accent-strong);
+  color: var(--on-accent);
+}
+.cf-sheet.is-dark .cf-tag {
+  color: var(--on-dark-2);
 }
 .cf-next strong {
   font-size: clamp(1.6rem, 3vw, 2.2rem);

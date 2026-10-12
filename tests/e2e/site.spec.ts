@@ -60,12 +60,13 @@ test.describe("printing", () => {
     await expect(page.getByRole("status")).toHaveText(await title.innerText());
     await expect(page.locator(".sheets .sheet").first()).toContainText("A dual view: the network and a list");
     await expect(page.locator(".sheets .sheet").first().locator(".full")).toHaveAttribute("href", "/work/hhcd-data-platform#dual-view");
-    // Several HHCD cards print; all from one project, so the counter alone numbers them.
+    // HHCD's cards and the design system's colour cards print; with two projects, each sheet says which of its
+    // project's cards it is.
     const sheets = page.locator(".sheets .sheet");
     const n = await sheets.count();
     expect(n).toBeGreaterThan(1);
     expect(n).toBeLessThanOrEqual(6);
-    await expect(page.locator(".sheets .s-run")).toHaveCount(0);
+    await expect(page.locator(".sheets .s-run")).toHaveCount(n);
     await expect(page.locator(".deckbar span")).toHaveText(`01 / 0${n}`);
     // The cards reset after printing.
     await expect(card).toHaveAttribute("aria-pressed", "false");

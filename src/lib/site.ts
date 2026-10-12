@@ -15,6 +15,7 @@ export { SIGNAL_SHORT } from "./printed";
 const TRAY_PLACE: Record<string, string> = {
   "hhcd-data-platform": "RCA",
   "components-for-any-data": "Logistics",
+  "design-system": "Logistics",
   "nike-athletes-closet": "Nike app",
   "this-site": "Personal",
   wildecho: "RCA",

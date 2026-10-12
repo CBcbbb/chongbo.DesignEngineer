@@ -1,6 +1,7 @@
 import type { Profile, Project } from "./schema";
 import { hhcd } from "./projects/hhcd";
 import { anyData } from "./projects/components-for-any-data";
+import { designSystem } from "./projects/design-system";
 import { nike } from "./projects/nike";
 import { thisSite } from "./projects/this-site";
 import { wildecho } from "./projects/wildecho";
@@ -14,7 +15,7 @@ export * from "./schema";
 const HIDDEN = new Set(["this-site", "wildecho"]);
 
 /** Order is the dealing order on the table. */
-export const projects: Project[] = [hhcd, anyData, nike, thisSite, wildecho].filter((p) => !HIDDEN.has(p.slug));
+export const projects: Project[] = [hhcd, anyData, designSystem, nike, thisSite, wildecho].filter((p) => !HIDDEN.has(p.slug));
 
 export const mainProjects = projects.filter((p) => p.tier === "main");
 export const earlierProjects = projects.filter((p) => p.tier === "earlier");

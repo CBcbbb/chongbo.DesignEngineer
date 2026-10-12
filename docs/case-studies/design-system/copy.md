@@ -1,4 +1,8 @@
-# One Design System, Three Products: copy (draft 3, 12 Oct)
+# One Design System, Three Products, Any Brand: copy (live, 12 Oct)
+
+This matches `content/projects/design-system.ts`, the source of the live page (checked line by line on 12 Oct). Change the content file first, then this.
+
+## History
 
 Playbook §8 step 4. Every line traces to "Facts and their sources" in `inventory.md`. `[Brackets]` mark what isn't confirmed yet. Nothing states status or progress.
 
@@ -86,9 +90,9 @@ The real products are confidential, so this is a rebuild. Switch the brand, the 
 
 ### Outcome
 
-- **Consistency:** three products built from one set of role definitions, base colours and components, each keeping its own character.
-- **Delivery:** teams build new screens from shared code instead of redrawing them.
-- **Accessibility:** every role passes AA in light and dark, under any customer's brand. `[the last clause once the fix ships]`
+- **Consistency:** Three products built from one set of role definitions, base colours and components, each keeping its own character.
+- **Delivery:** Teams build new screens from shared code instead of redrawing them.
+- **Accessibility:** Every role passes AA in light and dark, under any customer's brand. `[Chongbo to confirm the product-side fix has shipped: DECISIONS.md, item 14]`
 
 I designed the system in Figma on my own and shipped it as code for different teams to use.
 

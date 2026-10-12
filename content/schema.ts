@@ -217,7 +217,7 @@ export type Step = {
   image?: { asset: string; alt: string };
 };
 /** A label's icon on the cover, where a project wants a different one from its capability's default. */
-export type CapabilityIconName = "pipeline" | "contract" | "binding";
+export type CapabilityIconName = "pipeline" | "contract" | "binding" | "system" | "code" | "contrast";
 
 export type Section = {
   id: string;
@@ -255,6 +255,13 @@ export type Section = {
   surface?: "paper" | "dark";
   /** Case-file template: short labelled facts under the body, e.g. the closing card's Context and Team (playbook §4). */
   facts?: { label: string; text: string }[];
+  /**
+   * Case-file template: a short label beside the index (e.g. "Problem", "Solution"). The playbook has no kind labels;
+   * a project uses this only where its story turns on them, and records why in its DECISIONS.md. `strong` fills it.
+   */
+  tag?: { label: string; strong?: boolean };
+  /** Case-file template: whether the canvas (the dot field) runs under the evidence. Defaults by the evidence's kind. */
+  canvas?: boolean;
 };
 
 export type ProjectLink = { label: string; href: string };
@@ -303,12 +310,28 @@ export type Project = {
     url?: string;
     /** Instead of `Project.cover` in a browser frame: a project module (see `Media` kind "module"), on the field. */
     module?: string;
+    /** A line under the title, e.g. that the work is a rebuild with invented data. */
+    note?: string;
+    /**
+     * Where the sheet sits: straight after the cover (default), or after this card, as a showcase near the end. With
+     * `after`, the sheet joins that card's part in the contents under `nav` and takes the id `id`.
+     */
+    after?: string;
+    nav?: string;
+    id?: string;
   };
   /**
    * Case-file template: the project's own art on the cover (playbook §7: the skeleton is shared, the art direction
    * is not). `network`: the map's four marks spilling from the cover's top-right corner, fading towards the text.
    */
-  coverArt?: "network" | "wires";
+  coverArt?: "network" | "wires" | "layers";
+  /**
+   * Case-file template: a project module set on the cover between the line and Role (e.g. a control that changes how
+   * the whole case file looks). Registered in `src/components/casefile/modules.tsx` like any module.
+   */
+  coverControl?: string;
+  /** Case-file template: the cover title broken into lines where its name breaks. Defaults to `title`. */
+  titleLines?: string[];
   /** Case-file template: part openers on the project's colour field (`field`, default) or on the studio (`ground`). */
   openers?: "field" | "ground";
   /** Case-file template: the key to the cover image, e.g. a map's entity types. */

@@ -44,12 +44,14 @@ describe("fallback: one capability", () => {
     expectValid(r, "topic accessibility");
   });
 
-  it("asked in words, accessibility prints HHCD's keyboard, testing and contrast cards, keyboard first", () => {
+  it("asked in words, accessibility prints HHCD's keyboard and testing cards, keyboard first", () => {
     const r = fallbackAnswer("What matters most to us is accessibility.");
     expect(r.asked[0]).toBe("accessibility");
     expect(r.sheets[0]).toMatchObject({ project: "hhcd-data-platform", section: "keyboard" });
     const keys = r.sheets.map((s) => `${s.project}#${s.section}`);
-    for (const k of ["keyboard", "testing", "contrast"]) expect(keys).toContain(`hhcd-data-platform#${k}`);
+    for (const k of ["keyboard", "testing"]) expect(keys).toContain(`hhcd-data-platform#${k}`);
+    // the design system's colour cards show accessibility too, so HHCD's contrast card can fall outside the six
+    expect(keys.some((k) => k.startsWith("design-system#"))).toBe(true);
   });
 
   it("never pads: only cards where the capability is a main signal, unless nothing else shows it", () => {
@@ -61,9 +63,9 @@ describe("fallback: one capability", () => {
 
   it("writes the line from a template, counting cards and projects", () => {
     const r = fallbackAnswer({ topics: ["accessibility"] });
-    expect(r.line).toBe("Six cards show accessibility.");
+    expect(r.line).toBe("Six cards from two projects show accessibility.");
     expect(r.reply).toBe(r.line);
-    expect(fallbackAnswer("give me 2 design systems projects").line).toBe("Three cards from two projects show design systems.");
+    expect(fallbackAnswer("give me 2 design systems projects").line).toBe("Six cards from two projects show design systems.");
   });
 
   it("every signal used in content prints something, and only cards that carry it", () => {
