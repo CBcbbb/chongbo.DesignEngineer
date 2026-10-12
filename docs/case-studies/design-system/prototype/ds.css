@@ -193,6 +193,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ui-alert { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; padding: 10px 12px; border-radius: var(--r); border: 1px solid var(--b-border); background: var(--b-bg); color: var(--b-fg); font: 400 12.5px/1.45 var(--font); }
 .ui-alert strong { font-weight: 600; }
 .ui-alert svg { width: 16px; height: 16px; margin-top: 1px; }
+.ui-brandtext { color: var(--primary-text); font-weight: 600; }
 .ui-link, .cf a.ui-link { color: var(--primary-text); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .ui-pages { display: flex; gap: 4px; align-items: center; font: 500 12.5px/1 var(--font); }
 .ui-pages span { min-width: 28px; height: 28px; display: grid; place-items: center; border-radius: var(--r); color: var(--muted-fg); font-variant-numeric: tabular-nums; }
@@ -407,8 +408,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-layers2 .o-num { fill: var(--case-bg); stroke: var(--ov-line); stroke-width: 1.1; }
 .ds-layers2 .o-numt { font: 600 11.5px var(--mono); fill: var(--case-ink); }
 .ds-layers2 .o-ln { font: 600 15.5px var(--sans); fill: var(--case-ink); }
-.ds-layers2 .o-mk-lo { fill: var(--case-bg); stroke: var(--case-dim); stroke-width: 1; }
-.ds-layers2 .o-mk-hi { fill: var(--case-ink); stroke: var(--case-bg); stroke-width: 1; }
+.ds-layers2 .o-mk { fill: none; stroke: var(--case-ink); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
 .ds-layers2 .o-ls { font: 500 12px var(--mono); fill: var(--case-dim); }
 /* the nav sits at the top of the app frame: its callout hangs below the tab instead */
 .show-ratios .tp-tabs [data-r] { bottom: auto; top: calc(100% + 5px); }

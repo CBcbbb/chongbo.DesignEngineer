@@ -122,7 +122,7 @@
             <li><b>Run 4823</b><span class="ui-badge r-info">On the road</span><small>11 stops · North depot</small></li>
             <li><b>Run 4824</b><span class="ui-badge r-destructive">Failed</span><small>3 stops · Harbour depot</small></li>
           </ul>
-          <div class="tp-actions"><div class="ui-pages" aria-label="Pages"><span class="is-on">1</span><span>2</span><span>3</span><span>…</span><span>10</span></div><a class="ui-link" href="#work-panel">Show on the map</a><span data-r="link"></span></div>
+          <div class="tp-actions"><div class="ui-pages" aria-label="Pages"><span class="is-on">1</span><span>2</span><span>3</span><span>…</span><span>10</span></div></div>
         </section>
         <section class="tp-card" aria-label="Driver">
           <h4>Run 4822</h4>
@@ -453,12 +453,13 @@
       rows.forEach(([n, t, s2, [ax, ay]]) => {
         g += line([ax + 4, ay], [LX - 22, ay], "o-leader") + `<circle class="o-tick" cx="${f1(ax + 4)}" cy="${f1(ay)}" r="2.2"/>`;
         g += `<circle class="o-num" cx="${LX - 10}" cy="${f1(ay)}" r="10"/><text class="o-numt" x="${LX - 10}" y="${f1(ay + 4)}" text-anchor="middle">${n}</text>`;
-        // the override mark: a solid layer laid over an outlined one (the level below); the base is the outlined layer alone
-        const mx = LX + 8, my = ay + 6.5;
-        const mark = n === 1
-          ? `<rect class="o-mk-lo" x="${mx}" y="${f1(my + 3.5)}" width="13" height="5" rx="1"/>`
-          : `<rect class="o-mk-lo" x="${mx}" y="${f1(my + 3.5)}" width="10" height="5" rx="1"/><rect class="o-mk-hi" x="${mx + 3}" y="${f1(my)}" width="10" height="5" rx="1"/>`;
-        g += `<text class="o-ln" x="${LX + 8}" y="${f1(ay - 2)}">${t}</text><g aria-hidden="true">${mark}</g><text class="o-ls" x="${LX + 27}" y="${f1(ay + 15)}">${s2}</text>`;
+        // the override mark: a refresh arrow (each level rewrites what's below it); the base sets, so it has none
+        const cx = LX + 14, cy = ay + 11, r = 4.6, end = -70 * Math.PI / 180;
+        const ex = cx + r * Math.cos(end), ey = cy + r * Math.sin(end), dx = -Math.sin(end), dy = Math.cos(end);
+        const head = (rot) => { const c = Math.cos(rot), sn = Math.sin(rot); return [ex - 3.2 * (dx * c - dy * sn), ey - 3.2 * (dx * sn + dy * c)]; };
+        const [h1x, h1y] = head(0.6), [h2x, h2y] = head(-0.6);
+        const mark = n === 1 ? "" : `<path class="o-mk" d="M${f1(cx + r)} ${f1(cy)} A${r} ${r} 0 1 1 ${f1(ex)} ${f1(ey)} M${f1(h1x)} ${f1(h1y)} L${f1(ex)} ${f1(ey)} L${f1(h2x)} ${f1(h2y)}"/>`;
+        g += `<text class="o-ln" x="${LX + 8}" y="${f1(ay - 2)}">${t}</text><g aria-hidden="true">${mark}</g><text class="o-ls" x="${n === 1 ? LX + 8 : LX + 26}" y="${f1(ay + 15)}">${s2}</text>`;
       });
       g += `</svg>`;
       layers.innerHTML = g;
@@ -566,7 +567,7 @@
       out.innerHTML = ["light", "dark"].map((mode) => `<div class="cc-pane ui" data-mode="${mode}">
           <span class="ds-label">${mode === "light" ? "Light" : "Dark"}</span>
           <div class="cc-line"><span class="ui-btn is-primary" style="display:inline-block">New run</span><span data-r="btn"></span></div>
-          <div class="cc-line"><a class="ui-link" href="#customer-colour">Show on the map</a><span data-r="link"></span></div>
+          <div class="cc-line"><span class="ui-brandtext">Text in the brand colour</span><span data-r="link"></span></div>
           <div class="cc-line"><span class="ui-badge r-primary">Today</span><span data-r="tab"></span></div>
         </div>`).join("");
       out.querySelectorAll(".cc-pane").forEach((p) => {
