@@ -251,9 +251,9 @@ const LAYERS: Layer[] = [
     job: "its own format",
     whole: (
       <pre className="ac-json" aria-label='{"evt":"delivered","payload":{"town":"Leeds","parcels":"128"}}'>
-        <span className="ac-faint">{'{"evt": "delivered",\n "payload": {'}</span>
-        {'\n   "town": "Leeds",\n   "parcels": "128"'}
-        <span className="ac-faint">{"\n }}"}</span>
+        <span className="ac-faint">{'{"evt":"delivered",\n "payload":{'}</span>
+        {'\n  "town":"Leeds",\n  "parcels":"128"'}
+        <span className="ac-faint">{"}}"}</span>
       </pre>
     ),
   },
@@ -270,9 +270,9 @@ const LAYERS: Layer[] = [
     k: "Binding",
     job: "fields onto roles",
     lanes: [
-      ["category", "← town"],
-      ["value", "← parcels"],
-      ["period", "← delivered_on"],
+      ["category", "←\u00a0town"],
+      ["value", "←\u00a0parcels"],
+      ["period", "←\u00a0delivered_on"],
     ],
   },
   {

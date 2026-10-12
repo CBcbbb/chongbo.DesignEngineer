@@ -119,6 +119,10 @@
     border-right: 0;
     border-radius: 12px 0 0 12px;
   }
+  /* the empty cell stays clear of the edge the strip runs off */
+  [data-palette="components-for-any-data"] #shapes .ac-cell.is-missing {
+    margin-right: var(--cf-pad);
+  }
   [data-palette="components-for-any-data"] #shapes .cf-evidence::before {
     inset: -1.25rem calc(-1 * var(--cf-pad)) calc(-1 * var(--cf-pad-y));
     -webkit-mask-image: linear-gradient(transparent, #000 2.5rem);
