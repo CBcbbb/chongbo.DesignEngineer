@@ -449,30 +449,20 @@
 .ad-role-note.is-warn {
   color: var(--ad-ink);
 }
+/* how sure a suggestion is: a quiet tag with the word, nothing else */
 .ad-conf {
   display: inline-flex;
-  gap: 6px;
   align-items: center;
-  font: 500 12px var(--mono);
-  color: var(--ad-dim);
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--ad-inset);
+  box-shadow: inset 0 0 0 1px var(--ad-rule);
+  font: 500 11px var(--sans);
+  color: var(--ad-body);
   white-space: nowrap;
 }
 .ad-conf i {
-  display: inline-flex;
-  gap: 2px;
-}
-.ad-conf i b {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--ad-line);
-}
-.ad-conf[data-c="exact"] i b,
-.ad-conf[data-c="known"] i b:nth-child(-n + 2),
-.ad-conf[data-c="close"] i b:first-child {
-  background: var(--ad-ink);
-}
-.ad-conf[data-c="manual"] i {
   display: none;
 }
 

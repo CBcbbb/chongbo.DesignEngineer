@@ -295,15 +295,15 @@ export function Empty({
     return (
       <div className="ad-empty">
         <div>
-          <strong>This stream can&rsquo;t draw this chart</strong>
-          <code>{stream}</code> has no{" "}
-          {absent.map((r, i) => (
-            <span key={r.key}>
-              {i > 0 && " or "}
-              {r.type} field for <b>{r.key}</b>
-            </span>
-          ))}
-          . The chart never fills a gap with made-up data.
+          <strong>
+            No {absent.map((r, i) => (
+              <span key={r.key}>
+                {i > 0 && " or "}
+                {r.type} field for <b>{r.key}</b>
+              </span>
+            ))}
+            <span className="sr-only"> in {stream}</span>
+          </strong>
           {action && <span className="ad-empty-act">{action}</span>}
         </div>
       </div>
@@ -311,14 +311,15 @@ export function Empty({
   return (
     <div className="ad-empty">
       <div>
-        <strong>Nothing to draw yet</strong>
-        Choose a field for {missing.map((m, i) => (
-          <span key={m}>
-            {i > 0 && " and "}
-            <b>{m}</b>
-          </span>
-        ))}
-        . The chart never fills a gap with made-up data.
+        <strong>
+          Choose a field for{" "}
+          {missing.map((m, i) => (
+            <span key={m}>
+              {i > 0 && " and "}
+              <b>{m}</b>
+            </span>
+          ))}
+        </strong>
       </div>
     </div>
   );

@@ -55,7 +55,6 @@ export function Demo() {
   const isSample = srcId === "sample";
   const stream = isSample ? SAMPLE : all.find((s) => s.id === srcId)!;
   const mapping: Mapping = isSample ? { category: "category", value: "value", period: "period" } : state.mapping;
-  const confs: Confidences = isSample ? { category: "exact", value: "exact", period: "exact" } : state.confs;
   const missing = stream.fields ? missingRoles(stream, mapping) : (["category", "value"] as RoleKey[]);
   const absent = stream.fields ? absentRoles(stream) : [];
 
@@ -112,8 +111,14 @@ export function Demo() {
 
   return (
     <div className="dm-wrap">
-      <p className="dm-disclaimer">
-        The product is confidential, so this is an independent rebuild of its preview panel, with invented data and no production code.
+      <p className="dm-flag">
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <circle cx="8" cy="8" r="6.25" />
+          <path d="M8 7.25v3.5M8 5.1v.05" />
+        </svg>
+        <span>
+          <strong>Simplified rebuild.</strong> The product is confidential, so this uses mock data and is for demonstration only.
+        </span>
       </p>
       <div className="ad dm">
         {/* ---------- preview ---------- */}
@@ -125,11 +130,6 @@ export function Demo() {
               </button>
             ))}
           </div>
-          <p className={`dm-status${isSample ? " is-sample" : ""}`}>
-            <i aria-hidden="true" />
-            <span className="sr-only">Showing </span>
-            {isSample ? "Sample data" : stream.name}
-          </p>
         </div>
 
         <div className="dm-canvas" aria-live="polite">
@@ -141,7 +141,7 @@ export function Demo() {
               action={
                 absent.length > 0 && groups.fits[0] ? (
                   <button type="button" className="dm-ghost is-act" onClick={() => choose(groups.fits[0]!.id)}>
-                    Use {groups.fits[0].name}, which fits
+                    Switch to {groups.fits[0].name}
                   </button>
                 ) : undefined
               }
@@ -157,7 +157,7 @@ export function Demo() {
         <section className="dm-rows" aria-labelledby={`${uid}-rows`}>
           <div className="dm-sec-h">
             <h3 id={`${uid}-rows`}>Rows as they arrive</h3>
-            <p>{!stream.fields ? "" : isSample ? "Sample rows fit the contract exactly" : `First 3 of ${stream.rows.toLocaleString("en-GB")}`}</p>
+            <p>{stream.fields ? `First 3 of ${stream.rows.toLocaleString("en-GB")}` : ""}</p>
           </div>
           <div className="ad-rows-wrap" tabIndex={0} role="region" aria-label="First rows of the selected data">
             <table className="ad-table">
@@ -222,22 +222,14 @@ export function Demo() {
           <section className="dm-sec" aria-labelledby={`${uid}-fields`}>
             <div className="dm-sec-h">
               <h3 id={`${uid}-fields`}>Fields</h3>
-              <p>Totals by category</p>
             </div>
             <ul className="dm-fields">
               {ROLES.map((r) => {
                 const fields = stream.fields ?? [];
                 const sel = mapping[r.key];
-                const f = fields.find((x) => x.name === sel);
-                const wrongType = !!f && f.type !== r.type;
-                const conf = confs[r.key];
                 const selId = `${uid}-${r.key}`;
                 const none = !!stream.fields && r.required && !fields.some((x) => x.type === r.type);
-                let note = "";
-                if (!stream.fields) note = "This stream has no rows yet, so its fields are unknown.";
-                else if (none) note = `This stream has no ${r.type} field, so nothing can fill ${r.key}.`;
-                else if (wrongType) note = `Needs a ${r.type} field.`;
-                else if (!sel && r.required) note = "Required";
+                const placeholder = !stream.fields ? "No fields yet" : none ? `No ${r.type} field` : r.required ? "Choose a field" : "None";
                 return (
                   <li key={r.key} className="dm-field" data-role={r.key}>
                     <div className="dm-field-top">
@@ -245,47 +237,26 @@ export function Demo() {
                         <Swatch role={r.key} />
                         {r.key}
                       </label>
-                      <span className="dm-field-type">
-                        {r.type}
-                        {r.required ? " · required" : ""}
-                      </span>
+                      {!r.required && <span className="dm-field-opt">optional</span>}
                     </div>
-                    <div className="dm-sel">
-                      <span className="dm-sel-box">
-                        <select
-                          id={selId}
-                          value={sel}
-                          disabled={isSample || !stream.fields || none}
-                          aria-describedby={note ? `${selId}-note` : undefined}
-                          onChange={(e) => {
-                            const v = e.target.value;
-                            setState((s) => ({ mapping: { ...s.mapping, [r.key]: v }, confs: { ...s.confs, [r.key]: "manual" } }));
-                          }}
-                        >
-                          <option value="">{none ? `No ${r.type} field` : r.required ? "Choose a field" : "None"}</option>
-                          {fields.map((x) => (
-                            <option key={x.name} value={x.name} disabled={x.type !== r.type}>
-                              {x.type !== r.type ? `${x.name} (${x.type})` : x.name}
-                            </option>
-                          ))}
-                        </select>
-                      </span>
-                      {sel && conf && !wrongType && (
-                        <span className="ad-conf" data-c={conf}>
-                          <i aria-hidden="true">
-                            <b />
-                            <b />
-                            <b />
-                          </i>
-                          {conf === "manual" ? "your choice" : conf}
-                        </span>
-                      )}
-                    </div>
-                    {note && (
-                      <p className="dm-note" id={`${selId}-note`}>
-                        {note}
-                      </p>
-                    )}
+                    <span className="dm-sel-box">
+                      <select
+                        id={selId}
+                        value={sel}
+                        disabled={isSample || !stream.fields || none}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          setState((s) => ({ mapping: { ...s.mapping, [r.key]: v }, confs: { ...s.confs, [r.key]: "manual" } }));
+                        }}
+                      >
+                        <option value="">{placeholder}</option>
+                        {fields.map((x) => (
+                          <option key={x.name} value={x.name} disabled={x.type !== r.type}>
+                            {x.type !== r.type ? `${x.name} (${x.type})` : x.name}
+                          </option>
+                        ))}
+                      </select>
+                    </span>
                   </li>
                 );
               })}
