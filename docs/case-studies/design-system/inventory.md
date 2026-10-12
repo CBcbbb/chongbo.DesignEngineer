@@ -45,10 +45,10 @@ Lens roles: `lead` (opens here), `in` (printed), `·` (not printed).
 | # | id | Heading (the claim) | Caps | ux | engineer | web | Evidence | Gaps |
 |---|---|---|---|---|---|---|---|---|
 | | | **Part 1 · From one product to five** | | | | | | |
-| 01.1 | `drift` | Five products, drifting from the first | C | in | in | · | Drawn: the first product, then the new ones on the same tokens, each with its own radii, buttons, type and spacing | `[product count]` |
+| 01.1 | `drift` | Five products, drifting from the first | C | in | in | · | Drawn: the first product, then the four new ones on the same tokens, each with its own radii, buttons, type and spacing | |
 | 01.2 | `three-layers` | One shared package under every product | C B | · | lead | in | Diagram: shared package → one product's overrides → a customer's colour, font and button shape | |
 | | | **Part 2 · Figma and code** | | | | | | |
-| 02.1 | `figma-library` | A Figma library for sketching in the system | C B | in | in | lead | Rebuilt Figma: component sets, variables (Light / Dark); a sketch beside the same screen in code | |
+| 02.1 | `figma-to-code` | From a Figma library to shared code | C B | in | in | lead | Rebuilt Figma: component sets, variables (Light / Dark), beside the same components as code | |
 | | | **Part 3 · Accessibility built into the colours** | | | | | | |
 | 03.1 | `roles` | Components ask for a role, not a colour | C E | in | in | in | Colour specimens: six hues × five steps, each step labelled with its job (surface, border, charts, text on white, text on tint) | |
 | 03.2 | `fixed-lightness` | The same lightness on every hue | E | in | in | in | Numbers set large: 30 of 30 text pairings pass AA in both modes; lowest 5.16:1 | |
@@ -174,6 +174,8 @@ Resolved 12 Oct: what differed (radii, buttons, type, spacing); variables (yes);
 - `figma-first` → `figma-library`: Figma is for sketching ideas in the system; he builds in code with AI tools. Show that he can build a design system in Figma, not that it's complete. No screen sizes.
 - Part 3 is accessibility.
 - 8 cards.
+- Five products in all: the main one and four later ones. AI coding tools may be named in 01.1.
+- 02.1 is about delivery: he shipped the system as shared code everyone builds with and that stays up to date, not as a Figma file. Whether Figma and CSS names match doesn't matter.
 
 ## Decisions (12 October 2026)
 

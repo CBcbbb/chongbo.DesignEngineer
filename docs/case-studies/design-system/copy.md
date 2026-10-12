@@ -32,7 +32,7 @@ The system, rebuilt on an invented brand.
 
 The company began with one product, with its own colours and design tokens. New products took only those first tokens with them, and each needed things the first didn't have.
 
-Built fast by different teams, `[optional: much of it with AI coding tools,]` each product changed or dropped what didn't fit. With every release they looked less alike.
+Built fast by different teams, much of it with AI coding tools, each product changed or dropped what didn't fit. With every release they looked less alike.
 
 ### 01.2 One shared package under every product
 
@@ -42,13 +42,13 @@ Customers apply their own colour, font and button shape on top.
 
 ## Part 2 · Figma and code
 
-### 02.1 A Figma library for sketching in the system
+### 02.1 From a Figma library to shared code
 
 I built the system in Figma first, starting from the main product's shadcn components: colour variables with Light and Dark modes, and components with their variants and states.
 
-I've since moved to building the product directly in code with AI coding tools. With the library in place, a sketch already uses the system's colours and parts when it reaches code.
+I delivered it as code, not as a file to redraw from, so every team builds with the same parts and keeps up with each update.
 
-I keep the library to its foundations and leave the polish to the code.
+I've since moved to building directly in code with AI coding tools. The Figma library keeps the foundations, so a sketch already uses the system's colours and parts.
 
 ## Part 3 · Accessibility built into the colours
 
