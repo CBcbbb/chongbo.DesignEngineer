@@ -81,11 +81,10 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
 
 /* the sentence as it would read, shown while an ending is hovered or focused */
 .mirror{position:absolute;top:0;left:0;right:0;font:400 17px/1.5 var(--mono);white-space:pre-wrap;overflow-wrap:break-word;color:var(--paper-ink);pointer-events:none}
-.mirror .frame{color:var(--paper-ghost)}
 .mirror .add{background:linear-gradient(transparent 60%,rgba(201,55,42,.16) 60%,rgba(201,55,42,.16) 94%,transparent 94%)}
 .field.previewing textarea{color:transparent}
 .field.previewing .ghost{display:none}
-.pfoot{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-top:10px;border-top:1px solid var(--paper-rule);font:400 12.5px var(--sans);color:var(--paper-dim)}
+.pfoot{display:flex;justify-content:flex-end;align-items:baseline;gap:12px;padding-top:10px;border-top:1px solid var(--paper-rule);font:400 12.5px var(--sans);color:var(--paper-dim)}
 .pfoot button{border:0;background:none;padding:2px 0;font:500 12.5px var(--sans);color:var(--paper-ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--paper-chip);cursor:pointer}
 .pfoot button:hover{text-decoration-color:currentColor}
 
@@ -116,8 +115,6 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
   .sugg li:last-child::after{bottom:auto;height:17px}
   .sugg button{padding-top:4px}
   .sugg button{min-height:40px;padding:4px 6px;gap:8px;font-size:13px}
-  .pfoot .own{display:none}
-  .pfoot{justify-content:flex-end}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
@@ -130,7 +127,7 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
   </header>
 
   <main>
-    <h1 id="h1">What are you looking for?</h1>
+    <h1 id="h1">What skills are you looking for?</h1>
     <p class="intro"><b>I'm Chongbo, a design engineer in London.</b> Pick or describe what you need, and I'll print the parts of my work that fit best.</p>
 
     <div class="stage" id="stage">
@@ -140,12 +137,11 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
             <div class="field" id="field">
               <label for="brief" class="sr">Describe what you're looking for, or paste a job description.</label>
               <textarea id="brief" name="brief" rows="1" maxlength="6000"></textarea>
-              <div class="ghost" id="ghost" aria-hidden="true">Someone who</div>
+              <div class="ghost" id="ghost" aria-hidden="true">Describe them, or pick below</div>
               <div class="mirror" id="mirror" aria-hidden="true" hidden></div>
             </div>
             <ul class="sugg" id="sugg" aria-label="Ways to finish the sentence"></ul>
             <div class="pfoot" id="pfoot">
-              <span class="own">or describe it yourself</span>
               <button type="button" id="jd">Paste a job description</button>
             </div>
             <ul class="steps" id="steps" hidden aria-hidden="true"></ul>
@@ -171,14 +167,14 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
 
 <script>
 (() => {
-  const FRAME = "Someone who";
-  // Each ending continues the frame. Signals are the content keys the printer already understands.
+  const FRAME = "Describe them, or pick below"; // the empty paper's hint
+  // Each ending names a skill, and joins the others in one sentence. Signals are the content keys the printer already understands.
   const LINES = [
-    { id: "systems", text: "owns the design system", label: "Design systems", signals: ["design-systems", "reusable-components", "cross-platform"] },
-    { id: "e2e", text: "takes ideas to production", label: "End-to-end delivery", signals: ["end-to-end", "judgement"] },
-    { id: "data", text: "designs from the data up", label: "Data architecture", signals: ["data-architecture", "data", "design-eng-gap"] },
-    { id: "brand", text: "builds memorable marketing pages", label: "Web and brand", signals: ["brand-storytelling", "conversion", "typography"] },
-    { id: "ai", text: "is fluent with AI coding tools", label: "AI tools", signals: ["ai-tools", "prototyping"] },
+    { id: "systems", text: "owning the design system", label: "Design systems", signals: ["design-systems", "reusable-components", "cross-platform"] },
+    { id: "e2e", text: "taking ideas to production", label: "End-to-end delivery", signals: ["end-to-end", "judgement"] },
+    { id: "data", text: "designing from the data up", label: "Data architecture", signals: ["data-architecture", "data", "design-eng-gap"] },
+    { id: "brand", text: "building memorable marketing pages", label: "Web and brand", signals: ["brand-storytelling", "conversion", "typography"] },
+    { id: "ai", text: "working with AI coding tools", label: "AI tools", signals: ["ai-tools", "prototyping"] },
   ];
   const JD_LONG = 240; // past this, it's a pasted description: the endings step aside
   const $ = (id) => document.getElementById(id);
@@ -197,7 +193,7 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
     if (!ids.length) return "";
     const t = ids.map((id) => byId(id).text);
     const list = t.length === 1 ? t[0] : `${t.slice(0, -1).join(", ")} and ${t[t.length - 1]}`;
-    return `${FRAME} ${list}.`;
+    return `${list[0].toUpperCase()}${list.slice(1)}.`;
   };
 
   function renderSugg() {
@@ -236,7 +232,7 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
     const owned = !ta.value.trim() || ta.value.trim() === generated.trim();
     if (owned) return compose(ids);
     const base = ta.value.replace(/\s+$/, "");
-    return `${base}${/[.!?]$/.test(base) ? "" : "."} Also someone who ${byId(id).text}.`;
+    return `${base}${/[.!?]$/.test(base) ? "" : "."} Also ${byId(id).text}.`;
   }
 
   const mirror = $("mirror");
@@ -250,12 +246,10 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
     }
     const next = nextFor(previewId);
     const t = byId(previewId).text;
-    const at = next.lastIndexOf(t);
-    const empty = !ta.value.trim();
-    const head = next.slice(0, at), tail = next.slice(at + t.length);
-    mirror.innerHTML = empty
-      ? `<span class="frame">${esc(head)}</span><span class="add">${esc(t)}</span><span class="frame">${esc(tail)}</span>`
-      : `${esc(head)}<span class="add">${esc(t)}</span>${esc(tail)}`;
+    // the first ending is capitalised in the sentence, so find it case-blind
+    const at = next.toLowerCase().lastIndexOf(t.toLowerCase());
+    const head = next.slice(0, at), mid = next.slice(at, at + t.length), tail = next.slice(at + t.length);
+    mirror.innerHTML = `${esc(head)}<span class="add">${esc(mid)}</span>${esc(tail)}`;
     mirror.hidden = false;
     field.classList.add("previewing");
     sync();
@@ -282,7 +276,7 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
       else {
         // The visitor has written their own words: the ending goes after them.
         const base = ta.value.replace(/\s+$/, "");
-        next = `${base}${/[.!?]$/.test(base) ? "" : "."} Also someone who ${line.text}.`;
+        next = `${base}${/[.!?]$/.test(base) ? "" : "."} Also ${line.text}.`;
       }
       await typeTo(next);
       if (owned) generated = next;
@@ -305,7 +299,7 @@ h1{margin:var(--s6) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
   ta.addEventListener("input", () => {
     // An ending deleted from the paper goes back on the list.
     const before = picked.length;
-    picked = picked.filter((id) => ta.value.includes(byId(id).text));
+    picked = picked.filter((id) => ta.value.toLowerCase().includes(byId(id).text.toLowerCase()));
     if (picked.length !== before || !ta.value.trim()) renderSugg();
     if (!ta.value.trim()) generated = "";
     sync();
