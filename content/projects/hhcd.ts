@@ -173,9 +173,9 @@ export const hhcd: Project = {
       nav: "Data model",
       part: "voice",
       kind: "decision",
-      title: "Why the data is collected by person but mapped by type",
+      title: "Data collection is part of the design",
       body: [
-        "To make the survey easy to fill in, I started it from each person's own work: their projects, the methods they used and who supported them. Collecting was easy, but every row had a person at its centre. Mapped as it was, people would have become the hubs and everything else secondary, which went against a map of equals. After a first round of cleaning, I split each row into four linked types of equal weight.",
+        "On the map, people, projects, methods and partners carry equal weight. Collecting them called for a different logic. Asked to fill in four separate types, people would struggle to know where their work belonged, so the survey starts from the person: who they are, what they worked on, which methods they used and who supported it. Each answer maps to one type, so splitting the rows into four linked types was planned before the first answer came in.",
       ],
       signals: ["data", "judgement"],
       capabilities: ["B", "C"],
