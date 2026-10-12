@@ -31,6 +31,8 @@ body{margin:0;background-color:var(--studio);background-image:radial-gradient(90
 
 .eyebrow{margin:var(--s5) 0 0;text-align:center;font:500 12px var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
 h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var(--sans);letter-spacing:-.035em;text-wrap:balance}
+.hello{margin:var(--s5) 0 0;text-align:center;font-size:17px;color:var(--ink-2)}
+.hello b{font-weight:600;color:var(--ink)}
 .intro{max-width:56ch;margin:var(--s3) auto 0;text-align:center;color:var(--ink-2);text-wrap:pretty}
 .intro b{font-weight:500;color:var(--ink)}
 
@@ -117,9 +119,9 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
   </header>
 
   <main>
-    <p class="eyebrow">Printed to order</p>
-    <h1 id="h1">Who are you hiring?</h1>
-    <p class="intro">Describe the role or paste the job description. The machine prints the parts of my work that match.</p>
+    <p class="hello">I'm <b>Chongbo Ning</b>, a design engineer in London.</p>
+    <h1 id="h1">What are you looking for?</h1>
+    <p class="intro">Describe it, or paste a job description. The machine prints the parts of my work that match.</p>
 
     <h2 class="sr" id="lines-title">Lines to start from</h2>
     <ul class="lines" id="lines" aria-labelledby="lines-title"></ul>
@@ -129,9 +131,9 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
         <form class="paperbox" id="order" autocomplete="off" aria-labelledby="h1">
           <div class="paper" id="paper">
             <div class="field" id="field">
-              <label for="brief" class="sr">Describe who you're hiring, or paste a job description.</label>
+              <label for="brief" class="sr">Describe what you're looking for, or paste a job description.</label>
               <textarea id="brief" name="brief" rows="3" maxlength="6000"></textarea>
-              <div class="ghost" id="ghost" aria-hidden="true">We're looking for someone who<span class="eg" id="eg"></span></div>
+              <div class="ghost" id="ghost" aria-hidden="true">Someone who<span class="eg" id="eg"></span></div>
             </div>
             <ul class="steps" id="steps" hidden aria-hidden="true"></ul>
           </div>
@@ -156,7 +158,7 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
 
 <script>
 (() => {
-  const FRAME = "We're looking for someone who";
+  const FRAME = "Someone who";
   // Each line continues the frame. Signals are the content keys the printer already understands.
   const LINES = [
     { id: "systems", text: "owns the design system", label: "Design systems", signals: ["design-systems", "reusable-components", "cross-platform"] },
