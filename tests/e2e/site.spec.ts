@@ -53,17 +53,15 @@ test.describe("the projector", () => {
     await expect(page.locator(".pj-machine")).toHaveAttribute("data-lamp", "ready");
     await page.getByRole("button", { name: "Project", exact: true }).click();
     const title = page.locator("#r-title");
-    await expect(title).toHaveText("Two projects show accessibility.", { timeout: 10_000 });
+    await expect(title).toHaveText("One project shows accessibility.", { timeout: 10_000 });
     await expect(title).toBeFocused();
-    await expect(page.getByRole("status")).toContainText("Two projects show accessibility.");
+    await expect(page.getByRole("status")).toContainText("One project shows accessibility.");
     await expect(page.locator("html")).toHaveAttribute("data-room", "dark");
     const slide = page.locator(".pj-slide[data-current]");
     await expect(slide).toHaveCount(1);
     await expect(slide).toContainText("Accessibility – keyboard navigation");
     await expect(slide.locator(".pj-full")).toHaveAttribute("href", "/work/hhcd-data-platform#keyboard");
     await expect(page.locator(".pj-quote")).toContainText(A11Y);
-    // The slides that aren't lit are out of reach.
-    await expect(page.locator(".pj-slide:not([data-current])").first()).toHaveAttribute("aria-hidden", "true");
     // Change the card: the lights come up and the card comes back to the hand.
     await page.getByRole("button", { name: "Change the card" }).click();
     await expect(page.locator("#r-title")).toHaveCount(0);
@@ -119,13 +117,15 @@ test.describe("the projector", () => {
   test("arrow keys move along the slides; Escape brings the lights up", async ({ page }) => {
     await page.goto("/");
     await projectCard(page, "Show me something you built end to end.");
-    await expect(page.locator(".pj-count")).toHaveText("01 / 04");
+    await expect(page.locator(".pj-count")).toHaveText("01 / 03");
     await page.keyboard.press("ArrowRight");
-    await expect(page.locator(".pj-count")).toHaveText("02 / 04");
-    await expect(page.getByRole("status")).toContainText("Slide 2 of 4");
+    await expect(page.locator(".pj-count")).toHaveText("02 / 03");
+    await expect(page.getByRole("status")).toContainText("Slide 2 of 3");
+    // The slides that aren't lit are out of reach.
+    await expect(page.locator(".pj-slide:not([data-current])").first()).toHaveAttribute("aria-hidden", "true");
     await page.waitForTimeout(500);
     await page.keyboard.press("ArrowLeft");
-    await expect(page.locator(".pj-count")).toHaveText("01 / 04");
+    await expect(page.locator(".pj-count")).toHaveText("01 / 03");
     await page.waitForTimeout(500);
     await page.keyboard.press("Escape");
     await expect(page.locator("#r-title")).toHaveCount(0);

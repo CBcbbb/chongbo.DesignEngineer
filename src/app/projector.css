@@ -70,7 +70,7 @@
 .pj {
   --strip: 46px;
   --cw: 372px;
-  --mw-dark: 220px;
+  --mw-dark: 204px;
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
@@ -718,14 +718,14 @@
 .pj-slide-main {
   flex: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
-  gap: clamp(24px, 3.4vw, 48px);
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(24px, 3vw, 44px);
   align-items: center;
   margin-top: clamp(16px, 2.6vh, 26px);
 }
 .pj-slide.is-text .pj-slide-main {
   grid-template-columns: minmax(0, 1fr);
-  align-items: start;
+  align-items: center;
 }
 .pj-slide-text {
   display: flex;
@@ -800,6 +800,15 @@
 }
 .pj-slide-media {
   min-width: 0;
+}
+@media (min-width: 1000px) {
+  /* tall evidence (a table of colour specimens, say) scrolls inside the slide rather than stretching every slide */
+  .pj-slide-media {
+    max-height: min(54vh, 470px);
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
 }
 .pj-slide-media figure {
   margin: 0;
