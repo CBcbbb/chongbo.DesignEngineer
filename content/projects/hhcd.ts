@@ -177,7 +177,7 @@ export const hhcd: Project = {
     },
     {
       id: "four-types",
-      nav: "Data model",
+      nav: "Data collection",
       part: "voice",
       kind: "decision",
       title: "Data collection is part of the design",
