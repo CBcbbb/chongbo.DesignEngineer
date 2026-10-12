@@ -16,7 +16,7 @@ Logistics infrastructure company
 
 # One Design System, Three Products, Any Brand
 
-Built in Figma, shipped as code, and layered so anyone can restyle it without breaking contrast.
+Started in Figma, shipped as code, and layered so anyone can restyle it without breaking contrast.
 
 - **Role:** Design Engineer · Figma library, colour scales and code · on my own
 - **Outcome:** One design system across the company's products, which every client and user can customise on top.
