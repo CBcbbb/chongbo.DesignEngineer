@@ -2891,7 +2891,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   --field: #f2c94c; --on-field: #1c1b19; --on-field-2: #4a3d18;
   --dark: #1b1912; --on-dark: #f5f3ee; --on-dark-body: #d4d0c7; --on-dark-2: #a29e95;
   --dark-rule: #2c2a22; --dark-line: #4a4738; --dark-inset: #24221a; --accent-on-dark: #f2c94c;
-  --ds-mark: #f2c94c; --ds-btn-font: "Archivo", var(--sans); --ds-btn-r: 0px;
+  --ds-mark: #f2c94c; --ds-btn-font: "Archivo", var(--sans); --ds-btn-r: 0px; --ds-title-font: "Archivo", var(--sans); --ds-title-weight: 700; --ds-title-track: -0.035em;
   --ds-surface: #ffffff; --ds-surface-ink: #18181b; --ds-surface-dim: #6b6b74; --ds-surface-rule: #e4e4e7;
   --ds-pass: #13703a; --ds-fail: #b3261e;
 }
@@ -2909,6 +2909,10 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   --ds-surface: #18181b; --ds-surface-ink: #f4f4f5; --ds-surface-dim: #a1a1aa; --ds-surface-rule: #2e2e33;
   --ds-pass: #6fd08f; --ds-fail: #ff8a80;
 }
+/* brand surfaces set their titles in the brand's face (Chongbo, 12 Oct): the cover title and the part openers */
+[data-palette="design-system"] .cf-cover .cf-h1,
+[data-palette="design-system"] .cf-opener h2,
+[data-palette="design-system"] .cf-opener .cf-num { font-family: var(--ds-title-font, var(--sans)); font-weight: var(--ds-title-weight, 600); letter-spacing: var(--ds-title-track, -0.045em); }
 [data-palette="design-system"] .cf-sheet.is-field { transition: background-color 0.35s var(--ease), color 0.35s var(--ease); }
 [data-palette="design-system"] .cf-shows li { background: var(--on-field); color: var(--field); transition: background-color 0.35s var(--ease), color 0.35s var(--ease); }
 /* the contents marker and the card indexes take the brand as a mark when the accent is ink */
@@ -2940,7 +2944,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .cf-cover-top .cf-h1 { max-width: none; }
 .ds-seen { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 3px; border-radius: 22px; width: fit-content; max-width: 100%; margin-top: clamp(1rem, 2.4vw, 1.5rem); background: color-mix(in srgb, var(--on-field) 10%, transparent); }
 .ds-seen > span { font: 500 12px/1 var(--mono); padding: 0 8px 0 10px; color: var(--on-field-2); }
-.ds-seen label { position: relative; display: inline-flex; align-items: center; gap: 7px; font: 500 13px/1 var(--sans); padding: 8px 12px; border-radius: 999px; color: var(--on-field); cursor: pointer; }
+.ds-seen label { position: relative; display: inline-flex; align-items: center; gap: 7px; font: 500 13.5px/1 var(--sans); padding: 8px 12px; border-radius: 999px; color: var(--on-field); cursor: pointer; }
 .ds-seen input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
 .ds-seen label:has(input:checked) { background: var(--on-field); color: var(--field); }
 .ds-seen label:has(input:focus-visible) { outline: 2px solid var(--on-field); outline-offset: 2px; }
@@ -3609,10 +3613,10 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 
   /* ---------- customers (invented) ---------- */
   const CUSTOMERS = [
-    { id: "courier", name: "Courier", colour: "#f2c94c", font: '"Archivo", var(--sans)', r: "0", btn: "0", mark: "C" },
-    { id: "platform", name: "Platform", colour: "#0c5c63", font: '"Geist", var(--sans)', r: "0.5rem", btn: "0.5rem", mark: "P" },
-    { id: "grocer", name: "Grocer", colour: "#2e7d3a", font: '"Fraunces", Georgia, serif', r: "0.75rem", btn: "999px", mark: "G" },
-    { id: "bank", name: "Bank", colour: "#1d2b5c", font: '"IBM Plex Sans", var(--sans)', r: "0.375rem", btn: "0.75rem", mark: "B" },
+    { id: "courier", name: "Courier", colour: "#f2c94c", font: '"Archivo", var(--sans)', weight: 700, track: "-0.035em", r: "0", btn: "0", mark: "C" },
+    { id: "platform", name: "Platform", colour: "#0c5c63", font: '"Geist", var(--sans)', weight: 600, track: "-0.045em", r: "0.5rem", btn: "0.5rem", mark: "P" },
+    { id: "grocer", name: "Grocer", colour: "#2e7d3a", font: '"Fraunces", Georgia, serif', weight: 600, track: "-0.025em", r: "0.75rem", btn: "999px", mark: "G" },
+    { id: "bank", name: "Bank", colour: "#1d2b5c", font: '"IBM Plex Sans", var(--sans)', weight: 600, track: "-0.035em", r: "0.375rem", btn: "0.75rem", mark: "B" },
   ];
   const state = { id: "courier", own: "#e85d9a", mode: "light", ratios: false };
   const current = () => (state.id === "own" ? { ...CUSTOMERS[1], id: "own", name: "Your colour", colour: state.own, mark: "Y" } : CUSTOMERS.find((c) => c.id === state.id));
@@ -3621,7 +3625,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     state.id = id;
     const c = current();
     const { L, D } = pagePalette(c.colour);
-    const extra = `--ds-btn-font:${c.font};--ds-btn-r:${c.btn}`;
+    const extra = `--ds-btn-font:${c.font};--ds-btn-r:${c.btn};--ds-title-font:${c.font};--ds-title-weight:${c.weight};--ds-title-track:${c.track}`;
     sheet.textContent = `[data-palette="design-system"]{${vars(L)};${extra}}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) [data-palette="design-system"]{${vars(D)}}}
 :root[data-theme="dark"] [data-palette="design-system"]{${vars(D)}}`;
@@ -3632,7 +3636,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   /* ---------- cover: "Seen as" and the layers ---------- */
   const seen = document.getElementById("seen-as");
   if (seen) {
-    seen.innerHTML = `<span>Seen as</span>` + CUSTOMERS.map((c) => `<label><input type="radio" name="seen" data-cust value="${c.id}" id="seen-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${c.name}</label>`).join("");
+    seen.innerHTML = `<span>Seen as</span>` + CUSTOMERS.map((c) => `<label style="font-family:${c.font.replace(/"/g, "&quot;")};font-weight:${c.weight === 700 ? 600 : 500}"><input type="radio" name="seen" data-cust value="${c.id}" id="seen-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${c.name}</label>`).join("");
     seen.addEventListener("change", (e) => { if (e.target.name === "seen") setCustomer(e.target.value); });
   }
   const layersArt = document.getElementById("cover-layers");

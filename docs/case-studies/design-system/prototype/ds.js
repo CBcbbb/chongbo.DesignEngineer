@@ -178,10 +178,10 @@
 
   /* ---------- customers (invented) ---------- */
   const CUSTOMERS = [
-    { id: "courier", name: "Courier", colour: "#f2c94c", font: '"Archivo", var(--sans)', r: "0", btn: "0", mark: "C" },
-    { id: "platform", name: "Platform", colour: "#0c5c63", font: '"Geist", var(--sans)', r: "0.5rem", btn: "0.5rem", mark: "P" },
-    { id: "grocer", name: "Grocer", colour: "#2e7d3a", font: '"Fraunces", Georgia, serif', r: "0.75rem", btn: "999px", mark: "G" },
-    { id: "bank", name: "Bank", colour: "#1d2b5c", font: '"IBM Plex Sans", var(--sans)', r: "0.375rem", btn: "0.75rem", mark: "B" },
+    { id: "courier", name: "Courier", colour: "#f2c94c", font: '"Archivo", var(--sans)', weight: 700, track: "-0.035em", r: "0", btn: "0", mark: "C" },
+    { id: "platform", name: "Platform", colour: "#0c5c63", font: '"Geist", var(--sans)', weight: 600, track: "-0.045em", r: "0.5rem", btn: "0.5rem", mark: "P" },
+    { id: "grocer", name: "Grocer", colour: "#2e7d3a", font: '"Fraunces", Georgia, serif', weight: 600, track: "-0.025em", r: "0.75rem", btn: "999px", mark: "G" },
+    { id: "bank", name: "Bank", colour: "#1d2b5c", font: '"IBM Plex Sans", var(--sans)', weight: 600, track: "-0.035em", r: "0.375rem", btn: "0.75rem", mark: "B" },
   ];
   const state = { id: "courier", own: "#e85d9a", mode: "light", ratios: false };
   const current = () => (state.id === "own" ? { ...CUSTOMERS[1], id: "own", name: "Your colour", colour: state.own, mark: "Y" } : CUSTOMERS.find((c) => c.id === state.id));
@@ -190,7 +190,7 @@
     state.id = id;
     const c = current();
     const { L, D } = pagePalette(c.colour);
-    const extra = `--ds-btn-font:${c.font};--ds-btn-r:${c.btn}`;
+    const extra = `--ds-btn-font:${c.font};--ds-btn-r:${c.btn};--ds-title-font:${c.font};--ds-title-weight:${c.weight};--ds-title-track:${c.track}`;
     sheet.textContent = `[data-palette="design-system"]{${vars(L)};${extra}}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) [data-palette="design-system"]{${vars(D)}}}
 :root[data-theme="dark"] [data-palette="design-system"]{${vars(D)}}`;
@@ -201,7 +201,7 @@
   /* ---------- cover: "Seen as" and the layers ---------- */
   const seen = document.getElementById("seen-as");
   if (seen) {
-    seen.innerHTML = `<span>Seen as</span>` + CUSTOMERS.map((c) => `<label><input type="radio" name="seen" data-cust value="${c.id}" id="seen-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${c.name}</label>`).join("");
+    seen.innerHTML = `<span>Seen as</span>` + CUSTOMERS.map((c) => `<label style="font-family:${c.font.replace(/"/g, "&quot;")};font-weight:${c.weight === 700 ? 600 : 500}"><input type="radio" name="seen" data-cust value="${c.id}" id="seen-${c.id}"><i class="ds-dot" style="background:${c.colour}"></i>${c.name}</label>`).join("");
     seen.addEventListener("change", (e) => { if (e.target.name === "seen") setCustomer(e.target.value); });
   }
   const layersArt = document.getElementById("cover-layers");
