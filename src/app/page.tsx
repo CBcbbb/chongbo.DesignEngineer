@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { profile, projects } from "@content";
 import { PrintedToOrder } from "@/components/PrintedToOrder";
-import { sheetEvidence } from "@/components/SheetEvidence";
+import { sheetCard, sheetEvidence } from "@/components/SheetEvidence";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { buildCardIndex, cardKey, shownTopics } from "@/lib/cards";
@@ -12,6 +12,17 @@ function sheetMedia(): Record<string, ReactNode> {
   const out: Record<string, ReactNode> = {};
   for (const p of projects)
     for (const [i, s] of p.sections.entries()) if (s.media) out[cardKey(p.slug, s.id)] = sheetEvidence(p, s, i);
+  return out;
+}
+
+/** Each case-file section as its whole card, rendered on the server. */
+function sheetCards(): Record<string, ReactNode> {
+  const out: Record<string, ReactNode> = {};
+  for (const p of projects)
+    for (const s of p.sections) {
+      const c = sheetCard(p, s);
+      if (c) out[cardKey(p.slug, s.id)] = c;
+    }
   return out;
 }
 
@@ -43,7 +54,7 @@ export default function Home() {
           <b>I&apos;m {profile.name}, a design engineer in {profile.location}.</b> Tell the machine what the role needs: a few
           skills, a sentence, or the whole job description. It prints the parts of my work that answer it.
         </p>
-        <PrintedToOrder cards={buildCardIndex()} media={sheetMedia()} labelledBy="home-title" topics={shownTopics()} />
+        <PrintedToOrder cards={buildCardIndex()} media={sheetMedia()} whole={sheetCards()} labelledBy="home-title" topics={shownTopics()} />
       </main>
       <SiteFooter />
       <script

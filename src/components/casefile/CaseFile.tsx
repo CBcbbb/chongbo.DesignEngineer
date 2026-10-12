@@ -51,21 +51,21 @@ function fitOf(section: Section): "fill" | "foot" {
  * One card = one sheet: the index above the claim on the left, the reasoning on the right, the evidence underneath
  * at full width (or beside the text, for `layout: "pair"`, where the screen is wide and tall enough).
  */
-function Card({ section, idx, url }: { section: Section; idx: string; url: string }) {
+export function Card({ section, idx, url, titleId, as: H = "h3" }: { section: Section; idx: string; url: string; titleId?: string; as?: "h2" | "h3" }) {
   const dark = section.surface === "dark";
   const side = section.layout === "pair";
   const hasEvidence = !!section.media || !!section.steps?.length;
   const cls = ["cf-sheet", "is-card", dark && "is-dark", side && "is-side", !hasEvidence && "is-text"].filter(Boolean).join(" ");
   return (
-    <section id={section.id} className={cls} data-canvas={canvasOf(section)} data-size={sizeOf(section)} data-layout={section.layout ?? "stack"} aria-labelledby={`${section.id}-title`}>
+    <section id={titleId ? undefined : section.id} className={cls} data-canvas={canvasOf(section)} data-size={sizeOf(section)} data-layout={section.layout ?? "stack"} aria-labelledby={titleId ?? `${section.id}-title`}>
       <div className="cf-head">
         <div>
           <p className="cf-meta">
             <span className="cf-idx">{idx}</span>
           </p>
-          <h3 id={`${section.id}-title`} className="cf-h3">
+          <H id={titleId ?? `${section.id}-title`} className="cf-h3">
             <CardTitle section={section} />
-          </h3>
+          </H>
         </div>
         <div className="cf-body">
           {section.bodyStyle !== "list" &&
@@ -103,6 +103,24 @@ function Card({ section, idx, url }: { section: Section; idx: string; url: strin
  * contents on the left; on the right a stack of sheets: a compact cover, the work itself, then each part's opener
  * and one sheet per card, then the next case file. Projects opt in with `template: "case-file"`.
  */
+/** The palette a project's cards use (case-palettes.css). */
+export const paletteOf = (project: Project) => (project.slug === "hhcd-data-platform" ? "hhcd" : project.slug);
+
+/** The index printed on a card, "02.3": its part, then its place in it. Same numbering as the case file. */
+export function cardIndexOf(project: Project, section: Section): string {
+  const parts = project.parts ?? [{ id: "main", label: "", title: project.title }];
+  const partId = section.part ?? parts[0]!.id;
+  const pi = Math.max(0, parts.findIndex((p) => p.id === partId));
+  const ci = project.sections.filter((s) => (s.part ?? parts[0]!.id) === partId).findIndex((s) => s.id === section.id);
+  return `${pad2(pi + 1)}.${ci + 1}`;
+}
+
+/** The address shown in a card's browser frames: the live product's, or the host of the live link. */
+export function workUrlOf(project: Project): string {
+  const live = project.links.find((l) => /live/i.test(l.label));
+  return project.work?.url ?? (live ? new URL(live.href).host : "");
+}
+
 export function CaseFile({ project, next }: { project: Project; next: Project }) {
   const parts = project.parts ?? [{ id: "main", label: "", title: project.title }];
   const inPart = (id: string) => project.sections.filter((s) => (s.part ?? parts[0]!.id) === id);

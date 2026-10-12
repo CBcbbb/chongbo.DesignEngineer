@@ -90,7 +90,10 @@
   mask-clip: no-clip;
   mask-composite: intersect;
   filter: drop-shadow(0 2px 0 #d6d2ca) drop-shadow(0 12px 10px rgba(40, 30, 20, 0.2));
-  transition: transform 0.25s var(--ease);
+  transition:
+    transform 0.25s var(--ease),
+    background-color 0.2s,
+    color 0.2s;
 }
 /* perforation between the stub (number) and the ticket (name) */
 .topic::before {
@@ -140,18 +143,6 @@
 }
 .topic[aria-pressed="true"]:hover b {
   opacity: 0.8;
-}
-/* the copy in flight: a plain stub (no notches or filter, which are costly to animate), lifted off the page */
-.topic.flying {
-  transform: none;
-  transition: none;
-  mask-image: none;
-  filter: none;
-  box-shadow: 0 18px 24px -8px rgba(40, 30, 20, 0.35);
-  will-change: transform, opacity;
-}
-.topic.flying::before {
-  display: none;
 }
 
 /* ---------- the printer ----------
@@ -479,8 +470,7 @@
   font: 500 12px var(--sans);
   color: var(--paper-ink);
   cursor: pointer;
-  animation: chip-in 0.3s var(--ease-out) both;
-  animation-delay: 0.5s;
+  animation: chip-in 0.22s var(--ease-out) both;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
 }
 .paper .chips button small {
@@ -503,7 +493,7 @@
 @keyframes chip-in {
   from {
     opacity: 0;
-    scale: 0.85;
+    translate: 0 4px;
   }
 }
 .steps {
@@ -650,7 +640,9 @@
   .sheets {
     /* from the screen edge to the page's content: what is left over once the shell is centred, plus its gutter */
     --edge: calc(max((100vw - var(--wrap-max)) / 2, 0px) + var(--gutter));
-    --sheet-w: min(640px, 72%);
+    /* as wide as a case-file card plus the sheet's margins, so a printed card is the card at its own size */
+    --sheet-w: min(876px, 100%);
+    --sheet-h: clamp(520px, calc(100svh - 170px), 920px);
     display: flex;
     gap: var(--s5);
     max-width: none;
@@ -668,7 +660,7 @@
   /* one screen per sheet: a fixed height, the evidence scaled to whatever room the words leave */
   .sheets .sheet {
     flex: 0 0 var(--sheet-w);
-    height: clamp(520px, calc(100svh - 200px), 720px);
+    height: var(--sheet-h);
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;
@@ -679,11 +671,19 @@
     display: flex;
     flex-direction: column;
   }
-  .sheets .s-media {
+  .sheets .s-media,
+  .sheets .s-card {
     flex: 1;
     min-height: 0;
     margin-top: var(--s4);
     margin-bottom: 0;
+  }
+  .sheets .s-card {
+    margin-top: 0;
+  }
+  /* the card is as tall as the room the sheet gives it; a card that is naturally shorter stays shorter */
+  .sheets .cf-print {
+    --cf-card-h: calc(var(--sheet-h) - 150px);
   }
   .sheets .fit {
     height: 100%;
@@ -809,6 +809,28 @@
   position: relative;
   overflow: hidden;
 }
+/* a whole case-file card on a printed sheet: the sheet is its paper, so the card needs no edge of its own */
+.s-card {
+  margin-top: 0;
+}
+.cf-print .cf-sheet.is-card {
+  border: 0;
+  border-radius: 0;
+  scroll-margin-top: 0;
+}
+.cf-print .cf-sheet.is-card:target {
+  box-shadow: none;
+}
+.sheet.has-card {
+  padding: clamp(14px, 1.6vw, 18px) clamp(14px, 1.6vw, 18px) clamp(12px, 1.6vw, 16px);
+}
+.sheet.has-card .s-top {
+  margin-bottom: var(--s3);
+  padding-inline: 4px;
+}
+.sheet.has-card .s-foot {
+  padding-inline: 4px;
+}
 .fit-in {
   transform-origin: top center;
 }
@@ -879,7 +901,7 @@
 .sheet-list {
   display: grid;
   gap: var(--s5);
-  max-width: 880px;
+  max-width: 876px;
   margin: 0 auto;
   padding: 0;
   list-style: none;

@@ -133,7 +133,8 @@ test.describe("printing", () => {
     const sheets = page.locator(".sheets .sheet");
     expect(await sheets.count()).toBeGreaterThan(0);
     for (const sheet of await sheets.all()) {
-      await expect(sheet.locator(".sheet-title")).toBeVisible();
+      // a case-file project prints its own card, heading and all; older projects print the sheet's title
+      await expect(sheet.locator(".sheet-title, .cf-h3").first()).toBeVisible();
       await expect(sheet.locator(".full")).toHaveAttribute("href", /^\/work\/[a-z-]+#[a-z-]+$/);
     }
   });

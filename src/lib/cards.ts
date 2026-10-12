@@ -19,6 +19,9 @@ export type CardIndex = Record<string, SheetCard>;
 
 export const cardKey = (project: string, section: string) => `${project}#${section}`;
 
+/** The id of a printed case-file card's own heading, which names its sheet. */
+export const printedTitleId = (project: string, section: string) => `print-${project}-${section}-title`;
+
 export function buildCardIndex(): CardIndex {
   const index: CardIndex = {};
   for (const p of projects) {

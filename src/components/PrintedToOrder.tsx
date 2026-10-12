@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import { SIGNALS } from "@content/schema";
 import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type AskResponse } from "@/lib/ask/schema";
-import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
+import { cardKey, printedTitleId, type CardIndex, type SheetCard } from "@/lib/cards";
 import { EXAMPLES, PICKED_HINT, TOPICS, missingLine, pad2, printedCount, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
 import { Pill } from "./nav/Pill";
 import { Sheet } from "./Sheet";
@@ -13,6 +13,8 @@ type Props = {
   cards: CardIndex;
   /** Server-rendered media for each section (MediaSlot, compact), keyed by cardKey. */
   media: Record<string, ReactNode>;
+  /** Whole case-file cards, keyed by cardKey, for the projects that have them. */
+  whole?: Record<string, ReactNode>;
   /** id of the page h1, which names the paper form. */
   labelledBy: string;
   /** The skills cards to offer: those some shown project has work for (default: all). */
@@ -30,48 +32,8 @@ const prefersReduced = () =>
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, prefersReduced() ? 0 : ms));
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
-/** The ticket's flight: from the rack into the slot (or back). The chip on the paper appears as it lands. */
-const FLY_MS = 560;
 /** The empty paper swaps its example every so often, with a fade rather than a typewriter, so it reads as a hint, not output. */
 const EXAMPLE_MS = 3800;
-
-/**
- * A ticket leaves its place and lands somewhere else: a copy of it flies between the two rectangles, shrinking to fit,
- * and is thrown away on arrival. The real elements never move, so the layout stays put.
- */
-function fly(source: HTMLElement, from: DOMRect, to: DOMRect) {
-  if (prefersReduced()) return;
-  const copy = source.cloneNode(true) as HTMLElement;
-  copy.className = "topic flying";
-  copy.removeAttribute("aria-pressed");
-  copy.setAttribute("aria-hidden", "true");
-  Object.assign(copy.style, {
-    position: "fixed",
-    left: `${from.left}px`,
-    top: `${from.top}px`,
-    width: `${from.width}px`,
-    height: `${from.height}px`,
-    margin: "0",
-    zIndex: "40",
-    pointerEvents: "none",
-  });
-  document.body.appendChild(copy);
-  const dx = to.left + to.width / 2 - (from.left + from.width / 2);
-  const dy = to.top + to.height / 2 - (from.top + from.height / 2);
-  const scale = Math.min(1, to.height / from.height);
-  const tilt = rnd(-6, 6);
-  const anim = copy.animate(
-    [
-      { transform: "translate(0, 0) scale(1) rotate(0deg)", opacity: 1 },
-      { transform: `translate(${dx * 0.5}px, ${dy * 0.42}px) scale(0.85) rotate(${tilt}deg)`, opacity: 1, offset: 0.5 },
-      { transform: `translate(${dx}px, ${dy}px) scale(${scale}) rotate(0deg)`, opacity: 1, offset: 0.88 },
-      { transform: `translate(${dx}px, ${dy}px) scale(${scale}) rotate(0deg)`, opacity: 0 },
-    ],
-    { duration: FLY_MS, easing: "cubic-bezier(0.3, 0, 0.1, 1)", fill: "forwards" },
-  );
-  anim.onfinish = () => copy.remove();
-  anim.oncancel = () => copy.remove();
-}
 
 type Outcome = { ok: true; data: AskResponse } | { ok: false; message: string };
 
@@ -96,7 +58,7 @@ async function ask(brief: string, topics: string[]): Promise<Outcome> {
   }
 }
 
-export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Props) {
+export function PrintedToOrder({ cards, media, whole = {}, labelledBy, topics = TOPICS }: Props) {
   const [brief, setBrief] = useState("");
   const [picked, setPicked] = useState<string[]>([]);
   const [focused, setFocused] = useState(false);
@@ -119,8 +81,6 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
   const machineRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
-  const chipsRef = useRef<HTMLDivElement>(null);
-  const rackRef = useRef<HTMLUListElement>(null);
 
   // ---------- examples on the paper, one at a time; a still hint once a skill is picked ----------
   const anyPicked = picked.length > 0;
@@ -142,34 +102,13 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
   }, []);
 
   // ---------- skills cards ----------
-  /** Where a ticket lands on the paper: beside the last chip, or the paper's bottom-left corner when there are none. */
-  const slotOnPaper = (): DOMRect | null => {
-    const chips = chipsRef.current;
-    if (!chips || chips.hidden) return null;
-    const last = chips.lastElementChild as HTMLElement | null;
-    if (last) {
-      const r = last.getBoundingClientRect();
-      return new DOMRect(r.right + 6, r.top, r.width, r.height);
-    }
-    const r = chips.getBoundingClientRect();
-    return new DOMRect(r.left, r.top, 120, r.height);
-  };
-
-  /** A ticket is taken from the rack and dropped into the slot, or taken off the paper and put back. */
+  /** A ticket is taken from the rack and put on the paper, or taken off the paper and put back. The rack never moves. */
   const toggle = (id: string, from?: HTMLElement | null) => {
     if (busyRef.current) return;
-    const taking = !picked.includes(id);
     setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
-    const rackTicket = rackRef.current?.querySelector<HTMLElement>(`[data-topic="${id}"]`);
-    if (taking) {
-      const to = slotOnPaper();
-      if (rackTicket && to) fly(rackTicket, rackTicket.getBoundingClientRect(), to);
-    } else if (rackTicket) {
-      const chip = from?.closest(".chips") ? from : chipsRef.current?.querySelector<HTMLElement>(`[data-topic="${id}"]`);
-      if (chip) fly(rackTicket, chip.getBoundingClientRect(), rackTicket.getBoundingClientRect());
-      if (!prefersReduced())
-        rackTicket.animate([{ scale: "0.96", opacity: 0.4 }, { scale: "1", opacity: 1 }], { duration: 320, delay: FLY_MS - 80, easing: SPRING, fill: "backwards" });
-    }
+    // the press: the ticket gives a little under the finger
+    if (from && !prefersReduced())
+      from.animate([{ scale: "1" }, { scale: "0.965", offset: 0.4 }, { scale: "1" }], { duration: 260, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" });
   };
 
   /** The button goes down and the whole machine takes the knock, a little differently each time. */
@@ -337,7 +276,7 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
         <h2 className="sr-only" id="skills-title">
           Skills
         </h2>
-        <ul className="topics" ref={rackRef} style={{ "--topics": topics.length } as CSSProperties}>
+        <ul className="topics" style={{ "--topics": topics.length } as CSSProperties}>
           {topics.map((t, i) => (
             <li key={t.id}>
               <button
@@ -398,7 +337,7 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
                 </div>
               </div>
               <input type="hidden" name="topics" value={topicsToSignals(picked).join(",")} />
-              <div className="chips" ref={chipsRef} aria-label="Selected skills" role="group" hidden={working}>
+              <div className="chips" aria-label="Selected skills" role="group" hidden={working}>
                 {picked.map((id) => {
                   const label = topicById(id)?.label ?? id;
                   const n = topics.findIndex((t) => t.id === id);
@@ -462,8 +401,12 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
               onKeyDown={onStripKey}
             >
               {result.cards.map((card, i) => (
-                <li key={cardKey(card.project, card.section)} className="sheet" style={{ animationDelay: `${80 + 110 * i}ms` }}>
-                  <article aria-labelledby={`sh-${i}`}>
+                <li
+                  key={cardKey(card.project, card.section)}
+                  className={`sheet${whole[cardKey(card.project, card.section)] ? " has-card" : ""}`}
+                  style={{ animationDelay: `${80 + 110 * i}ms` }}
+                >
+                  <article aria-labelledby={whole[cardKey(card.project, card.section)] ? printedTitleId(card.project, card.section) : `sh-${i}`}>
                     <Sheet
                       card={card}
                       index={i}
@@ -471,6 +414,7 @@ export function PrintedToOrder({ cards, media, labelledBy, topics = TOPICS }: Pr
                       headingId={`sh-${i}`}
                       run={runs[i]}
                       media={card.hasMedia ? media[cardKey(card.project, card.section)] : undefined}
+                      whole={whole[cardKey(card.project, card.section)]}
                     />
                   </article>
                 </li>
