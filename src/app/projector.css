@@ -15,7 +15,7 @@
 .pj-bg i {
   position: absolute;
   inset: 0;
-  transition: opacity 0.9s ease;
+  transition: opacity 0.6s ease;
 }
 .pj-bg-light {
   background: var(--room);
@@ -62,7 +62,7 @@
 /* the page itself (seen when a phone overscrolls, and in full-page captures) matches the room */
 body:has(.pj) {
   background: var(--room);
-  transition: background-color 0.9s ease;
+  transition: background-color 0.6s ease;
 }
 :root[data-room="dark"] body:has(.pj) {
   background: var(--dark-room);
@@ -379,7 +379,7 @@ body:has(.pj) {
   height: 10%;
   border-radius: 50%;
   background: radial-gradient(closest-side, rgba(45, 32, 18, 0.34), rgba(45, 32, 18, 0));
-  transition: opacity 0.9s;
+  transition: opacity 0.5s;
 }
 .pj-photo {
   position: relative;
@@ -395,7 +395,7 @@ body:has(.pj) {
 .pj-mag,
 .pj-plate,
 .pj-go-label {
-  transition: filter 0.9s ease;
+  transition: filter 0.6s ease;
 }
 
 /* the magazine: a card stands in its front slot; the lip hides its lower half */
@@ -418,7 +418,7 @@ body:has(.pj) {
   cursor: default;
   transform: translateY(calc(52% - var(--d, 0) * 17%)) scale(calc(1 - var(--d, 0) * 0.04));
   filter: brightness(calc(1 - var(--d, 0) * 0.07));
-  transition: transform 0.55s var(--ease-out);
+  transition: transform 0.38s var(--ease-out);
 }
 .pj-slotcard[data-pos="gate"] {
   transform: translateY(82%);
@@ -494,7 +494,7 @@ body:has(.pj) {
   opacity: 0;
   background: radial-gradient(closest-side, #fffaf0 0%, #ffe6bd 34%, rgba(255, 196, 120, 0.6) 66%, rgba(255, 170, 90, 0) 100%);
   mix-blend-mode: screen;
-  transition: opacity 0.6s ease;
+  transition: opacity 0.4s ease;
 }
 .pj-lens::after {
   content: "";
@@ -662,7 +662,7 @@ body:has(.pj) {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.7s ease;
+  transition: opacity 0.4s ease;
 }
 .pj[data-lens="on"] .pj-photo-on {
   opacity: 1;
@@ -677,7 +677,7 @@ body:has(.pj) {
   z-index: 30;
   inset: 0;
   pointer-events: none;
-  transition: filter 0.8s ease;
+  transition: filter 0.5s ease;
 }
 .pj-view {
   position: absolute;
@@ -693,7 +693,7 @@ body:has(.pj) {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.7s ease;
+  transition: opacity 0.4s ease;
 }
 .pj[data-lens="on"] .pj-shot-on {
   opacity: 1;
@@ -711,7 +711,7 @@ body:has(.pj) {
   width: var(--mw);
   left: calc(var(--mw) * -0.36);
   bottom: calc(var(--mw) * -0.05);
-  transition: opacity 0.36s ease-in;
+  transition: opacity 0.24s ease-in;
   /* it melts into the dark away from the lens */
   -webkit-mask-image: radial-gradient(120% 130% at 92% 46%, #000 46%, rgba(0, 0, 0, 0.6) 70%, transparent 96%);
   mask-image: radial-gradient(120% 130% at 92% 46%, #000 46%, rgba(0, 0, 0, 0.6) 70%, transparent 96%);
@@ -733,10 +733,10 @@ body:has(.pj) {
   scale: 1.06;
   filter: brightness(0.74) sepia(0.16) saturate(1.05);
   transition:
-    opacity 0.8s ease 0.1s,
-    scale 1.6s cubic-bezier(0.16, 1, 0.3, 1),
-    translate 0.9s cubic-bezier(0.65, 0, 0.35, 1),
-    filter 0.9s ease;
+    opacity 0.5s ease 0.05s,
+    scale 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+    translate 0.6s cubic-bezier(0.3, 0, 0.1, 1),
+    filter 0.6s ease;
   -webkit-mask-image: radial-gradient(130% 140% at 100% 0%, #000 40%, rgba(0, 0, 0, 0.7) 66%, transparent 100%);
   mask-image: radial-gradient(130% 140% at 100% 0%, #000 40%, rgba(0, 0, 0, 0.7) 66%, transparent 100%);
 }
@@ -797,7 +797,7 @@ body:has(.pj) {
   pointer-events: none;
   mix-blend-mode: screen;
   opacity: 0;
-  transition: opacity 0.6s ease;
+  transition: opacity 0.4s ease;
   /* the light thins out before it reaches the wall, so the photograph's rounded end never shows; and while it
      switches on, it reaches out along the beam with a soft front (--reach) */
   -webkit-mask-image:
@@ -820,8 +820,8 @@ body:has(.pj) {
 /* opening, changing or closing a slide, the light follows it (a transform, run by the compositor) */
 .pj[data-glide] .pj-beam {
   transition:
-    opacity 0.6s ease,
-    transform 0.62s cubic-bezier(0.22, 0.8, 0.2, 1);
+    opacity 0.4s ease,
+    transform 0.44s cubic-bezier(0.22, 0.8, 0.2, 1);
 }
 .pj-beam[data-view="34"] .pj-beam-rear,
 .pj-beam[data-view="rear"] .pj-beam-34 {
@@ -980,7 +980,7 @@ body:has(.pj) {
   }
 }
 .pj-answer {
-  animation: pj-rise 0.6s var(--ease-out) 0.3s backwards;
+  animation: pj-rise 0.45s var(--ease-out) 0.12s backwards;
 }
 @keyframes pj-rise {
   from {
@@ -1024,7 +1024,7 @@ body:has(.pj) {
   margin: 4px 0 0;
   font: 500 12.5px var(--mono);
   color: var(--on-dark-room-2);
-  animation: pj-rise 0.6s var(--ease-out) 0.35s backwards;
+  animation: pj-rise 0.45s var(--ease-out) 0.18s backwards;
 }
 
 /* the wall: where the light lands */
@@ -1064,12 +1064,12 @@ body:has(.pj) {
   opacity: 0;
   will-change: opacity;
   animation:
-    pj-patch-in 1.1s ease-out 1.3s forwards,
+    pj-patch-in 0.8s ease-out 0.8s forwards,
     pj-patch-breathe 2.6s ease-in-out 2.4s infinite;
 }
 /* as the cards come into focus, the soft light they came out of goes */
 .pj-patch[data-out] {
-  animation: pj-patch-out 0.7s ease-out forwards;
+  animation: pj-patch-out 0.45s ease-out forwards;
 }
 @keyframes pj-patch-out {
   from {
@@ -1118,8 +1118,8 @@ body:has(.pj) {
   opacity: var(--o);
   transform: translate(-50%, -50%) translateX(calc(var(--rel) * var(--cwid) * 0.9)) scale(var(--scale)) rotateY(var(--rot));
   transition:
-    transform 0.7s cubic-bezier(0.22, 0.8, 0.2, 1),
-    opacity 0.5s ease;
+    transform 0.46s cubic-bezier(0.2, 0.9, 0.1, 1),
+    opacity 0.3s ease;
   -webkit-tap-highlight-color: transparent;
 }
 .pj-row[data-dragging] .pj-story {
@@ -1134,7 +1134,7 @@ body:has(.pj) {
   opacity: calc(1 - var(--b));
   -webkit-mask: url(/projector/story.webp) center / 100% 100% no-repeat;
   mask: url(/projector/story.webp) center / 100% 100% no-repeat;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 .pj-wall[data-open] .pj-story {
@@ -1340,7 +1340,7 @@ body:has(.pj) {
   align-items: center;
   gap: 12px;
   padding-top: 10px;
-  animation: pj-rise 0.6s var(--ease-out) 0.5s backwards;
+  animation: pj-rise 0.45s var(--ease-out) 0.25s backwards;
 }
 .pj-foot .pj-pager {
   grid-column: 2;

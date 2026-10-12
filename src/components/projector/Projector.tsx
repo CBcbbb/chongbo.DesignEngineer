@@ -66,7 +66,7 @@ const OUT = "cubic-bezier(0.16, 1, 0.3, 1)";
 const INOUT = "cubic-bezier(0.65, 0, 0.35, 1)";
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 /** The camera: gathers speed, then a long settle. */
-const CAMERA = "cubic-bezier(0.38, 0, 0.12, 1)";
+const CAMERA = "cubic-bezier(0.3, 0, 0.08, 1)";
 /** A camera-like move: eases in a little, then settles long. */
 const GLIDE = "cubic-bezier(0.22, 0.8, 0.2, 1)";
 /** A clip-path inset that shows only the part of `box` covered by `card`, with the card's rounded corners. */
@@ -364,7 +364,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
           },
           { transform: `translate(${b.left}px, ${b.top}px) rotate(0deg)`, width: `${b.width}px`, height: `${bh}px`, borderRadius: `${b.width * 0.028}px` },
         ],
-        { duration: 720, easing: "cubic-bezier(0.45, 0, 0.2, 1)", fill: "forwards" },
+        { duration: 520, easing: "cubic-bezier(0.3, 0, 0.1, 1)", fill: "forwards" },
       )
       .finished.catch(() => undefined);
     fly.remove();
@@ -376,7 +376,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       const slot = slotOf(c);
       slot?.getAnimations().forEach((x) => x.cancel());
       await play(slot, [{ transform: slotAt(POS.above, depth) }, { transform: slotAt(POS.seated, depth) }], {
-        duration: 240,
+        duration: 160,
         easing: "cubic-bezier(0.5, 0, 0.75, 0)",
       });
       knock(0.6);
@@ -392,7 +392,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
         { transform: slotAt(POS.seated, depth), opacity: 1 },
         { transform: slotAt(POS.out, depth), opacity: 0 },
       ],
-      { duration: 300, easing: OUT, fill: "forwards" },
+      { duration: 220, easing: OUT, fill: "forwards" },
     );
   }, []);
 
@@ -401,7 +401,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     (c: Choice) => {
       if (c === null) return;
       void play(cardRefs.current[c === "blank" ? BLANK : c], [{ transform: "translateY(-16px)", opacity: 0 }, { transform: "none", opacity: 1 }], {
-        duration: 440,
+        duration: 340,
         easing: SPRING,
       });
     },
@@ -525,7 +525,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     rootRef.current?.removeAttribute("data-beam");
     await Promise.all(
       [wallRef.current, camRef.current].map((el) =>
-        play(el, [{ opacity: 1 }, { opacity: 0 }], { duration: 320, easing: "ease-in", fill: "forwards" }),
+        play(el, [{ opacity: 1 }, { opacity: 0 }], { duration: 220, easing: "ease-in", fill: "forwards" }),
       ),
     );
     const first = stageRef.current?.getBoundingClientRect();
@@ -540,21 +540,21 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     });
     window.scrollTo({ top: 0, behavior: "instant" });
     void play(introRef.current, [{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], {
-      duration: 520,
-      delay: 380,
+      duration: 420,
+      delay: 200,
       easing: OUT,
       fill: "backwards",
     });
     void play(handRef.current, [{ opacity: 0, transform: "translateY(14px)" }, { opacity: 1, transform: "none" }], {
-      duration: 560,
-      delay: 460,
+      duration: 440,
+      delay: 250,
       easing: OUT,
       fill: "backwards",
     });
-    void play(allRef.current, [{ opacity: 0 }, { opacity: 1 }], { duration: 400, delay: 600, fill: "backwards" });
+    void play(allRef.current, [{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 320, fill: "backwards" });
     // we step back out to the front of the machine, and it comes up out of the dark
-    void play(stageRef.current, [{ opacity: 0 }, { opacity: 1 }], { duration: 700, easing: "ease-out" });
-    await flip(stageRef.current, first, 950);
+    void play(stageRef.current, [{ opacity: 0 }, { opacity: 1 }], { duration: 450, easing: "ease-out" });
+    await flip(stageRef.current, first, 700, CAMERA);
   }, []);
 
   // ---------- 2. thinking, then 3. browsing ----------
@@ -591,7 +591,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       if (el) await flyIn(el, brief.trim(), pad2(BLANK + 1), true, depth);
       flushSync(() => setMag((m) => [...m, "blank"]));
       await seat("blank", depth);
-      await sleep(100);
+      await sleep(60);
     }
 
     // The button goes in, the card drops into the gate, and the question is on its way.
@@ -605,7 +605,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     await Promise.all(
       [introRef.current, handRef.current, allRef.current].map((el) =>
         play(el, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(-8px)" }], {
-          duration: 300,
+          duration: 200,
           easing: "ease-in",
           fill: "forwards",
         }),
@@ -629,26 +629,27 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     });
     window.scrollTo({ top: 0, behavior: "instant" });
     [introRef.current, handRef.current, allRef.current].forEach((el) => el?.getAnimations().forEach((x) => x.cancel()));
-    const MOVE = 1250;
+    const MOVE = 950;
     const moving = travel(stageRef.current, machineRef.current, front, view34Ref.current, MOVE);
     // the lens lights and the light goes out to the wall while the camera is still settling, not after it stops
     const lensOn = sleep(MOVE * 0.55).then(() => rootRef.current?.setAttribute("data-lens", "on"));
-    const second = setTimeout(() => setStep((s) => Math.max(s, 1)), reduced() ? 0 : 1250);
+    const second = setTimeout(() => setStep((s) => Math.max(s, 1)), reduced() ? 0 : 750);
     await Promise.all([sleep(MOVE * 0.7), lensOn]);
     aim();
     rootRef.current?.setAttribute("data-beam", "on");
     // the light reaches out from the lens: a soft edge running along the beam, not a hard wipe
-    void play(beamRef.current, [{ "--reach": "0%" }, { "--reach": "125%" }], { duration: 900, easing: OUT });
+    void play(beamRef.current, [{ "--reach": "0%" }, { "--reach": "125%" }], { duration: 650, easing: OUT });
     void moving.then(() => {
       // the last few pixels of the settle: the light follows the lens there
       rootRef.current?.setAttribute("data-glide", "");
       aim();
-      setTimeout(() => rootRef.current?.removeAttribute("data-glide"), 650);
+      setTimeout(() => rootRef.current?.removeAttribute("data-glide"), 450);
     });
 
     const outcomes = await pending;
     const elapsed = performance.now() - t0;
-    await sleep(Math.max(0, 1900 - elapsed));
+    // long enough to see it think, never padded once the answer is in hand beyond that
+    await sleep(Math.max(0, 1300 - elapsed));
     clearTimeout(second);
 
     // Each card's answer is a reel; a card that jammed is named, and the others are still shown.
@@ -690,14 +691,14 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
 
     // The answer: the last two steps, then the light comes into focus as the story cards.
     setStep(2);
-    await sleep(420);
+    await sleep(200);
     setStep(3);
-    await sleep(380);
+    await sleep(180);
 
     // A cut through the dark: the three-quarter view goes, and we are behind the machine, looking at the wall.
     rootRef.current?.removeAttribute("data-beam");
     if (camRef.current) camRef.current.dataset.view = "cut";
-    await sleep(280);
+    await sleep(200);
     viewRef.current = "rear";
     const r: Result = { reels, slides };
     flushSync(() => {
@@ -707,14 +708,14 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     });
     if (camRef.current) camRef.current.dataset.view = "rear";
     aim();
-    setTimeout(() => rootRef.current?.setAttribute("data-beam", "on"), reduced() ? 0 : 260);
+    setTimeout(() => rootRef.current?.setAttribute("data-beam", "on"), reduced() ? 0 : 140);
     // the light comes into focus: the soft patch goes as the sharp cards come (no animated blur: it repaints every frame)
     void play(rowRef.current, [{ opacity: 0, transform: "scale(1.035)" }, { opacity: 1, transform: "none" }], {
-      duration: 900,
+      duration: 520,
       easing: OUT,
     });
     storyRefs.current.forEach((el, i) =>
-      play(el?.querySelector(".pj-story-face"), [{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: 420 + i * 90, fill: "backwards" }),
+      play(el?.querySelector(".pj-story-face"), [{ opacity: 0 }, { opacity: 1 }], { duration: 300, delay: 160 + i * 60, fill: "backwards" }),
     );
     titleRef.current?.focus({ preventScroll: true });
     const s0 = slides[0]!;
@@ -781,7 +782,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     const from = storyRefs.current[active]?.getBoundingClientRect();
     rootRef.current?.setAttribute("data-glide", "");
     flushSync(() => setOpen(true));
-    follow(900);
+    follow(600);
     const el = openRef.current;
     if (el && from && !reduced()) {
       // The slide opens out of the card's own rectangle: a growing window on it, so nothing is stretched, and its
@@ -789,8 +790,8 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       const to = el.getBoundingClientRect();
       const inset = cardInset(from, to);
       await Promise.all([
-        play(el, [{ clipPath: inset, opacity: 0.6 }, { clipPath: "inset(-90px round 14px)", opacity: 1 }], { duration: 620, easing: GLIDE }),
-        ...[...el.children].map((c) => play(c, [{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 380, delay: 220, easing: OUT, fill: "backwards" })),
+        play(el, [{ clipPath: inset, opacity: 0.6 }, { clipPath: "inset(-90px round 14px)", opacity: 1 }], { duration: 440, easing: GLIDE }),
+        ...[...el.children].map((c) => play(c, [{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 260, delay: 130, easing: OUT, fill: "backwards" })),
       ]);
     }
     openTitleRef.current?.focus({ preventScroll: true });
@@ -810,16 +811,16 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     if (el && to && !reduced()) {
       // the reverse: the words go, the window closes down onto the card, and the card is back in the light
       const from = el.getBoundingClientRect();
-      await Promise.all([...el.children].map((c) => play(c, [{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease-in", fill: "forwards" })));
+      await Promise.all([...el.children].map((c) => play(c, [{ opacity: 1 }, { opacity: 0 }], { duration: 110, easing: "ease-in", fill: "forwards" })));
       wallRef.current?.removeAttribute("data-open");
       await play(el, [{ clipPath: "inset(-90px round 14px)", opacity: 1 }, { clipPath: cardInset(to, from), opacity: 0.4 }], {
-        duration: 460,
+        duration: 340,
         easing: GLIDE,
         fill: "forwards",
       });
     }
     flushSync(() => setOpen(false));
-    follow(500);
+    follow(420);
     storyRefs.current[at]?.focus({ preventScroll: true });
     end();
   }, [open, begin, follow]);
@@ -837,7 +838,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       rootRef.current?.setAttribute("data-glide", "");
       const dir = j > activeRef.current ? 1 : -1;
       knock(0.4);
-      await play(openRef.current, [{ opacity: 1 }, { opacity: 0.06 }], { duration: 150, easing: "ease-in", fill: "forwards" });
+      await play(openRef.current, [{ opacity: 1 }, { opacity: 0.06 }], { duration: 110, easing: "ease-in", fill: "forwards" });
       flushSync(() => setActive(j));
       openRef.current?.getAnimations().forEach((x) => x.cancel());
       const s = result.slides[j]!;
@@ -850,7 +851,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
           { opacity: 0.62, offset: 0.6 },
           { opacity: 1, transform: "none" },
         ],
-        { duration: 360, easing: OUT },
+        { duration: 280, easing: OUT },
       );
       openTitleRef.current?.focus({ preventScroll: true });
       rootRef.current?.removeAttribute("data-glide");
