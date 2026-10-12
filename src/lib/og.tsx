@@ -142,12 +142,13 @@ export async function ticketImage({ head, right, big, small, title, line }: Tick
   );
 }
 
-/** The home card: the Printed to order headline over the photographed printer, paper rising from its slot. */
-export async function printerImage({ eyebrow, title }: { eyebrow: string; title: string }) {
-  const png = await fs.readFile(path.join(process.cwd(), "src/lib/og-printer.png"));
+/** The home card: the headline beside the projector, a card standing in its magazine. */
+export async function projectorImage({ title, line, card }: { title: string; line: string; card: string }) {
+  const png = await fs.readFile(path.join(process.cwd(), "src/lib/og-projector.png"));
   const src = `data:image/png;base64,${png.toString("base64")}`;
-  const w = 760;
-  const h = Math.round((w * 494) / 1100);
+  const w = 640;
+  const h = Math.round((w * 390) / 760);
+  const k = w / 1488; // the photograph's scale (public/projector/machine.webp is 1488 wide)
   return new ImageResponse(
     (
       <div
@@ -155,40 +156,39 @@ export async function printerImage({ eyebrow, title }: { eyebrow: string; title:
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
-          background: "radial-gradient(90% 70% at 50% 30%, #F5F4F0 0%, #E9E7E2 70%)",
+          justifyContent: "space-between",
+          padding: "0 64px 0 76px",
+          background: "radial-gradient(90% 80% at 30% 20%, #F8F5EF 0%, #EFEAE1 75%)",
           fontFamily: "Geist",
           color: "#1C1B19",
         }}
       >
-        <div style={{ display: "flex", marginTop: 56, fontFamily: "Geist Mono", fontSize: 20, letterSpacing: 5, color: "#5B5853" }}>
-          {eyebrow.toUpperCase()}
+        <div style={{ display: "flex", flexDirection: "column", width: 440 }}>
+          <div style={{ display: "flex", fontSize: 62, fontWeight: 600, letterSpacing: -2.6, lineHeight: 1 }}>{title}</div>
+          <div style={{ display: "flex", marginTop: 26, fontSize: 24, lineHeight: 1.4, color: "#5B5853" }}>{line}</div>
+          <div style={{ display: "flex", marginTop: 40, fontFamily: "Geist Mono", fontSize: 15, letterSpacing: 1.2, color: "#5B5853" }}>
+            CHONGBO NING · DESIGN ENGINEER · LONDON
+          </div>
         </div>
-        <div style={{ display: "flex", marginTop: 10, fontSize: 64, fontWeight: 600, letterSpacing: -2.5 }}>{title}</div>
-        <div style={{ display: "flex", position: "relative", width: w, height: h, marginTop: 120 }}>
-          {/* paper rising from the slot: bottom at 7.7% of the image, 15.5% in, 69% wide */}
+        <div style={{ display: "flex", position: "relative", width: w, height: h, marginTop: 40 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+          <img src={src} width={w} height={h} style={{ position: "absolute", left: 0, top: 0 }} />
+          {/* the card's question, printed on the part that stands out of the magazine */}
           <div
             style={{
               position: "absolute",
-              left: w * 0.155,
-              width: w * 0.69,
-              bottom: h * (1 - 0.077),
-              height: 110,
+              left: 0.2124 * 1488 * k + 12,
+              top: (231 - 105) * k + 9,
+              width: 0.2655 * 1488 * k - 30,
               display: "flex",
-              padding: "18px 22px",
-              background: "#FBFAF7",
-              borderRadius: "3px 3px 0 0",
-              fontFamily: "Geist Mono",
-              fontSize: 19,
-              lineHeight: 1.5,
-              color: "#75716A",
+              fontSize: 11.5,
+              fontWeight: 500,
+              color: "#1C1B19",
             }}
           >
-            A design engineer for our marketing website, strong in React and motion
+            {card}
           </div>
-          {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
-          <img src={src} width={w} height={h} style={{ position: "absolute", left: 0, top: 0 }} />
         </div>
       </div>
     ),

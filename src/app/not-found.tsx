@@ -2,29 +2,32 @@ import Link from "next/link";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 
+/** An empty slot in the carousel: a lit slide with nothing on it but the way back. */
 export default function NotFound() {
   return (
     <div className="wrap">
       <SiteHeader />
-      <main id="main" tabIndex={-1} className="flex justify-center py-16">
-        <div className="paper-drop w-full max-w-[440px]">
-          <div className="ticket torn">
-            <div className="t-head">
-              <span>No. 404</span>
-              <span className="stamp">Not found</span>
-            </div>
-            <h1 className="t-num">404</h1>
-            <p className="t-reply">This sheet was never printed. The page may have moved.</p>
-            <div className="t-cta">
-              <Link className="t-link" href="/">
-                Back to the machine
-              </Link>
-              <Link className="t-link" href="/work">
-                Browse all work
-              </Link>
+      <main id="main" tabIndex={-1} className="nf">
+        <article className="pj-slide is-text nf-slide" data-current>
+          <div className="pj-slide-top">
+            <span>404</span>
+            <span>Empty slot</span>
+          </div>
+          <div className="pj-slide-main">
+            <div className="pj-slide-text">
+              <h1 className="pj-slide-title">There&apos;s no slide in this slot.</h1>
+              <p>The page may have moved, or the link is missing a letter.</p>
+              <div className="nf-links">
+                <Link className="pj-full" href="/">
+                  Back to the projector<span aria-hidden="true"> →</span>
+                </Link>
+                <Link className="nf-all" href="/work">
+                  Browse all work
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
+        </article>
       </main>
       <SiteFooter />
     </div>

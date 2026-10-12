@@ -1,8 +1,8 @@
 # Chongbo Ning — Design Engineer
 
-The portfolio of Chongbo Ning, a design engineer in London. A red ticket printer sits on the page: type what your team cares about, press **Print**, and it prints a ticket with the part of my work that answers it. Every project is also a short case file you can read without asking anything.
+The portfolio of Chongbo Ning, a design engineer in London. The home page is a conversation staged on a slide projector: put a card in it (four questions a recruiter might ask, or a blank one to write on or paste a job description into), press the red button, and the room goes dark while the parts of my work that answer it are projected, one slide per project. Every project is also a case file you can read without asking anything.
 
-- `/` — the machine and the tray of case files
+- `/` — the projector (`?type=serif` shows the display type in Instrument Serif, for review)
 - `/ask?brief=…&topics=a,b` (or the older `?q=…`) — the same answer, server-rendered (works without JavaScript; shareable; `noindex`)
 - `/work/<slug>` — a case file per project, every section deep-linkable (`/work/<slug>#<section-id>`)
 - `/about` — profile, education and contact
@@ -11,7 +11,7 @@ The portfolio of Chongbo Ning, a design engineer in London. A red ticket printer
 
 Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS v4 · Zod · Anthropic TypeScript SDK · Geist and Geist Mono (self-hosted via the `geist` package) · Vitest · Playwright + axe-core.
 
-Motion is plain CSS and the Web Animations API (no animation library): the thermal-printer feed is a `steps()` height transition, and the shell's capsule links (`src/components/nav/Pill.tsx`) animate with `element.animate()`, so the client bundle stays small.
+Motion is plain CSS and the Web Animations API (no animation library): the card's flight into the magazine, the machine stepping back into the dark room (FLIP) and the slide's flicker are `element.animate()`; the beam is an SVG polygon measured from the lens to the slide. The header's links (`src/components/nav/NavLink.tsx`) animate the same way, so the client bundle stays small.
 
 ## Run locally
 
@@ -65,12 +65,14 @@ All content lives in `content/` (typed by `content/schema.ts`). Each project is 
 
 The schema is shared by the API route, the `/ask` page and the client (`src/lib/ask/schema.ts`).
 
-1. **Rate limit** (`src/lib/ask/rate-limit.ts`): a per-IP sliding window. Over the limit → `429` and the machine prints a small "Paused" ticket. Question text is never logged.
+1. **Rate limit** (`src/lib/ask/rate-limit.ts`): a per-IP sliding window. Over the limit → `429` and the projector says on its status line that the lamp needs a minute to cool down. Question text is never logged.
 2. **Model path** (`src/lib/ask/model.ts`): if `ANTHROPIC_API_KEY` is set and the daily cap allows, `claude-haiku-5-5` is called through the official SDK with structured JSON output (`output_config.format` via `zodOutputFormat`). The system prompt is a compact catalogue built from `content/` (project and section ids, titles, kinds, signals, one-sentence excerpts). The visitor's question is wrapped and treated as data. A 10-second timeout applies, and the answer may use up to 2,000 tokens; there are no retries. When the model path gives up, the server log says why (never the brief).
 3. **Sanitising** (`src/lib/ask/sanitize.ts`): sheets that point at sections that don't exist are dropped, only the first sheet per project is kept, at most five, reasons clipped; unknown signal keys are dropped and a sheet's signal is repaired from its section; an invalid `line` is rebuilt from a template. Topics the visitor chose always count as asked. If no valid sheet remains, it falls back.
 4. **Fallback** (`src/lib/ask/fallback.ts`): scores the brief against signal synonyms to find the capabilities asked for (chosen topics first), then picks each project's best section by signal match (the section's first-listed signal weighs most), then word overlap. A short list of common asks the content never mentions (A/B testing, native iOS or Android, Swift, Kotlin, backend and databases, analytics) is reported as `missing`. If nothing is understood, it prints three strong defaults (HHCD dual view, Component Store contracts, Nike layout system). Used for topic-only requests, and when there is no key, on error, timeout, refusal, or past the daily cap.
 
-On the page, the LED blinks and a lip of paper inches at the slot while waiting; the ticket prints when the answer arrives (at least ~400 ms so the motion reads, no other artificial delay). Focus then moves to the ticket and the reply is announced in a polite live region. With reduced motion, everything is instant.
+On the page (`src/components/projector/Projector.tsx`), the home page sends the card's text as `brief` and nothing else. While waiting, the lamp blinks amber, the card drops into the gate and the status line says what the machine is doing; the slides are projected when the answer arrives (at least ~1 s so the motion reads, no other artificial delay). Focus then moves to the wall's heading and the answer is announced in a polite live region. With reduced motion, everything is instant and the room still goes dark. Errors stay in the light room, on the machine's status line.
+
+The projector's photographs (machine, paper card, lit slide, walls) are in `public/projector/`, made from the projector material pack; overlays are placed in % of `machine.webp` (1488 × 764), documented in `src/app/projector.css`.
 
 ### Swapping the rate limiter for a hosted store
 
@@ -111,7 +113,7 @@ Images and video referenced by content live in `public/assets/<path>`. Missing f
 3. Under **Environment Variables** add:
    - `NEXT_PUBLIC_SITE_URL` = the final URL (e.g. `https://chongbo-designengineer.vercel.app`, or your domain).
    - `ANTHROPIC_API_KEY` = a key from the Claude Console (optional; see REPORT.md for setting a spend limit).
-4. Click **Deploy**. When it finishes, open the URL on desktop and phone and ask a question. The footer of each answer ticket doesn't say which path answered; check `source` in the browser's network tab (`model` or `fallback`).
+4. Click **Deploy**. When it finishes, open the URL on desktop and phone and ask a question. The line under the slides says in plain words who chose them; to be sure, check `source` in the browser's network tab (`model` or `fallback`).
 5. If you add a custom domain later, update `NEXT_PUBLIC_SITE_URL` and redeploy so canonical links and OG images use it.
 
 ## Project layout
@@ -121,7 +123,7 @@ content/              typed content: the single source of truth
 src/app/              routes, metadata, OG images, sitemap, robots
 src/app/tokens.css    design tokens (light + dark)
 src/app/components.css component styles (Tailwind components layer)
-src/components/       Machine (client), Ticket, Tray, MediaSlot, diagrams
+src/components/       projector/ (the home page), nav/, case files, MediaSlot, diagrams
 src/lib/ask/          schema, catalogue, model, fallback, sanitise, rate limit
 scripts/contrast.ts   WCAG contrast check
 tests/unit/           Vitest

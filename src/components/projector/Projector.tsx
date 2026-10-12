@@ -168,6 +168,12 @@ export function Projector({ cards, media, questions, name, location }: Props) {
   /** A card leaves the hand and flies to just above the magazine. */
   const flyIn = useCallback(async (from: HTMLElement, text: string, no: string, typed: boolean) => {
     if (reduced()) return;
+    // On a phone the machine can be out of view (above the hand): bring it in first, so the card is seen going in.
+    const mag0 = machineRef.current?.getBoundingClientRect();
+    if (mag0 && (mag0.top < 0 || mag0.bottom > window.innerHeight)) {
+      machineRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+      await sleep(420);
+    }
     const a = from.getBoundingClientRect();
     // Just above the magazine: the end of every flight.
     const m = magRef.current?.getBoundingClientRect();
@@ -741,7 +747,7 @@ export function Projector({ cards, media, questions, name, location }: Props) {
               const tags = s.tags.filter((t) => !t.toLowerCase().startsWith(s.why.toLowerCase()));
               return (
                 <article
-                  key={s.project}
+                  key={`${s.project}#${s.section}`}
                   className={`pj-slide${m ? "" : " is-text"}`}
                   data-current={on || undefined}
                   aria-roledescription="slide"
@@ -798,7 +804,7 @@ export function Projector({ cards, media, questions, name, location }: Props) {
                   </button>
                   <ol className="pj-dots" aria-label="Slides">
                     {slides.map((s, i) => (
-                      <li key={s.project}>
+                      <li key={`${s.project}#${s.section}`}>
                         <button type="button" aria-current={i === cur || undefined} title={s.projectTitle} onClick={() => void show(i)}>
                           <span className="sr-only">
                             {i + 1}: {s.projectTitle}

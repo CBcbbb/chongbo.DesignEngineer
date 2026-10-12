@@ -59,6 +59,15 @@
   mix-blend-mode: screen;
 }
 
+/* the page itself (seen when a phone overscrolls, and in full-page captures) matches the room */
+body:has(.pj) {
+  background: var(--room);
+  transition: background-color 0.9s ease;
+}
+:root[data-room="dark"] body:has(.pj) {
+  background: var(--dark-room);
+}
+
 /* the header and footer dim with the room */
 .bar,
 .bar a,
@@ -1082,4 +1091,31 @@
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* ---------- 404: an empty slot in the carousel ---------- */
+.nf {
+  display: grid;
+  place-items: center;
+  min-height: calc(100svh - 200px);
+  padding-block: 64px;
+}
+.nf-slide {
+  width: min(720px, 100%);
+  min-height: 340px;
+}
+.nf-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+}
+.nf-all {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 22px;
+  font: 500 14px var(--sans);
+  color: var(--slide-ink);
+  text-underline-offset: 4px;
 }
