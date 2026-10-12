@@ -137,11 +137,15 @@ export function beamPlacement(lens: Point, target: Point, targetHeight: number, 
   const s = dist / base;
   const phi = Math.atan2(target.y - lens.y, target.x - lens.x);
   const k = Math.max(0.6, Math.min(3.2, targetHeight / (spec.endWidth * s)));
+  const turn = `rotate(${phi}rad) scale(1, ${k}) rotate(${-a0}rad)`;
   return {
     left: lens.x - spec.apex.x * s,
     top: lens.y - spec.apex.y * s,
     width: spec.w * s,
     origin: `${spec.apex.x * s}px ${spec.apex.y * s}px`,
-    transform: `rotate(${phi}rad) scale(1, ${k}) rotate(${-a0}rad)`,
+    transform: turn,
+    /** The same placement as one transform of the photograph at its own size from its top-left corner, so moving the
+     * light from one place to another is a transform the compositor can run, with nothing re-laid out. */
+    matrix: `translate(${lens.x}px, ${lens.y}px) ${turn} scale(${s}) translate(${-spec.apex.x}px, ${-spec.apex.y}px)`,
   };
 }

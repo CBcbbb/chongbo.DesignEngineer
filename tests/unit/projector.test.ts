@@ -97,3 +97,36 @@ describe("the beam photograph", () => {
     expect(Math.hypot(BEAM_REAR.end.x - BEAM_REAR.apex.x, BEAM_REAR.end.y - BEAM_REAR.apex.y) * s).toBeCloseTo(Math.hypot(380, 170));
   });
 });
+
+/** Applies a CSS transform list (translate, rotate in rad, scale only) to a point, right to left as CSS does. */
+function apply(transform: string, x: number, y: number) {
+  const ops = [...transform.matchAll(/(translate|rotate|scale)\(([^)]+)\)/g)].map((m) => ({
+    fn: m[1]!,
+    args: m[2]!.split(",").map((a) => parseFloat(a)),
+  }));
+  let p = { x, y };
+  for (const { fn, args } of ops.reverse()) {
+    if (fn === "translate") p = { x: p.x + args[0]!, y: p.y + (args[1] ?? 0) };
+    if (fn === "scale") p = { x: p.x * args[0]!, y: p.y * (args[1] ?? args[0]!) };
+    if (fn === "rotate") {
+      const c = Math.cos(args[0]!);
+      const s = Math.sin(args[0]!);
+      p = { x: p.x * c - p.y * s, y: p.x * s + p.y * c };
+    }
+  }
+  return p;
+}
+
+describe("the beam as a single transform", () => {
+  it("puts the apex on the lens and the far end on the target", () => {
+    const lens = { x: 400, y: 700 };
+    const target = { x: 900, y: 400 };
+    const p = beamPlacement(lens, target, 400, BEAM_REAR);
+    const a = apply(p.matrix, BEAM_REAR.apex.x, BEAM_REAR.apex.y);
+    expect(a.x).toBeCloseTo(lens.x);
+    expect(a.y).toBeCloseTo(lens.y);
+    const e = apply(p.matrix, BEAM_REAR.end.x, BEAM_REAR.end.y);
+    expect(e.x).toBeCloseTo(target.x);
+    expect(e.y).toBeCloseTo(target.y);
+  });
+});

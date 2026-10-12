@@ -62,6 +62,33 @@ const STEPS = ["Reading your card", "Finding the work that answers it", "Choosin
 const OUT = "cubic-bezier(0.16, 1, 0.3, 1)";
 const INOUT = "cubic-bezier(0.65, 0, 0.35, 1)";
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+/** The camera: gathers speed, then a long settle. */
+const CAMERA = "cubic-bezier(0.38, 0, 0.12, 1)";
+/** A camera-like move: eases in a little, then settles long. */
+const GLIDE = "cubic-bezier(0.22, 0.8, 0.2, 1)";
+/** A clip-path inset that shows only the part of `box` covered by `card`, with the card's rounded corners. */
+function cardInset(card: DOMRect, box: DOMRect): string {
+  const t = card.top - box.top;
+  const l = card.left - box.left;
+  const r = box.right - card.right;
+  const b = box.bottom - card.bottom;
+  return `inset(${t}px ${r}px ${b}px ${l}px round 12px)`;
+}
+/** Everything the dark room shows, fetched and decoded while you choose a card, so nothing pops in mid-move. */
+const DARK_ROOM = [
+  "/projector/machine-34-off.webp",
+  "/projector/machine-34-on.webp",
+  "/projector/machine-rear.webp",
+  "/projector/beam.webp",
+  "/projector/beam-rear.webp",
+  "/projector/dust-34-a.webp",
+  "/projector/dust-34-b.webp",
+  "/projector/dust-rear-a.webp",
+  "/projector/dust-rear-b.webp",
+  "/projector/story.webp",
+  "/projector/story-glow.webp",
+  "/projector/slide.webp",
+];
 /** The paper card's proportions (public/projector/card.webp). */
 const CARD_RATIO = 900 / 499;
 /** The magazine's card positions, as translateY of the slot card (anchored to the magazine's front lip). */
@@ -89,6 +116,47 @@ function flip(el: HTMLElement | null, first: DOMRect | undefined, duration: numb
       { transformOrigin: "0 0", transform: "none" },
     ],
     { duration, easing },
+  );
+}
+
+/** The camera move into the dark (see project()): the same path for both views, a short hand-over half-way. */
+function travel(
+  stage: HTMLElement | null,
+  machine: HTMLElement | null,
+  from: DOMRect | undefined,
+  view: HTMLElement | null,
+  duration: number,
+): Promise<void> {
+  if (!stage || !machine || !view || !from || reduced()) return Promise.resolve();
+  const s = stage.getBoundingClientRect();
+  const m = machine.getBoundingClientRect();
+  const v = view.getBoundingClientRect();
+  if (!m.width || !v.width) return Promise.resolve();
+  const timing = { duration, easing: CAMERA };
+  // the front view: its machine starts where it stood and ends drawn into the three-quarter view's box
+  const origin = `${m.left - s.left}px ${m.top - s.top}px`;
+  const at = (r: { left: number; top: number; width: number }) =>
+    `translate(${r.left - m.left}px, ${r.top - m.top}px) scale(${r.width / m.width})`;
+  void play(
+    stage,
+    [
+      { transformOrigin: origin, transform: at(from), opacity: 1 },
+      { opacity: 1, offset: 0.46 },
+      { opacity: 0, offset: 0.6 },
+      { transformOrigin: origin, transform: at(v), opacity: 0 },
+    ],
+    timing,
+  );
+  // the three-quarter view: starts drawn into the front view's box, ends in its own place
+  return play(
+    view,
+    [
+      { transformOrigin: "0 0", transform: `translate(${from.left - v.left}px, ${from.top - v.top}px) scale(${from.width / v.width})`, opacity: 0 },
+      { opacity: 0, offset: 0.42 },
+      { opacity: 1, offset: 0.56 },
+      { transformOrigin: "0 0", transform: "none", opacity: 1 },
+    ],
+    timing,
   );
 }
 
@@ -196,6 +264,22 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       delete html.dataset.room;
     };
   }, [phase]);
+
+  // ---------- the dark room's pictures, fetched and decoded once the page is idle ----------
+  const warm = useRef<HTMLImageElement[]>([]);
+  useEffect(() => {
+    const go = () => {
+      warm.current = DARK_ROOM.map((src) => {
+        const img = new window.Image();
+        img.src = src;
+        void img.decode().catch(() => undefined);
+        return img;
+      });
+    };
+    const idle = typeof window.requestIdleCallback === "function";
+    const id = idle ? window.requestIdleCallback(go, { timeout: 1500 }) : setTimeout(go, 800);
+    return () => (idle ? window.cancelIdleCallback(id as number) : clearTimeout(id));
+  }, []);
 
   // ---------- small physical moments ----------
   const knock = useCallback((strength = 1) => {
@@ -362,7 +446,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
   const aim = useCallback(() => {
     const rear = viewRef.current === "rear";
     const lens = (rear ? lensRearRef : lens34Ref).current?.getBoundingClientRect();
-    const target = (open ? openRef.current : aimRef.current)?.getBoundingClientRect();
+    const target = (openRef.current ?? aimRef.current)?.getBoundingClientRect();
     if (!lens || !target || !target.width) return;
     const p = beamPlacement(
       { x: lens.left + lens.width / 2, y: lens.top + lens.height / 2 },
@@ -370,8 +454,22 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       target.height * (rear ? 1.05 : 0.92),
       rear ? BEAM_REAR : BEAM,
     );
-    setBeam({ left: p.left, top: p.top, width: p.width, transformOrigin: p.origin, transform: p.transform });
-  }, [open]);
+    setBeam({ transform: p.matrix });
+  }, []);
+
+  /** Aim again once the machine has finished moving (it drops away when a slide opens, and comes back), the light
+   * gliding after it. */
+  const follow = useCallback(
+    (after: number) => {
+      rootRef.current?.setAttribute("data-glide", "");
+      aim();
+      window.setTimeout(() => {
+        aim();
+        window.setTimeout(() => rootRef.current?.removeAttribute("data-glide"), 700);
+      }, reduced() ? 0 : after);
+    },
+    [aim],
+  );
 
   useLayoutEffect(() => {
     if (phase !== "dark") return;
@@ -457,17 +555,19 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     if (slotRef.current) slotRef.current.dataset.pos = "gate";
     await Promise.all(
       [introRef.current, handRef.current, allRef.current].map((el) =>
-        play(el, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(-10px)" }], {
-          duration: 340,
-          delay: 120,
+        play(el, [{ opacity: 1, transform: "none" }, { opacity: 0, transform: "translateY(-8px)" }], {
+          duration: 300,
           easing: "ease-in",
           fill: "forwards",
         }),
       ),
     );
 
-    // The room goes dark and we move in and round the machine: the front view hands over to the three-quarter view.
-    const first = stageRef.current?.getBoundingClientRect();
+    camRef.current?.getAnimations({ subtree: true }).forEach((x) => x.cancel());
+    // The room goes dark and we move in and round the machine. One camera path carries both photographs: the front
+    // view and the three-quarter view are drawn into the same moving rectangle, from where the machine stood to where
+    // it ends, close at the bottom left. Half-way, at the fastest point of the move, one hands over to the other in a
+    // fifth of a second (a cut on the action), so the change of angle reads as the camera going round, not a dissolve.
     const front = machineRef.current?.getBoundingClientRect();
     viewRef.current = "34";
     flushSync(() => {
@@ -480,19 +580,21 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     });
     window.scrollTo({ top: 0, behavior: "instant" });
     [introRef.current, handRef.current, allRef.current].forEach((el) => el?.getAnimations().forEach((x) => x.cancel()));
-    const moving = flip(stageRef.current, first, 1150);
-    // the new view comes in over the old one, and only then does the old one go, so the two never show through each other
-    void play(stageRef.current, [{ opacity: 1 }, { opacity: 1, offset: 0.5 }, { opacity: 0, offset: 0.72 }, { opacity: 0 }], { duration: 1150 });
-    void flip(view34Ref.current, front, 1150);
-    void play(view34Ref.current, [{ opacity: 0 }, { opacity: 0, offset: 0.12 }, { opacity: 1, offset: 0.5 }, { opacity: 1 }], { duration: 1150, easing: "ease-in-out" });
-    const lensOn = sleep(520).then(() => rootRef.current?.setAttribute("data-lens", "on"));
-    const second = setTimeout(() => setStep((s) => Math.max(s, 1)), reduced() ? 0 : 1100);
-    await Promise.all([moving, lensOn]);
+    const MOVE = 1250;
+    const moving = travel(stageRef.current, machineRef.current, front, view34Ref.current, MOVE);
+    // the lens lights and the light goes out to the wall while the camera is still settling, not after it stops
+    const lensOn = sleep(MOVE * 0.55).then(() => rootRef.current?.setAttribute("data-lens", "on"));
+    const second = setTimeout(() => setStep((s) => Math.max(s, 1)), reduced() ? 0 : 1250);
+    await Promise.all([sleep(MOVE * 0.7), lensOn]);
     aim();
     rootRef.current?.setAttribute("data-beam", "on");
-    void play(beamRef.current, [{ clipPath: "inset(0 88% 0 0)", opacity: 0.2 }, { clipPath: "inset(0 0 0 0)", opacity: 1 }], {
-      duration: 720,
-      easing: OUT,
+    // the light reaches out from the lens: a soft edge running along the beam, not a hard wipe
+    void play(beamRef.current, [{ "--reach": "0%" }, { "--reach": "125%" }], { duration: 900, easing: OUT });
+    void moving.then(() => {
+      // the last few pixels of the settle: the light follows the lens there
+      rootRef.current?.setAttribute("data-glide", "");
+      aim();
+      setTimeout(() => rootRef.current?.removeAttribute("data-glide"), 650);
     });
 
     const outcome = await pending;
@@ -533,7 +635,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     // A cut through the dark: the three-quarter view goes, and we are behind the machine, looking at the wall.
     rootRef.current?.removeAttribute("data-beam");
     if (camRef.current) camRef.current.dataset.view = "cut";
-    await sleep(380);
+    await sleep(280);
     viewRef.current = "rear";
     const r: Result = {
       line: outcome.data.line,
@@ -550,15 +652,11 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     if (camRef.current) camRef.current.dataset.view = "rear";
     aim();
     setTimeout(() => rootRef.current?.setAttribute("data-beam", "on"), reduced() ? 0 : 260);
-    void play(
-      rowRef.current,
-      [
-        { filter: "blur(18px)", opacity: 0.35, transform: "scale(1.04)" },
-        { filter: "blur(6px)", opacity: 0.8, offset: 0.55 },
-        { filter: "blur(0)", opacity: 1, transform: "none" },
-      ],
-      { duration: 900, easing: OUT },
-    );
+    // the light comes into focus: the soft patch goes as the sharp cards come (no animated blur: it repaints every frame)
+    void play(rowRef.current, [{ opacity: 0, transform: "scale(1.035)" }, { opacity: 1, transform: "none" }], {
+      duration: 900,
+      easing: OUT,
+    });
     storyRefs.current.forEach((el, i) =>
       play(el?.querySelector(".pj-story-face"), [{ opacity: 0 }, { opacity: 1 }], { duration: 500, delay: 420 + i * 90, fill: "backwards" }),
     );
@@ -623,28 +721,25 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     if (!result || open || busy.current) return;
     const end = begin();
     const from = storyRefs.current[active]?.getBoundingClientRect();
+    rootRef.current?.setAttribute("data-glide", "");
     flushSync(() => setOpen(true));
+    follow(900);
     const el = openRef.current;
     if (el && from && !reduced()) {
+      // The slide opens out of the card's own rectangle: a growing window on it, so nothing is stretched, and its
+      // words come up once there is room for them.
       const to = el.getBoundingClientRect();
-      await play(
-        el,
-        [
-          {
-            transformOrigin: "0 0",
-            transform: `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`,
-            opacity: 0.3,
-          },
-          { transformOrigin: "0 0", transform: "none", opacity: 1 },
-        ],
-        { duration: 560, easing: OUT },
-      );
+      const inset = cardInset(from, to);
+      await Promise.all([
+        play(el, [{ clipPath: inset, opacity: 0.6 }, { clipPath: "inset(-90px round 14px)", opacity: 1 }], { duration: 620, easing: GLIDE }),
+        ...[...el.children].map((c) => play(c, [{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 380, delay: 220, easing: OUT, fill: "backwards" })),
+      ]);
     }
     openTitleRef.current?.focus({ preventScroll: true });
     const s = result.slides[active]!;
     setLive(`Open: ${s.title}, ${s.projectTitle}.`);
     end();
-  }, [result, open, active, begin]);
+  }, [result, open, active, begin, follow]);
 
   const closeStory = useCallback(async () => {
     if (motion.current) await motion.current;
@@ -653,25 +748,23 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
     const at = activeRef.current;
     const el = openRef.current;
     const to = storyRefs.current[at]?.getBoundingClientRect();
+    rootRef.current?.setAttribute("data-glide", "");
     if (el && to && !reduced()) {
+      // the reverse: the words go, the window closes down onto the card, and the card is back in the light
       const from = el.getBoundingClientRect();
-      await play(
-        el,
-        [
-          { transformOrigin: "0 0", transform: "none", opacity: 1 },
-          {
-            transformOrigin: "0 0",
-            transform: `translate(${to.left - from.left}px, ${to.top - from.top}px) scale(${to.width / from.width}, ${to.height / from.height})`,
-            opacity: 0,
-          },
-        ],
-        { duration: 380, easing: "cubic-bezier(0.4, 0, 0.6, 1)", fill: "forwards" },
-      );
+      await Promise.all([...el.children].map((c) => play(c, [{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: "ease-in", fill: "forwards" })));
+      wallRef.current?.removeAttribute("data-open");
+      await play(el, [{ clipPath: "inset(-90px round 14px)", opacity: 1 }, { clipPath: cardInset(to, from), opacity: 0.4 }], {
+        duration: 460,
+        easing: GLIDE,
+        fill: "forwards",
+      });
     }
     flushSync(() => setOpen(false));
+    follow(500);
     storyRefs.current[at]?.focus({ preventScroll: true });
     end();
-  }, [open, begin]);
+  }, [open, begin, follow]);
 
   /** With a slide open, the next story replaces it: the light dips, the slide changes, the light comes back. */
   const step2 = useCallback(
@@ -682,6 +775,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       const j = Math.max(0, Math.min(n - 1, k));
       if (j === activeRef.current) return;
       const end = begin();
+      rootRef.current?.setAttribute("data-glide", "");
       const dir = j > activeRef.current ? 1 : -1;
       knock(0.4);
       await play(openRef.current, [{ opacity: 1 }, { opacity: 0.06 }], { duration: 150, easing: "ease-in", fill: "forwards" });
@@ -700,6 +794,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
         { duration: 360, easing: OUT },
       );
       openTitleRef.current?.focus({ preventScroll: true });
+      rootRef.current?.removeAttribute("data-glide");
       end();
     },
     [result, n, knock, begin],
@@ -921,29 +1016,38 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
       </div>
 
       {/* 2–3. The dark room: the beam, the steps, the wall */}
+      {/* The camera in the dark: the machine close in the foreground, from the side while it thinks, from behind once
+          the light is on the wall. Two photographs of each view's light, placed and turned in JS, with dust in it. */}
+      <div className="pj-cam" ref={camRef} data-view={stage === "show" ? "rear" : "34"} aria-hidden="true">
+        <div className="pj-view pj-view-34" ref={view34Ref}>
+          {/* eslint-disable-next-line @next/next/no-img-element -- preloaded and decoded ahead (DARK_ROOM), so the same URL */}
+          <img className="pj-shot" src="/projector/machine-34-off.webp" alt="" width={1620} height={775} draggable={false} decoding="sync" fetchPriority="low" />
+          {/* eslint-disable-next-line @next/next/no-img-element -- as above */}
+          <img className="pj-shot pj-shot-on" src="/projector/machine-34-on.webp" alt="" width={1620} height={775} draggable={false} decoding="sync" fetchPriority="low" />
+          <span className="pj-anchor" ref={lens34Ref} />
+        </div>
+        <div className="pj-view pj-view-rear">
+          {/* eslint-disable-next-line @next/next/no-img-element -- as above */}
+          <img className="pj-shot" src="/projector/machine-rear.webp" alt="" width={1420} height={862} draggable={false} decoding="sync" fetchPriority="low" />
+          <span className="pj-anchor" ref={lensRearRef} />
+        </div>
+      </div>
+      <div className="pj-beam" ref={beamRef} data-view={stage === "show" ? "rear" : "34"} aria-hidden="true" style={beam ?? { opacity: 0 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element -- placed and turned per frame, not a content image */}
+        <img className="pj-beam-34" src="/projector/beam.webp" alt="" fetchPriority="low" />
+        {/* eslint-disable-next-line @next/next/no-img-element -- placed and turned per frame, not a content image */}
+        <img className="pj-beam-rear" src="/projector/beam-rear.webp" alt="" fetchPriority="low" />
+      </div>
+      {/* the dust: placed exactly as the light, but on its own, with no blending, so moving it costs nothing */}
+      <div className="pj-beam pj-dustbox" data-view={stage === "show" ? "rear" : "34"} aria-hidden="true" style={beam ?? { opacity: 0 }}>
+        {/* dust, already cut to each beam's shape, so it only ever floats in the light */}
+        {(["34-a", "34-b", "rear-a", "rear-b"] as const).map((d) => (
+          // eslint-disable-next-line @next/next/no-img-element -- as above
+          <img key={d} className={`pj-dust pj-beam-${d.slice(0, -2)} pj-dust-${d.slice(-1)}`} src={`/projector/dust-${d}.webp`} alt="" fetchPriority="low" />
+        ))}
+      </div>
       {phase === "dark" && (
         <>
-          {/* The camera in the dark: the machine close in the foreground, from the side while it thinks, from behind once
-              the light is on the wall. Two photographs of each view's light, placed and turned in JS, with dust in it. */}
-          <div className="pj-cam" ref={camRef} data-view={stage === "show" ? "rear" : "34"} aria-hidden="true">
-            <div className="pj-view pj-view-34" ref={view34Ref}>
-              <Image className="pj-shot" src="/projector/machine-34-off.webp" alt="" width={1620} height={775} draggable={false} sizes="(min-width: 1000px) 62vw, 420px" />
-              <Image className="pj-shot pj-shot-on" src="/projector/machine-34-on.webp" alt="" width={1620} height={775} draggable={false} sizes="(min-width: 1000px) 62vw, 420px" />
-              <span className="pj-anchor" ref={lens34Ref} />
-            </div>
-            <div className="pj-view pj-view-rear">
-              <Image className="pj-shot" src="/projector/machine-rear.webp" alt="" width={1420} height={862} draggable={false} sizes="(min-width: 1000px) 44vw, 340px" />
-              <span className="pj-anchor" ref={lensRearRef} />
-            </div>
-          </div>
-          <div className="pj-beam" ref={beamRef} data-view={stage === "show" ? "rear" : "34"} aria-hidden="true" style={beam ?? { opacity: 0 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element -- placed and turned per frame, not a content image */}
-            <img className="pj-beam-34" src="/projector/beam.webp" alt="" />
-            {/* eslint-disable-next-line @next/next/no-img-element -- placed and turned per frame, not a content image */}
-            <img className="pj-beam-rear" src="/projector/beam-rear.webp" alt="" />
-            <span className="pj-dust" />
-            <span className="pj-dust pj-dust-2" />
-          </div>
           <section className="pj-wall" ref={wallRef} aria-labelledby={result ? "r-title" : undefined} aria-label={result ? undefined : "Projecting"} data-open={open || undefined}>
             <header className="pj-wallhead">
               <ol className="pj-steps" aria-hidden="true" data-done={stage === "show" || undefined}>
@@ -978,7 +1082,7 @@ export function Projector({ cards, media, thumbs, wide, questions, name, locatio
             <div className="pj-area" ref={areaRef}>
               {/* where the card in the light stands: the beam aims here */}
               <div className="pj-aim" ref={aimRef} aria-hidden="true" />
-              {stage === "think" && <div className="pj-patch" aria-hidden="true" />}
+              <div className="pj-patch" aria-hidden="true" data-out={stage === "show" || undefined} />
               {result && (
                 <div
                   className="pj-row"
