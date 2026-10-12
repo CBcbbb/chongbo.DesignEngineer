@@ -294,7 +294,7 @@
   }
 
   /* ---------- 01.1: three products that share one blue and nothing else. Each is drawn at 560 × 360 and scaled to
-     its card: a light sidebar workspace, a light network map, a dark pipeline builder (all content invented). ---------- */
+     its card: a light berth planner, a dense records table, a dark live map (all content invented). ---------- */
   const PI = {
     folder: "M3 7h6l2 2h10v10H3z", route: "M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8 17h6a4 4 0 0 0 0-8h-2",
     file: "M7 3h7l5 5v13H7zM14 3v5h5", pin: "M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11zM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
@@ -309,51 +309,76 @@
   };
   const pi = (n, c = "") => `<svg class="pi ${c}" viewBox="0 0 24 24" aria-hidden="true"><path d="${PI[n]}"/></svg>`;
   const PF = {
-    // 1 · a light workspace: sidebar, page header, a grid of record cards
+    // 1 · a light planning board (Geist): KPI tiles over a berth timeline, warm greys, 14px cards, pill buttons
     1: () => {
-      const card = (ic, tag, t, d, f) => `<div class="p1-card"><div class="p1-ch"><i class="p1-ic">${pi(ic)}</i><span class="p1-tag">${tag}</span></div><b>${t}</b><p>${d}</p><footer>${f}<span>${pi("dots")}</span></footer></div>`;
+      const X0 = 78, W = 430, H0 = 6, HN = 18, px = (h) => X0 + ((h - H0) / (HN - H0)) * W;
+      const blk = (row, a, b, name, sub, kind) => `<div class="p1-blk is-${kind}" style="left:${px(a).toFixed(1)}px;width:${(px(b) - px(a)).toFixed(1)}px;top:${42 + row * 36}px"><b>${name}</b><small>${sub}</small></div>`;
+      const now = px(11 + 20 / 60);
       return `<div class="pf pf-1">
-        <aside class="p1-side"><div class="p1-logo"><i></i>LADING</div><div class="p1-filter">Filter pages…</div>
-          <nav><span class="is-on">${pi("folder")}Shipments</span><span>${pi("route")}Routes</span><span>${pi("file")}Contracts</span><span>${pi("pin")}Depots</span></nav>
-          <small>Operations</small><nav><span>${pi("chart")}Throughput</span><span>${pi("bolt")}Dispatch</span></nav>
-          <div class="p1-user"><i>OT</i><span>Ops team<small>12 members</small></span></div></aside>
-        <main class="p1-main"><header><h5>${pi("folder")}Shipments</h5><span class="p1-btn">${pi("chart")}Reports</span><span class="p1-btn is-blue">${pi("plus")}New shipment</span></header>
-          <div class="p1-tools"><span class="p1-seg"><i class="is-on">${pi("grid")}</i><i>${pi("list")}</i></span><span class="p1-pill">Select</span><span class="p1-sp"></span><span class="p1-seg2"><b>All</b><span>${pi("star")}Starred</span></span><small>48 shipments</small></div>
-          <div class="p1-grid">${card("ship", "Sea freight", "Harbour import 2201", "Twelve containers from the coast, cleared for the north depot.", "Coastal lane")}${card("truck", "Road", "North depot transfer", "Pallets moved overnight to free space for the import.", "Inland lane")}${card("ship", "Sea freight", "Reefer export 0418", "Chilled cargo booked on the Thursday sailing.", "Coastal lane")}${card("truck", "Road", "Last-mile batch 77", "Sixty drops across the city, two vans.", "City lane")}</div></main>
-      </div>`;
-    },
-    // 2 · a light network map: icon rail, tree, a canvas of nodes and floating controls
-    2: () => {
-      const node = (x, y, w, eye, t, cls = "", dots = 3) => `<div class="p2-node ${cls}" style="left:${x}px;top:${y}px;width:${w}px"><small>${eye}</small><b>${t}</b><i>${"<em></em>".repeat(dots)}</i></div>`;
-      const curve = (x1, y1, x2, y2, on) => { const m = (x1 + x2) / 2; return `<path class="${on ? "is-on" : ""}" d="M${x1} ${y1} C${m} ${y1} ${m} ${y2} ${x2} ${y2}"/>`; };
-      const cy = 160, hubs = [[128, 44], [128, 140], [128, 232]], leaves = [[236, 166, 1], [236, 206, 1], [236, 248, 2], [236, 288, 2]];
-      let lines = hubs.map(([x, y], i) => curve(114, cy, x, y + 19, i === 1)).join("") + leaves.map(([x, y, h]) => curve(hubs[h][0] + 92, hubs[h][1] + 19, x, y + 14, h === 1)).join("");
-      return `<div class="pf pf-2">
-        <div class="p2-rail">${["panel", "search", "folder", "tree", "chart", "db"].map((n, i) => `<i class="${i === 3 ? "is-on" : ""}">${pi(n)}</i>`).join("")}</div>
-        <aside class="p2-tree"><div class="p2-search">${pi("search")}Search lanes…</div><div class="p2-sel">Network overview</div>
-          <ul><li class="h">${pi("chev")}Inbound</li><li>Harbour arrivals</li><li>Customs holds</li><li class="h">${pi("chev")}Outbound</li><li>North depot</li><li>Inland hubs</li><li>Last mile</li><li class="h">${pi("chev")}Fleet</li><li>Vans</li></ul></aside>
-        <div class="p2-canvas"><svg class="p2-lines" viewBox="0 0 385 360" aria-hidden="true">${lines}</svg>
-          ${node(18, cy - 22, 96, "12 lanes", "North network", "is-root", 0)}
-          ${node(128, 44, 92, "Hub · 3 lanes", "Harbour")}${node(128, 140, 92, "Hub · 4 lanes", "Inland", "is-hl", 4)}${node(128, 232, 92, "Hub · 5 lanes", "Last mile", "", 5)}
-          ${leaves.map(([x, y], i) => `<div class="p2-leaf" style="left:${x}px;top:${y}px"><small>Live lane</small><b>${["Depot A", "Depot B", "City east", "City west"][i]}</b></div>`).join("")}
-          <div class="p2-ctrl"><b>View controls ${pi("up")}</b><small>Layout</small><span class="p2-seg"><i class="is-on">Tree</i><i>Radial</i></span><small>Status</small><span class="p2-st"><em class="g"></em>Live<b>12</b></span></div>
-          <div class="p2-zoom"><span>42%</span><i><em></em></i><small>Layers</small><span class="p2-lay"><b><em>1</em>Overview</b><b><em>2</em>Detail</b></span></div>
+        <header class="p1-top"><i class="p1-mark"></i><b>Quayside</b><span class="p1-crumb">Terminal 2<em>/</em><strong>Berth schedule</strong></span>
+          <span class="p1-date">Tue 14 Oct ${pi("chev")}</span><span class="p1-faces"><i>RM</i><i>JL</i><i>+3</i></span><span class="p1-cta">${pi("plus")}Plan a berth</span></header>
+        <div class="p1-kpis">
+          <div class="p1-kpi"><small>Vessels due today</small><b>7</b><span class="p1-spark">${[3, 5, 4, 6, 5, 7, 7].map((v) => `<i style="height:${v * 3}px"></i>`).join("")}</span></div>
+          <div class="p1-kpi"><small>Average wait</small><b>2<sub>h</sub> 10<sub>m</sub></b><span class="p1-delta">↓ 18%</span></div>
+          <div class="p1-kpi"><small>Cranes in use</small><b>11<sub> / 14</sub></b><span class="p1-bar"><i style="width:78%"></i></span></div>
         </div>
+        <section class="p1-board"><header><b>Berths</b><span class="p1-key"><i class="is-along"></i>Alongside<i class="is-sched"></i>Scheduled<i class="is-late"></i>Delayed</span></header>
+          ${[6, 8, 10, 12, 14, 16, 18].map((h) => `<span class="p1-tick" style="left:${px(h)}px">${String(h).padStart(2, "0")}:00</span><span class="p1-grid" style="left:${px(h)}px"></span>`).join("")}
+          ${["Berth 1", "Berth 2", "Berth 3", "Berth 4"].map((n, i) => `<span class="p1-row" style="top:${42 + i * 36}px"><b>${n}</b><small>${["14 m", "12 m", "16 m", "11 m"][i]} draught</small></span>`).join("")}
+          ${blk(0, 6.5, 11, "Nordlys", "06:30 – 11:00", "along")}${blk(0, 13, 17.5, "Halcyon", "13:00", "sched")}
+          ${blk(1, 8, 14.5, "Cape Ardent", "08:00 – 14:30", "along")}
+          ${blk(2, 6.8, 9.6, "Mira", "Left 09:35", "done")}${blk(2, 10.5, 15, "Saltmarsh", "+40 min", "late")}
+          ${blk(3, 12, 18, "Tern", "12:00", "sched")}
+          <span class="p1-now" style="left:${now}px"><em>11:20</em></span>
+        </section>
       </div>`;
     },
-    // 3 · a dark pipeline builder: top tabs, a status toolbar, a palette and a canvas of blocks
+    // 2 · a dense records table (IBM Plex Sans): underline tabs, filter chips, square corners, mono figures
+    2: () => {
+      const st = { held: "Held", clear: "Cleared", insp: "Inspect", pend: "Pending" };
+      const rows = [
+        ["CN-48213", "Harlow Foods", "Rotterdam", "Leeds", "18,420", "Thu", "held", 1],
+        ["CN-48214", "Brightwell & Co", "Antwerp", "Bristol", "6,105", "Thu", "clear", 0],
+        ["CN-48217", "Northgate Retail", "Hamburg", "Glasgow", "22,960", "Fri", "held", 1],
+        ["CN-48220", "Pellow Marine", "Le Havre", "Cardiff", "3,340", "Fri", "insp", 0],
+        ["CN-48221", "Ashby Textiles", "Rotterdam", "Leicester", "9,870", "Sat", "held", 1],
+        ["CN-48225", "Fenwick Parts", "Zeebrugge", "Hull", "12,015", "Sat", "pend", 0],
+        ["CN-48226", "Corran Drinks", "Antwerp", "Belfast", "15,600", "Mon", "clear", 0],
+        ["CN-48230", "Linden Paper", "Hamburg", "Newport", "7,480", "Mon", "pend", 0],
+      ];
+      return `<div class="pf pf-2">
+        <header class="p2-top"><b class="p2-word"><i></i>MANIFEST</b><nav><span class="is-on">Consignments</span><span>Customs</span><span>Invoices</span><span>Carriers</span></nav><span class="p2-find">${pi("search")}Search ref or consignee<kbd>⌘K</kbd></span></header>
+        <div class="p2-bar"><b>Consignments</b><small>1,284</small><span class="p2-chip is-on">Arriving: this week <em>×</em></span><span class="p2-chip">Port ${pi("chev")}</span><span class="p2-chip is-add">${pi("plus")}Filter</span><span class="p2-sp"></span><span class="p2-ghost">Export</span><span class="p2-btn">Release 3</span></div>
+        <div class="p2-table"><div class="p2-tr is-head"><span><i class="p2-cb"></i></span><span>Ref</span><span>Consignee</span><span>Route</span><span class="r">Kg</span><span>ETA</span><span>Status</span></div>
+          ${rows.map(([ref, who, a, b, kg, eta, s, sel]) => `<div class="p2-tr${sel ? " is-sel" : ""}"><span><i class="p2-cb${sel ? " is-on" : ""}"></i></span><span class="m">${ref}</span><span>${who}</span><span>${a}<em>→</em>${b}</span><span class="m r">${kg}</span><span class="m">${eta}</span><span><i class="p2-st is-${s}">${st[s]}</i></span></div>`).join("")}
+        </div>
+        <footer class="p2-foot"><b>3 selected</b><span>Rows 1–8 of 1,284</span><span class="p2-pg"><i>‹</i><i>›</i></span></footer>
+      </div>`;
+    },
+    // 3 · a dark live map (Inter): a city at night, one route lit in blue, glass panels floating over it
     3: () => {
-      const blk = (x, y, ic, t, kind, k, body) => `<div class="p3-blk" style="left:${x}px;top:${y}px"><div class="p3-bh"><i class="k-${k}">${pi(ic)}</i><b>${t}</b><span class="k-${k}">${kind}</span><em></em></div><p>${body}</p><small>✓ Completed · 1 ms</small><u class="l"></u><u class="r"></u></div>`;
+      const route = "M240 318 V252 H300 V196 H392 V150 H470 V96";
+      const vans = [["12", "Depot A → City east", "12 min", 1, 64], ["07", "Depot A → Harbour", "26 min", 0, 35], ["19", "Inland hub → Depot B", "Late 9 min", 2, 80], ["03", "Depot B → City west", "41 min", 0, 18]];
       return `<div class="pf pf-3">
-        <header class="p3-top"><span class="p3-logo">✦ RELAY</span><nav><b>Builder</b><span>Sources</span><span>Jobs</span><span>Catalogue</span></nav><span class="p3-who">viewer · partner</span></header>
-        <div class="p3-bar"><span class="p3-dd">Nightly rate sync ${pi("chev")}</span><span class="p3-st is-b">PIPELINE</span><span class="p3-st is-g">DEPLOYED</span><span class="p3-st is-p">RETRYING</span><span class="p3-sp"></span><span class="p3-btn">Test</span><span class="p3-btn">Deploy</span><span class="p3-btn is-blue">Save</span></div>
-        <div class="p3-body"><aside class="p3-pal"><span class="p3-add">${pi("plus")}Add source</span><div class="p3-chips"><b>All</b><span>Triggers</span><span>Joins</span></div><small>Sources (live)</small>
-            ${[["Rate calculator", "eu-west · live"], ["Depot connector", "eu-west · live"], ["Manifest reader", "ap-south · live"]].map(([a, b]) => `<div class="p3-src"><i>${pi("globe")}</i><span><b>${a}</b><small>${b}</small></span></div>`).join("")}</aside>
-          <div class="p3-canvas"><svg class="p3-wire" viewBox="0 0 420 288" aria-hidden="true"><path d="M134 139 C150 139 142 79 156 79"/><path d="M134 139 C150 139 142 199 156 199"/><path d="M276 79 C292 79 284 139 298 139"/><path d="M276 199 C292 199 284 139 298 139"/></svg>
-            ${blk(14, 110, "clock", "Schedule", "TRIGGER", "a", "Every 5 min")}${blk(156, 50, "db", "Rates: now", "CACHE", "r", "Read string")}${blk(156, 170, "db", "Rates: last", "CACHE", "r", "Read string")}${blk(298, 110, "merge", "Merge", "JOIN", "p", "2 inputs")}
-            <div class="p3-tools">${["plus", "chev", "grid"].map((n) => `<i>${pi(n)}</i>`).join("")}</div>
-            <div class="p3-mini"><em style="left:6px;top:20px;width:16px;background:#e3a32b"></em><em style="left:24px;top:12px;width:16px;background:#d64545"></em><em style="left:24px;top:28px;width:16px;background:#d64545"></em><em style="left:42px;top:20px;width:16px;background:#3453d3"></em><em style="left:60px;top:20px;width:12px;background:#2a3a7a"></em></div>
-          </div></div>
+        <svg class="p3-map" viewBox="0 0 560 360" aria-hidden="true">
+          <path class="water" d="M330 360 C340 300 420 280 450 230 C480 180 470 120 560 90 L560 140 C510 160 520 210 490 250 C450 300 390 320 380 360 Z"/>
+          <rect class="park" x="384" y="188" width="78" height="52" rx="6"/><g class="blocks">${Array.from({ length: 9 }, (_, i) => Array.from({ length: 6 }, (_, j) => `<rect x="${12 + i * 62}" y="${8 + j * 60}" width="54" height="52" rx="3"/>`).join("")).join("")}</g>
+          <g class="roads"><path d="M0 252 H560 M0 150 H560 M196 0 V360 M392 0 V360 M118 0 V360 M300 0 V360"/></g>
+          <g class="minor"><path d="M0 96 H560 M0 196 H560 M0 300 H560 M470 0 V360 M40 0 V360 M240 0 V360"/></g>
+          <path class="glow" d="${route}"/><path class="route" d="${route}"/>
+          ${[[300, 196], [392, 150]].map(([x, y]) => `<circle class="stop" cx="${x}" cy="${y}" r="3.5"/>`).join("")}
+          <circle class="dest" cx="470" cy="96" r="6"/><rect class="depot" x="234" y="312" width="12" height="12" rx="3"/>
+          <text class="area" x="330" y="60">OLD TOWN</text><text class="area" x="420" y="290">HARBOUR</text><text class="pin" x="482" y="92">City east</text><text class="pin" x="252" y="330">Depot A</text>
+          ${[[520, 300], [470, 196], [392, 40], [300, 40]].map(([x, y]) => `<circle class="other" cx="${x}" cy="${y}" r="4"/>`).join("")}
+          <circle class="pulse" cx="300" cy="226" r="16"/><circle class="van" cx="300" cy="226" r="7"/>
+        </svg>
+        <aside class="p3-panel"><header><b>On the road</b><span>24</span></header>
+          <div class="p3-seg"><i class="is-on">All</i><i>Late</i><i>Idle</i></div>
+          ${vans.map(([id, r, eta, s, p]) => `<div class="p3-van${s === 1 ? " is-on" : ""}"><i class="p3-id">${id}</i><span><b>Van ${id}</b><small>${r}</small><u><em style="width:${p}%"></em></u></span><em class="p3-eta${s === 1 ? " is-on" : s === 2 ? " is-late" : ""}">${eta}</em></div>`).join("")}
+        </aside>
+        <div class="p3-toggle"><i class="is-on">Live</i><i>Today</i></div>
+        <div class="p3-zoom"><i>${pi("plus")}</i><i>–</i></div>
+        <div class="p3-toast"><em></em><b>Van 12</b>3 stops left · on time</div>
       </div>`;
     },
   };
@@ -364,7 +389,14 @@
     if ("ResizeObserver" in window) new ResizeObserver(fit).observe(el);
   });
 
-  /* ---------- 01.2: the same library in code. Figma shows the file; Code shows the source (tokens, two components)
+  /* ---------- 01.2: one screen, three clients: the layout is shared; colour, typeface and button shape are theirs ---------- */
+  document.querySelectorAll("[data-mp]").forEach((el) => {
+    el.innerHTML = `<div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
+      <div class="mp-main"><div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
+      <ul class="mp-list"><li><span>Run 4821</span><span class="mp-badge">On time</span></li><li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li><li><span>Run 4823</span><span class="mp-badge">On time</span></li><li><span>Run 4824</span><span class="mp-badge">On time</span></li></ul></div>`;
+  });
+
+  /* ---------- 01.3: the same library in code. Figma shows the file; Code shows the source (tokens, two components)
      beside what it renders, light and dark. Choosing a file lights up the parts it draws. ---------- */
   const codeSide = document.getElementById("code-side");
   if (codeSide) {

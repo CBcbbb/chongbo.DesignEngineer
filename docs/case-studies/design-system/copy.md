@@ -42,7 +42,13 @@ The company began with one product and its own colours and design tokens. New pr
 
 Built fast by different teams, much of it with AI coding tools, each product changed or dropped what didn't fit. With every release they looked less alike.
 
-### 01.2 From a Figma library to shared code
+### 01.2 Every client wants its own look
+
+Our customers are companies with brands of their own, and each wants the product to feel like theirs: their colour, their typeface, the shape of their buttons.
+
+So the system lets every client change those few things, and only those. The screens underneath stay the same for everyone.
+
+### 01.3 From a Figma library to shared code
 
 I built the system in Figma first, from the main product's shadcn components: colour variables with Light and Dark modes, and components with their variants and states.
 

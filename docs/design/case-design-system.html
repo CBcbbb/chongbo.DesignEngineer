@@ -3322,6 +3322,18 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-ico .s { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .ds-ico .o { fill: none; stroke: currentColor; stroke-width: 1.8; }
 
+/* the clients sit side by side, square to the page, so the three looks can be compared */
+.ds-fan.is-clients { height: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.ds-fan.is-clients .ds-fan-card { position: static; width: auto; transform: none; }
+@media (max-width: 760px) { .ds-fan.is-clients { grid-template-columns: minmax(0, 1fr); } }
+/* ---------- 01.2 clients: one layout; only colour, typeface and button shape change (text on the colour by the rule) ---------- */
+.mp.cl-courier { --mp-brand: #f2c94c; --mp-tint: #fbf3d6; --mp-font: "Archivo", var(--sans); --mp-title: 700 15px/1.2 "Archivo", var(--sans); --mp-r: 0; --mp-logo-r: 0; --mp-btn-ink: #1c1b19; --mp-badge-r: 0; }
+.mp.cl-courier .mp-badge { color: #6b5300; }
+.mp.cl-grocer { --mp-brand: #2e7d3a; --mp-tint: #e6f3e7; --mp-font: "Geist", var(--sans); --mp-title: 600 16px/1.2 "Fraunces", Georgia, serif; --mp-r: 999px; --mp-logo-r: 999px; --mp-badge-r: 999px; }
+.mp.cl-grocer .mp-badge { color: #1f5a28; }
+.mp.cl-bank { --mp-brand: #1d2b5c; --mp-tint: #e8ebf5; --mp-font: "IBM Plex Sans", var(--sans); --mp-title: 600 15px/1.2 "IBM Plex Sans", var(--sans); --mp-r: 12px; --mp-logo-r: 4px; --mp-badge-r: 4px; }
+.mp.cl-bank .mp-badge { color: #1d2b5c; }
+
 /* ---------- 01.1 three products: one blue, nothing else shared. Each drawn at 560 × 360, scaled to its card ---------- */
 .pfw { position: relative; aspect-ratio: 560 / 360; overflow: hidden; border-radius: 12px; box-shadow: 0 0 0 1px rgb(0 0 0 / .09), 0 18px 40px -18px rgb(0 0 0 / .38); background: #fff; }
 .pf { position: absolute; left: 0; top: 0; width: 560px; height: 360px; transform: scale(var(--k, 1)); transform-origin: 0 0; --b: #3453d3; overflow: hidden; text-align: left; }
@@ -3329,143 +3341,124 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .pf .pi { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .pf b, .pf small, .pf p { font-style: normal; }
 
-/* 1 · light workspace (Geist): white sidebar, grey hover fills, 12px cards, pill buttons */
-.pf-1 { display: grid; grid-template-columns: 150px 1fr; background: #fff; color: #18181b; font: 400 11px/1.3 "Geist", sans-serif; }
-.p1-side { border-right: 1px solid #ececef; padding: 12px 10px; display: flex; flex-direction: column; gap: 6px; }
-.p1-logo { display: flex; align-items: center; gap: 7px; font: 700 13px/1 "Geist", sans-serif; letter-spacing: .06em; margin: 2px 4px 6px; }
-.p1-logo i { width: 14px; height: 14px; border-radius: 4px; background: var(--b); box-shadow: inset -5px -5px 0 #18181b; }
-.p1-filter { border: 1px solid #e4e4e7; border-radius: 999px; padding: 6px 10px; color: #a1a1aa; margin-bottom: 4px; }
-.p1-side nav { display: grid; gap: 1px; }
-.p1-side nav span { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 7px; color: #27272a; }
-.p1-side nav span.is-on { background: #f4f4f5; font-weight: 600; }
-.p1-side > small { color: #71717a; margin: 8px 8px 0; font-size: 10px; }
-.p1-user { margin-top: auto; display: flex; align-items: center; gap: 8px; padding: 4px; }
-.p1-user i { width: 24px; height: 24px; border-radius: 50%; background: var(--b); color: #fff; font: 600 10px/24px "Geist", sans-serif; text-align: center; font-style: normal; }
-.p1-user span { display: grid; font-weight: 600; } .p1-user small { color: #71717a; font-weight: 400; }
-.p1-main { padding: 14px 16px; display: grid; grid-template-rows: auto auto 1fr; gap: 10px; background: #fff; min-width: 0; }
-.p1-main header { display: flex; align-items: center; gap: 6px; }
-.p1-main h5 { margin: 0 auto 0 0; display: flex; align-items: center; gap: 7px; font: 600 16px/1 "Geist", sans-serif; letter-spacing: -.01em; }
-.p1-main h5 .pi { color: var(--b); width: 16px; height: 16px; }
-.p1-btn { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 999px; border: 1px solid #e4e4e7; font-weight: 500; background: #fafafa; }
-.p1-btn.is-blue { background: var(--b); border-color: var(--b); color: #fff; }
-.p1-tools { display: flex; align-items: center; gap: 6px; color: #52525b; }
-.p1-seg { display: inline-flex; border: 1px solid #e4e4e7; border-radius: 999px; padding: 2px; }
-.p1-seg i { display: grid; place-items: center; width: 22px; height: 20px; border-radius: 999px; color: #71717a; }
-.p1-seg i.is-on { background: #eef2ff; color: var(--b); }
-.p1-pill { border: 1px solid #e4e4e7; border-radius: 999px; padding: 4px 10px; color: #18181b; font-weight: 500; }
-.p1-sp { flex: 1; }
-.p1-seg2 { display: inline-flex; gap: 2px; border: 1px solid #e4e4e7; border-radius: 999px; padding: 2px; }
-.p1-seg2 > * { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; }
-.p1-seg2 b { background: #eef2ff; color: var(--b); font-weight: 500; }
-.p1-seg2 .pi { width: 11px; height: 11px; }
-.p1-tools small { color: #71717a; font-size: 11px; }
-.p1-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-height: 0; }
-.p1-card { border: 1px solid #e4e4e7; border-radius: 12px; padding: 10px 12px; display: grid; gap: 4px; align-content: start; }
-.p1-ch { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
-.p1-ic { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; background: #eef2ff; color: var(--b); }
-.p1-tag { background: #f4f4f5; border-radius: 999px; padding: 2px 7px; font-size: 9.5px; font-weight: 500; }
-.p1-card b { font-weight: 600; font-size: 12px; }
-.p1-card p { margin: 0; color: #71717a; font-size: 10px; line-height: 1.35; }
-.p1-card footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f0f0f2; margin-top: 4px; padding-top: 6px; color: #52525b; font-size: 10px; }
+/* 1 · light planning board (Geist): warm greys, white 14px cards, pill buttons, a timeline */
+.pf-1 { background: #f6f6f3; color: #1c1c1a; font: 400 10.5px/1.3 "Geist", sans-serif; }
+.p1-top { height: 46px; display: flex; align-items: center; gap: 8px; padding: 0 16px; background: #fff; border-bottom: 1px solid #ebebe7; }
+.p1-mark { width: 18px; height: 18px; border-radius: 6px; background: var(--b); position: relative; }
+.p1-mark::after { content: ""; position: absolute; left: 4px; right: 4px; bottom: 4px; height: 4px; border-radius: 2px; background: #fff; }
+.p1-top > b { font-weight: 600; font-size: 12.5px; letter-spacing: -.01em; }
+.p1-crumb { margin-left: 10px; color: #8a8a83; display: flex; gap: 6px; align-items: center; }
+.p1-crumb em { font-style: normal; color: #c9c9c2; } .p1-crumb strong { color: #1c1c1a; font-weight: 500; }
+.p1-date { margin-left: auto; display: inline-flex; align-items: center; gap: 4px; background: #f3f3ef; border-radius: 999px; padding: 5px 9px; font-weight: 500; }
+.p1-date .pi { width: 10px; height: 10px; }
+.p1-faces { display: flex; } .p1-faces i { width: 22px; height: 22px; border-radius: 50%; margin-left: -6px; border: 2px solid #fff; display: grid; place-items: center; font: 600 7.5px/1 "Geist", sans-serif; font-style: normal; color: #fff; background: #8b7d6b; }
+.p1-faces i:nth-child(2) { background: #5f7470; } .p1-faces i:nth-child(3) { background: #ecece7; color: #55554f; }
+.p1-cta { display: inline-flex; align-items: center; gap: 5px; background: var(--b); color: #fff; border-radius: 999px; padding: 6px 11px 6px 9px; font-weight: 500; box-shadow: 0 1px 0 rgb(255 255 255 / .2) inset, 0 2px 6px -2px color-mix(in srgb, var(--b) 70%, transparent); }
+.p1-cta .pi { width: 11px; height: 11px; stroke-width: 2.2; }
+.p1-kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 12px 16px 0; }
+.p1-kpi { background: #fff; border: 1px solid #ebebe7; border-radius: 14px; padding: 10px 12px; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 2px 8px; box-shadow: 0 1px 2px rgb(40 40 30 / .04); }
+.p1-kpi small { grid-column: 1 / -1; color: #8a8a83; font-size: 9.5px; }
+.p1-kpi b { font-weight: 600; font-size: 21px; letter-spacing: -.03em; line-height: 1; }
+.p1-kpi sub { font-size: 11px; font-weight: 500; color: #8a8a83; vertical-align: baseline; letter-spacing: 0; }
+.p1-spark { display: flex; align-items: flex-end; gap: 2px; height: 22px; } .p1-spark i { width: 4px; border-radius: 2px; background: color-mix(in srgb, var(--b) 30%, #fff); } .p1-spark i:last-child { background: var(--b); }
+.p1-delta { font-weight: 600; font-size: 9.5px; color: #1d7a45; background: #e6f4ea; border-radius: 999px; padding: 3px 6px; }
+.p1-bar { width: 56px; height: 6px; border-radius: 3px; background: #ecece7; overflow: hidden; align-self: center; } .p1-bar i { display: block; height: 100%; background: var(--b); border-radius: 3px; }
+.p1-board { position: relative; margin: 10px 16px 0; height: 206px; background: #fff; border: 1px solid #ebebe7; border-radius: 14px; box-shadow: 0 1px 2px rgb(40 40 30 / .04); }
+.p1-board > header { display: flex; align-items: center; padding: 10px 12px 0; }
+.p1-board > header b { font-weight: 600; font-size: 11.5px; }
+.p1-key { margin-left: auto; display: flex; align-items: center; gap: 5px; color: #6f6f68; font-size: 9px; }
+.p1-key i { width: 8px; height: 8px; border-radius: 3px; margin-left: 6px; }
+.p1-key .is-along { background: var(--b); } .p1-key .is-sched { background: color-mix(in srgb, var(--b) 18%, #fff); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--b) 35%, #fff); } .p1-key .is-late { background: #fdf3e2; box-shadow: inset 0 0 0 1px #e0a43c; }
+.p1-tick { position: absolute; top: 30px; transform: translateX(-50%); font: 500 8px/1 "Geist Mono", monospace; color: #a3a39b; }
+.p1-grid { position: absolute; top: 40px; bottom: 10px; width: 1px; background: #f1f1ed; }
+.p1-row { position: absolute; left: 12px; height: 28px; display: grid; align-content: center; }
+.p1-row b { font-weight: 600; font-size: 9.5px; } .p1-row small { color: #a3a39b; font-size: 8px; }
+.p1-blk { position: absolute; height: 28px; border-radius: 8px; padding: 4px 8px; display: grid; align-content: center; overflow: hidden; white-space: nowrap; }
+.p1-blk b { font-weight: 600; font-size: 9.5px; } .p1-blk small { font-size: 8px; opacity: .8; }
+.p1-blk.is-along { background: var(--b); color: #fff; box-shadow: 0 2px 6px -3px color-mix(in srgb, var(--b) 80%, transparent); }
+.p1-blk.is-sched { background: color-mix(in srgb, var(--b) 9%, #fff); color: color-mix(in srgb, var(--b) 75%, #000); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--b) 28%, #fff); }
+.p1-blk.is-done { background: #f1f1ed; color: #8a8a83; }
+.p1-blk.is-late { background: #fdf6ea; color: #7a4d06; box-shadow: inset 0 0 0 1px #e8b25a; }
+.p1-now { position: absolute; top: 36px; bottom: 8px; width: 0; border-left: 1.5px solid #1c1c1a; }
+.p1-now::before { content: ""; position: absolute; top: 4px; left: -4px; width: 6.5px; height: 6.5px; border-radius: 50%; background: #1c1c1a; }
+.p1-now em { position: absolute; bottom: -4px; left: 0; transform: translateX(-50%); font: 600 8px/1 "Geist Mono", monospace; font-style: normal; background: #1c1c1a; color: #fff; border-radius: 999px; padding: 3px 5px; }
 
-/* 2 · light network map (IBM Plex Sans): icon rail, dense tree, dot-grid canvas, square-ish 6px nodes, floating panels */
-.pf-2 { display: grid; grid-template-columns: 30px 145px 1fr; background: #fff; color: #1f2937; font: 400 10.5px/1.3 "IBM Plex Sans", sans-serif; }
-.p2-rail { border-right: 1px solid #e5e7eb; display: grid; align-content: start; justify-items: center; gap: 12px; padding-top: 12px; color: #4b5563; }
-.p2-rail i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; }
-.p2-rail i.is-on { background: #eaf0ff; color: var(--b); }
-.p2-tree { border-right: 1px solid #e5e7eb; padding: 10px 8px; display: grid; align-content: start; gap: 6px; }
-.p2-search { display: flex; align-items: center; gap: 6px; background: #f3f4f6; border-radius: 6px; padding: 6px 8px; color: #6b7280; }
-.p2-search .pi { width: 11px; height: 11px; }
-.p2-sel { background: #eaf0ff; color: var(--b); border-radius: 6px; padding: 6px 8px; font-weight: 500; border: 1px solid #c9d6ff; }
-.p2-tree ul { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 4px; }
-.p2-tree li { padding-left: 22px; color: #4b5563; }
-.p2-tree li.h { padding-left: 4px; display: flex; align-items: center; gap: 4px; color: #111827; font-weight: 500; margin-top: 3px; }
-.p2-tree li.h .pi { width: 11px; height: 11px; }
-.p2-canvas { position: relative; background: #fbfcfe radial-gradient(circle, #dfe3ea 1px, transparent 1.2px) 0 0 / 14px 14px; overflow: hidden; }
-.p2-lines { position: absolute; inset: 0; width: 385px; height: 360px; }
-.p2-lines path { fill: none; stroke: #cfd5df; stroke-width: 1; }
-.p2-lines path.is-on { stroke: var(--b); stroke-width: 1.3; }
-.p2-node { position: absolute; background: #f5f7fb; border: 1px solid #e3e7ef; border-radius: 6px; padding: 6px 7px; display: grid; gap: 2px; box-shadow: 0 1px 2px rgb(0 0 0 / .04); }
-.p2-node small { font: 500 7px/1 "IBM Plex Sans", sans-serif; letter-spacing: .06em; text-transform: uppercase; color: #6b7280; }
-.p2-node b { font-weight: 500; font-size: 10px; }
-.p2-node i { display: flex; gap: 2px; } .p2-node i em { width: 3px; height: 6px; background: #22a55a; border-radius: 1px; }
-.p2-node.is-root { background: var(--b); border-color: var(--b); color: #fff; box-shadow: 0 6px 18px -4px color-mix(in srgb, var(--b) 60%, transparent); padding: 9px 10px; }
-.p2-node.is-root small { color: rgb(255 255 255 / .75); }
-.p2-node.is-hl { border-color: #b9c8ff; }
-.p2-leaf { position: absolute; width: 80px; background: #f5f7fb; border: 1px solid #e3e7ef; border-radius: 6px; padding: 4px 6px; display: grid; gap: 1px; }
-.p2-leaf small { font-size: 6.5px; letter-spacing: .06em; text-transform: uppercase; color: #6b7280; } .p2-leaf b { font-weight: 500; font-size: 8.5px; }
-.p2-ctrl { position: absolute; right: 10px; top: 10px; width: 112px; background: #fff; border: 1px solid #c9d6ff; border-radius: 10px; padding: 8px; display: grid; gap: 5px; box-shadow: 0 8px 20px -10px rgb(0 0 0 / .2); }
-.p2-ctrl > b { display: flex; justify-content: space-between; align-items: center; font-weight: 500; font-size: 10px; }
-.p2-ctrl > b .pi { width: 10px; height: 10px; }
-.p2-ctrl small { font-size: 7px; letter-spacing: .08em; text-transform: uppercase; color: #6b7280; margin-top: 2px; }
-.p2-seg { display: grid; grid-template-columns: 1fr 1fr; background: #f3f4f6; border-radius: 6px; padding: 2px; }
-.p2-seg i { font-style: normal; text-align: center; padding: 4px 0; border-radius: 5px; color: #374151; }
-.p2-seg i.is-on { background: #eaf0ff; color: var(--b); box-shadow: inset 0 0 0 1px #c9d6ff; }
-.p2-st { display: flex; align-items: center; gap: 5px; border: 1px solid #c9d6ff; border-radius: 6px; padding: 4px 6px; color: var(--b); }
-.p2-st em { width: 6px; height: 6px; border-radius: 50%; } .p2-st em.g { background: #22a55a; } .p2-st em.a { background: #e8a33a; }
-.p2-st b { margin-left: auto; font: 500 9px/1 "Geist Mono", monospace; color: #374151; }
-.p2-zoom { position: absolute; left: 14px; bottom: 10px; width: 210px; background: #fff; border: 1px solid #c9d6ff; border-radius: 10px; padding: 7px 9px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 5px 8px; box-shadow: 0 8px 20px -10px rgb(0 0 0 / .2); }
-.p2-zoom > span { color: #4b5563; }
-.p2-zoom > i { height: 3px; background: #e5e7eb; border-radius: 2px; position: relative; }
-.p2-zoom > i em { position: absolute; left: 0; top: 0; bottom: 0; width: 42%; background: var(--b); border-radius: 2px; }
-.p2-zoom > i em::after { content: ""; position: absolute; right: -4px; top: -3px; width: 9px; height: 9px; border-radius: 50%; background: var(--b); }
-.p2-zoom > small { font-size: 7px; letter-spacing: .08em; text-transform: uppercase; color: #6b7280; }
-.p2-lay { display: flex; gap: 10px; }
-.p2-lay b { display: inline-flex; align-items: center; gap: 4px; font-weight: 500; font-size: 9px; }
-.p2-lay b em { width: 12px; height: 12px; border-radius: 50%; background: var(--b); color: #fff; font: 600 7px/12px "IBM Plex Sans", sans-serif; text-align: center; font-style: normal; }
-.p2-zoom { grid-template-columns: auto 1fr; }
+/* 2 · dense records table (IBM Plex Sans): hairlines everywhere, 3px corners, underline tabs, mono figures */
+.pf-2 { background: #fff; color: #161b22; font: 400 10px/1.25 "IBM Plex Sans", sans-serif; display: grid; grid-template-rows: 38px 40px 1fr 30px; }
+.p2-top { display: flex; align-items: stretch; gap: 18px; padding: 0 14px; border-bottom: 1px solid #dfe3e8; background: #fbfcfd; }
+.p2-word { display: flex; align-items: center; gap: 6px; font: 600 10px/1 "IBM Plex Sans", sans-serif; letter-spacing: .16em; }
+.p2-word i { width: 9px; height: 9px; background: var(--b); }
+.p2-top nav { display: flex; gap: 14px; }
+.p2-top nav span { display: flex; align-items: center; color: #57606a; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.p2-top nav .is-on { color: #161b22; font-weight: 600; border-color: var(--b); }
+.p2-find { margin: 7px 0 7px auto; display: flex; align-items: center; gap: 6px; width: 170px; border: 1px solid #d0d7de; border-radius: 3px; padding: 0 6px; color: #8c959f; background: #fff; }
+.p2-find .pi { width: 10px; height: 10px; } .p2-find kbd { margin-left: auto; font: 500 8px/1 "Geist Mono", monospace; border: 1px solid #d0d7de; border-radius: 3px; padding: 2px 3px; color: #57606a; }
+.p2-bar { display: flex; align-items: center; gap: 6px; padding: 0 14px; border-bottom: 1px solid #dfe3e8; }
+.p2-bar > b { font-weight: 600; font-size: 12.5px; } .p2-bar > small { font: 500 9px/1 "Geist Mono", monospace; color: #57606a; background: #eef1f4; border-radius: 3px; padding: 3px 4px; margin-right: 6px; }
+.p2-chip { display: inline-flex; align-items: center; gap: 4px; border: 1px solid #d0d7de; border-radius: 3px; padding: 4px 6px; color: #3a434d; }
+.p2-chip .pi { width: 9px; height: 9px; }
+.p2-chip.is-on { border-color: color-mix(in srgb, var(--b) 45%, #fff); background: color-mix(in srgb, var(--b) 7%, #fff); color: color-mix(in srgb, var(--b) 80%, #000); }
+.p2-chip em { font-style: normal; opacity: .6; } .p2-chip.is-add { border-style: dashed; color: #57606a; }
+.p2-sp { flex: 1; }
+.p2-ghost { padding: 5px 8px; color: #3a434d; font-weight: 500; }
+.p2-btn { background: var(--b); color: #fff; border-radius: 3px; padding: 5px 10px; font-weight: 600; }
+.p2-table { display: grid; align-content: start; overflow: hidden; }
+.p2-tr { display: grid; grid-template-columns: 28px 70px 112px 132px 64px 40px 1fr; align-items: center; height: 27px; padding: 0 14px 0 6px; border-bottom: 1px solid #eef0f3; }
+.p2-tr > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px; }
+.p2-tr .m { font: 500 9.5px/1 "Geist Mono", monospace; letter-spacing: -.01em; } .p2-tr .r { text-align: right; padding-right: 14px; }
+.p2-tr em { font-style: normal; color: #8c959f; margin: 0 4px; }
+.p2-tr.is-head { height: 24px; background: #f6f8fa; border-bottom-color: #dfe3e8; font-size: 8px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: #57606a; }
+.p2-tr.is-sel { background: color-mix(in srgb, var(--b) 6%, #fff); box-shadow: inset 2px 0 0 var(--b); }
+.p2-cb { display: block; width: 11px; height: 11px; margin: 0 auto; border: 1px solid #b6bec8; border-radius: 2px; background: #fff; }
+.p2-cb.is-on { background: var(--b); border-color: var(--b); position: relative; }
+.p2-cb.is-on::after { content: ""; position: absolute; left: 3px; top: 0.5px; width: 3px; height: 6px; border: solid #fff; border-width: 0 1.6px 1.6px 0; transform: rotate(45deg); }
+.p2-st { display: inline-flex; align-items: center; gap: 4px; font-style: normal; font-weight: 500; font-size: 9px; border-radius: 3px; padding: 2px 5px; }
+.p2-st::before { content: ""; width: 5px; height: 5px; border-radius: 1px; background: currentColor; }
+.p2-st.is-held { color: #8a5300; background: #fff4e0; } .p2-st.is-clear { color: #1a6b3a; background: #e7f5ec; } .p2-st.is-insp { color: #a32b2b; background: #fdeaea; } .p2-st.is-pend { color: #57606a; background: #eef1f4; }
+.p2-foot { display: flex; align-items: center; gap: 12px; padding: 0 14px; border-top: 1px solid #dfe3e8; background: #fbfcfd; color: #57606a; }
+.p2-foot b { color: var(--b); font-weight: 600; } .p2-pg { margin-left: auto; display: flex; gap: 3px; } .p2-pg i { font-style: normal; width: 18px; height: 18px; display: grid; place-items: center; border: 1px solid #d0d7de; border-radius: 3px; background: #fff; }
 
-/* 3 · dark pipeline builder (Inter): black, segmented top tabs, outlined status pills, blocks with coloured kinds */
-.pf-3 { background: #070708; color: #e7e7ea; font: 400 10px/1.3 "Inter", sans-serif; display: grid; grid-template-rows: 38px 36px 1fr; }
-.p3-top { display: flex; align-items: center; gap: 14px; padding: 0 12px; border-bottom: 1px solid #1d1d22; }
-.p3-logo { font: 600 11px/1 "Inter", sans-serif; letter-spacing: .14em; color: #fff; }
-.p3-top nav { display: flex; gap: 2px; border: 1px solid #26262c; border-radius: 9px; padding: 2px; }
-.p3-top nav > * { padding: 5px 9px; border-radius: 7px; color: #a1a1aa; font-weight: 500; }
-.p3-top nav b { background: var(--b); color: #fff; }
-.p3-who { margin-left: auto; color: #8b8b94; font-size: 9px; }
-.p3-bar { display: flex; align-items: center; gap: 6px; padding: 0 12px; border-bottom: 1px solid #1d1d22; }
-.p3-dd { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #26262c; border-radius: 7px; padding: 5px 8px; color: #fff; }
-.p3-dd .pi { width: 10px; height: 10px; }
-.p3-st { font: 600 7.5px/1 "Inter", sans-serif; letter-spacing: .08em; padding: 4px 7px; border-radius: 999px; border: 1px solid; }
-.p3-st.is-b { color: #8ea2ff; border-color: #2c3d8f; background: #10173a; }
-.p3-st.is-g { color: #4fd18b; border-color: #17462d; background: #0b2016; }
-.p3-st.is-p { color: #c79bff; border-color: #44306e; background: #1b1230; }
-.p3-sp { flex: 1; }
-.p3-btn { border: 1px solid #2a2a31; border-radius: 7px; padding: 5px 9px; color: #e7e7ea; background: #0e0e11; font-weight: 500; }
-.p3-btn.is-blue { background: var(--b); border-color: var(--b); color: #fff; }
-.p3-body { display: grid; grid-template-columns: 140px 1fr; min-height: 0; }
-.p3-pal { border-right: 1px solid #1d1d22; padding: 10px; display: grid; align-content: start; gap: 7px; }
-.p3-add { display: flex; justify-content: center; align-items: center; gap: 5px; background: var(--b); color: #fff; border-radius: 7px; padding: 6px; font-weight: 500; }
-.p3-add .pi { width: 11px; height: 11px; }
-.p3-chips { display: flex; flex-wrap: wrap; gap: 4px; }
-.p3-chips > * { border: 1px solid #2a2a31; border-radius: 999px; padding: 3px 7px; color: #b4b4bc; font-weight: 400; }
-.p3-chips b { background: var(--b); border-color: var(--b); color: #fff; }
-.p3-pal > small { font-size: 7.5px; letter-spacing: .1em; text-transform: uppercase; color: #8b8b94; margin-top: 2px; }
-.p3-src { display: flex; align-items: center; gap: 7px; border: 1px solid #222228; border-radius: 8px; padding: 6px; background: #0c0c0f; }
-.p3-src i { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; background: #121a3a; color: #8ea2ff; }
-.p3-src i .pi { width: 11px; height: 11px; }
-.p3-src span { display: grid; } .p3-src b { font-weight: 600; font-size: 9.5px; } .p3-src small { color: #8b8b94; font-size: 8px; }
-.p3-canvas { position: relative; background: #050506 radial-gradient(circle, #1a1a20 1px, transparent 1.2px) 0 0 / 16px 16px; overflow: hidden; }
-.p3-wire { position: absolute; inset: 0; width: 420px; height: 288px; }
-.p3-wire path { fill: none; stroke: var(--b); stroke-width: 1.2; stroke-dasharray: 3 3; }
-.p3-blk { position: absolute; width: 120px; background: #0f0f12; border: 1px solid #26262c; border-radius: 10px; padding: 7px 8px; display: grid; gap: 3px; }
-.p3-bh { display: flex; align-items: center; gap: 5px; }
-.p3-bh i { display: grid; place-items: center; width: 16px; height: 16px; border-radius: 5px; }
-.p3-bh i .pi { width: 10px; height: 10px; }
-.p3-bh b { font-weight: 600; font-size: 10px; color: #fff; white-space: nowrap; }
-.p3-bh span { margin-left: auto; font: 600 6px/1 "Inter", sans-serif; letter-spacing: .08em; padding: 2px 4px; border-radius: 999px; border: 1px solid; }
-.p3-bh em { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px #22c55e; }
-.k-a { color: #e3a32b; } i.k-a { background: #2a1d07; } span.k-a { border-color: #6b4a10; }
-.k-r { color: #f06a6a; } i.k-r { background: #2a0d0d; } span.k-r { border-color: #6e2222; }
-.k-p { color: #c79bff; } i.k-p { background: #1b1230; } span.k-p { border-color: #44306e; }
-.p3-blk p { margin: 0; color: #c4c4cc; font-size: 9px; }
-.p3-blk small { color: #4fd18b; font-size: 8px; }
-.p3-blk u { position: absolute; top: 50%; width: 5px; height: 5px; border-radius: 50%; background: var(--b); margin-top: -2.5px; }
-.p3-blk u.l { left: -3px; } .p3-blk u.r { right: -3px; }
-.p3-tools { position: absolute; left: 12px; bottom: 12px; display: grid; gap: 3px; background: #0e0e11; border: 1px solid #26262c; border-radius: 7px; padding: 3px; }
-.p3-tools i { display: grid; place-items: center; width: 16px; height: 16px; color: #c4c4cc; } .p3-tools .pi { width: 10px; height: 10px; }
-.p3-mini { position: absolute; right: 12px; bottom: 12px; width: 84px; height: 48px; background: #0b0b0e; border: 1px solid #1d1d22; border-radius: 6px; }
-.p3-mini em { position: absolute; height: 6px; border-radius: 1px; }
+/* 3 · dark live map (Inter): a city grid at night, one route lit in blue, frosted panels floating over it */
+.pf-3 { background: #0b0e13; color: #e9ecf2; font: 400 10px/1.3 "Inter", sans-serif; }
+.p3-map { position: absolute; inset: 0; width: 560px; height: 360px; }
+.p3-map .water { fill: #0b1526; }
+.p3-map .blocks rect { fill: #10141b; }
+.p3-map .park { fill: #0f1a16; }
+.p3-map .area { font: 600 7px/1 "Inter", sans-serif; letter-spacing: .2em; fill: #3a4252; }
+.p3-map .pin { font: 600 8px/1 "Inter", sans-serif; fill: #c5ccd8; paint-order: stroke; stroke: #0b0e13; stroke-width: 3px; }
+.p3-map .roads path { stroke: #1c222d; stroke-width: 7; fill: none; }
+.p3-map .minor path { stroke: #151a23; stroke-width: 3; fill: none; }
+.p3-map .glow { fill: none; stroke: var(--b); stroke-width: 10; stroke-opacity: .28; filter: blur(4px); stroke-linejoin: round; }
+.p3-map .route { fill: none; stroke: color-mix(in srgb, var(--b) 75%, #fff); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.p3-map .stop { fill: #0b0e13; stroke: #fff; stroke-width: 1.5; }
+.p3-map .dest { fill: #fff; stroke: var(--b); stroke-width: 3; }
+.p3-map .depot { fill: #e9ecf2; stroke: #0b0e13; stroke-width: 2; }
+.p3-map .other { fill: #5b6475; stroke: #0b0e13; stroke-width: 2; }
+.p3-map .pulse { fill: color-mix(in srgb, var(--b) 25%, transparent); stroke: color-mix(in srgb, var(--b) 60%, transparent); stroke-width: 1; }
+.p3-map .van { fill: var(--b); stroke: #fff; stroke-width: 2.5; }
+.p3-panel { position: absolute; left: 12px; top: 12px; bottom: 12px; width: 200px; border-radius: 14px; padding: 12px; background: rgb(17 21 29 / .86); backdrop-filter: blur(10px); box-shadow: 0 0 0 1px rgb(255 255 255 / .07), 0 18px 40px -10px rgb(0 0 0 / .6); display: grid; align-content: start; gap: 8px; }
+.p3-panel > header { display: flex; align-items: center; justify-content: space-between; }
+.p3-panel > header b { font-weight: 600; font-size: 12.5px; letter-spacing: -.01em; }
+.p3-panel > header span { font: 600 9px/1 "Inter", sans-serif; background: rgb(255 255 255 / .08); border-radius: 999px; padding: 3px 7px; color: #c5ccd8; }
+.p3-seg { display: grid; grid-template-columns: repeat(3, 1fr); background: rgb(255 255 255 / .05); border-radius: 9px; padding: 2px; }
+.p3-seg i { font-style: normal; text-align: center; padding: 4px 0; border-radius: 7px; color: #9aa3b2; font-weight: 500; }
+.p3-seg i.is-on { background: rgb(255 255 255 / .1); color: #fff; }
+.p3-van { display: grid; grid-template-columns: 26px 1fr auto; gap: 8px; align-items: center; padding: 7px; border-radius: 10px; }
+.p3-van.is-on { background: color-mix(in srgb, var(--b) 22%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--b) 55%, transparent); }
+.p3-id { font-style: normal; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: rgb(255 255 255 / .07); font: 600 9.5px/1 "Inter", sans-serif; color: #dfe4ec; }
+.p3-van.is-on .p3-id { background: var(--b); color: #fff; }
+.p3-van span { display: grid; gap: 2px; min-width: 0; }
+.p3-van b { font-weight: 600; font-size: 10px; } .p3-van small { color: #8c95a5; font-size: 8.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.p3-van u { display: block; height: 3px; border-radius: 2px; background: rgb(255 255 255 / .08); margin-top: 2px; } .p3-van u em { display: block; height: 100%; border-radius: 2px; background: #6b7487; }
+.p3-van.is-on u em { background: color-mix(in srgb, var(--b) 70%, #fff); }
+.p3-eta { font-style: normal; font: 600 8.5px/1 "Inter", sans-serif; color: #c5ccd8; white-space: nowrap; }
+.p3-eta.is-on { color: #fff; background: var(--b); border-radius: 999px; padding: 3px 6px; } .p3-eta.is-late { color: #ff9a8a; }
+.p3-toggle { position: absolute; right: 12px; top: 12px; display: flex; padding: 2px; border-radius: 10px; background: rgb(17 21 29 / .86); box-shadow: 0 0 0 1px rgb(255 255 255 / .07); }
+.p3-toggle i { font-style: normal; padding: 5px 10px; border-radius: 8px; color: #9aa3b2; font-weight: 500; } .p3-toggle i.is-on { background: var(--b); color: #fff; }
+.p3-zoom { position: absolute; right: 12px; bottom: 12px; display: grid; border-radius: 10px; overflow: hidden; background: rgb(17 21 29 / .86); box-shadow: 0 0 0 1px rgb(255 255 255 / .07); }
+.p3-zoom i { font-style: normal; width: 26px; height: 24px; display: grid; place-items: center; color: #dfe4ec; } .p3-zoom i + i { border-top: 1px solid rgb(255 255 255 / .07); } .p3-zoom .pi { width: 11px; height: 11px; }
+.p3-toast { position: absolute; left: 318px; bottom: 14px; display: flex; align-items: center; gap: 6px; padding: 7px 11px; border-radius: 999px; background: rgb(17 21 29 / .9); box-shadow: 0 0 0 1px rgb(255 255 255 / .08), 0 10px 24px -8px rgb(0 0 0 / .6); color: #aeb6c4; }
+.p3-toast em { width: 7px; height: 7px; border-radius: 50%; background: #3ccf7a; box-shadow: 0 0 0 3px rgb(60 207 122 / .18); } .p3-toast b { color: #fff; font-weight: 600; }
 
 </style>
 <style id="ds-palette"></style>
@@ -3488,6 +3481,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           <a href="#one-system"><span class="cf-n">01</span>One system for three products</a>
           <ol>
             <li><a href="#drift">Drifting apart</a></li>
+            <li><a href="#client-looks">Client looks</a></li>
             <li><a href="#figma-to-code">Figma to code</a></li>
           </ol>
         </li>
@@ -3575,7 +3569,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
         <span class="cf-num" aria-hidden="true">01</span>
         <div>
           <h2 id="one-system-h"><span class="sr-only">Part 01: </span>One system for three products</h2>
-          <p class="cf-cards">Drifting apart · Figma to code</p>
+          <p class="cf-cards">Drifting apart · Client looks · Figma to code</p>
         </div>
       </section>
 
@@ -3588,7 +3582,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           </div>
         </div>
         <div class="cf-evidence" data-fit="fill">
-          <div class="ds-ev ds-fan" role="group" aria-label="Three products that share one blue and nothing else: a light workspace with a sidebar and cards, a light network map, and a dark pipeline builder">
+          <div class="ds-ev ds-fan" role="group" aria-label="Three products that share one blue and nothing else: a light berth planner, a dense records table and a dark live map">
             <figure class="ds-fan-card is-1"><span class="ds-tag">First product</span><div class="pfw" aria-hidden="true" data-pf="1"></div></figure>
             <figure class="ds-fan-card is-2"><span class="ds-tag">Second product</span><div class="pfw" aria-hidden="true" data-pf="2"></div></figure>
             <figure class="ds-fan-card is-3"><span class="ds-tag">Third product</span><div class="pfw" aria-hidden="true" data-pf="3"></div></figure>
@@ -3596,9 +3590,26 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
         </div>
       </section>
 
+      <section id="client-looks" class="cf-sheet is-card" data-size="auto" data-layout="stack" aria-labelledby="client-looks-title">
+        <div class="cf-head">
+          <div><p class="cf-meta"><span class="cf-idx">01.2</span></p><h3 id="client-looks-title" class="cf-h3">Every client wants its own look</h3></div>
+          <div class="cf-body">
+            <p>Our customers are companies with brands of their own, and each wants the product to feel like theirs: their colour, their typeface, the shape of their buttons.</p>
+            <p>So the system lets every client change those few things, and only those. The screens underneath stay the same for everyone.</p>
+          </div>
+        </div>
+        <div class="cf-evidence" data-fit="fill">
+          <div class="ds-ev ds-fan is-clients" role="group" aria-label="The same screen for three clients: the same layout and components, each in the client's colour, typeface and button shape">
+            <figure class="ds-fan-card is-1"><span class="ds-tag">Courier</span><div class="mp mp-1 cl-courier" aria-hidden="true" data-mp></div></figure>
+            <figure class="ds-fan-card is-2"><span class="ds-tag">Grocer</span><div class="mp mp-1 cl-grocer" aria-hidden="true" data-mp></div></figure>
+            <figure class="ds-fan-card is-3"><span class="ds-tag">Bank</span><div class="mp mp-1 cl-bank" aria-hidden="true" data-mp></div></figure>
+          </div>
+        </div>
+      </section>
+
       <section id="figma-to-code" class="cf-sheet is-card" data-canvas="" data-size="auto" data-layout="stack" aria-labelledby="figma-to-code-title">
         <div class="cf-head">
-          <div><p class="cf-meta"><span class="cf-idx">01.2</span></p><h3 id="figma-to-code-title" class="cf-h3">From a Figma library to shared code</h3></div>
+          <div><p class="cf-meta"><span class="cf-idx">01.3</span></p><h3 id="figma-to-code-title" class="cf-h3">From a Figma library to shared code</h3></div>
           <div class="cf-body">
             <p>I built the system in Figma first, from the main product's shadcn components: colour variables with Light and Dark modes, and components with their variants and states.</p>
             <p>Then I shipped it as a code package, so teams build with its parts instead of redrawing them from a file. I've since moved to building directly in code with AI coding tools; the Figma library keeps the foundations for quick sketches.</p>
@@ -4007,7 +4018,7 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   }
 
   /* ---------- 01.1: three products that share one blue and nothing else. Each is drawn at 560 × 360 and scaled to
-     its card: a light sidebar workspace, a light network map, a dark pipeline builder (all content invented). ---------- */
+     its card: a light berth planner, a dense records table, a dark live map (all content invented). ---------- */
   const PI = {
     folder: "M3 7h6l2 2h10v10H3z", route: "M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8 17h6a4 4 0 0 0 0-8h-2",
     file: "M7 3h7l5 5v13H7zM14 3v5h5", pin: "M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11zM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
@@ -4022,51 +4033,76 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   };
   const pi = (n, c = "") => `<svg class="pi ${c}" viewBox="0 0 24 24" aria-hidden="true"><path d="${PI[n]}"/></svg>`;
   const PF = {
-    // 1 · a light workspace: sidebar, page header, a grid of record cards
+    // 1 · a light planning board (Geist): KPI tiles over a berth timeline, warm greys, 14px cards, pill buttons
     1: () => {
-      const card = (ic, tag, t, d, f) => `<div class="p1-card"><div class="p1-ch"><i class="p1-ic">${pi(ic)}</i><span class="p1-tag">${tag}</span></div><b>${t}</b><p>${d}</p><footer>${f}<span>${pi("dots")}</span></footer></div>`;
+      const X0 = 78, W = 430, H0 = 6, HN = 18, px = (h) => X0 + ((h - H0) / (HN - H0)) * W;
+      const blk = (row, a, b, name, sub, kind) => `<div class="p1-blk is-${kind}" style="left:${px(a).toFixed(1)}px;width:${(px(b) - px(a)).toFixed(1)}px;top:${42 + row * 36}px"><b>${name}</b><small>${sub}</small></div>`;
+      const now = px(11 + 20 / 60);
       return `<div class="pf pf-1">
-        <aside class="p1-side"><div class="p1-logo"><i></i>LADING</div><div class="p1-filter">Filter pages…</div>
-          <nav><span class="is-on">${pi("folder")}Shipments</span><span>${pi("route")}Routes</span><span>${pi("file")}Contracts</span><span>${pi("pin")}Depots</span></nav>
-          <small>Operations</small><nav><span>${pi("chart")}Throughput</span><span>${pi("bolt")}Dispatch</span></nav>
-          <div class="p1-user"><i>OT</i><span>Ops team<small>12 members</small></span></div></aside>
-        <main class="p1-main"><header><h5>${pi("folder")}Shipments</h5><span class="p1-btn">${pi("chart")}Reports</span><span class="p1-btn is-blue">${pi("plus")}New shipment</span></header>
-          <div class="p1-tools"><span class="p1-seg"><i class="is-on">${pi("grid")}</i><i>${pi("list")}</i></span><span class="p1-pill">Select</span><span class="p1-sp"></span><span class="p1-seg2"><b>All</b><span>${pi("star")}Starred</span></span><small>48 shipments</small></div>
-          <div class="p1-grid">${card("ship", "Sea freight", "Harbour import 2201", "Twelve containers from the coast, cleared for the north depot.", "Coastal lane")}${card("truck", "Road", "North depot transfer", "Pallets moved overnight to free space for the import.", "Inland lane")}${card("ship", "Sea freight", "Reefer export 0418", "Chilled cargo booked on the Thursday sailing.", "Coastal lane")}${card("truck", "Road", "Last-mile batch 77", "Sixty drops across the city, two vans.", "City lane")}</div></main>
-      </div>`;
-    },
-    // 2 · a light network map: icon rail, tree, a canvas of nodes and floating controls
-    2: () => {
-      const node = (x, y, w, eye, t, cls = "", dots = 3) => `<div class="p2-node ${cls}" style="left:${x}px;top:${y}px;width:${w}px"><small>${eye}</small><b>${t}</b><i>${"<em></em>".repeat(dots)}</i></div>`;
-      const curve = (x1, y1, x2, y2, on) => { const m = (x1 + x2) / 2; return `<path class="${on ? "is-on" : ""}" d="M${x1} ${y1} C${m} ${y1} ${m} ${y2} ${x2} ${y2}"/>`; };
-      const cy = 160, hubs = [[128, 44], [128, 140], [128, 232]], leaves = [[236, 166, 1], [236, 206, 1], [236, 248, 2], [236, 288, 2]];
-      let lines = hubs.map(([x, y], i) => curve(114, cy, x, y + 19, i === 1)).join("") + leaves.map(([x, y, h]) => curve(hubs[h][0] + 92, hubs[h][1] + 19, x, y + 14, h === 1)).join("");
-      return `<div class="pf pf-2">
-        <div class="p2-rail">${["panel", "search", "folder", "tree", "chart", "db"].map((n, i) => `<i class="${i === 3 ? "is-on" : ""}">${pi(n)}</i>`).join("")}</div>
-        <aside class="p2-tree"><div class="p2-search">${pi("search")}Search lanes…</div><div class="p2-sel">Network overview</div>
-          <ul><li class="h">${pi("chev")}Inbound</li><li>Harbour arrivals</li><li>Customs holds</li><li class="h">${pi("chev")}Outbound</li><li>North depot</li><li>Inland hubs</li><li>Last mile</li><li class="h">${pi("chev")}Fleet</li><li>Vans</li></ul></aside>
-        <div class="p2-canvas"><svg class="p2-lines" viewBox="0 0 385 360" aria-hidden="true">${lines}</svg>
-          ${node(18, cy - 22, 96, "12 lanes", "North network", "is-root", 0)}
-          ${node(128, 44, 92, "Hub · 3 lanes", "Harbour")}${node(128, 140, 92, "Hub · 4 lanes", "Inland", "is-hl", 4)}${node(128, 232, 92, "Hub · 5 lanes", "Last mile", "", 5)}
-          ${leaves.map(([x, y], i) => `<div class="p2-leaf" style="left:${x}px;top:${y}px"><small>Live lane</small><b>${["Depot A", "Depot B", "City east", "City west"][i]}</b></div>`).join("")}
-          <div class="p2-ctrl"><b>View controls ${pi("up")}</b><small>Layout</small><span class="p2-seg"><i class="is-on">Tree</i><i>Radial</i></span><small>Status</small><span class="p2-st"><em class="g"></em>Live<b>12</b></span></div>
-          <div class="p2-zoom"><span>42%</span><i><em></em></i><small>Layers</small><span class="p2-lay"><b><em>1</em>Overview</b><b><em>2</em>Detail</b></span></div>
+        <header class="p1-top"><i class="p1-mark"></i><b>Quayside</b><span class="p1-crumb">Terminal 2<em>/</em><strong>Berth schedule</strong></span>
+          <span class="p1-date">Tue 14 Oct ${pi("chev")}</span><span class="p1-faces"><i>RM</i><i>JL</i><i>+3</i></span><span class="p1-cta">${pi("plus")}Plan a berth</span></header>
+        <div class="p1-kpis">
+          <div class="p1-kpi"><small>Vessels due today</small><b>7</b><span class="p1-spark">${[3, 5, 4, 6, 5, 7, 7].map((v) => `<i style="height:${v * 3}px"></i>`).join("")}</span></div>
+          <div class="p1-kpi"><small>Average wait</small><b>2<sub>h</sub> 10<sub>m</sub></b><span class="p1-delta">↓ 18%</span></div>
+          <div class="p1-kpi"><small>Cranes in use</small><b>11<sub> / 14</sub></b><span class="p1-bar"><i style="width:78%"></i></span></div>
         </div>
+        <section class="p1-board"><header><b>Berths</b><span class="p1-key"><i class="is-along"></i>Alongside<i class="is-sched"></i>Scheduled<i class="is-late"></i>Delayed</span></header>
+          ${[6, 8, 10, 12, 14, 16, 18].map((h) => `<span class="p1-tick" style="left:${px(h)}px">${String(h).padStart(2, "0")}:00</span><span class="p1-grid" style="left:${px(h)}px"></span>`).join("")}
+          ${["Berth 1", "Berth 2", "Berth 3", "Berth 4"].map((n, i) => `<span class="p1-row" style="top:${42 + i * 36}px"><b>${n}</b><small>${["14 m", "12 m", "16 m", "11 m"][i]} draught</small></span>`).join("")}
+          ${blk(0, 6.5, 11, "Nordlys", "06:30 – 11:00", "along")}${blk(0, 13, 17.5, "Halcyon", "13:00", "sched")}
+          ${blk(1, 8, 14.5, "Cape Ardent", "08:00 – 14:30", "along")}
+          ${blk(2, 6.8, 9.6, "Mira", "Left 09:35", "done")}${blk(2, 10.5, 15, "Saltmarsh", "+40 min", "late")}
+          ${blk(3, 12, 18, "Tern", "12:00", "sched")}
+          <span class="p1-now" style="left:${now}px"><em>11:20</em></span>
+        </section>
       </div>`;
     },
-    // 3 · a dark pipeline builder: top tabs, a status toolbar, a palette and a canvas of blocks
+    // 2 · a dense records table (IBM Plex Sans): underline tabs, filter chips, square corners, mono figures
+    2: () => {
+      const st = { held: "Held", clear: "Cleared", insp: "Inspect", pend: "Pending" };
+      const rows = [
+        ["CN-48213", "Harlow Foods", "Rotterdam", "Leeds", "18,420", "Thu", "held", 1],
+        ["CN-48214", "Brightwell & Co", "Antwerp", "Bristol", "6,105", "Thu", "clear", 0],
+        ["CN-48217", "Northgate Retail", "Hamburg", "Glasgow", "22,960", "Fri", "held", 1],
+        ["CN-48220", "Pellow Marine", "Le Havre", "Cardiff", "3,340", "Fri", "insp", 0],
+        ["CN-48221", "Ashby Textiles", "Rotterdam", "Leicester", "9,870", "Sat", "held", 1],
+        ["CN-48225", "Fenwick Parts", "Zeebrugge", "Hull", "12,015", "Sat", "pend", 0],
+        ["CN-48226", "Corran Drinks", "Antwerp", "Belfast", "15,600", "Mon", "clear", 0],
+        ["CN-48230", "Linden Paper", "Hamburg", "Newport", "7,480", "Mon", "pend", 0],
+      ];
+      return `<div class="pf pf-2">
+        <header class="p2-top"><b class="p2-word"><i></i>MANIFEST</b><nav><span class="is-on">Consignments</span><span>Customs</span><span>Invoices</span><span>Carriers</span></nav><span class="p2-find">${pi("search")}Search ref or consignee<kbd>⌘K</kbd></span></header>
+        <div class="p2-bar"><b>Consignments</b><small>1,284</small><span class="p2-chip is-on">Arriving: this week <em>×</em></span><span class="p2-chip">Port ${pi("chev")}</span><span class="p2-chip is-add">${pi("plus")}Filter</span><span class="p2-sp"></span><span class="p2-ghost">Export</span><span class="p2-btn">Release 3</span></div>
+        <div class="p2-table"><div class="p2-tr is-head"><span><i class="p2-cb"></i></span><span>Ref</span><span>Consignee</span><span>Route</span><span class="r">Kg</span><span>ETA</span><span>Status</span></div>
+          ${rows.map(([ref, who, a, b, kg, eta, s, sel]) => `<div class="p2-tr${sel ? " is-sel" : ""}"><span><i class="p2-cb${sel ? " is-on" : ""}"></i></span><span class="m">${ref}</span><span>${who}</span><span>${a}<em>→</em>${b}</span><span class="m r">${kg}</span><span class="m">${eta}</span><span><i class="p2-st is-${s}">${st[s]}</i></span></div>`).join("")}
+        </div>
+        <footer class="p2-foot"><b>3 selected</b><span>Rows 1–8 of 1,284</span><span class="p2-pg"><i>‹</i><i>›</i></span></footer>
+      </div>`;
+    },
+    // 3 · a dark live map (Inter): a city at night, one route lit in blue, glass panels floating over it
     3: () => {
-      const blk = (x, y, ic, t, kind, k, body) => `<div class="p3-blk" style="left:${x}px;top:${y}px"><div class="p3-bh"><i class="k-${k}">${pi(ic)}</i><b>${t}</b><span class="k-${k}">${kind}</span><em></em></div><p>${body}</p><small>✓ Completed · 1 ms</small><u class="l"></u><u class="r"></u></div>`;
+      const route = "M240 318 V252 H300 V196 H392 V150 H470 V96";
+      const vans = [["12", "Depot A → City east", "12 min", 1, 64], ["07", "Depot A → Harbour", "26 min", 0, 35], ["19", "Inland hub → Depot B", "Late 9 min", 2, 80], ["03", "Depot B → City west", "41 min", 0, 18]];
       return `<div class="pf pf-3">
-        <header class="p3-top"><span class="p3-logo">✦ RELAY</span><nav><b>Builder</b><span>Sources</span><span>Jobs</span><span>Catalogue</span></nav><span class="p3-who">viewer · partner</span></header>
-        <div class="p3-bar"><span class="p3-dd">Nightly rate sync ${pi("chev")}</span><span class="p3-st is-b">PIPELINE</span><span class="p3-st is-g">DEPLOYED</span><span class="p3-st is-p">RETRYING</span><span class="p3-sp"></span><span class="p3-btn">Test</span><span class="p3-btn">Deploy</span><span class="p3-btn is-blue">Save</span></div>
-        <div class="p3-body"><aside class="p3-pal"><span class="p3-add">${pi("plus")}Add source</span><div class="p3-chips"><b>All</b><span>Triggers</span><span>Joins</span></div><small>Sources (live)</small>
-            ${[["Rate calculator", "eu-west · live"], ["Depot connector", "eu-west · live"], ["Manifest reader", "ap-south · live"]].map(([a, b]) => `<div class="p3-src"><i>${pi("globe")}</i><span><b>${a}</b><small>${b}</small></span></div>`).join("")}</aside>
-          <div class="p3-canvas"><svg class="p3-wire" viewBox="0 0 420 288" aria-hidden="true"><path d="M134 139 C150 139 142 79 156 79"/><path d="M134 139 C150 139 142 199 156 199"/><path d="M276 79 C292 79 284 139 298 139"/><path d="M276 199 C292 199 284 139 298 139"/></svg>
-            ${blk(14, 110, "clock", "Schedule", "TRIGGER", "a", "Every 5 min")}${blk(156, 50, "db", "Rates: now", "CACHE", "r", "Read string")}${blk(156, 170, "db", "Rates: last", "CACHE", "r", "Read string")}${blk(298, 110, "merge", "Merge", "JOIN", "p", "2 inputs")}
-            <div class="p3-tools">${["plus", "chev", "grid"].map((n) => `<i>${pi(n)}</i>`).join("")}</div>
-            <div class="p3-mini"><em style="left:6px;top:20px;width:16px;background:#e3a32b"></em><em style="left:24px;top:12px;width:16px;background:#d64545"></em><em style="left:24px;top:28px;width:16px;background:#d64545"></em><em style="left:42px;top:20px;width:16px;background:#3453d3"></em><em style="left:60px;top:20px;width:12px;background:#2a3a7a"></em></div>
-          </div></div>
+        <svg class="p3-map" viewBox="0 0 560 360" aria-hidden="true">
+          <path class="water" d="M330 360 C340 300 420 280 450 230 C480 180 470 120 560 90 L560 140 C510 160 520 210 490 250 C450 300 390 320 380 360 Z"/>
+          <rect class="park" x="384" y="188" width="78" height="52" rx="6"/><g class="blocks">${Array.from({ length: 9 }, (_, i) => Array.from({ length: 6 }, (_, j) => `<rect x="${12 + i * 62}" y="${8 + j * 60}" width="54" height="52" rx="3"/>`).join("")).join("")}</g>
+          <g class="roads"><path d="M0 252 H560 M0 150 H560 M196 0 V360 M392 0 V360 M118 0 V360 M300 0 V360"/></g>
+          <g class="minor"><path d="M0 96 H560 M0 196 H560 M0 300 H560 M470 0 V360 M40 0 V360 M240 0 V360"/></g>
+          <path class="glow" d="${route}"/><path class="route" d="${route}"/>
+          ${[[300, 196], [392, 150]].map(([x, y]) => `<circle class="stop" cx="${x}" cy="${y}" r="3.5"/>`).join("")}
+          <circle class="dest" cx="470" cy="96" r="6"/><rect class="depot" x="234" y="312" width="12" height="12" rx="3"/>
+          <text class="area" x="330" y="60">OLD TOWN</text><text class="area" x="420" y="290">HARBOUR</text><text class="pin" x="482" y="92">City east</text><text class="pin" x="252" y="330">Depot A</text>
+          ${[[520, 300], [470, 196], [392, 40], [300, 40]].map(([x, y]) => `<circle class="other" cx="${x}" cy="${y}" r="4"/>`).join("")}
+          <circle class="pulse" cx="300" cy="226" r="16"/><circle class="van" cx="300" cy="226" r="7"/>
+        </svg>
+        <aside class="p3-panel"><header><b>On the road</b><span>24</span></header>
+          <div class="p3-seg"><i class="is-on">All</i><i>Late</i><i>Idle</i></div>
+          ${vans.map(([id, r, eta, s, p]) => `<div class="p3-van${s === 1 ? " is-on" : ""}"><i class="p3-id">${id}</i><span><b>Van ${id}</b><small>${r}</small><u><em style="width:${p}%"></em></u></span><em class="p3-eta${s === 1 ? " is-on" : s === 2 ? " is-late" : ""}">${eta}</em></div>`).join("")}
+        </aside>
+        <div class="p3-toggle"><i class="is-on">Live</i><i>Today</i></div>
+        <div class="p3-zoom"><i>${pi("plus")}</i><i>–</i></div>
+        <div class="p3-toast"><em></em><b>Van 12</b>3 stops left · on time</div>
       </div>`;
     },
   };
@@ -4077,7 +4113,14 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     if ("ResizeObserver" in window) new ResizeObserver(fit).observe(el);
   });
 
-  /* ---------- 01.2: the same library in code. Figma shows the file; Code shows the source (tokens, two components)
+  /* ---------- 01.2: one screen, three clients: the layout is shared; colour, typeface and button shape are theirs ---------- */
+  document.querySelectorAll("[data-mp]").forEach((el) => {
+    el.innerHTML = `<div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
+      <div class="mp-main"><div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
+      <ul class="mp-list"><li><span>Run 4821</span><span class="mp-badge">On time</span></li><li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li><li><span>Run 4823</span><span class="mp-badge">On time</span></li><li><span>Run 4824</span><span class="mp-badge">On time</span></li></ul></div>`;
+  });
+
+  /* ---------- 01.3: the same library in code. Figma shows the file; Code shows the source (tokens, two components)
      beside what it renders, light and dark. Choosing a file lights up the parts it draws. ---------- */
   const codeSide = document.getElementById("code-side");
   if (codeSide) {
