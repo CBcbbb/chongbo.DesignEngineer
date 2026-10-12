@@ -8,7 +8,7 @@
   --studio:#e9e7e2; --studio-hi:#f5f4f0; --ink:#1c1b19; --ink-2:#5b5853; --rule:#d3d0c9;
   --paper:#fbfaf7; --paper-ink:#1c1b19; --paper-dim:#5e5b55; --paper-ghost:#75716a; --paper-chip:#bdb9b1; --paper-rule:#e2dfd8;
   --red:#c9372a; --lamp-ready:#6fcf7c; --lamp-busy:#ffc46b; --focus:#1c1b19;
-  --slip-edge:#d6d2ca;
+  --slip-edge:#d6d2ca; --paper-eg:#a19c94;
   --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
   --ease:cubic-bezier(.2,.8,.2,1);
@@ -35,15 +35,17 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
 .intro b{font-weight:500;color:var(--ink)}
 
 /* ---------- lines to borrow ---------- */
-.lines{max-width:1120px;margin:var(--s5) auto 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.lines{max-width:1200px;margin:var(--s5) auto 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
 .line{--focus:var(--ink);position:relative;display:inline-flex;align-items:baseline;gap:5px;min-height:36px;padding:7px 12px 8px;border:0;border-radius:5px;cursor:pointer;text-align:left;
   background:var(--paper);color:var(--paper-ink);font:500 13.5px/1.3 var(--sans);letter-spacing:-.005em;
   box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 0 0 1px rgba(60,50,40,.1),0 2px 0 var(--slip-edge),0 10px 18px -10px rgba(40,30,20,.35);
   transition:transform .25s var(--ease),box-shadow .25s}
 .line i{font-style:normal;font-family:var(--mono);color:var(--paper-dim)}
 .line:hover{transform:translateY(-3px)}
-.line[aria-pressed="true"]{transform:translateY(-6px);box-shadow:0 0 0 1.5px var(--paper-ink),0 14px 20px -12px rgba(40,30,20,.45)}
-.line[aria-pressed="true"]::after{content:"";position:absolute;top:-3px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 0 2px var(--paper)}
+.line[aria-pressed="true"]{transform:translateY(-4px);box-shadow:0 0 0 1.5px var(--paper-ink),0 14px 20px -12px rgba(40,30,20,.45)}
+.line .tick{display:none;color:var(--paper-ink)}
+.line[aria-pressed="true"] .dots{display:none}
+.line[aria-pressed="true"] .tick{display:inline}
 .line.jd{background:transparent;color:var(--ink);box-shadow:none;border:1.5px dashed var(--ink-2)}
 .line.jd:hover{border-style:solid}
 
@@ -76,6 +78,9 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
 .ghost::after{content:"";display:inline-block;width:2px;height:1.1em;background:var(--red);vertical-align:-3px;margin-left:1px;animation:caret 1s steps(2) infinite}
 @keyframes caret{50%{opacity:0}}
 .field.on .ghost{display:none}
+.ghost .eg{color:var(--paper-eg);transition:opacity .4s}
+.ghost .eg.out{opacity:0}
+.ghost.jd .eg{display:none}
 .count{align-self:flex-end;font:500 11px var(--mono);letter-spacing:.06em;color:var(--paper-dim)}
 .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px;font:400 15px/1.4 var(--mono)}
 .steps li{display:flex;gap:12px;align-items:flex-start;opacity:0;transform:translateY(4px);transition:opacity .25s,transform .25s}
@@ -113,8 +118,8 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
 
   <main>
     <p class="eyebrow">Printed to order</p>
-    <h1 id="h1">Who are you looking for?</h1>
-    <p class="intro"><b>I'm Chongbo Ning, a design engineer in London.</b> Tell the machine who you're hiring, or paste the job description. It prints the parts of my work that match.</p>
+    <h1 id="h1">Who are you hiring?</h1>
+    <p class="intro">Describe the role or paste the job description. The machine prints the parts of my work that match.</p>
 
     <h2 class="sr" id="lines-title">Lines to start from</h2>
     <ul class="lines" id="lines" aria-labelledby="lines-title"></ul>
@@ -126,7 +131,7 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
             <div class="field" id="field">
               <label for="brief" class="sr">Describe who you're hiring, or paste a job description.</label>
               <textarea id="brief" name="brief" rows="3" maxlength="6000"></textarea>
-              <div class="ghost" id="ghost" aria-hidden="true">We're looking for someone who</div>
+              <div class="ghost" id="ghost" aria-hidden="true">We're looking for someone who<span class="eg" id="eg"></span></div>
             </div>
             <ul class="steps" id="steps" hidden aria-hidden="true"></ul>
           </div>
@@ -154,13 +159,10 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
   const FRAME = "We're looking for someone who";
   // Each line continues the frame. Signals are the content keys the printer already understands.
   const LINES = [
-    { id: "systems", text: "owns a design system from Figma to code", label: "Design systems", signals: ["design-systems", "reusable-components", "cross-platform"] },
-    { id: "e2e", text: "takes ideas from first sketch to production", label: "End-to-end delivery", signals: ["end-to-end", "judgement"] },
-    { id: "proto", text: "prototypes in code to find the right interaction", label: "Prototyping", signals: ["prototyping", "motion-interaction"] },
-    { id: "a11y", text: "builds interfaces that work with a keyboard or a screen reader", label: "Accessibility", signals: ["accessibility"] },
-    { id: "data", text: "designs the data layer as well as the interface", label: "Data architecture", signals: ["data-architecture", "data", "design-eng-gap"] },
-    { id: "brand", text: "builds marketing pages people remember", label: "Web and brand", signals: ["brand-storytelling", "conversion", "typography"] },
-    { id: "ai", text: "is fluent with AI coding tools", label: "AI tools", signals: ["ai-tools", "prototyping"] },
+    { id: "systems", text: "owns the design system", label: "Design systems", signals: ["design-systems", "reusable-components", "cross-platform"] },
+    { id: "e2e", text: "takes ideas to production", label: "End-to-end delivery", signals: ["end-to-end", "judgement"] },
+    { id: "data", text: "designs from the data up", label: "Data architecture", signals: ["data-architecture", "data", "design-eng-gap"] },
+    { id: "brand", text: "builds memorable marketing pages", label: "Web and brand", signals: ["brand-storytelling", "conversion", "typography"] },
   ];
   const $ = (id) => document.getElementById(id);
   const ta = $("brief"), ghost = $("ghost"), field = $("field"), machine = $("machine"), stage = $("stage"), box = $("order"), live = $("live");
@@ -169,8 +171,20 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
   const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
   $("lines").innerHTML =
-    LINES.map((l) => `<li><button type="button" class="line" aria-pressed="false" data-id="${l.id}"><i aria-hidden="true">…</i>${esc(l.text)}</button></li>`).join("") +
+    LINES.map((l) => `<li><button type="button" class="line" aria-pressed="false" data-id="${l.id}"><i class="dots" aria-hidden="true">…</i><i class="tick" aria-hidden="true">✓</i>${esc(l.text)}</button></li>`).join("") +
     `<li><button type="button" class="line jd" id="jd">Paste a job description</button></li>`;
+
+  // Endings typed in grey on the empty paper: ways to finish the sentence that aren't on the lines above.
+  const EXAMPLES = [" is fluent with AI coding tools", " builds for keyboard and screen reader users", " prototypes in code to find the right interaction"];
+  const frameText = ghost.firstChild, eg = $("eg");
+  let egAt = 0;
+  eg.textContent = EXAMPLES[0];
+  const showJD = (on) => { frameText.nodeValue = on ? "Paste the job description here" : FRAME; ghost.classList.toggle("jd", on); };
+  setInterval(() => {
+    if (reduced() || field.classList.contains("on")) return;
+    eg.classList.add("out");
+    setTimeout(() => { egAt = (egAt + 1) % EXAMPLES.length; eg.textContent = EXAMPLES[egAt]; eg.classList.remove("out"); }, 400);
+  }, 3600);
 
   let picked = [];
   let generated = ""; // the text the lines last wrote; if the paper still says exactly this, the lines own it
@@ -214,22 +228,23 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
     const adding = !picked.includes(id);
     picked = adding ? [...picked, id] : picked.filter((x) => x !== id);
     setPressed();
-    const owned = !ta.value.trim() || ta.value.trim() === generated.trim();
-    let next;
-    if (owned) {
-      next = compose(picked);
-    } else if (adding) {
-      // The visitor has written their own words: add the line to the end of what they wrote.
-      const base = ta.value.replace(/\s+$/, "");
-      next = base ? `${base}${/[.!?]$/.test(base) ? "" : "."} Also someone who ${line.text}.` : compose([id]);
-    } else {
-      // Take the line out with the word that joined it, wherever the visitor left it.
-      const t = line.text;
-      const cuts = [[` Also someone who ${t}.`, ""], [`, ${t}`, ""], [` and ${t}`, ""], [`${t}, `, ""], [`${t} and `, ""], [t, ""]];
-      next = ta.value;
-      for (const [from, to] of cuts) if (next.includes(from)) { next = next.replace(from, to); break; }
-    }
+    // Each click waits for the previous one to finish typing, then reads the paper as it is.
     queue = queue.then(async () => {
+      const owned = !ta.value.trim() || ta.value.trim() === generated.trim();
+      let next;
+      if (owned) {
+        next = compose(picked);
+      } else if (adding) {
+        // The visitor has written their own words: add the line after them.
+        const base = ta.value.replace(/\s+$/, "");
+        next = `${base}${/[.!?]$/.test(base) ? "" : "."} Also someone who ${line.text}.`;
+      } else {
+        // Take the line out with the word that joined it, wherever the visitor left it.
+        const t = line.text;
+        const cuts = [` Also someone who ${t}.`, `, ${t}`, ` and ${t}`, `${t}, `, `${t} and `, t];
+        next = ta.value;
+        for (const c of cuts) if (next.includes(c)) { next = next.replace(c, ""); break; }
+      }
       await typeTo(next);
       if (owned) generated = next;
       if (byPointer) { ta.focus({ preventScroll: true }); ta.setSelectionRange(ta.value.length, ta.value.length); }
@@ -241,7 +256,7 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
     const b = e.target.closest(".line");
     if (!b) return;
     if (b.id === "jd") {
-      ghost.textContent = "Paste the job description here";
+      showJD(true);
       ta.focus();
       return;
     }
@@ -255,7 +270,7 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
     sync();
   });
   ta.addEventListener("focus", sync);
-  ta.addEventListener("blur", () => { if (!ta.value) ghost.textContent = FRAME; sync(); });
+  ta.addEventListener("blur", () => { if (!ta.value) showJD(false); sync(); });
   ta.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); box.requestSubmit(); }
   });
@@ -290,7 +305,7 @@ h1{margin:var(--s1) 0 0;text-align:center;font:600 clamp(30px,4vw,44px)/1.05 var
     setPressed();
     busy = false;
     $("pk").removeAttribute("aria-busy");
-    ghost.textContent = FRAME;
+    showJD(false);
     sync();
     $("out").scrollIntoView({ behavior: reduced() ? "auto" : "smooth", block: "nearest" });
   });
