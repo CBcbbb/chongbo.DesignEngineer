@@ -407,6 +407,8 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-layers2 .o-num { fill: var(--case-bg); stroke: var(--ov-line); stroke-width: 1.1; }
 .ds-layers2 .o-numt { font: 600 11.5px var(--mono); fill: var(--case-ink); }
 .ds-layers2 .o-ln { font: 600 15.5px var(--sans); fill: var(--case-ink); }
+.ds-layers2 .o-mk-lo { fill: var(--case-bg); stroke: var(--case-dim); stroke-width: 1; }
+.ds-layers2 .o-mk-hi { fill: var(--case-ink); stroke: var(--case-bg); stroke-width: 1; }
 .ds-layers2 .o-ls { font: 500 12px var(--mono); fill: var(--case-dim); }
 /* the nav sits at the top of the app frame: its callout hangs below the tab instead */
 .show-ratios .tp-tabs [data-r] { bottom: auto; top: calc(100% + 5px); }

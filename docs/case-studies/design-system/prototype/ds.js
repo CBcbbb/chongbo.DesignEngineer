@@ -122,7 +122,7 @@
             <li><b>Run 4823</b><span class="ui-badge r-info">On the road</span><small>11 stops · North depot</small></li>
             <li><b>Run 4824</b><span class="ui-badge r-destructive">Failed</span><small>3 stops · Harbour depot</small></li>
           </ul>
-          <div class="tp-actions"><div class="ui-pages" aria-label="Pages"><span class="is-on">1</span><span>2</span><span>3</span><span>…</span><span>10</span></div><a class="ui-link" href="#work-panel">View all runs</a><span data-r="link"></span></div>
+          <div class="tp-actions"><div class="ui-pages" aria-label="Pages"><span class="is-on">1</span><span>2</span><span>3</span><span>…</span><span>10</span></div><a class="ui-link" href="#work-panel">Show on the map</a><span data-r="link"></span></div>
         </section>
         <section class="tp-card" aria-label="Driver">
           <h4>Run 4822</h4>
@@ -443,17 +443,22 @@
       });
       if (act) { const [x, y] = cliC(act); const [X, Y] = P(x - CX, y + CY, Z.client - T.client / 2); g += line([X - 4, Y], [X - 24, Y], "o-leader") + `<circle class="o-tick" cx="${f1(X - 4)}" cy="${f1(Y)}" r="2"/><text class="o-callname" x="${f1(X - 30)}" y="${f1(Y + 5)}" text-anchor="end">${act.name}</text>`; }
       // callouts, numbered, to a legend on the right; anchored on the right-hand product
-      const LX = 726, kR = cliC(CLIENTS[5]), pr = PRODS[2].r;
+      const LX = 712, kR = cliC(CLIENTS[5]), pr = PRODS[2].r;
       const rows = [
-        [4, "Users", "+ their own look", (() => { const [X, Y] = P(kR[0], kR[1] - U, Z.user - 4); return [X + 8, Y - 4]; })()],
-        [3, "Clients", "+ colour, font, button shape", P(kR[0] + CX, kR[1] - CY, Z.client - T.client / 2)],
-        [2, "Products", "+ their own parts, hatched", P(pr[2], pr[1], Z.product - T.product / 2)],
+        [4, "Users", "their own look", (() => { const [X, Y] = P(kR[0], kR[1] - U, Z.user - 4); return [X + 8, Y - 4]; })()],
+        [3, "Clients", "colour, font, button shape", P(kR[0] + CX, kR[1] - CY, Z.client - T.client / 2)],
+        [2, "Products", "its own parts, hatched", P(pr[2], pr[1], Z.product - T.product / 2)],
         [1, "Shared package", "sets every token", P(bx1, by1 - U / 2, -T.base / 2)],
       ];
       rows.forEach(([n, t, s2, [ax, ay]]) => {
         g += line([ax + 4, ay], [LX - 22, ay], "o-leader") + `<circle class="o-tick" cx="${f1(ax + 4)}" cy="${f1(ay)}" r="2.2"/>`;
         g += `<circle class="o-num" cx="${LX - 10}" cy="${f1(ay)}" r="10"/><text class="o-numt" x="${LX - 10}" y="${f1(ay + 4)}" text-anchor="middle">${n}</text>`;
-        g += `<text class="o-ln" x="${LX + 8}" y="${f1(ay - 2)}">${t}</text><text class="o-ls" x="${LX + 8}" y="${f1(ay + 15)}">${s2}</text>`;
+        // the override mark: a solid layer laid over an outlined one (the level below); the base is the outlined layer alone
+        const mx = LX + 8, my = ay + 6.5;
+        const mark = n === 1
+          ? `<rect class="o-mk-lo" x="${mx}" y="${f1(my + 3.5)}" width="13" height="5" rx="1"/>`
+          : `<rect class="o-mk-lo" x="${mx}" y="${f1(my + 3.5)}" width="10" height="5" rx="1"/><rect class="o-mk-hi" x="${mx + 3}" y="${f1(my)}" width="10" height="5" rx="1"/>`;
+        g += `<text class="o-ln" x="${LX + 8}" y="${f1(ay - 2)}">${t}</text><g aria-hidden="true">${mark}</g><text class="o-ls" x="${LX + 27}" y="${f1(ay + 15)}">${s2}</text>`;
       });
       g += `</svg>`;
       layers.innerHTML = g;
@@ -561,7 +566,7 @@
       out.innerHTML = ["light", "dark"].map((mode) => `<div class="cc-pane ui" data-mode="${mode}">
           <span class="ds-label">${mode === "light" ? "Light" : "Dark"}</span>
           <div class="cc-line"><span class="ui-btn is-primary" style="display:inline-block">New run</span><span data-r="btn"></span></div>
-          <div class="cc-line"><a class="ui-link" href="#customer-colour">View all runs</a><span data-r="link"></span></div>
+          <div class="cc-line"><a class="ui-link" href="#customer-colour">Show on the map</a><span data-r="link"></span></div>
           <div class="cc-line"><span class="ui-badge r-primary">Today</span><span data-r="tab"></span></div>
         </div>`).join("");
       out.querySelectorAll(".cc-pane").forEach((p) => {
