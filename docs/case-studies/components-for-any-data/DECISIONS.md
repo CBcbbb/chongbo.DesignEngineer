@@ -46,3 +46,10 @@ Chongbo: the cards shouldn't all be "claim left, text right, evidence under". Ea
 - **02.2 field.** The whole card is on the blue field, the chart comes first, and the claim and two paragraphs sit in three columns underneath.
 
 No words changed. At 1280 × 720 02.1 is 5px over one screen; every other card fits at every review size. Axe passes in light, dark and phone.
+
+## 12 October 2026 · the work sheet
+
+- **Panel redesigned as a component inspector.** Preview on the left (chart type, chart, rows as they arrive); settings on the right (Data: one radio list with Sample data first, then Fits / Partly fits / Other, CSV upload; Fields: one property row per role with its suggestion's confidence). Compact controls, sentence-case section headings, mono only for data. Fits one screen at 1440 × 900 and 1280 × 720.
+- **Sheet on white with a fine blue grid** (dark mode: the dark paper with the same grid), instead of the blue field.
+- **Title and the line under it.** Chongbo asked for plain portfolio wording on confidentiality. Title: "The preview panel, rebuilt for this case study". Line: "The product is confidential, so this is an independent rebuild of its preview panel, with invented data and no production code." (Phrasing follows the common advice to say once, plainly, that work under NDA is an independent rebuild on synthetic data.)
+- `Roles.tsx` removed (only the old panel used it).

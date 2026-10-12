@@ -24,7 +24,7 @@ export const anyData: Project = {
   tier: "main",
   tab: "slate",
   template: "case-file",
-  work: { title: "The preview panel, rebuilt on invented data", module: "any-data/demo" },
+  work: { title: "The preview panel, rebuilt for this case study", module: "any-data/demo" },
   coverArt: "wires",
   shows: [
     { capability: "B", label: "Front-end architecture", section: "pipeline", icon: "layers" },
