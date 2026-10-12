@@ -44,7 +44,7 @@ Built fast by different teams, much of it with AI coding tools, each product cha
 
 ### 01.2 Every client wants its own look
 
-Our customers are companies with brands of their own, and each wants the product to feel like theirs: their colour, their typeface, the shape of their buttons.
+Even within one product, our customers are companies with brands of their own, and each wants it to feel like theirs: their colour, their typeface, the shape of their buttons.
 
 So the system lets every client change those few things, and only those. The screens underneath stay the same for everyone.
 
