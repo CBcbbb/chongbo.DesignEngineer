@@ -515,11 +515,27 @@
           <i style="color:${S[h]["600"]}">Aa <small>${ratio(S[h]["600"], bg).toFixed(1)}</small></i>
           <i style="background:${S[h]["50"]};color:${S[h]["700"]}">Aa <small>${ratio(S[h]["700"], S[h]["50"]).toFixed(1)}</small></i></div>`).join("")}</div>`;
     };
-    split.innerHTML = `<div class="ds-split-stage" id="split-stage">${layer("light")}${layer("dark")}<span class="ds-split-handle"></span></div>
-      <input type="range" id="split-range" min="0" max="100" value="50" aria-label="Move between the light and dark versions of the same specimen">
-      <div class="ds-split-legend"><span>Light</span><span>Dark</span></div>`;
-    const stage = split.querySelector("#split-stage");
-    split.querySelector("#split-range").addEventListener("input", (e) => stage.style.setProperty("--split", `${e.target.value}%`));
+    // the divider is the control: drag it (or anywhere on the specimen), or focus it and use the arrow keys
+    split.innerHTML = `<div class="ds-split-stage" id="split-stage">${layer("light")}${layer("dark")}
+      <span class="ds-split-handle"></span><span class="ds-split-grip" role="slider" tabindex="0" aria-label="Move between the light and dark versions of the same specimen" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="Half light, half dark"><b aria-hidden="true">‹</b>Light · Dark<b aria-hidden="true">›</b></span></div>`;
+    const stage = split.querySelector("#split-stage"), grip = split.querySelector(".ds-split-grip");
+    const set = (v) => {
+      v = Math.max(0, Math.min(100, v));
+      stage.style.setProperty("--split", `${v}%`);
+      grip.setAttribute("aria-valuenow", String(Math.round(v)));
+      grip.setAttribute("aria-valuetext", v < 5 ? "All dark" : v > 95 ? "All light" : `${Math.round(v)}% light`);
+    };
+    const fromX = (x) => { const r = stage.getBoundingClientRect(); set(((x - r.left) / r.width) * 100); };
+    let dragging = false;
+    stage.addEventListener("pointerdown", (e) => { dragging = true; stage.setPointerCapture(e.pointerId); stage.classList.add("is-dragging"); fromX(e.clientX); });
+    stage.addEventListener("pointermove", (e) => { if (dragging) fromX(e.clientX); });
+    const stop = () => { dragging = false; stage.classList.remove("is-dragging"); };
+    stage.addEventListener("pointerup", stop); stage.addEventListener("pointercancel", stop);
+    grip.addEventListener("keydown", (e) => {
+      const now = Number(grip.getAttribute("aria-valuenow")), step = e.shiftKey ? 20 : 5;
+      const next = { ArrowLeft: now - step, ArrowDown: now - step, ArrowRight: now + step, ArrowUp: now + step, Home: 0, End: 100 }[e.key];
+      if (next != null) { e.preventDefault(); set(next); }
+    });
   }
 
   /* ---------- 02.4: a customer's colour, passed through or derived ---------- */
