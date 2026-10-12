@@ -4,7 +4,7 @@ import { useState, type CSSProperties } from "react";
 
 /**
  * The data pipeline, stepped through. The same sample entries move from one stage to the next, so the reader sees
- * the data change shape: the questions (each becomes one type) → one person's answers → a table of rows, one per
+ * the data change shape: the four types (each becomes one question) → one person's answers → a table of rows, one per
  * person, cleaned → split into four typed columns, where repeated entries merge → linked as a network.
  * Sample labels only: it shows the method, not the project's data.
  */
@@ -70,14 +70,14 @@ const TABLE_HEAD = [
 ];
 /** What the reader is looking at, at each step (shown under the stage, and read out). */
 const NOTES = [
-  "Each question becomes one type",
+  "Each type becomes one question",
   "One person's answers",
   "One row per person · duplicate removed · spelling unified",
   "Split by type · repeated entries merge into one",
   "Linked through the projects · every entry the same weight",
 ];
 const DESCRIBE = [
-  "Four questions, each marked with the type its answers become: people, projects, methods, partners.",
+  "The four types, each turned into a question: people, who are you; projects, what did you work on; methods, which methods did you use; partners, who supported it.",
   "Person A's answers: Project 1 and Project 2, Workshops, Partner X.",
   "A table with one row per person. A repeated row for Person A is struck out, and 'workshop' becomes 'Workshops'.",
   "Four columns, people, projects, methods and partners. Project 2 and Workshops, given by both people, become one entry each.",
@@ -137,14 +137,24 @@ export function DataFlow({ steps }: { steps: string[] }) {
             <line key={s + t} x1={NET[s].x} y1={NET[s].y} x2={NET[t].x} y2={NET[t].y} vectorEffect="non-scaling-stroke" />
           ))}
         </svg>
+        {/* step 1: the type comes first and becomes a question; from step 2 the question moves left to take answers */}
         {QUESTIONS.map((q, i) => (
-          <span key={q.q} className="cf-pipe-q" data-hidden={step > 1} style={{ top: `${QY[i]}%` } as CSSProperties}>
-            {q.q}
-            <span className="cf-pipe-type" data-hidden={step !== 0}>
-              <span className="cf-pipe-to">→</span>
+          <span key={q.kind} className="cf-pipe-type" data-hidden={step !== 0} style={{ top: `${QY[i]}%` } as CSSProperties}>
+            <span className="cf-pipe-type-name">
               <span className={`cf-mark cf-mark-${q.kind}`} />
               {q.type}
             </span>
+            <span className="cf-pipe-to">→</span>
+          </span>
+        ))}
+        {QUESTIONS.map((q, i) => (
+          <span
+            key={q.q}
+            className="cf-pipe-q"
+            data-hidden={step > 1}
+            style={{ top: `${QY[i]}%`, left: step === 0 ? "23%" : "4%" } as CSSProperties}
+          >
+            {q.q}
           </span>
         ))}
         {TABLE_HEAD.map((h) => (
