@@ -3,7 +3,7 @@
 <meta name="description" content="Prototype of the design-system case file: a theme panel, colour scales and the cards, on an invented brand.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap">
 <style>
 /* ===== shared: src/app/tokens.css (verbatim) ===== */
 /*
@@ -2996,10 +2996,10 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 /* ---------- 01.1 three products, fanned like printouts on a desk ---------- */
 .ds-fan { position: relative; height: clamp(300px, 34vw, 380px); margin-top: 8px; }
 .ds-fan-card { position: absolute; top: 0; width: 46%; margin: 0; display: grid; gap: 8px; transition: transform 0.35s var(--ease); }
-.ds-fan-card.is-1 { left: 0; transform: rotate(-4deg) translateY(18px); z-index: 1; }
-.ds-fan-card.is-2 { left: 27%; transform: rotate(0.5deg); z-index: 2; }
-.ds-fan-card.is-3 { left: 54%; transform: rotate(4.5deg) translateY(26px); z-index: 3; }
-.ds-fan-card .mp { box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08), 0 18px 40px -18px rgb(0 0 0 / 0.35); }
+.ds-fan-card.is-1 { left: 0.5%; transform: rotate(-3deg) translateY(18px); z-index: 1; }
+.ds-fan-card.is-2 { left: 26.5%; transform: rotate(0.5deg); z-index: 2; }
+.ds-fan-card.is-3 { left: 52.5%; transform: rotate(3deg) translateY(26px); z-index: 3; }
+.ds-fan-card .pfw, .ds-fan-card .mp { box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08), 0 18px 40px -18px rgb(0 0 0 / 0.35); }
 .ds-tag { justify-self: start; padding: 4px 7px; border-radius: 4px; background: var(--case-ink); color: var(--case-bg); }
 @media (max-width: 760px) {
   .ds-fan { height: auto; display: grid; gap: 18px; }
@@ -3322,6 +3322,151 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 .ds-ico .s { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .ds-ico .o { fill: none; stroke: currentColor; stroke-width: 1.8; }
 
+/* ---------- 01.1 three products: one blue, nothing else shared. Each drawn at 560 × 360, scaled to its card ---------- */
+.pfw { position: relative; aspect-ratio: 560 / 360; overflow: hidden; border-radius: 12px; box-shadow: 0 0 0 1px rgb(0 0 0 / .09), 0 18px 40px -18px rgb(0 0 0 / .38); background: #fff; }
+.pf { position: absolute; left: 0; top: 0; width: 560px; height: 360px; transform: scale(var(--k, 1)); transform-origin: 0 0; --b: #3453d3; overflow: hidden; text-align: left; }
+.pf, .pf * { box-sizing: border-box; }
+.pf .pi { width: 14px; height: 14px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pf b, .pf small, .pf p { font-style: normal; }
+
+/* 1 · light workspace (Geist): white sidebar, grey hover fills, 12px cards, pill buttons */
+.pf-1 { display: grid; grid-template-columns: 150px 1fr; background: #fff; color: #18181b; font: 400 11px/1.3 "Geist", sans-serif; }
+.p1-side { border-right: 1px solid #ececef; padding: 12px 10px; display: flex; flex-direction: column; gap: 6px; }
+.p1-logo { display: flex; align-items: center; gap: 7px; font: 700 13px/1 "Geist", sans-serif; letter-spacing: .06em; margin: 2px 4px 6px; }
+.p1-logo i { width: 14px; height: 14px; border-radius: 4px; background: var(--b); box-shadow: inset -5px -5px 0 #18181b; }
+.p1-filter { border: 1px solid #e4e4e7; border-radius: 999px; padding: 6px 10px; color: #a1a1aa; margin-bottom: 4px; }
+.p1-side nav { display: grid; gap: 1px; }
+.p1-side nav span { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 7px; color: #27272a; }
+.p1-side nav span.is-on { background: #f4f4f5; font-weight: 600; }
+.p1-side > small { color: #71717a; margin: 8px 8px 0; font-size: 10px; }
+.p1-user { margin-top: auto; display: flex; align-items: center; gap: 8px; padding: 4px; }
+.p1-user i { width: 24px; height: 24px; border-radius: 50%; background: var(--b); color: #fff; font: 600 10px/24px "Geist", sans-serif; text-align: center; font-style: normal; }
+.p1-user span { display: grid; font-weight: 600; } .p1-user small { color: #71717a; font-weight: 400; }
+.p1-main { padding: 14px 16px; display: grid; grid-template-rows: auto auto 1fr; gap: 10px; background: #fff; min-width: 0; }
+.p1-main header { display: flex; align-items: center; gap: 6px; }
+.p1-main h5 { margin: 0 auto 0 0; display: flex; align-items: center; gap: 7px; font: 600 16px/1 "Geist", sans-serif; letter-spacing: -.01em; }
+.p1-main h5 .pi { color: var(--b); width: 16px; height: 16px; }
+.p1-btn { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 999px; border: 1px solid #e4e4e7; font-weight: 500; background: #fafafa; }
+.p1-btn.is-blue { background: var(--b); border-color: var(--b); color: #fff; }
+.p1-tools { display: flex; align-items: center; gap: 6px; color: #52525b; }
+.p1-seg { display: inline-flex; border: 1px solid #e4e4e7; border-radius: 999px; padding: 2px; }
+.p1-seg i { display: grid; place-items: center; width: 22px; height: 20px; border-radius: 999px; color: #71717a; }
+.p1-seg i.is-on { background: #eef2ff; color: var(--b); }
+.p1-pill { border: 1px solid #e4e4e7; border-radius: 999px; padding: 4px 10px; color: #18181b; font-weight: 500; }
+.p1-sp { flex: 1; }
+.p1-seg2 { display: inline-flex; gap: 2px; border: 1px solid #e4e4e7; border-radius: 999px; padding: 2px; }
+.p1-seg2 > * { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; }
+.p1-seg2 b { background: #eef2ff; color: var(--b); font-weight: 500; }
+.p1-seg2 .pi { width: 11px; height: 11px; }
+.p1-tools small { color: #71717a; font-size: 11px; }
+.p1-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; min-height: 0; }
+.p1-card { border: 1px solid #e4e4e7; border-radius: 12px; padding: 10px 12px; display: grid; gap: 4px; align-content: start; }
+.p1-ch { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+.p1-ic { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; background: #eef2ff; color: var(--b); }
+.p1-tag { background: #f4f4f5; border-radius: 999px; padding: 2px 7px; font-size: 9.5px; font-weight: 500; }
+.p1-card b { font-weight: 600; font-size: 12px; }
+.p1-card p { margin: 0; color: #71717a; font-size: 10px; line-height: 1.35; }
+.p1-card footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f0f0f2; margin-top: 4px; padding-top: 6px; color: #52525b; font-size: 10px; }
+
+/* 2 · light network map (IBM Plex Sans): icon rail, dense tree, dot-grid canvas, square-ish 6px nodes, floating panels */
+.pf-2 { display: grid; grid-template-columns: 30px 145px 1fr; background: #fff; color: #1f2937; font: 400 10.5px/1.3 "IBM Plex Sans", sans-serif; }
+.p2-rail { border-right: 1px solid #e5e7eb; display: grid; align-content: start; justify-items: center; gap: 12px; padding-top: 12px; color: #4b5563; }
+.p2-rail i { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; }
+.p2-rail i.is-on { background: #eaf0ff; color: var(--b); }
+.p2-tree { border-right: 1px solid #e5e7eb; padding: 10px 8px; display: grid; align-content: start; gap: 6px; }
+.p2-search { display: flex; align-items: center; gap: 6px; background: #f3f4f6; border-radius: 6px; padding: 6px 8px; color: #6b7280; }
+.p2-search .pi { width: 11px; height: 11px; }
+.p2-sel { background: #eaf0ff; color: var(--b); border-radius: 6px; padding: 6px 8px; font-weight: 500; border: 1px solid #c9d6ff; }
+.p2-tree ul { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 4px; }
+.p2-tree li { padding-left: 22px; color: #4b5563; }
+.p2-tree li.h { padding-left: 4px; display: flex; align-items: center; gap: 4px; color: #111827; font-weight: 500; margin-top: 3px; }
+.p2-tree li.h .pi { width: 11px; height: 11px; }
+.p2-canvas { position: relative; background: #fbfcfe radial-gradient(circle, #dfe3ea 1px, transparent 1.2px) 0 0 / 14px 14px; overflow: hidden; }
+.p2-lines { position: absolute; inset: 0; width: 385px; height: 360px; }
+.p2-lines path { fill: none; stroke: #cfd5df; stroke-width: 1; }
+.p2-lines path.is-on { stroke: var(--b); stroke-width: 1.3; }
+.p2-node { position: absolute; background: #f5f7fb; border: 1px solid #e3e7ef; border-radius: 6px; padding: 6px 7px; display: grid; gap: 2px; box-shadow: 0 1px 2px rgb(0 0 0 / .04); }
+.p2-node small { font: 500 7px/1 "IBM Plex Sans", sans-serif; letter-spacing: .06em; text-transform: uppercase; color: #6b7280; }
+.p2-node b { font-weight: 500; font-size: 10px; }
+.p2-node i { display: flex; gap: 2px; } .p2-node i em { width: 3px; height: 6px; background: #22a55a; border-radius: 1px; }
+.p2-node.is-root { background: var(--b); border-color: var(--b); color: #fff; box-shadow: 0 6px 18px -4px color-mix(in srgb, var(--b) 60%, transparent); padding: 9px 10px; }
+.p2-node.is-root small { color: rgb(255 255 255 / .75); }
+.p2-node.is-hl { border-color: #b9c8ff; }
+.p2-leaf { position: absolute; width: 80px; background: #f5f7fb; border: 1px solid #e3e7ef; border-radius: 6px; padding: 4px 6px; display: grid; gap: 1px; }
+.p2-leaf small { font-size: 6.5px; letter-spacing: .06em; text-transform: uppercase; color: #6b7280; } .p2-leaf b { font-weight: 500; font-size: 8.5px; }
+.p2-ctrl { position: absolute; right: 10px; top: 10px; width: 112px; background: #fff; border: 1px solid #c9d6ff; border-radius: 10px; padding: 8px; display: grid; gap: 5px; box-shadow: 0 8px 20px -10px rgb(0 0 0 / .2); }
+.p2-ctrl > b { display: flex; justify-content: space-between; align-items: center; font-weight: 500; font-size: 10px; }
+.p2-ctrl > b .pi { width: 10px; height: 10px; }
+.p2-ctrl small { font-size: 7px; letter-spacing: .08em; text-transform: uppercase; color: #6b7280; margin-top: 2px; }
+.p2-seg { display: grid; grid-template-columns: 1fr 1fr; background: #f3f4f6; border-radius: 6px; padding: 2px; }
+.p2-seg i { font-style: normal; text-align: center; padding: 4px 0; border-radius: 5px; color: #374151; }
+.p2-seg i.is-on { background: #eaf0ff; color: var(--b); box-shadow: inset 0 0 0 1px #c9d6ff; }
+.p2-st { display: flex; align-items: center; gap: 5px; border: 1px solid #c9d6ff; border-radius: 6px; padding: 4px 6px; color: var(--b); }
+.p2-st em { width: 6px; height: 6px; border-radius: 50%; } .p2-st em.g { background: #22a55a; } .p2-st em.a { background: #e8a33a; }
+.p2-st b { margin-left: auto; font: 500 9px/1 "Geist Mono", monospace; color: #374151; }
+.p2-zoom { position: absolute; left: 14px; bottom: 10px; width: 210px; background: #fff; border: 1px solid #c9d6ff; border-radius: 10px; padding: 7px 9px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 5px 8px; box-shadow: 0 8px 20px -10px rgb(0 0 0 / .2); }
+.p2-zoom > span { color: #4b5563; }
+.p2-zoom > i { height: 3px; background: #e5e7eb; border-radius: 2px; position: relative; }
+.p2-zoom > i em { position: absolute; left: 0; top: 0; bottom: 0; width: 42%; background: var(--b); border-radius: 2px; }
+.p2-zoom > i em::after { content: ""; position: absolute; right: -4px; top: -3px; width: 9px; height: 9px; border-radius: 50%; background: var(--b); }
+.p2-zoom > small { font-size: 7px; letter-spacing: .08em; text-transform: uppercase; color: #6b7280; }
+.p2-lay { display: flex; gap: 10px; }
+.p2-lay b { display: inline-flex; align-items: center; gap: 4px; font-weight: 500; font-size: 9px; }
+.p2-lay b em { width: 12px; height: 12px; border-radius: 50%; background: var(--b); color: #fff; font: 600 7px/12px "IBM Plex Sans", sans-serif; text-align: center; font-style: normal; }
+.p2-zoom { grid-template-columns: auto 1fr; }
+
+/* 3 · dark pipeline builder (Inter): black, segmented top tabs, outlined status pills, blocks with coloured kinds */
+.pf-3 { background: #070708; color: #e7e7ea; font: 400 10px/1.3 "Inter", sans-serif; display: grid; grid-template-rows: 38px 36px 1fr; }
+.p3-top { display: flex; align-items: center; gap: 14px; padding: 0 12px; border-bottom: 1px solid #1d1d22; }
+.p3-logo { font: 600 11px/1 "Inter", sans-serif; letter-spacing: .14em; color: #fff; }
+.p3-top nav { display: flex; gap: 2px; border: 1px solid #26262c; border-radius: 9px; padding: 2px; }
+.p3-top nav > * { padding: 5px 9px; border-radius: 7px; color: #a1a1aa; font-weight: 500; }
+.p3-top nav b { background: var(--b); color: #fff; }
+.p3-who { margin-left: auto; color: #8b8b94; font-size: 9px; }
+.p3-bar { display: flex; align-items: center; gap: 6px; padding: 0 12px; border-bottom: 1px solid #1d1d22; }
+.p3-dd { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #26262c; border-radius: 7px; padding: 5px 8px; color: #fff; }
+.p3-dd .pi { width: 10px; height: 10px; }
+.p3-st { font: 600 7.5px/1 "Inter", sans-serif; letter-spacing: .08em; padding: 4px 7px; border-radius: 999px; border: 1px solid; }
+.p3-st.is-b { color: #8ea2ff; border-color: #2c3d8f; background: #10173a; }
+.p3-st.is-g { color: #4fd18b; border-color: #17462d; background: #0b2016; }
+.p3-st.is-p { color: #c79bff; border-color: #44306e; background: #1b1230; }
+.p3-sp { flex: 1; }
+.p3-btn { border: 1px solid #2a2a31; border-radius: 7px; padding: 5px 9px; color: #e7e7ea; background: #0e0e11; font-weight: 500; }
+.p3-btn.is-blue { background: var(--b); border-color: var(--b); color: #fff; }
+.p3-body { display: grid; grid-template-columns: 140px 1fr; min-height: 0; }
+.p3-pal { border-right: 1px solid #1d1d22; padding: 10px; display: grid; align-content: start; gap: 7px; }
+.p3-add { display: flex; justify-content: center; align-items: center; gap: 5px; background: var(--b); color: #fff; border-radius: 7px; padding: 6px; font-weight: 500; }
+.p3-add .pi { width: 11px; height: 11px; }
+.p3-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.p3-chips > * { border: 1px solid #2a2a31; border-radius: 999px; padding: 3px 7px; color: #b4b4bc; font-weight: 400; }
+.p3-chips b { background: var(--b); border-color: var(--b); color: #fff; }
+.p3-pal > small { font-size: 7.5px; letter-spacing: .1em; text-transform: uppercase; color: #8b8b94; margin-top: 2px; }
+.p3-src { display: flex; align-items: center; gap: 7px; border: 1px solid #222228; border-radius: 8px; padding: 6px; background: #0c0c0f; }
+.p3-src i { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 6px; background: #121a3a; color: #8ea2ff; }
+.p3-src i .pi { width: 11px; height: 11px; }
+.p3-src span { display: grid; } .p3-src b { font-weight: 600; font-size: 9.5px; } .p3-src small { color: #8b8b94; font-size: 8px; }
+.p3-canvas { position: relative; background: #050506 radial-gradient(circle, #1a1a20 1px, transparent 1.2px) 0 0 / 16px 16px; overflow: hidden; }
+.p3-wire { position: absolute; inset: 0; width: 420px; height: 288px; }
+.p3-wire path { fill: none; stroke: var(--b); stroke-width: 1.2; stroke-dasharray: 3 3; }
+.p3-blk { position: absolute; width: 120px; background: #0f0f12; border: 1px solid #26262c; border-radius: 10px; padding: 7px 8px; display: grid; gap: 3px; }
+.p3-bh { display: flex; align-items: center; gap: 5px; }
+.p3-bh i { display: grid; place-items: center; width: 16px; height: 16px; border-radius: 5px; }
+.p3-bh i .pi { width: 10px; height: 10px; }
+.p3-bh b { font-weight: 600; font-size: 10px; color: #fff; white-space: nowrap; }
+.p3-bh span { margin-left: auto; font: 600 6px/1 "Inter", sans-serif; letter-spacing: .08em; padding: 2px 4px; border-radius: 999px; border: 1px solid; }
+.p3-bh em { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+.k-a { color: #e3a32b; } i.k-a { background: #2a1d07; } span.k-a { border-color: #6b4a10; }
+.k-r { color: #f06a6a; } i.k-r { background: #2a0d0d; } span.k-r { border-color: #6e2222; }
+.k-p { color: #c79bff; } i.k-p { background: #1b1230; } span.k-p { border-color: #44306e; }
+.p3-blk p { margin: 0; color: #c4c4cc; font-size: 9px; }
+.p3-blk small { color: #4fd18b; font-size: 8px; }
+.p3-blk u { position: absolute; top: 50%; width: 5px; height: 5px; border-radius: 50%; background: var(--b); margin-top: -2.5px; }
+.p3-blk u.l { left: -3px; } .p3-blk u.r { right: -3px; }
+.p3-tools { position: absolute; left: 12px; bottom: 12px; display: grid; gap: 3px; background: #0e0e11; border: 1px solid #26262c; border-radius: 7px; padding: 3px; }
+.p3-tools i { display: grid; place-items: center; width: 16px; height: 16px; color: #c4c4cc; } .p3-tools .pi { width: 10px; height: 10px; }
+.p3-mini { position: absolute; right: 12px; bottom: 12px; width: 84px; height: 48px; background: #0b0b0e; border: 1px solid #1d1d22; border-radius: 6px; }
+.p3-mini em { position: absolute; height: 6px; border-radius: 1px; }
+
 </style>
 <style id="ds-palette"></style>
 <div class="proto-bar" role="group" aria-label="Theme for review">
@@ -3443,10 +3588,10 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
           </div>
         </div>
         <div class="cf-evidence" data-fit="fill">
-          <div class="ds-ev ds-fan" role="group" aria-label="The same screen in three products: the same colours, with different corners, buttons, type and spacing">
-            <figure class="ds-fan-card is-1"><span class="ds-tag">First product</span><div class="mp mp-1" aria-hidden="true" data-mp></div></figure>
-            <figure class="ds-fan-card is-2"><span class="ds-tag">Second product</span><div class="mp mp-2" aria-hidden="true" data-mp></div></figure>
-            <figure class="ds-fan-card is-3"><span class="ds-tag">Third product</span><div class="mp mp-3" aria-hidden="true" data-mp></div></figure>
+          <div class="ds-ev ds-fan" role="group" aria-label="Three products that share one blue and nothing else: a light workspace with a sidebar and cards, a light network map, and a dark pipeline builder">
+            <figure class="ds-fan-card is-1"><span class="ds-tag">First product</span><div class="pfw" aria-hidden="true" data-pf="1"></div></figure>
+            <figure class="ds-fan-card is-2"><span class="ds-tag">Second product</span><div class="pfw" aria-hidden="true" data-pf="2"></div></figure>
+            <figure class="ds-fan-card is-3"><span class="ds-tag">Third product</span><div class="pfw" aria-hidden="true" data-pf="3"></div></figure>
           </div>
         </div>
       </section>
@@ -3861,11 +4006,75 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     });
   }
 
-  /* ---------- 01.1: the same screen, three products ---------- */
-  document.querySelectorAll("[data-mp]").forEach((el) => {
-    el.innerHTML = `<div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
-      <div class="mp-main"><div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
-      <ul class="mp-list"><li><span>Run 4821</span><span class="mp-badge">On time</span></li><li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li><li><span>Run 4823</span><span class="mp-badge">On time</span></li><li><span>Run 4824</span><span class="mp-badge">On time</span></li></ul></div>`;
+  /* ---------- 01.1: three products that share one blue and nothing else. Each is drawn at 560 × 360 and scaled to
+     its card: a light sidebar workspace, a light network map, a dark pipeline builder (all content invented). ---------- */
+  const PI = {
+    folder: "M3 7h6l2 2h10v10H3z", route: "M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8 17h6a4 4 0 0 0 0-8h-2",
+    file: "M7 3h7l5 5v13H7zM14 3v5h5", pin: "M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11zM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
+    chart: "M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3", bolt: "M13 3 5 14h6l-1 7 8-11h-6z", plus: "M12 5v14M5 12h14",
+    grid: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z", list: "M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1",
+    ship: "M3 15l2 5h14l2-5-9-3zM12 3v9M8 7h8", truck: "M3 6h11v10H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
+    star: "M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6L3.4 9.3l6-.7z", search: "M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4",
+    clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2", db: "M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6",
+    merge: "M6 3v6a6 6 0 0 0 6 6h6M15 12l3 3-3 3M6 21v-6", globe: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18",
+    panel: "M4 4h16v16H4zM9 4v16", tree: "M12 3v6M5 15v-3h14v3M5 15v4M19 15v4M12 9v10", chev: "M6 9l6 6 6-6", dots: "M5 12h.01M12 12h.01M19 12h.01",
+    up: "M6 15l6-6 6 6",
+  };
+  const pi = (n, c = "") => `<svg class="pi ${c}" viewBox="0 0 24 24" aria-hidden="true"><path d="${PI[n]}"/></svg>`;
+  const PF = {
+    // 1 · a light workspace: sidebar, page header, a grid of record cards
+    1: () => {
+      const card = (ic, tag, t, d, f) => `<div class="p1-card"><div class="p1-ch"><i class="p1-ic">${pi(ic)}</i><span class="p1-tag">${tag}</span></div><b>${t}</b><p>${d}</p><footer>${f}<span>${pi("dots")}</span></footer></div>`;
+      return `<div class="pf pf-1">
+        <aside class="p1-side"><div class="p1-logo"><i></i>LADING</div><div class="p1-filter">Filter pages…</div>
+          <nav><span class="is-on">${pi("folder")}Shipments</span><span>${pi("route")}Routes</span><span>${pi("file")}Contracts</span><span>${pi("pin")}Depots</span></nav>
+          <small>Operations</small><nav><span>${pi("chart")}Throughput</span><span>${pi("bolt")}Dispatch</span></nav>
+          <div class="p1-user"><i>OT</i><span>Ops team<small>12 members</small></span></div></aside>
+        <main class="p1-main"><header><h5>${pi("folder")}Shipments</h5><span class="p1-btn">${pi("chart")}Reports</span><span class="p1-btn is-blue">${pi("plus")}New shipment</span></header>
+          <div class="p1-tools"><span class="p1-seg"><i class="is-on">${pi("grid")}</i><i>${pi("list")}</i></span><span class="p1-pill">Select</span><span class="p1-sp"></span><span class="p1-seg2"><b>All</b><span>${pi("star")}Starred</span></span><small>48 shipments</small></div>
+          <div class="p1-grid">${card("ship", "Sea freight", "Harbour import 2201", "Twelve containers from the coast, cleared for the north depot.", "Coastal lane")}${card("truck", "Road", "North depot transfer", "Pallets moved overnight to free space for the import.", "Inland lane")}${card("ship", "Sea freight", "Reefer export 0418", "Chilled cargo booked on the Thursday sailing.", "Coastal lane")}${card("truck", "Road", "Last-mile batch 77", "Sixty drops across the city, two vans.", "City lane")}</div></main>
+      </div>`;
+    },
+    // 2 · a light network map: icon rail, tree, a canvas of nodes and floating controls
+    2: () => {
+      const node = (x, y, w, eye, t, cls = "", dots = 3) => `<div class="p2-node ${cls}" style="left:${x}px;top:${y}px;width:${w}px"><small>${eye}</small><b>${t}</b><i>${"<em></em>".repeat(dots)}</i></div>`;
+      const curve = (x1, y1, x2, y2, on) => { const m = (x1 + x2) / 2; return `<path class="${on ? "is-on" : ""}" d="M${x1} ${y1} C${m} ${y1} ${m} ${y2} ${x2} ${y2}"/>`; };
+      const cy = 160, hubs = [[128, 44], [128, 140], [128, 232]], leaves = [[236, 166, 1], [236, 206, 1], [236, 248, 2], [236, 288, 2]];
+      let lines = hubs.map(([x, y], i) => curve(114, cy, x, y + 19, i === 1)).join("") + leaves.map(([x, y, h]) => curve(hubs[h][0] + 92, hubs[h][1] + 19, x, y + 14, h === 1)).join("");
+      return `<div class="pf pf-2">
+        <div class="p2-rail">${["panel", "search", "folder", "tree", "chart", "db"].map((n, i) => `<i class="${i === 3 ? "is-on" : ""}">${pi(n)}</i>`).join("")}</div>
+        <aside class="p2-tree"><div class="p2-search">${pi("search")}Search lanes…</div><div class="p2-sel">Network overview</div>
+          <ul><li class="h">${pi("chev")}Inbound</li><li>Harbour arrivals</li><li>Customs holds</li><li class="h">${pi("chev")}Outbound</li><li>North depot</li><li>Inland hubs</li><li>Last mile</li><li class="h">${pi("chev")}Fleet</li><li>Vans</li></ul></aside>
+        <div class="p2-canvas"><svg class="p2-lines" viewBox="0 0 385 360" aria-hidden="true">${lines}</svg>
+          ${node(18, cy - 22, 96, "12 lanes", "North network", "is-root", 0)}
+          ${node(128, 44, 92, "Hub · 3 lanes", "Harbour")}${node(128, 140, 92, "Hub · 4 lanes", "Inland", "is-hl", 4)}${node(128, 232, 92, "Hub · 5 lanes", "Last mile", "", 5)}
+          ${leaves.map(([x, y], i) => `<div class="p2-leaf" style="left:${x}px;top:${y}px"><small>Live lane</small><b>${["Depot A", "Depot B", "City east", "City west"][i]}</b></div>`).join("")}
+          <div class="p2-ctrl"><b>View controls ${pi("up")}</b><small>Layout</small><span class="p2-seg"><i class="is-on">Tree</i><i>Radial</i></span><small>Status</small><span class="p2-st"><em class="g"></em>Live<b>12</b></span></div>
+          <div class="p2-zoom"><span>42%</span><i><em></em></i><small>Layers</small><span class="p2-lay"><b><em>1</em>Overview</b><b><em>2</em>Detail</b></span></div>
+        </div>
+      </div>`;
+    },
+    // 3 · a dark pipeline builder: top tabs, a status toolbar, a palette and a canvas of blocks
+    3: () => {
+      const blk = (x, y, ic, t, kind, k, body) => `<div class="p3-blk" style="left:${x}px;top:${y}px"><div class="p3-bh"><i class="k-${k}">${pi(ic)}</i><b>${t}</b><span class="k-${k}">${kind}</span><em></em></div><p>${body}</p><small>✓ Completed · 1 ms</small><u class="l"></u><u class="r"></u></div>`;
+      return `<div class="pf pf-3">
+        <header class="p3-top"><span class="p3-logo">✦ RELAY</span><nav><b>Builder</b><span>Sources</span><span>Jobs</span><span>Catalogue</span></nav><span class="p3-who">viewer · partner</span></header>
+        <div class="p3-bar"><span class="p3-dd">Nightly rate sync ${pi("chev")}</span><span class="p3-st is-b">PIPELINE</span><span class="p3-st is-g">DEPLOYED</span><span class="p3-st is-p">RETRYING</span><span class="p3-sp"></span><span class="p3-btn">Test</span><span class="p3-btn">Deploy</span><span class="p3-btn is-blue">Save</span></div>
+        <div class="p3-body"><aside class="p3-pal"><span class="p3-add">${pi("plus")}Add source</span><div class="p3-chips"><b>All</b><span>Triggers</span><span>Joins</span></div><small>Sources (live)</small>
+            ${[["Rate calculator", "eu-west · live"], ["Depot connector", "eu-west · live"], ["Manifest reader", "ap-south · live"]].map(([a, b]) => `<div class="p3-src"><i>${pi("globe")}</i><span><b>${a}</b><small>${b}</small></span></div>`).join("")}</aside>
+          <div class="p3-canvas"><svg class="p3-wire" viewBox="0 0 420 288" aria-hidden="true"><path d="M134 139 C150 139 142 79 156 79"/><path d="M134 139 C150 139 142 199 156 199"/><path d="M276 79 C292 79 284 139 298 139"/><path d="M276 199 C292 199 284 139 298 139"/></svg>
+            ${blk(14, 110, "clock", "Schedule", "TRIGGER", "a", "Every 5 min")}${blk(156, 50, "db", "Rates: now", "CACHE", "r", "Read string")}${blk(156, 170, "db", "Rates: last", "CACHE", "r", "Read string")}${blk(298, 110, "merge", "Merge", "JOIN", "p", "2 inputs")}
+            <div class="p3-tools">${["plus", "chev", "grid"].map((n) => `<i>${pi(n)}</i>`).join("")}</div>
+            <div class="p3-mini"><em style="left:6px;top:20px;width:16px;background:#e3a32b"></em><em style="left:24px;top:12px;width:16px;background:#d64545"></em><em style="left:24px;top:28px;width:16px;background:#d64545"></em><em style="left:42px;top:20px;width:16px;background:#3453d3"></em><em style="left:60px;top:20px;width:12px;background:#2a3a7a"></em></div>
+          </div></div>
+      </div>`;
+    },
+  };
+  document.querySelectorAll("[data-pf]").forEach((el) => {
+    el.innerHTML = PF[el.dataset.pf]();
+    const fit = () => el.style.setProperty("--k", String(el.clientWidth / 560));
+    fit();
+    if ("ResizeObserver" in window) new ResizeObserver(fit).observe(el);
   });
 
   /* ---------- 01.2: the same library in code. Figma shows the file; Code shows the source (tokens, two components)

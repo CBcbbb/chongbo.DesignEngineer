@@ -293,11 +293,75 @@
     });
   }
 
-  /* ---------- 01.1: the same screen, three products ---------- */
-  document.querySelectorAll("[data-mp]").forEach((el) => {
-    el.innerHTML = `<div class="mp-bar"><i class="mp-logo"></i><b>Deliveries</b><span>Today</span></div>
-      <div class="mp-main"><div class="mp-top"><h4>Today's runs</h4><span class="mp-btn">New run</span></div>
-      <ul class="mp-list"><li><span>Run 4821</span><span class="mp-badge">On time</span></li><li><span>Run 4822</span><span class="mp-badge is-warn">Delayed</span></li><li><span>Run 4823</span><span class="mp-badge">On time</span></li><li><span>Run 4824</span><span class="mp-badge">On time</span></li></ul></div>`;
+  /* ---------- 01.1: three products that share one blue and nothing else. Each is drawn at 560 × 360 and scaled to
+     its card: a light sidebar workspace, a light network map, a dark pipeline builder (all content invented). ---------- */
+  const PI = {
+    folder: "M3 7h6l2 2h10v10H3z", route: "M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8 17h6a4 4 0 0 0 0-8h-2",
+    file: "M7 3h7l5 5v13H7zM14 3v5h5", pin: "M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11zM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
+    chart: "M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3", bolt: "M13 3 5 14h6l-1 7 8-11h-6z", plus: "M12 5v14M5 12h14",
+    grid: "M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z", list: "M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1",
+    ship: "M3 15l2 5h14l2-5-9-3zM12 3v9M8 7h8", truck: "M3 6h11v10H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
+    star: "M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6L3.4 9.3l6-.7z", search: "M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4",
+    clock: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2", db: "M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6",
+    merge: "M6 3v6a6 6 0 0 0 6 6h6M15 12l3 3-3 3M6 21v-6", globe: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18",
+    panel: "M4 4h16v16H4zM9 4v16", tree: "M12 3v6M5 15v-3h14v3M5 15v4M19 15v4M12 9v10", chev: "M6 9l6 6 6-6", dots: "M5 12h.01M12 12h.01M19 12h.01",
+    up: "M6 15l6-6 6 6",
+  };
+  const pi = (n, c = "") => `<svg class="pi ${c}" viewBox="0 0 24 24" aria-hidden="true"><path d="${PI[n]}"/></svg>`;
+  const PF = {
+    // 1 · a light workspace: sidebar, page header, a grid of record cards
+    1: () => {
+      const card = (ic, tag, t, d, f) => `<div class="p1-card"><div class="p1-ch"><i class="p1-ic">${pi(ic)}</i><span class="p1-tag">${tag}</span></div><b>${t}</b><p>${d}</p><footer>${f}<span>${pi("dots")}</span></footer></div>`;
+      return `<div class="pf pf-1">
+        <aside class="p1-side"><div class="p1-logo"><i></i>LADING</div><div class="p1-filter">Filter pages…</div>
+          <nav><span class="is-on">${pi("folder")}Shipments</span><span>${pi("route")}Routes</span><span>${pi("file")}Contracts</span><span>${pi("pin")}Depots</span></nav>
+          <small>Operations</small><nav><span>${pi("chart")}Throughput</span><span>${pi("bolt")}Dispatch</span></nav>
+          <div class="p1-user"><i>OT</i><span>Ops team<small>12 members</small></span></div></aside>
+        <main class="p1-main"><header><h5>${pi("folder")}Shipments</h5><span class="p1-btn">${pi("chart")}Reports</span><span class="p1-btn is-blue">${pi("plus")}New shipment</span></header>
+          <div class="p1-tools"><span class="p1-seg"><i class="is-on">${pi("grid")}</i><i>${pi("list")}</i></span><span class="p1-pill">Select</span><span class="p1-sp"></span><span class="p1-seg2"><b>All</b><span>${pi("star")}Starred</span></span><small>48 shipments</small></div>
+          <div class="p1-grid">${card("ship", "Sea freight", "Harbour import 2201", "Twelve containers from the coast, cleared for the north depot.", "Coastal lane")}${card("truck", "Road", "North depot transfer", "Pallets moved overnight to free space for the import.", "Inland lane")}${card("ship", "Sea freight", "Reefer export 0418", "Chilled cargo booked on the Thursday sailing.", "Coastal lane")}${card("truck", "Road", "Last-mile batch 77", "Sixty drops across the city, two vans.", "City lane")}</div></main>
+      </div>`;
+    },
+    // 2 · a light network map: icon rail, tree, a canvas of nodes and floating controls
+    2: () => {
+      const node = (x, y, w, eye, t, cls = "", dots = 3) => `<div class="p2-node ${cls}" style="left:${x}px;top:${y}px;width:${w}px"><small>${eye}</small><b>${t}</b><i>${"<em></em>".repeat(dots)}</i></div>`;
+      const curve = (x1, y1, x2, y2, on) => { const m = (x1 + x2) / 2; return `<path class="${on ? "is-on" : ""}" d="M${x1} ${y1} C${m} ${y1} ${m} ${y2} ${x2} ${y2}"/>`; };
+      const cy = 160, hubs = [[128, 44], [128, 140], [128, 232]], leaves = [[236, 166, 1], [236, 206, 1], [236, 248, 2], [236, 288, 2]];
+      let lines = hubs.map(([x, y], i) => curve(114, cy, x, y + 19, i === 1)).join("") + leaves.map(([x, y, h]) => curve(hubs[h][0] + 92, hubs[h][1] + 19, x, y + 14, h === 1)).join("");
+      return `<div class="pf pf-2">
+        <div class="p2-rail">${["panel", "search", "folder", "tree", "chart", "db"].map((n, i) => `<i class="${i === 3 ? "is-on" : ""}">${pi(n)}</i>`).join("")}</div>
+        <aside class="p2-tree"><div class="p2-search">${pi("search")}Search lanes…</div><div class="p2-sel">Network overview</div>
+          <ul><li class="h">${pi("chev")}Inbound</li><li>Harbour arrivals</li><li>Customs holds</li><li class="h">${pi("chev")}Outbound</li><li>North depot</li><li>Inland hubs</li><li>Last mile</li><li class="h">${pi("chev")}Fleet</li><li>Vans</li></ul></aside>
+        <div class="p2-canvas"><svg class="p2-lines" viewBox="0 0 385 360" aria-hidden="true">${lines}</svg>
+          ${node(18, cy - 22, 96, "12 lanes", "North network", "is-root", 0)}
+          ${node(128, 44, 92, "Hub · 3 lanes", "Harbour")}${node(128, 140, 92, "Hub · 4 lanes", "Inland", "is-hl", 4)}${node(128, 232, 92, "Hub · 5 lanes", "Last mile", "", 5)}
+          ${leaves.map(([x, y], i) => `<div class="p2-leaf" style="left:${x}px;top:${y}px"><small>Live lane</small><b>${["Depot A", "Depot B", "City east", "City west"][i]}</b></div>`).join("")}
+          <div class="p2-ctrl"><b>View controls ${pi("up")}</b><small>Layout</small><span class="p2-seg"><i class="is-on">Tree</i><i>Radial</i></span><small>Status</small><span class="p2-st"><em class="g"></em>Live<b>12</b></span></div>
+          <div class="p2-zoom"><span>42%</span><i><em></em></i><small>Layers</small><span class="p2-lay"><b><em>1</em>Overview</b><b><em>2</em>Detail</b></span></div>
+        </div>
+      </div>`;
+    },
+    // 3 · a dark pipeline builder: top tabs, a status toolbar, a palette and a canvas of blocks
+    3: () => {
+      const blk = (x, y, ic, t, kind, k, body) => `<div class="p3-blk" style="left:${x}px;top:${y}px"><div class="p3-bh"><i class="k-${k}">${pi(ic)}</i><b>${t}</b><span class="k-${k}">${kind}</span><em></em></div><p>${body}</p><small>✓ Completed · 1 ms</small><u class="l"></u><u class="r"></u></div>`;
+      return `<div class="pf pf-3">
+        <header class="p3-top"><span class="p3-logo">✦ RELAY</span><nav><b>Builder</b><span>Sources</span><span>Jobs</span><span>Catalogue</span></nav><span class="p3-who">viewer · partner</span></header>
+        <div class="p3-bar"><span class="p3-dd">Nightly rate sync ${pi("chev")}</span><span class="p3-st is-b">PIPELINE</span><span class="p3-st is-g">DEPLOYED</span><span class="p3-st is-p">RETRYING</span><span class="p3-sp"></span><span class="p3-btn">Test</span><span class="p3-btn">Deploy</span><span class="p3-btn is-blue">Save</span></div>
+        <div class="p3-body"><aside class="p3-pal"><span class="p3-add">${pi("plus")}Add source</span><div class="p3-chips"><b>All</b><span>Triggers</span><span>Joins</span></div><small>Sources (live)</small>
+            ${[["Rate calculator", "eu-west · live"], ["Depot connector", "eu-west · live"], ["Manifest reader", "ap-south · live"]].map(([a, b]) => `<div class="p3-src"><i>${pi("globe")}</i><span><b>${a}</b><small>${b}</small></span></div>`).join("")}</aside>
+          <div class="p3-canvas"><svg class="p3-wire" viewBox="0 0 420 288" aria-hidden="true"><path d="M134 139 C150 139 142 79 156 79"/><path d="M134 139 C150 139 142 199 156 199"/><path d="M276 79 C292 79 284 139 298 139"/><path d="M276 199 C292 199 284 139 298 139"/></svg>
+            ${blk(14, 110, "clock", "Schedule", "TRIGGER", "a", "Every 5 min")}${blk(156, 50, "db", "Rates: now", "CACHE", "r", "Read string")}${blk(156, 170, "db", "Rates: last", "CACHE", "r", "Read string")}${blk(298, 110, "merge", "Merge", "JOIN", "p", "2 inputs")}
+            <div class="p3-tools">${["plus", "chev", "grid"].map((n) => `<i>${pi(n)}</i>`).join("")}</div>
+            <div class="p3-mini"><em style="left:6px;top:20px;width:16px;background:#e3a32b"></em><em style="left:24px;top:12px;width:16px;background:#d64545"></em><em style="left:24px;top:28px;width:16px;background:#d64545"></em><em style="left:42px;top:20px;width:16px;background:#3453d3"></em><em style="left:60px;top:20px;width:12px;background:#2a3a7a"></em></div>
+          </div></div>
+      </div>`;
+    },
+  };
+  document.querySelectorAll("[data-pf]").forEach((el) => {
+    el.innerHTML = PF[el.dataset.pf]();
+    const fit = () => el.style.setProperty("--k", String(el.clientWidth / 560));
+    fit();
+    if ("ResizeObserver" in window) new ResizeObserver(fit).observe(el);
   });
 
   /* ---------- 01.2: the same library in code. Figma shows the file; Code shows the source (tokens, two components)
