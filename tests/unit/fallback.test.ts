@@ -237,3 +237,14 @@ describe("fallback: shape", () => {
     for (const s of DEFAULT_SHEETS) expect(findEntry(s.project, s.section)?.section.signals).toContain(s.signal);
   });
 });
+
+describe("hidden projects", () => {
+  it("are never named from a brief, even by their own words", () => {
+    const shown = new Set(projects.map((p) => p.slug));
+    for (const brief of ["How did you build this portfolio and its printer?", "Tell me about WildEcho, the wildlife sound project"]) {
+      const { named } = understand(brief);
+      for (const slug of named) expect(shown.has(slug), `${brief} → ${slug}`).toBe(true);
+      expect(fallbackAnswer(brief).sheets.every((s) => shown.has(s.project)), brief).toBe(true);
+    }
+  });
+});
