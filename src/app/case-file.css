@@ -1179,9 +1179,11 @@
   fill: var(--i-val);
   stroke: none;
 }
-/* a layer: solid like the label, so the lanes read as passing through it */
-.cf-ico-ad .i-layer {
-  fill: var(--on-field);
+.cf-ico-ad .i-spark {
+  stroke-width: 1.8;
+}
+.cf-ico-wide {
+  width: 1.4rem;
 }
 .cf-ico-marks .m-people {
   fill: var(--mark-people);

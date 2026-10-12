@@ -52,14 +52,13 @@ function MergeIcon() {
  * (violet category, orange value), set solid against the outline of what carries it.
  */
 
-/** The pipeline: two role lanes run through its layers, from the stream to the chart. */
+/** From the stream to the chart: a live stream comes in, and the roles it fills stand up as bars. */
 function PipelineIcon() {
   return (
     <svg className="cf-ico cf-ico-ad" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <path className="i-cat" d="M2.5 9.3h19" />
-      <path className="i-val" d="M2.5 14.7h19" />
-      <rect className="i-layer" x="7" y="4.5" width="3.4" height="15" rx="1.4" />
-      <rect className="i-layer" x="13.6" y="4.5" width="3.4" height="15" rx="1.4" />
+      <path d="M2.5 12c1.4-3 2.8-3 4.2 0s2.8 3 4.2 0" />
+      <rect className="i-cat-dot" x="13.6" y="5" width="3.4" height="15" rx="1.2" />
+      <rect className="i-val-dot" x="18.6" y="11" width="3.4" height="9" rx="1.2" />
     </svg>
   );
 }
@@ -76,13 +75,14 @@ function ContractIcon() {
   );
 }
 
-/** A binding: a role's swatch beside the field chosen for it. */
+/** A binding: a role's swatch, a spark of current, and the field it now drives. Wider, so the spark has room. */
 function BindingIcon() {
   return (
-    <svg className="cf-ico cf-ico-ad" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-      <circle className="i-cat-dot" cx="5" cy="12" r="3.3" />
-      <rect x="10.5" y="6.5" width="11" height="11" rx="3.2" />
-      <path d="m14 11 2 2 2-2" />
+    <svg className="cf-ico cf-ico-ad cf-ico-wide" viewBox="0 0 32 24" aria-hidden="true" focusable="false">
+      <circle className="i-cat-dot" cx="4.5" cy="12" r="3" />
+      <path className="i-cat i-spark" d="M8.6 12h2.2l1.7-4.6 2.6 9.2 1.7-4.6h2.2" />
+      <rect x="21" y="7" width="9" height="10" rx="3" />
+      <path d="m23.9 11.2 1.6 1.6 1.6-1.6" />
     </svg>
   );
 }
