@@ -395,7 +395,7 @@ export const hhcd: Project = {
       kind: "evidence",
       title: "Accessibility – testing",
       body: [
-        "Automated checks gave VOICE a near-perfect score, but missed that its map entries and filters couldn't be reached by keyboard. In the Centre's version both work by keyboard, and axe found no issues on any main page at desktop and phone widths. It passed testing in Chrome, Safari and Firefox, and with the VoiceOver screen reader.",
+        "Automated checks gave VOICE a near-perfect score, but missed that entries on its map couldn't be reached by keyboard; only the list view made them reachable. In the Centre's version, every entry on the map can be reached by keyboard, and axe found no issues at desktop and phone widths. It was tested in Chrome, Safari and Firefox, and with the VoiceOver screen reader.",
       ],
       signals: ["accessibility", "research"],
       capabilities: ["E"],
@@ -409,10 +409,10 @@ export const hhcd: Project = {
           { value: "0", label: "axe violations at 1440 and 390px", note: "Centre's version", tone: "pass" },
         ],
         checks: [
-          { group: "VOICE", text: "Missed: map entries and filters couldn't be reached by keyboard", tone: "miss" },
-          { group: "Centre's version", text: "Map entries and filters work by keyboard", tone: "pass" },
-          { group: "Centre's version", text: "Passed in Chrome, Safari and Firefox", tone: "pass" },
-          { group: "Centre's version", text: "Passed with the VoiceOver screen reader", tone: "pass" },
+          { group: "VOICE", text: "Missed: entries on the map couldn't be reached by keyboard", tone: "miss" },
+          { group: "Centre's version", text: "Every map entry reachable by keyboard", tone: "pass" },
+          { group: "Centre's version", text: "Tested in Chrome, Safari and Firefox", tone: "pass" },
+          { group: "Centre's version", text: "Tested with the VoiceOver screen reader", tone: "pass" },
         ],
       },
     },
