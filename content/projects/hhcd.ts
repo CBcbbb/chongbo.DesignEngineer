@@ -258,7 +258,7 @@ export const hhcd: Project = {
       kind: "decision",
       title: "Two arrangements of the same map",
       body: [
-        "The map opens as a free network, with every entry the same size. One switch moves the same entries into four columns by type, which are easier to scan and to follow by keyboard. Both layouts are calculated in advance, so the switch is a single animated move.",
+        "The map opens as a free network, with every entry the same size. One switch moves the same entries into four columns by type, which are easier to scan and to follow by keyboard. Both layouts are calculated in advance, so the switch is a single animated move. A table view of the same entries sits alongside both, for screen readers and anyone who prefers a list.",
       ],
       signals: ["motion-interaction", "data", "accessibility"],
       capabilities: ["D", "E"],
