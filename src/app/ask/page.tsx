@@ -58,7 +58,7 @@ export default async function AskPage({ searchParams }: Props) {
     .filter((c): c is SheetCard => Boolean(c));
   const runs = projectRuns(sheets);
   const picked = !brief.trim() ? topicsToLabels(topics) : [];
-  const title = result ? resultTitle({ asked: result.asked, startHere: result.matched === "start-here", picked }) : (error ?? "What skills are you looking for?");
+  const title = result ? resultTitle({ asked: result.asked, startHere: result.matched === "start-here", picked }) : (error ?? "What are you hiring for?");
 
   return (
     <div className="wrap">

@@ -21,7 +21,7 @@ Paste this into a new conversation. It gives the full background, then the first
 
 Recruiters don't ask for a portfolio; they ask to see work. You tell the machine what skills you need, and it prints exactly that.
 
-- Home: eyebrow "Printed to order", h1 "What skills are you looking for?", 8 skill cards (Accessibility, Design systems, Front‑end, Motion, Web and brand, AI tools, Research, Data), then a photographed cream printer (`public/printer.webp`, overlays positioned in % of the image).
+- Home: eyebrow "Printed to order", h1 "What are you hiring for?", 8 skill cards (Accessibility, Design systems, Front‑end, Motion, Web and brand, AI tools, Research, Data), then a photographed cream printer (`public/printer.webp`, overlays positioned in % of the image).
 - The paper rising from the printer's top slot is the input (type a brief or paste a JD; typed examples cycle). Selected skills show as chips on the paper. The red button prints.
 - Processing: step lines print on the paper. Results: up to six cards that answer the ask best, across all projects (several from one project when they answer best, grouped together), shown as a strip you can swipe, click or arrow through.
 - "Full project →" goes to `/work/<slug>#<section>`, a case file with a parts rail (01…n) that lands on that section.

@@ -37,11 +37,11 @@ export default function Home() {
       <main id="main" tabIndex={-1}>
         <p className="eyebrow">Printed to order</p>
         <h1 id="home-title" className="home-h1">
-          What skills are you looking for?
+          What are you hiring for?
         </h1>
         <p className="home-intro">
-          <b>I&apos;m {profile.name}, a design engineer in {profile.location}.</b> Pick the skills your role needs, describe what
-          you&apos;re looking for, or paste the job description. The machine prints the parts of my work that match.
+          <b>I&apos;m {profile.name}, a design engineer in {profile.location}.</b> Tell the machine what the role needs: a few
+          skills, a sentence, or the whole job description. It prints the parts of my work that answer it.
         </p>
         <PrintedToOrder cards={buildCardIndex()} media={sheetMedia()} labelledBy="home-title" topics={shownTopics()} />
       </main>
