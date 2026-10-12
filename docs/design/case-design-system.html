@@ -3194,45 +3194,55 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; } }
 
-/* ---------- overview: an exploded axonometric ---------- */
+/* ---------- overview: an exploded build, studs and seats ---------- */
 .ds-layers2 { overflow-x: auto; margin-top: 4px;
   --ov-line: #2a2925; --ov-hair: #8d8a83;
-  --ov-base-t: #e7e4dc; --ov-base-l: #d5d1c7; --ov-base-r: #c2bdb1;
-  --ov-prod-t: #ffffff; --ov-prod-l: #ecebe6; --ov-prod-r: #dad7d0;
-  --ov-piece: #ffffff; --ov-piece-2: #e4e1da; --ov-night: #2a2925; --ov-grid: rgb(0 0 0 / .07); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ds-layers2 { --ov-line: #dcd8cf; --ov-hair: #77736b;
-  --ov-base-t: #2e2d2a; --ov-base-l: #242321; --ov-base-r: #1b1a19;
-  --ov-prod-t: #3b3a36; --ov-prod-l: #302f2c; --ov-prod-r: #262523;
-  --ov-piece: #e6e2d9; --ov-piece-2: #c9c4b9; --ov-night: #151413; --ov-grid: rgb(255 255 255 / .07); } }
-:root[data-theme="dark"] .ds-layers2 { --ov-line: #dcd8cf; --ov-hair: #77736b;
-  --ov-base-t: #2e2d2a; --ov-base-l: #242321; --ov-base-r: #1b1a19;
-  --ov-prod-t: #3b3a36; --ov-prod-l: #302f2c; --ov-prod-r: #262523;
-  --ov-piece: #e6e2d9; --ov-piece-2: #c9c4b9; --ov-night: #151413; --ov-grid: rgb(255 255 255 / .07); }
-.ds-layers2 svg { display: block; width: 100%; height: auto; min-width: 640px; max-width: 900px; margin: 0 auto; overflow: visible; }
-.ds-layers2 .ob polygon, .ds-layers2 .cyl { stroke: var(--ov-line); stroke-width: .8; stroke-linejoin: round; }
-.ds-layers2 .ob .t { stroke-width: 1.1; }
+  --ov-base-t: #e9e6df; --ov-base-l: #d6d2c9; --ov-base-r: #c3beb3;
+  --ov-prod-t: #ffffff; --ov-prod-l: #ebe9e4; --ov-prod-r: #d9d6cf;
+  --ov-stud-s: #cfcac0; --ov-stud-c: #f4f2ed; --ov-user: #f7f6f2;
+  --ov-piece: #ffffff; --ov-night: #2a2925; --ov-own: #e8e4db; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ds-layers2 { --ov-line: #d9d5cc; --ov-hair: #77736b;
+  --ov-base-t: #2b2a27; --ov-base-l: #22211f; --ov-base-r: #1a1918;
+  --ov-prod-t: #3a3935; --ov-prod-l: #2f2e2b; --ov-prod-r: #252422;
+  --ov-stud-s: #23221f; --ov-stud-c: #3d3c38; --ov-user: #4a4945;
+  --ov-piece: #e6e2d9; --ov-night: #151413; --ov-own: #2c2b28; } }
+:root[data-theme="dark"] .ds-layers2 { --ov-line: #d9d5cc; --ov-hair: #77736b;
+  --ov-base-t: #2b2a27; --ov-base-l: #22211f; --ov-base-r: #1a1918;
+  --ov-prod-t: #3a3935; --ov-prod-l: #2f2e2b; --ov-prod-r: #252422;
+  --ov-stud-s: #23221f; --ov-stud-c: #3d3c38; --ov-user: #4a4945;
+  --ov-piece: #e6e2d9; --ov-night: #151413; --ov-own: #2c2b28; }
+.ds-layers2 svg { display: block; width: 100%; height: auto; min-width: 660px; overflow: visible; }
+.ds-layers2 .ob polygon { stroke: var(--ov-line); stroke-width: .9; stroke-linejoin: round; }
 .ds-layers2 .o-base .t { fill: var(--ov-base-t); } .ds-layers2 .o-base .l { fill: var(--ov-base-l); } .ds-layers2 .o-base .r { fill: var(--ov-base-r); }
-.ds-layers2 .ob .hx { fill: url(#ov-hatch); stroke: none; }
-.ds-layers2 .hx-l { stroke: var(--ov-hair); stroke-width: .6; }
-.ds-layers2 .o-grid { stroke: var(--ov-grid); stroke-width: .8; }
-.ds-layers2 .o-prod .t, .ds-layers2 .o-prod .cyl { fill: var(--ov-prod-t); } .ds-layers2 .o-prod .l { fill: var(--ov-prod-l); } .ds-layers2 .o-prod .r { fill: var(--ov-prod-r); }
+.ds-layers2 .o-prod .t { fill: var(--ov-prod-t); } .ds-layers2 .o-prod .l { fill: var(--ov-prod-l); } .ds-layers2 .o-prod .r { fill: var(--ov-prod-r); }
 .ds-layers2 .o-cli .t { fill: var(--t); } .ds-layers2 .o-cli .l { fill: var(--l); } .ds-layers2 .o-cli .r { fill: var(--r); }
-.ds-layers2 .ob.is-on polygon, .ds-layers2 .o-ex.is-on .cyl { stroke-width: 1.7; }
-.ds-layers2 .seat { fill: none; stroke: var(--ov-hair); stroke-width: .8; stroke-dasharray: 3 3; }
-.ds-layers2 .seat.is-on { stroke: var(--ov-line); stroke-width: 1.1; }
-.ds-layers2 .guide { stroke: var(--ov-hair); stroke-width: .7; stroke-dasharray: 2 3; }
-.ds-layers2 .guide.is-on { stroke: var(--ov-line); stroke-width: 1.2; stroke-dasharray: 5 3; }
-.ds-layers2 .o-dot { fill: var(--ov-piece-2); stroke: var(--ov-hair); stroke-width: .6; opacity: .7; }
+.ds-layers2 .ob.is-on polygon { stroke-width: 1.6; }
+/* the part of a product past the base plate: its own */
+.ds-layers2 .o-own-t { fill: var(--ov-own); stroke: none; }
+.ds-layers2 .o-own { fill: url(#ov-hatch); stroke: none; }
+.ds-layers2 .hx-l { stroke: var(--ov-line); stroke-width: .8; opacity: .7; }
+.ds-layers2 .o-note { font: 500 11.5px var(--mono); fill: var(--case-dim); }
+.ds-layers2 .os .s { fill: var(--ov-stud-s); stroke: var(--ov-line); stroke-width: .6; }
+.ds-layers2 .os .c { fill: var(--ov-stud-c); stroke: var(--ov-line); stroke-width: .6; }
+.ds-layers2 .os.on-cli .s { fill: rgb(0 0 0 / .18); }
+.ds-layers2 .os.on-cli .c { fill: rgb(255 255 255 / .35); }
+.ds-layers2 .os.o-user { opacity: .75; }
+.ds-layers2 .os.o-user .c { fill: var(--ov-user); }
+.ds-layers2 .seat { fill: none; stroke: var(--ov-hair); stroke-width: .9; stroke-dasharray: 3 3; }
+.ds-layers2 .seat.is-on { stroke: var(--ov-line); }
+.ds-layers2 .guide { stroke: var(--ov-hair); stroke-width: .8; stroke-dasharray: 2 3; }
+.ds-layers2 .guide.is-user { opacity: .6; }
+.ds-layers2 .guide.is-on { stroke: var(--ov-line); stroke-width: 1.3; stroke-dasharray: 5 3; opacity: 1; }
 /* the pieces: base and body in the piece colour; the head carries what that user changed */
 .ds-layers2 .pc path, .ds-layers2 .pc ellipse, .ds-layers2 .pc circle, .ds-layers2 .pc line { stroke: var(--ov-line); stroke-width: .9; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 .ds-layers2 .pc .pc-shadow { fill: rgb(0 0 0 / .12); stroke: none; }
 .ds-layers2 .pc .pc-b { fill: var(--ov-piece); }
 .ds-layers2 .pc.is-brand .pc-a { fill: var(--brand); }
 .ds-layers2 .pc.is-own .pc-a { fill: var(--own); }
-.ds-layers2 .pc.is-dark .pc-b, .ds-layers2 .pc.is-dark .pc-a { fill: var(--ov-night); stroke: var(--ov-line); }
-.ds-layers2 .pc.is-dark .pc-in { fill: var(--brand); stroke: var(--ov-line); stroke-width: .6; }
-.ds-layers2 .pc-notch { fill: var(--case-bg); }
-.ds-layers2 .pc-slit { stroke: var(--ov-line); stroke-width: 1.1; stroke-linecap: round; }
+.ds-layers2 .pc.is-dark .pc-b, .ds-layers2 .pc.is-dark .pc-a { fill: var(--ov-night); }
+.ds-layers2 .pc.is-dark .pc-in { fill: var(--brand); }
+.ds-layers2 .pc-notch { fill: var(--case-bg); stroke: none; }
+.ds-layers2 .pc-slit { stroke-width: 1.1; stroke-linecap: round; }
 .ds-layers2 .o-shadow { fill: #000; opacity: .12; }
 .ds-layers2 .o-callname { font: 600 14px var(--sans); fill: var(--case-ink); }
 .ds-layers2 .o-leader { stroke: var(--ov-hair); stroke-width: .8; }
@@ -3696,24 +3706,25 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
   const layersArt = document.getElementById("cover-layers");
   if (layersArt) {
     // the overview's build, small: the foundation strip, three products, two clients above each; the current brand is the solid one
-    const OX = 72, OY = 104;
+    const OX = 80, OY = 118;
     const P = (x, y, z) => [OX + (x - y) * 0.433, OY + (x + y) * 0.25 - z * 0.5];
     const pts = (a) => a.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
     const quad = (cx, cy, hx, hy, z) => [P(cx - hx, cy - hy, z), P(cx + hx, cy - hy, z), P(cx + hx, cy + hy, z), P(cx - hx, cy + hy, z)];
-    const PX = [70, 235, 400], PY = 70;
-    const slots = [[0, 1], [0, -1], [1, 1], [1, -1], [2, 1], [2, -1]].sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const PC = [[36, 112], [196, 108], [318, 22]], H = 46; // as in the overview
+    const slots = [[0, 1], [0, -1], [1, 1], [1, -1], [2, 1], [2, -1]]; // back brick first
     const which = { courier: "0,1", grocer: "0,-1", bank: "1,1" };
     const draw = (c) => {
       const mine = which[c.id];
       let g = `<svg viewBox="-6 -10 304 270" role="img" aria-label="One shared package, three products above it, clients above each product">`;
-      g += `<polygon class="cl-base" points="${pts(quad(235, 70, 235, 70, 0))}"/>`;
-      PX.forEach((x, p) => {
-        const a1 = P(x, PY, 0), a2 = P(x, PY, 122);
-        g += `<line class="cl-pin" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/><polygon class="cl-prod${!mine && p === 0 ? " is-on" : ""}" points="${pts(quad(x, PY, 50, 50, 122))}"/>`;
+      g += `<polygon class="cl-base" points="${pts(quad(180, 75, 180, 75, 0))}"/>`;
+      [0, 1, 2].sort((a, b) => PC[a][0] + PC[a][1] - (PC[b][0] + PC[b][1])).forEach((p) => {
+        const [x, y] = PC[p];
+        const a1 = P(x, y, 0), a2 = P(x, y, 108);
+        g += `<line class="cl-pin" x1="${a1[0]}" y1="${a1[1]}" x2="${a2[0]}" y2="${a2[1]}"/><polygon class="cl-prod${!mine && p === 0 ? " is-on" : ""}" points="${pts(quad(x, y, H, H, 108))}"/>`;
         slots.filter(([q]) => q === p).forEach(([, side]) => {
-          const cx = x - 6, cy = PY + side * 21, on = mine === `${p},${side}`;
-          const b1 = P(cx, cy, 122), b2 = P(cx, cy, 214);
-          g += `<line class="cl-pin${on ? " is-on" : ""}" x1="${b1[0]}" y1="${b1[1]}" x2="${b2[0]}" y2="${b2[1]}"/><polygon class="cl-cli${on ? " is-on" : ""}" points="${pts(quad(cx, cy, 31, 15, 214))}"/>`;
+          const cx = x - side * 20, cy = y, on = mine === `${p},${side}`;
+          const b1 = P(cx, cy, 108), b2 = P(cx, cy, 196);
+          g += `<line class="cl-pin${on ? " is-on" : ""}" x1="${b1[0]}" y1="${b1[1]}" x2="${b2[0]}" y2="${b2[1]}"/><polygon class="cl-cli${on ? " is-on" : ""}" points="${pts(quad(cx, cy, 14, 28, 196))}"/>`;
         });
       });
       g += `</svg>`;
@@ -3796,46 +3807,48 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
     document.querySelectorAll('input[name="f2c"]').forEach((r) => r.addEventListener("change", () => { stage.dataset.show = r.value; }));
   }
 
-  /* ---------- overview: an exploded axonometric. A foundation slab (the shared package), three products lifted off
-     their seats on it, two clients lifted off each product, and users above the clients. Dashed outlines are seats;
-     dashed lines are projection lines back to them. ---------- */
+  /* ---------- overview: an exploded build. A base plate (the shared package); three products lifted off it, each
+     sitting on a different part of it and overhanging its edge a little, because each adds parts of its own; two
+     clients lifted off each product and users above them, always inside their product. Dashed outlines are seats,
+     dashed lines drop each part back into place. ---------- */
   const layers = document.getElementById("layers");
   if (layers) {
-    const CLIENTS = [
-      { id: "courier", name: "Courier", colour: "#f2c94c", product: 0, side: 1 },
-      { id: "grocer", name: "Grocer", colour: "#3a9a4a", product: 0, side: -1 },
-      { id: "bank", name: "Bank", colour: "#3651b0", product: 1, side: 1 },
-      { id: "florist", name: "Florist", colour: "#e85d9a", product: 1, side: -1 },
-      { id: "bakery", name: "Bakery", colour: "#d06a33", product: 2, side: 1 },
-      { id: "studio", name: "Studio", colour: "#8a68f5", product: 2, side: -1 },
-    ];
-    const C30 = 0.866, S30 = 0.5, OX = 146, OY = 300;
+    const C30 = 0.866, S30 = 0.5, OX = 214, OY = 272;
     const P = (x, y, z) => [OX + (x - y) * C30, OY + (x + y) * S30 - z];
     const f1 = (n) => n.toFixed(1);
     const pts = (a) => a.map(([x, y]) => `${f1(x)},${f1(y)}`).join(" ");
     const shade = (hex, t) => mix("#000000", hex, t);
-    // a box: right face (x = x1), left face (y = y1), top; optional hatch over the side faces (a cut, in drawing terms)
-    const box = (x0, y0, x1, y1, z, h, cls, col, hatch) => {
-      const f = col ? `style="--t:${col};--l:${shade(col, 0.14)};--r:${shade(col, 0.3)}"` : "";
-      const R = [P(x1, y0, z), P(x1, y1, z), P(x1, y1, z - h), P(x1, y0, z - h)];
-      const L = [P(x0, y1, z), P(x1, y1, z), P(x1, y1, z - h), P(x0, y1, z - h)];
-      return `<g class="ob ${cls}" ${f}><polygon class="r" points="${pts(R)}"/><polygon class="l" points="${pts(L)}"/>
-        ${hatch ? `<polygon class="hx" points="${pts(R)}"/><polygon class="hx" points="${pts(L)}"/>` : ""}
+    const box = (x0, y0, x1, y1, z, h, cls, col) => {
+      const f = col ? `style="--t:${col};--l:${shade(col, 0.16)};--r:${shade(col, 0.32)}"` : "";
+      return `<g class="ob ${cls}" ${f}>
+        <polygon class="r" points="${pts([P(x1, y0, z), P(x1, y1, z), P(x1, y1, z - h), P(x1, y0, z - h)])}"/>
+        <polygon class="l" points="${pts([P(x0, y1, z), P(x1, y1, z), P(x1, y1, z - h), P(x0, y1, z - h)])}"/>
         <polygon class="t" points="${pts([P(x0, y0, z), P(x1, y0, z), P(x1, y1, z), P(x0, y1, z)])}"/></g>`;
     };
-    const seat = (x0, y0, x1, y1, z, on) => `<polygon class="seat${on ? " is-on" : ""}" points="${pts([P(x0, y0, z), P(x1, y0, z), P(x1, y1, z), P(x0, y1, z)])}"/>`;
+    const quad = (x0, y0, x1, y1, z) => pts([P(x0, y0, z), P(x1, y0, z), P(x1, y1, z), P(x0, y1, z)]);
+    const RX = 1.2247, RY = 0.7071;
+    const stud = (x, y, z, r, h, cls = "", style = "") => {
+      const [X, Y] = P(x, y, z), Yt = Y - h;
+      return `<g class="os ${cls}" ${style}><path class="s" d="M${f1(X - r * RX)} ${f1(Y)} A${f1(r * RX)} ${f1(r * RY)} 0 0 0 ${f1(X + r * RX)} ${f1(Y)} L${f1(X + r * RX)} ${f1(Yt)} L${f1(X - r * RX)} ${f1(Yt)} Z"/><ellipse class="c" cx="${f1(X)}" cy="${f1(Yt)}" rx="${f1(r * RX)}" ry="${f1(r * RY)}"/></g>`;
+    };
+    const studs = (x0, y0, x1, y1, z, step, r, h, cls) => {
+      const out = [];
+      const nx = Math.round((x1 - x0) / step), ny = Math.round((y1 - y0) / step);
+      const sx = (x1 - x0) / nx, sy = (y1 - y0) / ny;
+      for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) out.push([x0 + sx * (i + 0.5), y0 + sy * (j + 0.5)]);
+      out.sort((a, b) => a[0] + a[1] - (b[0] + b[1]));
+      return out.map(([x, y]) => stud(x, y, z, r, h, cls)).join("");
+    };
+    const seat = (x0, y0, x1, y1, z, on) => `<polygon class="seat${on ? " is-on" : ""}" points="${quad(x0, y0, x1, y1, z)}"/>`;
     const line = (a, b, cls, style = "") => `<line class="${cls}" ${style ? `style="${style}"` : ""} x1="${f1(a[0])}" y1="${f1(a[1])}" x2="${f1(b[0])}" y2="${f1(b[1])}"/>`;
     const guides = (x0, y0, x1, y1, zFrom, zTo, on, col) => [[x1, y0], [x1, y1], [x0, y1]].map(([x, y]) => line(P(x, y, zFrom), P(x, y, zTo), `guide${on ? " is-on" : ""}`, on && col ? `stroke:${col}` : "")).join("");
 
-    // round things, for the chess pieces: a circle of radius r on a level plane is an ellipse rx = 1.2247r, ry = 0.7071r
-    const RX = 1.2247, RY = 0.7071;
+    // users as chess pieces: each keeps the client's brand and changes one thing of its own
     const ell = (X, Y, r, cls) => `<ellipse class="${cls}" cx="${f1(X)}" cy="${f1(Y)}" rx="${f1(r * RX)}" ry="${f1(r * RY)}"/>`;
-    // a frustum from radius r1 at Yb to radius r2 at Yt; the visible side, then its top
     const frustum = (X, Yb, r1, Yt, r2, cls) => `<path class="${cls}" d="M${f1(X - r1 * RX)} ${f1(Yb)} A${f1(r1 * RX)} ${f1(r1 * RY)} 0 0 0 ${f1(X + r1 * RX)} ${f1(Yb)} L${f1(X + r2 * RX)} ${f1(Yt)} A${f1(r2 * RX)} ${f1(r2 * RY)} 0 0 1 ${f1(X - r2 * RX)} ${f1(Yt)} Z"/>${ell(X, Yt, r2, cls)}`;
-    // three users, three pieces: each keeps the client's brand and changes one thing of its own
     const piece = (kind, x, y, z, tone) => {
       const [X, Y] = P(x, y, z);
-      let s = `<g class="pc ${tone}" transform="translate(${f1(X)} ${f1(Y)}) scale(1.45) translate(${f1(-X)} ${f1(-Y)})">` + ell(X, Y + 1.5, 9, "pc-shadow") + frustum(X, Y, 7.2, Y - 3.2, 7.2, "pc-b") + frustum(X, Y - 3.2, 6.2, Y - 5, 5.6, "pc-b");
+      let s = `<g class="pc ${tone}" transform="translate(${f1(X)} ${f1(Y)}) scale(1.3) translate(${f1(-X)} ${f1(-Y)})">` + ell(X, Y + 1.5, 8.5, "pc-shadow") + frustum(X, Y, 7.2, Y - 3.2, 7.2, "pc-b") + frustum(X, Y - 3.2, 6.2, Y - 5, 5.6, "pc-b");
       if (kind === "pawn") {
         s += frustum(X, Y - 5, 4.8, Y - 16, 2.6, "pc-b") + frustum(X, Y - 16, 4.2, Y - 17.8, 4.2, "pc-a") + `<circle class="pc-a" cx="${f1(X)}" cy="${f1(Y - 22.6)}" r="5.4"/>`;
       } else if (kind === "rook") {
@@ -3848,70 +3861,86 @@ body { margin: 0; background: var(--studio); color: var(--ink); font-family: var
       return s + `</g>`;
     };
 
-    // plan, in drawing units: the foundation is a podium only a margin wider than the three products on it
-    const PX = [70, 235, 400], PY = 70, PH = 50, M = 20;
-    const BASE = [PX[0] - PH - M, PY - PH - M, PX[2] + PH + M, PY + PH + M];
-    const KX = 31, KY = 15; // client half-sizes: long side along x, the two clients side by side across the strip
-    const Z = { base: 0, product: 122, client: 214, user: 284 };
-    const T = { base: 20, product: 10, client: 14 };
-    const cliC = (k) => [PX[k.product] - 6, PY + k.side * 21];
-    const USERS = [-24, 0, 24]; // along x, on the client's long side, back to front
-    // what each product overrides for itself: a small part in its back corner, a different one each time
-    const extra = (p, on) => {
-      const x = PX[p] + 38, y = PY;
-      if (p === 0) return box(x - 7, y - 30, x + 7, y - 16, Z.product + 13, 13, `o-prod o-ex${on ? " is-on" : ""}`);
-      if (p === 1) return box(x - 5, y - 38, x + 5, y + 38, Z.product + 5, 5, `o-prod o-ex${on ? " is-on" : ""}`);
-      const [X, Y] = P(x, y + 26, Z.product);
-      return `<g class="o-ex o-prod${on ? " is-on" : ""}">${frustum(X, Y, 8, Y - 14, 8, "cyl")}</g>`;
+    // plan: a long base plate, and three products on different parts of it, each overhanging a different edge
+    const BASE = [0, 0, 360, 150];
+    const H = 46; // product half-size
+    const PRODS = [
+      { c: [36, 112], name: "A" },   // the left corner, past the left end and the front edge
+      { c: [196, 108], name: "B" },  // the middle, past the front edge
+      { c: [318, 22], name: "C" },   // the right, past the back edge and the right end
+    ];
+    const CLIENTS = [
+      { id: "courier", name: "Courier", colour: "#f2c94c", product: 0, side: 1 },
+      { id: "grocer", name: "Grocer", colour: "#3a9a4a", product: 0, side: -1 },
+      { id: "bank", name: "Bank", colour: "#3651b0", product: 1, side: 1 },
+      { id: "florist", name: "Florist", colour: "#e85d9a", product: 1, side: -1 },
+      { id: "bakery", name: "Bakery", colour: "#d06a33", product: 2, side: 1 },
+      { id: "studio", name: "Studio", colour: "#8a68f5", product: 2, side: -1 },
+    ];
+    const CX = 14, CY = 28; // a client brick: 1 × 2 studs, long side along y, inside its product
+    const Z = { base: 0, product: 108, client: 196, user: 258 };
+    const T = { base: 12, product: 9, client: 17 };
+    const cliC = (k) => { const [px, py] = PRODS[k.product].c; return [px - k.side * 20, py + k.side * 0]; };
+    const USERS = [-17, 0, 17]; // along the brick's long side, back to front
+    const order = [0, 1, 2].sort((a, b) => PRODS[a].c[0] + PRODS[a].c[1] - (PRODS[b].c[0] + PRODS[b].c[1]));
+    // the part of a product past the base's edge: what it adds on its own
+    const own = ([x0, y0, x1, y1], z) => {
+      const [bx0, by0, bx1, by1] = BASE, out = [];
+      if (x0 < bx0) out.push([x0, y0, bx0, y1]); if (x1 > bx1) out.push([bx1, y0, x1, y1]);
+      const ax0 = Math.max(x0, bx0), ax1 = Math.min(x1, bx1);
+      if (y0 < by0) out.push([ax0, y0, ax1, by0]); if (y1 > by1) out.push([ax0, by1, ax1, y1]);
+      return out;
     };
+    const ownSvg = (rs, z) => rs.map((r) => `<polygon class="o-own-t" points="${quad(...r, z)}"/><polygon class="o-own" points="${quad(...r, z)}"/>`).join("");
     const draw = (c) => {
       const act = CLIENTS.find((k) => k.id === c.id);
       const aP = act ? act.product : 0;
       const host = act || CLIENTS[0];
-      const own = lchToHex({ ...hexToLch(host.colour), l: 0.62, c: 0.16, h: (hexToLch(host.colour).h + 150) % 360 });
-      let g = `<svg viewBox="0 0 860 650" role="img" aria-label="An exploded drawing. A foundation slab, the shared package; three products lifted above their seats on it; two clients lifted above each product; users above each client, three of them drawn as chess pieces. Each level overrides only what it needs.">`;
+      const hl = hexToLch(host.colour);
+      const mine = lchToHex({ ...hl, l: 0.62, c: 0.16, h: (hl.h + 150) % 360 });
+      let g = `<svg viewBox="0 0 900 570" role="img" aria-label="An exploded build. A long base plate, the shared package; three products lifted above it, each on a different part of the plate and overhanging its edge a little; two clients above each product and users above each client, inside their product. Each level overrides only what it needs.">`;
       g += `<defs><pattern id="ov-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)"><line class="hx-l" x1="0" y1="0" x2="0" y2="5"/></pattern>
         <filter id="ov-blur" x="-10%" y="-10%" width="120%" height="140%"><feGaussianBlur stdDeviation="8"/></filter></defs>`;
-      // 0 · shadow; 1 · the foundation, with a grid on its top and a hatched cut on its sides
       const [bx0, by0, bx1, by1] = BASE;
       g += `<polygon class="o-shadow" filter="url(#ov-blur)" points="${pts([P(bx0, by0, -T.base), P(bx1, by0, -T.base), P(bx1, by1, -T.base), P(bx0, by1, -T.base)].map(([x, y]) => [x + 4, y + 12]))}"/>`;
-      g += box(bx0, by0, bx1, by1, Z.base, T.base, `o-base${act ? "" : " is-on"}`, null, true);
-      for (let x = bx0 + 20; x < bx1; x += 20) g += line(P(x, by0, 0), P(x, by1, 0), "o-grid");
-      for (let y = by0 + 20; y < by1; y += 20) g += line(P(bx0, y, 0), P(bx1, y, 0), "o-grid");
-      PX.forEach((x, p) => { g += seat(x - PH, PY - PH, x + PH, PY + PH, Z.base, p === aP); });
+      // 1 · the base plate and its studs; the products' seats, which run past its edges
+      g += box(bx0, by0, bx1, by1, Z.base, T.base, `o-base${act ? "" : " is-on"}`);
+      g += studs(bx0, by0, bx1, by1, Z.base, 30, 5.6, 3, "on-base");
+      order.forEach((p) => { const [x, y] = PRODS[p].c; g += seat(x - H, y - H, x + H, y + H, Z.base, p === aP); });
       // back to front, one product at a time
-      PX.forEach((x, p) => {
-        const on = p === aP;
-        g += guides(x - PH, PY - PH, x + PH, PY + PH, Z.product - T.product, Z.base, on);
-        g += box(x - PH, PY - PH, x + PH, PY + PH, Z.product, T.product, `o-prod${on ? " is-on" : ""}`);
-        g += extra(p, on);
-        const ks = CLIENTS.filter((k) => k.product === p);
-        ks.forEach((k) => { const [cx, cy] = cliC(k); g += seat(cx - KX, cy - KY, cx + KX, cy + KY, Z.product, k === act); });
+      order.forEach((p) => {
+        const [x, y] = PRODS[p].c, on = p === aP, R = [x - H, y - H, x + H, y + H];
+        g += guides(...R, Z.product - T.product, Z.base, on);
+        g += box(...R, Z.product, T.product, `o-prod${on ? " is-on" : ""}`);
+        const ownR = own(R, Z.product);
+        g += ownSvg(ownR, Z.product);
+        const ks = CLIENTS.filter((k) => k.product === p).sort((a, b) => cliC(a)[0] + cliC(a)[1] - (cliC(b)[0] + cliC(b)[1]));
+        ks.forEach((k) => { const [cx, cy] = cliC(k); g += seat(cx - CX, cy - CY, cx + CX, cy + CY, Z.product, k === act); });
+        g += studs(...R, Z.product, 30.7, 5, 2.6, "on-prod");
         ks.forEach((k) => {
           const [cx, cy] = cliC(k), kon = k === act;
-          g += guides(cx - KX, cy - KY, cx + KX, cy + KY, Z.client - T.client, Z.product, kon, k.colour);
-          g += box(cx - KX, cy - KY, cx + KX, cy + KY, Z.client, T.client, `o-cli${kon ? " is-on" : ""}`, k.colour);
+          g += guides(cx - CX, cy - CY, cx + CX, cy + CY, Z.client - T.client, Z.product, kon, k.colour);
+          g += box(cx - CX, cy - CY, cx + CX, cy + CY, Z.client, T.client, `o-cli${kon ? " is-on" : ""}`, k.colour);
+          [-1, 1].forEach((d) => { g += stud(cx, cy + d * 14, Z.client, 5, 3, "on-cli"); });
           if (k === host) {
-            // three users as pieces: the brand as set (pawn), dark mode (rook), a colour of their own (bishop)
             const kinds = [["bishop", "is-own"], ["rook", "is-dark"], ["pawn", "is-brand"]];
             USERS.forEach((dy, i) => {
-              const ux = cx + dy, uy = cy;
-              g += line(P(ux, uy, Z.client), P(ux, uy, Z.user), `guide${kon ? " is-on" : ""}`, kon ? `stroke:${k.colour}` : "");
-              g += `<g style="--brand:${k.colour};--own:${own}">${piece(kinds[i][0], ux, uy, Z.user, kinds[i][1])}</g>`;
+              g += line(P(cx, cy + dy, Z.client + 3), P(cx, cy + dy, Z.user), `guide${kon ? " is-on" : ""}`, kon ? `stroke:${k.colour}` : "");
+              g += `<g style="--brand:${k.colour};--own:${mine}">${piece(kinds[i][0], cx, cy + dy, Z.user, kinds[i][1])}</g>`;
             });
           } else {
-            USERS.forEach((dx) => { const [X, Y] = P(cx + dx, cy, Z.user); g += ell(X, Y, 3.6, "o-dot"); });
+            USERS.forEach((dy) => { const a = P(cx, cy + dy, Z.client + 3), b = P(cx, cy + dy, Z.user - 4); g += line(a, b, "guide is-user") + stud(cx, cy + dy, Z.user - 4, 5, 4, "o-user"); });
           }
         });
       });
-      if (act) { const [x, y] = cliC(act); const [X, Y] = act.side > 0 ? P(x - KX, y + KY, Z.client - T.client / 2) : P(x - KX, y - KY, Z.client); g += line([X - 4, Y], [X - 22, Y], "o-leader") + `<text class="o-callname" x="${f1(X - 28)}" y="${f1(Y + 5)}" text-anchor="end">${act.name}</text>`; }
-      // callouts, numbered, to a legend on the right; anchors on the front product's stack
-      const LX = 636, k5 = cliC(CLIENTS[5]);
+      if (act) { const [x, y] = cliC(act); const [X, Y] = P(x, y, Z.user + 60); g += `<text class="o-callname" x="${f1(X)}" y="${f1(Y)}" text-anchor="middle">${act.name}</text>`; }
+      // callouts, numbered, to a legend on the right; anchored on the right-hand product
+      const LX = 672, kR = cliC(CLIENTS[5]), [pcx, pcy] = PRODS[2].c;
       const rows = [
-        [4, "Users", "+ their own look", (() => { const [X, Y] = P(k5[0] + 24, k5[1], Z.user); return [X + 6, Y]; })()],
-        [3, "Clients", "+ colour, font, button shape", P(k5[0] + KX, k5[1] - KY, Z.client - T.client / 2)],
-        [2, "Products", "+ only what each needs", P(PX[2] + PH, PY - PH, Z.product - T.product / 2)],
-        [1, "Shared package", "sets every token", P(bx1, by0, -T.base / 2)],
+        [4, "Users", "+ their own look", (() => { const [X, Y] = P(kR[0], kR[1] - 17, Z.user); return [X + 8, Y - 2]; })()],
+        [3, "Clients", "+ colour, font, button shape", P(kR[0] + CX, kR[1] - CY, Z.client - T.client / 2)],
+        [2, "Products", "+ their own parts, hatched", P(pcx + H, pcy - H, Z.product - T.product / 2)],
+        [1, "Shared package", "sets every token", P(bx1, by0 + 30, -T.base / 2)],
       ];
       rows.forEach(([n, t, s2, [ax, ay]]) => {
         g += line([ax + 4, ay], [LX - 22, ay], "o-leader") + `<circle class="o-tick" cx="${f1(ax + 4)}" cy="${f1(ay)}" r="2.2"/>`;
