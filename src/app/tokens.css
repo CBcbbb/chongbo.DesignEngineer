@@ -131,3 +131,18 @@
   --accent-tint: #282624;
   color-scheme: dark;
 }
+
+/*
+ * One card height for every case-file card, on its case page and printed on a home-page sheet (tablets and up, when
+ * the window is tall enough). It is the screen less the sheet's frame (the results title above the sheet, the sheet's
+ * top line and its "Read it in context" foot), so a printed sheet fits one screen and the card on it is the very card
+ * on the case page. Cards sized to their content must not be taller than this: tests/e2e/cards.spec.ts checks every
+ * card at laptop sizes. The case files' tighter type for short windows applies up to 968px high, the height at which
+ * the tallest card in its roomier type still fits.
+ */
+@media (min-width: 761px) and (min-height: 620px) {
+  :root {
+    --card-frame: 116px;
+    --card-h: min(calc(100svh - var(--card-frame)), 58rem);
+  }
+}

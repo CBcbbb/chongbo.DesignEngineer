@@ -217,6 +217,10 @@ export function PrintedToOrder({ cards, media, whole = {}, labelledBy, topics = 
     if (!result || !introRef.current) return;
     introRef.current = false;
     if (stripRef.current) stripRef.current.scrollLeft = 0;
+    // The paper is back to its empty size in this same render: let the machine settle before measuring the scroll,
+    // or it settles a moment later and the results title slides up past the top of the screen.
+    const paper = paperRef.current;
+    if (paper) stageRef.current?.style.setProperty("--pm", `${paper.offsetHeight}px`);
     titleRef.current?.focus({ preventScroll: true });
     resultsRef.current?.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
   }, [result]);

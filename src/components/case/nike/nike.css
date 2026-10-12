@@ -1764,7 +1764,7 @@
  */
 @media (min-width: 761px) and (min-height: 620px) {
   .nk {
-    --nk-card-h: min(calc(100svh - 3rem), 58rem);
+    --nk-card-h: var(--card-h);
   }
   .nk-sheet.is-card {
     height: var(--nk-card-h);
@@ -2057,7 +2057,7 @@
   }
 }
 /* short windows: tighter text so the evidence keeps its space */
-@media (min-width: 761px) and (min-height: 620px) and (max-height: 800px) {
+@media (min-width: 761px) and (min-height: 620px) and (max-height: 968px) {
   .nk-sheet.is-card {
     font-size: 0.9375rem;
     line-height: 1.55;
@@ -2068,11 +2068,6 @@
   .nk-body {
     gap: 0.6rem;
     padding-top: 1.35rem;
-  }
-}
-@media (min-width: 761px) and (max-width: 1000px) and (min-height: 620px) {
-  .nk {
-    --nk-card-h: min(calc(100svh - 7rem), 58rem);
   }
 }
 
@@ -2204,14 +2199,11 @@
 }
 
 /* ---------- printed on the home page ----------
- * A card printed on its own sheet (src/app/printer.css): the sheet is its paper and gives it its height. */
+ * A card printed on its own sheet (src/app/printer.css): the sheet is its paper; the card keeps its own height (--card-h). */
 .nk-print .nk-sheet.is-card {
-  border: 0;
+  /* the edge is kept, unseen, so the card inside is exactly as wide as on its case page */
+  border-color: transparent;
   border-radius: 0;
   scroll-margin-top: 0;
 }
-@media (min-width: 761px) and (min-height: 620px) {
-  .nk.nk-print {
-    --nk-card-h: var(--cf-card-h);
-  }
-}
+

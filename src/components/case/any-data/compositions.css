@@ -319,7 +319,7 @@
 
 /* short windows: the poster and the schematic step their type down so each card stays near one screen */
 @container ad-sheets (min-width: 640px) {
-  @media (max-height: 800px) {
+  @media (max-height: 968px) {
     [data-palette="components-for-any-data"] [data-card="shapes"] .cf-h3 {
       font-size: clamp(2rem, 3.8vw, 2.75rem);
     }

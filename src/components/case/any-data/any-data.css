@@ -1016,7 +1016,7 @@
 }
 
 /* ---------- one card, one screen (playbook §7): tighter on wide-but-short windows ---------- */
-@media (min-width: 761px) and (max-height: 800px) {
+@media (min-width: 761px) and (max-height: 968px) {
   .ad-pipe {
     gap: 8px;
   }
@@ -1049,7 +1049,7 @@
   }
 }
 
-@media (min-width: 761px) and (max-height: 800px) {
+@media (min-width: 761px) and (max-height: 968px) {
   .ad-select select {
     min-height: 38px;
   }

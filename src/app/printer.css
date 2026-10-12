@@ -635,23 +635,62 @@
   border-radius: 6px;
 }
 @media (min-width: 900px) {
+  /* After a print the results title sits at the top of the screen with the sheet under it, and the whole sheet fits:
+     the title row, the sheet's top line and its foot are the frame (--card-frame, tokens.css) and the card below the
+     line is the case-file card at the height it has on its case page (--card-h). */
+  .results {
+    --rhead-h: 40px;
+    --sheet-band: 28px;
+    margin-top: var(--s6);
+    padding-top: 0;
+    /* 8px from the top of the screen: the page's own scroll padding (24px, globals.css) less 16px */
+    scroll-margin-top: -16px;
+  }
+  .rhead {
+    flex-wrap: nowrap;
+    align-items: baseline;
+    gap: 16px;
+    height: var(--rhead-h);
+    margin-bottom: 8px;
+  }
+  .rhead > div {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    min-width: 0;
+  }
+  .rhead h2 {
+    flex: none;
+    white-space: nowrap;
+  }
+  /* the brief, quoted on one line beside the title */
+  .rhead > div p {
+    margin: 0;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .rhead .provenance {
+    flex: none;
+    flex-basis: auto;
+    white-space: nowrap;
+  }
+
   /* The strip runs edge to edge of the screen, so the next sheet is cut by the screen itself, never by an invisible
      line inside the page. The first sheet lines up with the title above it. */
   .sheets {
     /* from the screen edge to the page's content: what is left over once the shell is centred, plus its gutter */
     --edge: calc(max((100vw - var(--wrap-max)) / 2, 0px) + var(--gutter));
-    /* a printed card is the case-file card at its own size: the same width (836px on the case page) and the same
-       height (--cf-card-h, as case-file.css sets it), with the sheet's margin around it. A shorter card keeps its own
-       height and sits at the top; the sheet stays the same size either way. */
+    /* a printed card is the case-file card at its own size: 836px wide, as on the case page from 1180px up, and
+       --card-h tall. A card shorter than that sits at the top of its sheet with paper below it. */
     --card-w: 836px;
-    --sheet-pad: 18px;
-    /* the sheet's own chrome: the line above the card and the foot below it */
-    --sheet-chrome: 124px;
-    /* the whole sheet fits one screen under the results title; the card gets what is left inside it */
-    --sheet-h: clamp(560px, calc(100svh - 130px), 900px);
-    --cf-card-h: calc(var(--sheet-h) - var(--sheet-chrome));
+    --sheet-pad: 14px;
+    --sheet-card-h: var(--card-h, 560px);
+    --sheet-h: calc(var(--sheet-card-h) + 2 * var(--sheet-band));
     --sheet-w: min(calc(var(--card-w) + 2 * var(--sheet-pad)), 100%);
     display: flex;
+    align-items: flex-start;
     gap: var(--s5);
     max-width: none;
     width: 100vw;
@@ -659,13 +698,13 @@
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scroll-padding-inline: var(--edge);
-    padding: var(--s3) 0 var(--s6) var(--edge);
+    padding: 0 0 var(--s6) var(--edge);
     scrollbar-width: none;
   }
   .sheets::-webkit-scrollbar {
     display: none;
   }
-  /* one screen per sheet: a fixed height, the evidence scaled to whatever room the words leave */
+  /* one screen per sheet: the line, the card, the foot */
   .sheets .sheet {
     flex: 0 0 var(--sheet-w);
     height: var(--sheet-h);
@@ -679,8 +718,7 @@
     display: flex;
     flex-direction: column;
   }
-  .sheets .s-media,
-  .sheets .s-card {
+  .sheets .s-media {
     flex: 1;
     min-height: 0;
     margin-top: var(--s4);
@@ -688,39 +726,34 @@
   }
   .sheets .s-card {
     flex: none;
-    height: var(--cf-card-h);
-    margin-top: 0;
+    height: var(--sheet-card-h);
+    margin: 0;
   }
-  /* the case file sets its own card height on .cf; on a sheet the sheet decides */
-  .sheets .cf.cf-print {
-    --cf-card-h: calc(var(--sheet-h) - var(--sheet-chrome));
-  }
-
   .sheets .sheet.has-card {
-    padding: var(--sheet-pad);
+    padding: 0 var(--sheet-pad);
   }
-  .sheets .sheet.has-card .s-top {
-    margin-bottom: var(--s3);
-  }
+  /* the line and the foot are printed in the paper's margin above and below the card */
+  .sheets .sheet.has-card .s-top,
   .sheets .sheet.has-card .s-foot {
-    margin-top: auto;
-    padding-top: var(--s2);
+    flex: none;
+    height: var(--sheet-band);
+    margin: 0;
+    padding: 0 4px;
     border-top: 0;
+    align-items: center;
   }
   .sheets .fit {
     height: 100%;
   }
   .sheets .s-foot {
     flex: none;
+    margin-top: auto;
+    padding-top: var(--s4);
   }
   /* room after the last sheet, so it too can come to the front */
   .sheets::after {
     content: "";
     flex: 0 0 calc(100% - var(--sheet-w));
-  }
-  .sheets .s-foot {
-    margin-top: auto;
-    padding-top: var(--s4);
   }
   /* on a sheet this wide the claim sits above the reasoning */
   .sheets .s-head {
@@ -837,7 +870,8 @@
   margin-top: 0;
 }
 .cf-print .cf-sheet.is-card {
-  border: 0;
+  /* the edge is kept, unseen, so the card inside is exactly as wide as on its case page */
+  border-color: transparent;
   border-radius: 0;
   scroll-margin-top: 0;
 }
