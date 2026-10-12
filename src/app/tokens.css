@@ -73,6 +73,22 @@
   --dark-inset: #23211f;
   --accent-on-dark: #f2f0ec;
 
+  /* the projector (home page). The light room follows the theme; the dark room, the slides and the light do not. */
+  --room: #f3efe8;
+  --fault: #a11f18;
+  --dark-room: #0f0e0d;
+  --on-dark-room: #f1ece3;
+  --on-dark-room-2: #aaa397;
+  --dark-room-line: #4a453e;
+  --slide: #f4ecde;
+  --slide-ink: #1c1b19;
+  --slide-body: #36322c;
+  --slide-dim: #635d54;
+  --slide-line: #b9ae9c;
+  --light: #ffd9a3;
+  --light-hot: #f07a2b;
+  --lamp-fault: #ff6b5e;
+
   --sans: var(--font-geist-sans), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: var(--font-geist-mono), "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
@@ -102,6 +118,8 @@
     --on-accent: #1f1e1c;
     --accent-2: #2a2826;
     --accent-tint: #282624;
+    --room: #1b1a18;
+    --fault: #ff8a7d;
     color-scheme: dark;
   }
 }
@@ -125,5 +143,16 @@
   --on-accent: #1f1e1c;
   --accent-2: #2a2826;
   --accent-tint: #282624;
+  --room: #1b1a18;
+  --fault: #ff8a7d;
+  color-scheme: dark;
+}
+
+/* The dark room: while the projector projects, the whole page (header and footer too) reads as one dark room. */
+:root[data-room="dark"] {
+  --ink: #f1ece3;
+  --ink-2: #aaa397;
+  --rule: #2c2925;
+  --focus: #f1ece3;
   color-scheme: dark;
 }

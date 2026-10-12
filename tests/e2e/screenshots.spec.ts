@@ -6,11 +6,14 @@ const SIZES = [
   { name: "390", width: 390, height: 844 },
 ];
 
-async function printAccessibility(page: Page) {
-  await page.getByRole("button", { name: "Accessibility", exact: true }).click();
-  await page.getByRole("button", { name: "Print" }).click();
+async function projectAccessibility(page: Page) {
+  await page
+    .getByRole("button", { name: "What matters most to us is accessibility.", exact: true })
+    .click({ position: { x: 48, y: 16 } });
+  await page.waitForTimeout(1200); // the card flies into the magazine
+  await page.getByRole("button", { name: "Project", exact: true }).click();
   await page.locator("#r-title").waitFor({ timeout: 10_000 });
-  await page.waitForTimeout(1200); // let the sheets deal
+  await page.waitForTimeout(1200); // the room goes dark and the slide comes on
 }
 
 for (const s of SIZES) {
@@ -19,9 +22,9 @@ for (const s of SIZES) {
     await page.goto("/");
     await page.waitForTimeout(600);
     await page.screenshot({ path: `${OUT}/home-idle-${s.name}.png`, fullPage: true });
-    await printAccessibility(page);
+    await projectAccessibility(page);
     await page.screenshot({ path: `${OUT}/home-accessibility-${s.name}.png`, fullPage: true });
-    await page.locator(".results").screenshot({ path: `${OUT}/sheets-${s.name}.png` });
+    await page.locator(".pj-wall").screenshot({ path: `${OUT}/slides-${s.name}.png` });
     await page.goto("/work/hhcd-data-platform#dual-view");
     await page.waitForTimeout(500);
     await page.screenshot({ path: `${OUT}/case-rail-${s.name}.png` });
@@ -31,11 +34,11 @@ for (const s of SIZES) {
   });
 }
 
-test("dark mode home after printing", async ({ browser }) => {
+test("dark mode home after projecting", async ({ browser }) => {
   const context = await browser.newContext({ colorScheme: "dark", viewport: { width: 1440, height: 1000 } });
   const page = await context.newPage();
   await page.goto("/");
-  await printAccessibility(page);
+  await projectAccessibility(page);
   await page.screenshot({ path: `${OUT}/home-accessibility-dark-1440.png`, fullPage: true });
   await context.close();
 });

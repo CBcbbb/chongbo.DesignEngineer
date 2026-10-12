@@ -3,7 +3,7 @@ import { projects, SIGNALS } from "@content";
 import { fallbackAnswer } from "@/lib/ask/fallback";
 import { AskRequestSchema } from "@/lib/ask/schema";
 import { shownTopics } from "@/lib/cards";
-import { missingLine, quoteBrief, resultTitle, TOPICS, topicsToSignals } from "@/lib/printed";
+import { missingLine, provenanceLine, quoteBrief, resultTitle, TOPICS, topicsToSignals } from "@/lib/printed";
 
 describe("skills cards", () => {
   it("has the eight approved cards in order", () => {
@@ -68,5 +68,11 @@ describe("wording", () => {
     expect(missingLine(["A/B testing", "Swift"])).toBe("No work to show yet for A/B testing, Swift.");
     expect(quoteBrief("  hi ")).toBe("“hi”");
     expect(quoteBrief("x".repeat(100))).toBe(`“${"x".repeat(90)}…”`);
+  });
+
+  it("says who chose the slides", () => {
+    expect(provenanceLine("model", 3)).toBe("Chosen by Claude from my case files, one section per project. The words are mine.");
+    expect(provenanceLine("fallback", 1)).toBe("Matched by keyword from my case files.");
+    expect(provenanceLine("model", 0)).toBe("");
   });
 });

@@ -59,8 +59,8 @@
   list-style: none;
 }
 
-/* ---------- shell links: a word and a small icon that acts on hover (src/components/nav/Pill.tsx) ---------- */
-.pill {
+/* ---------- the header's links: a word and a small drawn icon that acts on hover (src/components/nav/NavLink.tsx) ---------- */
+.navlink {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -74,52 +74,39 @@
   border-radius: 6px;
   transition: color 0.15s;
 }
-.pill:hover,
-.pill[aria-current="page"] {
+.navlink:hover,
+.navlink[aria-current="page"] {
   color: var(--ink);
 }
-.pill[aria-current="page"]::after {
+.navlink[aria-current="page"]::after {
   content: "";
   position: absolute;
-  left: var(--s2);
+  left: calc(var(--s2) + 28px);
   right: var(--s2);
   bottom: 9px;
   height: 1.5px;
-  background: var(--ink);
+  background: currentColor;
 }
-.pill-ico {
+.navlink-ico {
   flex: none;
   width: 20px;
   height: 20px;
   overflow: visible;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.8;
+  stroke-width: 1.7;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-.pill-ico .ico-pupil {
+.navlink-ico .ico-pupil {
   fill: currentColor;
   stroke: none;
-}
-.pill-ico .ico-hammer {
-  transform-origin: 5px 19px;
-}
-.pill-ico-line {
-  display: none;
-}
-.pill-label {
-  display: inline-flex;
-}
-.pill-letter,
-.pill-space {
-  display: inline-block;
 }
 @media (max-width: 420px) {
   .who span {
     display: none;
   }
-  .pill {
+  .navlink {
     padding: 0 6px;
     font-size: 13px;
   }

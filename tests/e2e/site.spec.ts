@@ -12,10 +12,18 @@ async function axe(page: Page) {
   expect(summary, summary.join("\n")).toEqual([]);
 }
 
-async function printAccessibility(page: Page) {
-  await page.getByRole("button", { name: "Accessibility", exact: true }).click();
-  await page.getByRole("button", { name: "Print" }).click();
-  await expect(page.locator("#r-title")).toBeVisible({ timeout: 10_000 });
+const A11Y = "What matters most to us is accessibility.";
+
+/** Cards overlap in the hand, so click the strip that shows, as a person would. */
+async function pickCard(page: Page, question: string) {
+  await page.getByRole("button", { name: question, exact: true }).click({ position: { x: 48, y: 16 } });
+}
+
+async function projectCard(page: Page, question = A11Y) {
+  await pickCard(page, question);
+  await page.getByRole("button", { name: "Project", exact: true }).click();
+  // Focus moves to the answer once the slide is lit.
+  await expect(page.locator("#r-title")).toBeFocused({ timeout: 10_000 });
 }
 
 test.describe("accessibility", () => {
@@ -28,45 +36,66 @@ test.describe("accessibility", () => {
     });
   }
 
-  test("axe after printing (Accessibility card)", async ({ page }) => {
+  test("axe in the dark room, after projecting", async ({ page }) => {
     await page.goto("/");
-    await printAccessibility(page);
-    await page.waitForTimeout(900);
+    await projectCard(page);
+    await page.waitForTimeout(300);
     await axe(page);
   });
 });
 
-test.describe("printing", () => {
-  test("a skills card prints one sheet per project, focuses and announces the title", async ({ page }) => {
+test.describe("the projector", () => {
+  test("a card goes in, the work is projected one slide per project, the answer is focused and announced", async ({ page }) => {
     await page.goto("/");
-    const card = page.getByRole("button", { name: "Accessibility", exact: true });
-    await card.click();
+    const card = page.getByRole("button", { name: A11Y, exact: true });
+    await pickCard(page, A11Y);
     await expect(card).toHaveAttribute("aria-pressed", "true");
-    await expect(page.getByRole("button", { name: "Remove Accessibility" })).toBeVisible();
-    await page.getByRole("button", { name: "Print" }).click();
+    await expect(page.locator(".pj-machine")).toHaveAttribute("data-lamp", "ready");
+    await page.getByRole("button", { name: "Project", exact: true }).click();
     const title = page.locator("#r-title");
-    await expect(title).toHaveText("Accessibility", { timeout: 10_000 });
+    await expect(title).toHaveText("Two projects show accessibility.", { timeout: 10_000 });
     await expect(title).toBeFocused();
-    await expect(page.getByRole("status")).toHaveText(await title.innerText());
-    await expect(page.locator(".sheets .sheet").first()).toContainText("A table view beside the network");
-    await expect(page.locator(".sheets .sheet").first().locator(".full")).toHaveAttribute("href", "/work/hhcd-data-platform#dual-view");
-    // The cards reset after printing.
-    await expect(card).toHaveAttribute("aria-pressed", "false");
-    await page.getByRole("button", { name: "New request" }).click();
+    await expect(page.getByRole("status")).toContainText("Two projects show accessibility.");
+    await expect(page.locator("html")).toHaveAttribute("data-room", "dark");
+    const slide = page.locator(".pj-slide[data-current]");
+    await expect(slide).toHaveCount(1);
+    await expect(slide).toContainText("Accessibility – keyboard navigation");
+    await expect(slide.locator(".pj-full")).toHaveAttribute("href", "/work/hhcd-data-platform#keyboard");
+    await expect(page.locator(".pj-quote")).toContainText(A11Y);
+    // The slides that aren't lit are out of reach.
+    await expect(page.locator(".pj-slide:not([data-current])").first()).toHaveAttribute("aria-hidden", "true");
+    // Change the card: the lights come up and the card comes back to the hand.
+    await page.getByRole("button", { name: "Change the card" }).click();
     await expect(page.locator("#r-title")).toHaveCount(0);
-    await expect(page.locator("#brief")).toBeFocused();
+    await expect(page.locator("html")).not.toHaveAttribute("data-room", "dark");
+    await expect(card).toBeFocused({ timeout: 5_000 });
+    await expect(card).toHaveAttribute("aria-pressed", "false");
   });
 
-  test("sends the cards as signal keys the API accepts", async ({ page }) => {
+  test("sends the card's text as the brief, and nothing else", async ({ page }) => {
     await page.goto("/");
     const req = page.waitForRequest("**/api/ask");
-    await page.getByRole("button", { name: "Design systems", exact: true }).click();
-    await page.getByRole("button", { name: "Print" }).click();
-    expect((await req).postDataJSON()).toEqual({ brief: "", topics: ["design-systems", "cross-platform"] });
-    await expect(page.locator("#r-title")).toHaveText("Design systems", { timeout: 10_000 });
+    await projectCard(page, "Have you built a design system?");
+    expect((await req).postDataJSON()).toEqual({ brief: "Have you built a design system?" });
   });
 
-  test("keyboard only: type on the paper, Enter, results title focused, Tab reaches the first sheet's link", async ({ page }) => {
+  test("one card at a time: loading another puts the first back in the hand", async ({ page }) => {
+    await page.goto("/");
+    const first = page.getByRole("button", { name: A11Y, exact: true });
+    const second = page.getByRole("button", { name: "Show me brand or marketing work.", exact: true });
+    await pickCard(page, A11Y);
+    await expect(first).toHaveAttribute("aria-pressed", "true");
+    await page.waitForTimeout(1200); // the card lands
+    await pickCard(page, "Show me brand or marketing work.");
+    await expect(second).toHaveAttribute("aria-pressed", "true");
+    await expect(first).toHaveAttribute("aria-pressed", "false");
+    await expect(page.locator(".pj-slotcard")).toContainText("Show me brand or marketing work.", { timeout: 5_000 });
+    // Writing on the blank card takes the printed one out.
+    await page.fill("#brief", "motion");
+    await expect(second).toHaveAttribute("aria-pressed", "false");
+  });
+
+  test("keyboard only: write on the blank card, Enter, the answer is focused, Tab reaches the slide's link", async ({ page }) => {
     await page.goto("/");
     for (let i = 0; i < 20; i++) {
       await page.keyboard.press("Tab");
@@ -78,12 +107,8 @@ test.describe("printing", () => {
     await expect(page.locator("#brief")).toHaveValue(/mobile\n$/);
     await page.keyboard.press("Enter");
     await expect(page.locator("#r-title")).toBeFocused({ timeout: 10_000 });
-    await expect(page.locator("#r-title")).toHaveText(/Design systems/);
-    // Tab reaches the strip of sheets, then the first sheet's link.
     await page.keyboard.press("Tab");
-    await expect(page.locator(".sheets")).toBeFocused();
-    await page.keyboard.press("Tab");
-    await expect(page.locator(":focus")).toHaveText(/Read it in context/);
+    await expect(page.locator(":focus")).toHaveText(/Full project/);
     const href = await page.locator(":focus").getAttribute("href");
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(new RegExp(`${href!.replace(/[#/]/g, "\\$&")}$`));
@@ -91,34 +116,57 @@ test.describe("printing", () => {
     await expect(page.locator('a[aria-current="step"]')).toHaveCount(1);
   });
 
-  test("Escape clears the paper; Print with nothing focuses the paper", async ({ page }) => {
+  test("arrow keys move along the slides; Escape brings the lights up", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("button", { name: "Print" }).click();
+    await projectCard(page, "Show me something you built end to end.");
+    await expect(page.locator(".pj-count")).toHaveText("01 / 04");
+    await page.keyboard.press("ArrowRight");
+    await expect(page.locator(".pj-count")).toHaveText("02 / 04");
+    await expect(page.getByRole("status")).toContainText("Slide 2 of 4");
+    await page.waitForTimeout(500);
+    await page.keyboard.press("ArrowLeft");
+    await expect(page.locator(".pj-count")).toHaveText("01 / 04");
+    await page.waitForTimeout(500);
+    await page.keyboard.press("Escape");
+    await expect(page.locator("#r-title")).toHaveCount(0);
+  });
+
+  test("Escape clears the blank card; Project with no card focuses it", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Project", exact: true }).click();
     await expect(page.locator("#brief")).toBeFocused();
     await page.keyboard.type("motion");
     await page.keyboard.press("Escape");
     await expect(page.locator("#brief")).toHaveValue("");
+    await expect(page.locator("#r-title")).toHaveCount(0);
   });
 
-  test("every sheet is readable in full, with its evidence and a link to the case file", async ({ page }) => {
+  test("every slide is readable in full, with a link to its place in the case file", async ({ page }) => {
     await page.goto("/");
-    await printAccessibility(page);
-    const sheets = page.locator(".sheets .sheet");
-    expect(await sheets.count()).toBeGreaterThan(0);
-    for (const sheet of await sheets.all()) {
-      await expect(sheet.locator(".sheet-title")).toBeVisible();
-      await expect(sheet.locator(".full")).toHaveAttribute("href", /^\/work\/[a-z-]+#[a-z-]+$/);
+    await projectCard(page, "Show me something you built end to end.");
+    const n = await page.locator(".pj-slide").count();
+    expect(n).toBeGreaterThan(1);
+    for (let i = 0; i < n; i++) {
+      const slide = page.locator(".pj-slide[data-current]");
+      await expect(slide.locator(".pj-slide-title")).toBeVisible();
+      await expect(slide.locator(".pj-full")).toHaveAttribute("href", /^\/work\/[a-z-]+#[a-z-]+$/);
+      if (i < n - 1) {
+        await page.getByRole("button", { name: "Next slide" }).click();
+        await expect(page.locator(".pj-count")).toHaveText(new RegExp(`^0${i + 2} /`));
+        await page.waitForTimeout(450);
+      }
     }
+    await expect(page.getByRole("button", { name: "Next slide" })).toBeDisabled();
   });
 
   test("missing capabilities are named", async ({ page }) => {
     await page.goto("/");
     await page.fill("#brief", "We need native iOS apps in Swift with an accessible design system");
     await page.press("#brief", "Enter");
-    await expect(page.locator(".missing")).toHaveText(/^No work to show yet for .*Swift/, { timeout: 10_000 });
+    await expect(page.locator(".pj-missing")).toHaveText(/^No work to show yet for .*Swift/, { timeout: 10_000 });
   });
 
-  test("rate limited: the reason is printed as the title", async ({ page }) => {
+  test("rate limited: the machine says so, and the room stays light", async ({ page }) => {
     await page.route("**/api/ask", (route) =>
       route.fulfill({
         status: 429,
@@ -129,11 +177,13 @@ test.describe("printing", () => {
     await page.goto("/");
     await page.fill("#brief", "accessibility");
     await page.press("#brief", "Enter");
-    await expect(page.locator("#r-title")).toContainText("cool down", { timeout: 10_000 });
-    await expect(page.getByRole("status")).toContainText("cool down");
+    await expect(page.getByRole("status")).toContainText("cool down", { timeout: 10_000 });
+    await expect(page.locator(".pj-status")).toContainText("cool down");
+    await expect(page.locator(".pj-machine")).toHaveAttribute("data-lamp", "fault");
+    await expect(page.locator("#r-title")).toHaveCount(0);
   });
 
-  test("reduced motion: the result appears without the print animation", async ({ browser }) => {
+  test("reduced motion: the answer is projected at once; the room still goes dark", async ({ browser }) => {
     const context = await browser.newContext({ reducedMotion: "reduce" });
     const page = await context.newPage();
     await page.goto("/");
@@ -142,23 +192,28 @@ test.describe("printing", () => {
     await page.press("#brief", "Enter");
     await expect(page.locator("#r-title")).toBeVisible({ timeout: 5_000 });
     expect(Date.now() - t0).toBeLessThan(1_500);
-    const animation = await page.locator(".sheets .sheet").first().evaluate((el) => getComputedStyle(el).animationName);
-    expect(animation).toBe("none");
+    await expect(page.locator("html")).toHaveAttribute("data-room", "dark");
+    const animations = await page.evaluate(() => document.getAnimations().filter((a) => a.playState === "running").length);
+    expect(animations).toBe(0);
     await context.close();
   });
 });
 
 test.describe("without JavaScript", () => {
-  test("the paper form GETs /ask and prints the sheets as a list", async ({ browser }) => {
+  test("a card, or the blank one, GETs /ask and lists the slides", async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
     await page.goto("/");
     await page.fill("#brief", "accessibility");
-    await page.getByRole("button", { name: "Print" }).click();
+    await page.getByRole("button", { name: "Project", exact: true }).click();
     await expect(page).toHaveURL(/\/ask\?brief=accessibility/);
     await expect(page.locator("h1")).toHaveText(/Accessibility/);
     await expect(page.locator(".sheet-list .sheet").first()).toContainText("Accessibility – keyboard navigation");
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+    await page.goto("/");
+    await pickCard(page, "Have you built a design system?");
+    await expect(page).toHaveURL(/\/ask\?brief=Have\+you\+built\+a\+design\+system/);
+    await expect(page.locator(".sheet-list .sheet").first()).toBeVisible();
     await page.goto("/ask?topics=accessibility");
     await expect(page.locator("h1")).toHaveText("Accessibility");
     await context.close();
@@ -195,12 +250,10 @@ test.describe("layout", () => {
 
   test("interactive targets (outside running text) are at least 44px tall", async ({ page }) => {
     await page.goto("/");
-    await page.getByRole("button", { name: "Accessibility", exact: true }).click();
     const small = await page.evaluate(() =>
       [...document.querySelectorAll<HTMLElement>("main a, main button, header a, main input")]
-        // Inline links inside running text are exempt (WCAG 2.5.8), as are the chips on the paper:
-        // 28px tall (above the 24px minimum) and duplicates of the 84px skills cards.
-        .filter((el) => el.offsetParent !== null && !el.closest("p") && !el.closest(".chips"))
+        // Inline links inside running text are exempt (WCAG 2.5.8).
+        .filter((el) => el.offsetParent !== null && !el.closest("p"))
         .map((el) => ({ el: el.textContent?.trim() || el.id, h: el.getBoundingClientRect().height }))
         .filter((x) => x.h < 44),
     );

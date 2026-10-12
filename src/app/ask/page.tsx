@@ -21,7 +21,7 @@ import { missingLine, provenanceLine, quoteBrief, resultTitle, topicsToLabels } 
 
 export const metadata: Metadata = {
   title: "Your answer",
-  description: "Projects printed to order from Chongbo Ning's portfolio.",
+  description: "The parts of Chongbo Ning's work that answer your question.",
   robots: { index: false, follow: true },
   alternates: { canonical: "/ask" },
 };
@@ -57,13 +57,12 @@ export default async function AskPage({ searchParams }: Props) {
     .map((s) => index[cardKey(s.project, s.section)])
     .filter((c): c is SheetCard => Boolean(c));
   const picked = !brief.trim() ? topicsToLabels(topics) : [];
-  const title = result ? resultTitle({ asked: result.asked, startHere: result.matched === "start-here", picked }) : (error ?? "What skills are you looking for?");
+  const title = result ? resultTitle({ asked: result.asked, startHere: result.matched === "start-here", picked }) : (error ?? "Ask me anything about my work.");
 
   return (
     <div className="wrap">
       <SiteHeader />
       <main id="main" tabIndex={-1} className="pb-10">
-        <p className="eyebrow">Printed to order</p>
         {result ? (
           <section className="results" aria-labelledby="r-title">
             <div className="rhead">
@@ -73,7 +72,7 @@ export default async function AskPage({ searchParams }: Props) {
               </div>
               <p className="provenance">{provenanceLine(result.source, sheets.length)}</p>
             </div>
-            <ol className="sheet-list" aria-label="Printed sheets">
+            <ol className="sheet-list" aria-label="Slides">
               {sheets.map((c, i) => {
                 const project = getProject(c.project);
                 const at = project?.sections.findIndex((s) => s.id === c.section) ?? -1;
@@ -95,7 +94,7 @@ export default async function AskPage({ searchParams }: Props) {
             </ol>
             {result.missing.length > 0 && <p className="missing">{missingLine(result.missing)}</p>}
             <div className="again">
-              <Link href="/">New request</Link>
+              <Link href="/">Change the card</Link>
             </div>
           </section>
         ) : (
@@ -103,10 +102,10 @@ export default async function AskPage({ searchParams }: Props) {
             <h1 className="home-h1">{title}</h1>
             <form className="ask-form" action="/ask" method="get">
               <label htmlFor="brief" className="sr-only">
-                Describe the role or paste a job description.
+                Write your own question, or paste a job description.
               </label>
               <textarea id="brief" name="brief" maxLength={BRIEF_MAX} defaultValue={brief} required />
-              <button type="submit">Print</button>
+              <button type="submit">Project</button>
             </form>
           </>
         )}

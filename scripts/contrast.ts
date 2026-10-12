@@ -38,6 +38,11 @@ const LARGE = 3; // large text and UI component boundaries / focus rings
 const INSET = "#f3f3ef"; // diagrams and media placeholders
 const CODE_BG = "#1f1f1d";
 const TAG_INK = "#3a3a36"; // case-file tags (components.css)
+// The projector's rooms and slide are photographs under the tokens: check against their worst pixel (projector.css).
+const LIGHT_ROOM_LOW = "#dad3cb"; // --room under wall-light.webp at 30% multiply, darkest pixel
+const DARK_THEME_ROOM_HIGH = "#3e3a32"; // dark theme: --room under wall-dark.webp at 16% screen, brightest pixel
+const DARK_ROOM_HIGH = "#3d3830"; // --dark-room under wall-dark.webp at 20% screen, brightest pixel
+const SLIDE_LOW = "#e5dace"; // slide.webp, darkest pixel inside the panel
 
 function pairs(t: Record<string, string>, theme: string): Pair[] {
   const T = (k: string) => {
@@ -73,6 +78,34 @@ function pairs(t: Record<string, string>, theme: string): Pair[] {
     { fg: "#ecece8", bg: CODE_BG, where: `${theme}: code text`, min: TEXT },
     { fg: "#a6a6a0", bg: CODE_BG, where: `${theme}: code comments`, min: TEXT },
     { fg: "#ffb4a6", bg: CODE_BG, where: `${theme}: code properties`, min: TEXT },
+  ];
+}
+
+/** The projector (projector.css): the light room follows the theme; the dark room and the slides do not. */
+function projectorPairs(t: Record<string, string>, theme: string): Pair[] {
+  const T = (k: string) => {
+    const v = t[k];
+    if (!v) throw new Error(`Missing token --${k}`);
+    return v;
+  };
+  const roomWorst = theme === "light" ? LIGHT_ROOM_LOW : DARK_THEME_ROOM_HIGH;
+  return [
+    { fg: T("ink"), bg: T("room"), where: `${theme}: projector headline and lede`, min: TEXT },
+    { fg: T("ink-2"), bg: T("room"), where: `${theme}: lede, hand label, status line, note`, min: TEXT },
+    { fg: T("ink-2"), bg: roomWorst, where: `${theme}: secondary text on the room's texture, worst pixel`, min: TEXT },
+    { fg: T("fault"), bg: roomWorst, where: `${theme}: the machine's error line, worst pixel`, min: TEXT },
+    { fg: T("focus"), bg: T("room"), where: `${theme}: focus ring in the light room`, min: LARGE },
+    { fg: T("paper-ghost"), bg: T("paper"), where: `${theme}: the blank card's hint`, min: TEXT },
+    // the dark room, in both themes
+    { fg: T("on-dark-room"), bg: T("dark-room"), where: `${theme}: dark room heading, counter, buttons`, min: TEXT },
+    { fg: T("on-dark-room-2"), bg: DARK_ROOM_HIGH, where: `${theme}: card quote, provenance, header links in the dark room, worst pixel`, min: TEXT },
+    { fg: T("on-dark-room"), bg: DARK_ROOM_HIGH, where: `${theme}: dark room text, worst pixel`, min: TEXT },
+    { fg: T("dark-room"), bg: T("on-dark-room"), where: `${theme}: Change the card button`, min: TEXT },
+    // the slide
+    { fg: T("slide-ink"), bg: SLIDE_LOW, where: `${theme}: slide title`, min: TEXT },
+    { fg: T("slide-body"), bg: SLIDE_LOW, where: `${theme}: slide body and tags`, min: TEXT },
+    { fg: T("slide-dim"), bg: SLIDE_LOW, where: `${theme}: slide index and project`, min: TEXT },
+    { fg: T("slide"), bg: T("slide-ink"), where: `${theme}: Full project button`, min: TEXT },
   ];
 }
 
@@ -191,6 +224,8 @@ const all = [
   ...browserFrame,
   ...pairs(light, "light"),
   ...pairs(dark, "dark"),
+  ...projectorPairs(light, "light"),
+  ...projectorPairs(dark, "dark"),
   ...casePairs(light, "light"),
   ...casePairs(dark, "dark"),
   ...palettePairs(),

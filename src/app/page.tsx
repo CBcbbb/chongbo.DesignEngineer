@@ -1,17 +1,29 @@
 import type { ReactNode } from "react";
-import { profile, projects } from "@content";
-import { PrintedToOrder } from "@/components/PrintedToOrder";
+import localFont from "next/font/local";
+import { profile, projects, suggestedQuestions } from "@content";
+import { Projector } from "@/components/projector/Projector";
 import { sheetEvidence } from "@/components/SheetEvidence";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { buildCardIndex, cardKey, shownTopics } from "@/lib/cards";
+import { buildCardIndex, cardKey } from "@/lib/cards";
+import { slideHasMedia } from "@/lib/projector";
 import { SITE_URL } from "@/lib/site";
 
-/** Each section's evidence, rendered on the server and handed to the printed sheets. */
-function sheetMedia(): Record<string, ReactNode> {
+/**
+ * Instrument Serif, for the display-type review (`/?type=serif`). Not preloaded: the browser only fetches it when the
+ * serif is switched on.
+ */
+const serif = localFont({ src: "./fonts/InstrumentSerif-Regular.woff2", variable: "--font-serif", display: "swap", preload: false });
+
+/**
+ * Each section's evidence, rendered on the server and handed to the projector: the same block as on its case-file card
+ * (and on /ask). Older projects use the compact slot, which leaves out what only works in the full case file.
+ */
+function slideMedia(): Record<string, ReactNode> {
   const out: Record<string, ReactNode> = {};
   for (const p of projects)
-    for (const [i, s] of p.sections.entries()) if (s.media) out[cardKey(p.slug, s.id)] = sheetEvidence(p, s, i);
+    for (const [i, s] of p.sections.entries())
+      if (s.media && (p.template === "case-file" || slideHasMedia(s.media))) out[cardKey(p.slug, s.id)] = sheetEvidence(p, s, i);
   return out;
 }
 
@@ -32,20 +44,18 @@ export default function Home() {
   };
 
   return (
-    <div className="wrap">
+    <div className={`wrap ${serif.variable}`}>
       <SiteHeader />
       <main id="main" tabIndex={-1}>
-        <p className="eyebrow">Printed to order</p>
-        <h1 id="home-title" className="home-h1">
-          What skills are you looking for?
-        </h1>
-        <p className="home-intro">
-          <b>I&apos;m {profile.name}, a design engineer in {profile.location}.</b> Pick the skills your role needs, describe what
-          you&apos;re looking for, or paste the job description. The machine prints the parts of my work that match.
-        </p>
-        <PrintedToOrder cards={buildCardIndex()} media={sheetMedia()} labelledBy="home-title" topics={shownTopics()} />
+        <Projector
+          cards={buildCardIndex()}
+          media={slideMedia()}
+          questions={suggestedQuestions}
+          name={profile.name}
+          location={profile.location}
+        />
       </main>
-      <SiteFooter />
+      <SiteFooter note={false} />
       <script
         type="application/ld+json"
         // Static, trusted data built from content/.

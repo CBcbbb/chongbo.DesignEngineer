@@ -1,0 +1,1076 @@
+/*
+ * The projector (home page). src/components/projector/Projector.tsx
+ * The light room follows the theme; the dark room is dark in both. The machine, the cards and the slides are
+ * objects: they keep their colours in both themes. Overlays on the photograph are placed in % of it
+ * (public/projector/machine.webp, 1488 × 764).
+ */
+
+/* ---------- the room ---------- */
+.pj-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+.pj-bg i {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.9s ease;
+}
+.pj-bg-light {
+  background: var(--room);
+}
+.pj-bg-light::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url(/projector/wall-light.webp) center / cover no-repeat;
+  /* kept low enough that secondary text passes AA on its darkest pixel (scripts/contrast.ts) */
+  opacity: 0.3;
+  mix-blend-mode: multiply;
+}
+.pj-bg-dark {
+  opacity: 0;
+  background:
+    radial-gradient(55% 45% at 64% 42%, rgba(255, 196, 120, 0.09), rgba(255, 196, 120, 0) 70%),
+    var(--dark-room);
+}
+.pj-bg-dark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url(/projector/wall-dark.webp) center / cover no-repeat;
+  opacity: 0.2;
+  mix-blend-mode: screen;
+}
+.pj[data-phase="dark"] .pj-bg-dark {
+  opacity: 1;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pj-bg-light::after {
+    background-image: url(/projector/wall-dark.webp);
+    opacity: 0.16;
+    mix-blend-mode: screen;
+  }
+}
+:root[data-theme="dark"] .pj-bg-light::after {
+  background-image: url(/projector/wall-dark.webp);
+  opacity: 0.16;
+  mix-blend-mode: screen;
+}
+
+/* the header and footer dim with the room */
+.bar,
+.bar a,
+.foot {
+  transition: color 0.6s ease, border-color 0.6s ease;
+}
+
+/* ---------- layout: the light room ---------- */
+.pj {
+  --strip: 46px;
+  --cw: 372px;
+  --mw-dark: 220px;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+  grid-template-areas:
+    "intro stage"
+    "hand stage"
+    "all stage";
+  grid-template-rows: auto auto 1fr;
+  column-gap: clamp(32px, 4.5vw, 72px);
+  min-height: calc(100svh - 72px);
+  padding-block: clamp(4px, 2.5vh, 32px) clamp(24px, 4vh, 48px);
+}
+.pj-intro {
+  grid-area: intro;
+}
+.pj-h1 {
+  margin: 0;
+  max-width: 12ch;
+  font: 600 clamp(38px, 3.6vw, 50px) / 1 var(--sans);
+  letter-spacing: -0.042em;
+  text-wrap: balance;
+}
+.pj-lede {
+  margin: clamp(14px, 2vh, 20px) 0 0;
+  max-width: 38ch;
+  font-size: 16.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.pj-lede b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* ---------- the hand: index cards stacked, the blank one in front ---------- */
+.pj-hand {
+  grid-area: hand;
+  margin-top: clamp(22px, 4vh, 40px);
+}
+.pj-hand-label {
+  margin: 0 0 14px;
+  font: 500 12px/1.4 var(--mono);
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+}
+.pj-stack {
+  display: grid;
+  width: min(var(--cw), 100%);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pj-stack > li {
+  grid-area: 1 / 1;
+  margin-top: calc(var(--i) * var(--strip));
+  translate: var(--x, 0) 0;
+  rotate: var(--r, 0deg);
+}
+/* a little hand-placed unevenness */
+.pj-stack > li:nth-child(1) {
+  --x: 5px;
+  --r: -0.7deg;
+}
+.pj-stack > li:nth-child(2) {
+  --x: -3px;
+  --r: 0.45deg;
+}
+.pj-stack > li:nth-child(3) {
+  --x: 3px;
+  --r: -0.3deg;
+}
+.pj-stack > li:nth-child(4) {
+  --x: -4px;
+  --r: 0.55deg;
+}
+/* the card stays in the accessibility tree (pressed), only out of sight */
+.pj-stack > li[data-out] > * {
+  opacity: 0;
+}
+/* the empty place a card leaves in the hand */
+.pj-stack > li[data-out]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1.5px dashed var(--rule);
+  border-radius: 10px;
+  pointer-events: none;
+}
+.pj-stack > li {
+  position: relative;
+}
+
+.pj-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 900 / 499;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 3cqi;
+  background: url(/projector/card.webp) center / 100% 100% no-repeat;
+  color: var(--paper-ink);
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  container-type: inline-size;
+  filter: drop-shadow(0 1px 1px rgba(70, 52, 30, 0.16)) drop-shadow(0 10px 14px rgba(70, 52, 30, 0.13));
+  transition:
+    transform 0.35s var(--ease-out),
+    filter 0.35s var(--ease-out);
+  -webkit-tap-highlight-color: transparent;
+}
+.pj-card[hidden] {
+  display: none;
+}
+.pj-q {
+  position: absolute;
+  left: 5.2cqi;
+  right: 12cqi;
+  top: 3.3cqi;
+  overflow: hidden;
+  font: 500 4.1cqi / 1.3 var(--sans);
+  letter-spacing: -0.012em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.pj-q-typed {
+  font: 400 3.7cqi / 1.35 var(--mono);
+  letter-spacing: 0;
+}
+.pj-no {
+  position: absolute;
+  right: 5.2cqi;
+  top: 4.1cqi;
+  font: 500 2.9cqi / 1 var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--paper-dim);
+}
+
+@media (hover: hover) {
+  .pj-stack > li:not(:last-child):hover > .pj-card {
+    transform: translateY(-12px);
+    filter: drop-shadow(0 1px 1px rgba(70, 52, 30, 0.18)) drop-shadow(0 18px 20px rgba(70, 52, 30, 0.18));
+  }
+}
+.pj-stack > li:not(:last-child) > .pj-card:focus-visible {
+  transform: translateY(-12px);
+}
+.pj-card:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+.pj-card:active {
+  transform: translateY(-6px) scale(0.99);
+}
+.pj-card[aria-pressed="true"] {
+  cursor: default;
+}
+
+/* the blank card: write on it */
+.pj-blank {
+  cursor: text;
+}
+.pj-blank textarea {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 3.3cqi 12cqi 4cqi 5.2cqi;
+  border: 0;
+  border-radius: inherit;
+  resize: none;
+  outline: none;
+  background:
+    repeating-linear-gradient(
+        180deg,
+        transparent 0 calc(5.4cqi - 1px),
+        rgba(120, 98, 70, 0.17) calc(5.4cqi - 1px) 5.4cqi
+      )
+      0 calc(3.3cqi + 0.2cqi) / 100% 100% local no-repeat;
+  background-clip: content-box;
+  color: var(--paper-ink);
+  font: 400 3.7cqi / 5.4cqi var(--mono);
+  caret-color: var(--red);
+}
+.pj-blank:focus-within {
+  transform: translateY(-4px);
+}
+.pj-blank:has(textarea:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+.pj-hint {
+  position: absolute;
+  left: 5.2cqi;
+  right: 12cqi;
+  top: 3.3cqi;
+  font: 400 3.7cqi / 5.4cqi var(--mono);
+  color: var(--paper-ghost);
+  pointer-events: none;
+}
+.pj-blank.has-text .pj-hint {
+  display: none;
+}
+
+.pj-all {
+  grid-area: all;
+  align-self: end;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 24px;
+  font: 500 14px var(--sans);
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.pj-all:hover {
+  color: var(--ink);
+}
+.pj-all span {
+  display: inline-block;
+  margin-left: 6px;
+  transition: translate 0.25s var(--ease-out);
+}
+.pj-all:hover span {
+  translate: 3px 0;
+}
+
+/* ---------- the machine ---------- */
+.pj-stage {
+  grid-area: stage;
+  align-self: center;
+  justify-self: end;
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 700px;
+}
+.pj-machine {
+  position: relative;
+  aspect-ratio: 1488 / 764;
+  container-type: inline-size;
+}
+.pj-machine::before {
+  /* where it stands: a soft contact shadow */
+  content: "";
+  position: absolute;
+  left: 5%;
+  right: 3%;
+  bottom: -4.5%;
+  height: 10%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(45, 32, 18, 0.34), rgba(45, 32, 18, 0));
+  transition: opacity 0.9s;
+}
+.pj-photo {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+.pj-photo,
+.pj-mag,
+.pj-plate,
+.pj-go-label {
+  transition: filter 0.9s ease;
+}
+
+/* the magazine: a card stands in its front slot; the lip hides its lower half */
+.pj-mag {
+  position: absolute;
+  z-index: 2;
+  left: 21.24%;
+  width: 26.55%;
+  bottom: 69.76%;
+  height: 80%;
+  clip-path: inset(-200% -30% 0 -30%);
+  pointer-events: none;
+}
+.pj-slotcard {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  cursor: default;
+  transform: translateY(52%);
+  transition: transform 0.55s var(--ease-out);
+  filter: drop-shadow(0 0 0.6px rgba(60, 45, 30, 0.35));
+}
+.pj-slotcard[data-pos="gate"] {
+  transform: translateY(82%);
+}
+
+/* the engraved name plate */
+.pj-plate {
+  position: absolute;
+  z-index: 2;
+  left: 8%;
+  top: 58.9%;
+  width: 17.9%;
+  height: 12.8%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.45cqi;
+  padding-left: 1.7cqi;
+  font: 600 clamp(5px, 1.18cqi, 10px) / 1 var(--mono);
+  letter-spacing: 0.16em;
+  color: rgba(58, 56, 52, 0.6);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+}
+
+/* the indicator lamp */
+.pj-lamp {
+  position: absolute;
+  z-index: 2;
+  left: 9.34%;
+  top: 51.7%;
+  width: 2.25%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  transition:
+    background-color 0.3s,
+    box-shadow 0.3s;
+}
+.pj-machine[data-lamp="ready"] .pj-lamp {
+  background: radial-gradient(circle at 40% 35%, #d6ffd6, var(--lamp-ready) 55%, #3f9b4b);
+  box-shadow: 0 0 1.4cqi 0.45cqi rgba(111, 207, 124, 0.6);
+}
+.pj-machine[data-lamp="busy"] .pj-lamp,
+.pj-machine[data-lamp="on"] .pj-lamp {
+  background: radial-gradient(circle at 40% 35%, #fff1d6, var(--lamp-busy) 55%, #c98a2a);
+  box-shadow: 0 0 1.5cqi 0.5cqi rgba(255, 180, 80, 0.62);
+}
+.pj-machine[data-lamp="busy"] .pj-lamp {
+  animation: pj-blink 0.9s steps(2, jump-none) infinite;
+}
+.pj-machine[data-lamp="fault"] .pj-lamp {
+  background: radial-gradient(circle at 40% 35%, #ffd9d4, var(--lamp-fault) 55%, #b8332a);
+  box-shadow: 0 0 1.4cqi 0.45cqi rgba(255, 107, 94, 0.55);
+}
+@keyframes pj-blink {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* the lens: warms while it reads, lights when it projects */
+.pj-lens {
+  position: absolute;
+  z-index: 3;
+  left: 93.6%;
+  top: 59%;
+  width: 9.4%;
+  height: 24.5%;
+  translate: -50% -50%;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(closest-side, #fffaf0 0%, #ffe6bd 34%, rgba(255, 196, 120, 0.6) 66%, rgba(255, 170, 90, 0) 100%);
+  mix-blend-mode: screen;
+  transition: opacity 0.6s ease;
+}
+.pj-lens::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 200, 130, 0.45), rgba(255, 170, 90, 0));
+}
+.pj[data-phase="reading"] .pj-lens {
+  opacity: 0.32;
+}
+.pj[data-lens="on"] .pj-lens {
+  opacity: 1;
+}
+
+/* the red button */
+.pj-go {
+  position: absolute;
+  z-index: 3;
+  left: 68.75%;
+  top: 63.74%;
+  width: max(9.6%, 44px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.pj-go::after {
+  content: "";
+  position: absolute;
+  inset: 6%;
+  border-radius: 50%;
+  transition: box-shadow 0.25s;
+}
+.pj-go::before {
+  /* pressed: the cap goes in */
+  content: "";
+  position: absolute;
+  inset: 9%;
+  border-radius: 50%;
+  opacity: 0;
+  box-shadow:
+    inset 0 0.5cqi 1.2cqi rgba(40, 0, 0, 0.42),
+    inset 0 -0.2cqi 0.4cqi rgba(255, 255, 255, 0.18);
+  transition: opacity 0.08s;
+}
+.pj-go:active::before,
+.pj-go[aria-busy="true"]::before {
+  opacity: 1;
+}
+.pj-go:hover::after {
+  box-shadow:
+    0 0 0 0.35cqi rgba(201, 55, 42, 0.16),
+    0 0 2.6cqi 0.6cqi rgba(201, 55, 42, 0.3);
+}
+.pj[data-ready][data-phase="light"] .pj-go::after {
+  animation: pj-invite 1.9s ease-in-out infinite;
+}
+@keyframes pj-invite {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(201, 55, 42, 0);
+  }
+  50% {
+    box-shadow:
+      0 0 0 0.55cqi rgba(201, 55, 42, 0.2),
+      0 0 3.4cqi 1cqi rgba(201, 55, 42, 0.36);
+  }
+}
+.pj-go:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.pj-go:disabled {
+  cursor: default;
+}
+.pj-go-label {
+  position: absolute;
+  z-index: 2;
+  left: 68.75%;
+  top: 76.4%;
+  translate: -50% -50%;
+  font: 600 clamp(5px, 1.08cqi, 9px) / 1 var(--mono);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba(70, 64, 56, 0.55);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+}
+
+.pj-status {
+  min-height: 1.5em;
+  margin: clamp(22px, 3.4vh, 34px) 0 0;
+  text-align: center;
+  font: 500 12.5px / 1.5 var(--mono);
+  letter-spacing: 0.02em;
+  color: var(--ink-2);
+}
+.pj-status.is-fault {
+  color: var(--fault);
+}
+.pj-note {
+  margin: 6px auto 0;
+  max-width: 44ch;
+  text-align: center;
+  font: 400 12px / 1.5 var(--mono);
+  color: var(--ink-2);
+}
+
+/* reading: the hand rests */
+.pj[data-phase="reading"] .pj-hand,
+.pj[data-phase="reading"] .pj-intro {
+  opacity: 0.55;
+  transition: opacity 0.4s;
+}
+
+/* ---------- the dark room ---------- */
+.pj[data-phase="dark"] {
+  grid-template-columns: var(--mw-dark) minmax(0, 1fr);
+  grid-template-areas: none;
+  grid-template-rows: auto auto auto;
+  column-gap: clamp(28px, 3.4vw, 48px);
+  align-content: start;
+  padding-top: clamp(4px, 2vh, 24px);
+}
+/* the page's title stays for screen readers */
+.pj[data-phase="dark"] .pj-intro {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.pj[data-phase="dark"] .pj-hand,
+.pj[data-phase="dark"] .pj-all {
+  display: none;
+}
+.pj[data-phase="dark"] .pj-stage {
+  grid-area: auto;
+  grid-column: 1;
+  grid-row: 2;
+  align-self: end;
+  justify-self: stretch;
+  max-width: none;
+  margin-bottom: 8px;
+}
+.pj[data-phase="dark"] .pj-photo,
+.pj[data-phase="dark"] .pj-mag,
+.pj[data-phase="dark"] .pj-plate,
+.pj[data-phase="dark"] .pj-go-label {
+  filter: brightness(0.52) saturate(0.8) sepia(0.12);
+}
+.pj[data-phase="dark"] .pj-machine::before {
+  opacity: 0.5;
+}
+.pj[data-phase="dark"] .pj-status {
+  margin-top: 16px;
+  color: var(--on-dark-room-2);
+}
+.pj[data-phase="dark"] .pj-note {
+  display: none;
+}
+
+.pj-beam {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 0.8s ease;
+}
+.pj[data-lens="on"] .pj-beam {
+  opacity: 1;
+}
+
+.pj-wall {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  display: grid;
+  grid-template-rows: subgrid;
+  position: relative;
+  z-index: 2;
+  color: var(--on-dark-room);
+}
+.pj-wallhead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 24px;
+  margin-bottom: clamp(18px, 3vh, 30px);
+}
+.pj-wallhead h2 {
+  margin: 0;
+  font: 600 clamp(22px, 2.3vw, 30px) / 1.15 var(--sans);
+  letter-spacing: -0.03em;
+  color: var(--on-dark-room);
+}
+/* the heading receives focus after projecting so the answer is read first; it is not a control, so no ring */
+.pj-wallhead h2:focus,
+.pj-wallhead h2:focus-visible {
+  outline: none;
+}
+.pj-quote {
+  margin: 0;
+  max-width: 48ch;
+  font: 400 13px / 1.5 var(--mono);
+  color: var(--on-dark-room-2);
+}
+
+/* the slides: one lit at a time, all the same size */
+.pj-screen {
+  display: grid;
+  touch-action: pan-y;
+  /* room for the glow round the slide */
+  margin: 4px 0 0;
+}
+.pj-slide {
+  --bi: 110px;
+  --bo: 73px;
+  grid-area: 1 / 1;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: clamp(30px, 3.4vw, 46px) clamp(30px, 3.8vw, 52px) clamp(30px, 3.4vw, 44px);
+  border-radius: 14px;
+  background: var(--slide);
+  color: var(--slide-ink);
+}
+.pj-slide::before {
+  /* the lit panel, with its warm edge and the slide's corner rivets (public/projector/slide.webp) */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 0 solid transparent;
+  border-image: url(/projector/slide.webp) 220 fill / var(--bi) / var(--bo) stretch;
+  pointer-events: none;
+}
+.pj-slide:not([data-current]) {
+  visibility: hidden;
+}
+.pj-slide-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font: 500 12px / 1.4 var(--mono);
+  letter-spacing: 0.02em;
+  color: var(--slide-dim);
+}
+.pj-why {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+.pj-why::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--light-hot);
+  box-shadow: 0 0 6px 1px rgba(240, 122, 43, 0.45);
+}
+.pj-slide-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
+  gap: clamp(24px, 3.4vw, 48px);
+  align-items: center;
+  margin-top: clamp(16px, 2.6vh, 26px);
+}
+.pj-slide.is-text .pj-slide-main {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+.pj-slide-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+.pj-slide-title {
+  margin: 0 0 14px;
+  max-width: 20ch;
+  font: 600 clamp(24px, 2.5vw, 34px) / 1.08 var(--sans);
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+.pj-slide.is-text .pj-slide-title {
+  max-width: 24ch;
+  font-size: clamp(28px, 3.2vw, 42px);
+}
+.pj-slide-text p {
+  margin: 0;
+  max-width: 54ch;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--slide-body);
+}
+.pj-slide.is-text .pj-slide-text p {
+  max-width: 62ch;
+  font-size: 17px;
+}
+.pj-slide-text p + p {
+  margin-top: 0.7em;
+}
+.pj-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.pj-tags li {
+  padding: 3px 9px;
+  border: 1px solid var(--slide-line);
+  border-radius: 999px;
+  font: 500 11.5px / 1.4 var(--mono);
+  color: var(--slide-body);
+}
+.pj-full {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 22px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--slide-ink);
+  color: var(--slide);
+  font: 500 14px var(--sans);
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+.pj-full span[aria-hidden] {
+  display: inline-block;
+  margin-left: 8px;
+  transition: translate 0.25s var(--ease-out);
+}
+.pj-full:hover span[aria-hidden] {
+  translate: 3px 0;
+}
+.pj-full:focus-visible {
+  outline: 2px solid var(--slide-ink);
+  outline-offset: 3px;
+}
+.pj-slide-media {
+  min-width: 0;
+}
+.pj-slide-media figure {
+  margin: 0;
+}
+.pj-slide-media figcaption {
+  display: none;
+}
+.pj-slide-media .slot-ph {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+/* under the slide: pager, what's missing, who chose, and the way back */
+.pj-under {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: clamp(16px, 2.6vh, 26px);
+}
+.pj-under > p:first-of-type {
+  margin-top: 6px;
+}
+.pj-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 24px;
+}
+.pj-pager {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pj-arrow,
+.pj-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border: 1px solid var(--dark-room-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--on-dark-room);
+  font: 500 14px var(--sans);
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    opacity 0.2s;
+}
+.pj-arrow {
+  width: 44px;
+  font-size: 17px;
+}
+.pj-arrow:hover:not(:disabled),
+.pj-btn:hover {
+  border-color: var(--on-dark-room-2);
+}
+.pj-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.pj-count {
+  min-width: 7ch;
+  text-align: center;
+  font: 500 13px var(--mono);
+  color: var(--on-dark-room);
+}
+.pj-dots {
+  display: flex;
+  margin: 0 0 0 4px;
+  padding: 0;
+  list-style: none;
+}
+.pj-dots button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.pj-dots button::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--on-dark-room-2);
+  opacity: 0.55;
+  transition:
+    opacity 0.2s,
+    background-color 0.2s,
+    box-shadow 0.2s;
+}
+.pj-dots button:hover::before {
+  opacity: 1;
+}
+.pj-dots button[aria-current]::before {
+  opacity: 1;
+  background: var(--light);
+  box-shadow: 0 0 8px 1px rgba(255, 217, 163, 0.6);
+}
+.pj-missing,
+.pj-prov {
+  margin: 0;
+  font: 400 12.5px / 1.5 var(--mono);
+  color: var(--on-dark-room-2);
+}
+.pj-missing {
+  color: var(--on-dark-room);
+}
+.pj-again {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.pj-btn {
+  padding: 0 20px;
+}
+.pj-btn-on {
+  background: var(--on-dark-room);
+  border-color: var(--on-dark-room);
+  color: var(--dark-room);
+}
+.pj-btn-on:hover {
+  background: #fff;
+  border-color: #fff;
+}
+.pj-wall :focus-visible {
+  outline-color: var(--on-dark-room);
+}
+
+@media (min-width: 1000px) and (max-height: 860px) {
+  .pj-wallhead {
+    margin-bottom: 16px;
+  }
+  .pj-slide {
+    padding: 28px 40px 28px;
+  }
+  .pj-slide-main {
+    margin-top: 12px;
+  }
+  .pj-slide-title {
+    margin-bottom: 10px;
+    font-size: clamp(22px, 2.2vw, 28px);
+  }
+  .pj-slide.is-text .pj-slide-title {
+    font-size: clamp(26px, 2.6vw, 34px);
+  }
+  .pj-slide-text p {
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .pj-full {
+    margin-top: 16px;
+  }
+  .pj-slide-media video {
+    max-height: 340px;
+  }
+}
+
+/* the review switch: ?type=serif sets the display type in Instrument Serif */
+.pj[data-type="serif"] .pj-h1 {
+  font: 400 clamp(46px, 5vw, 68px) / 0.95 var(--font-serif), Georgia, serif;
+  letter-spacing: -0.02em;
+}
+.pj[data-type="serif"] .pj-q {
+  top: 2.4cqi;
+  font: 400 5.3cqi / 1.3 var(--font-serif), Georgia, serif;
+  letter-spacing: -0.005em;
+}
+.pj[data-type="serif"] .pj-q-typed {
+  top: 3.3cqi;
+  font: 400 3.7cqi / 1.35 var(--mono);
+}
+.pj[data-type="serif"] .pj-wallhead h2 {
+  font: 400 clamp(28px, 3vw, 40px) / 1.05 var(--font-serif), Georgia, serif;
+  letter-spacing: -0.01em;
+}
+.pj[data-type="serif"] .pj-slide-title {
+  font: 400 clamp(30px, 3.1vw, 44px) / 1.02 var(--font-serif), Georgia, serif;
+  letter-spacing: -0.015em;
+}
+.pj[data-type="serif"] .pj-slide.is-text .pj-slide-title {
+  font-size: clamp(34px, 3.8vw, 52px);
+}
+
+/* ---------- tablets and phones ---------- */
+@media (max-width: 999px), (orientation: portrait) and (max-width: 1199px) {
+  .pj {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "intro"
+      "stage"
+      "hand"
+      "all";
+    grid-template-rows: none;
+    min-height: 0;
+  }
+  .pj-h1 {
+    max-width: 13ch;
+  }
+  .pj-stage {
+    justify-self: center;
+    max-width: 600px;
+    margin-top: clamp(40px, 7vw, 64px);
+  }
+  .pj-hand {
+    justify-self: center;
+    width: min(var(--cw), 100%);
+    margin-top: clamp(28px, 5vw, 44px);
+  }
+  .pj-all {
+    justify-self: center;
+  }
+
+  .pj[data-phase="dark"] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto;
+  }
+  .pj[data-phase="dark"] .pj-wall {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+  .pj[data-phase="dark"] .pj-stage {
+    grid-column: 1;
+    grid-row: 4;
+    justify-self: center;
+    width: min(var(--mw-dark), 60%);
+    margin: 36px 0 0;
+  }
+  .pj-slide-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pj-slide-media {
+    order: -1;
+  }
+}
+@media (max-width: 640px) {
+  .pj {
+    --strip: 44px;
+    --mw-dark: 190px;
+  }
+  .pj-lede {
+    font-size: 16px;
+  }
+  .pj-slide {
+    --bi: 70px;
+    --bo: 46px;
+    padding: 26px 22px 24px;
+    border-radius: 9px;
+  }
+  .pj-slide-top {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .pj-slide-text p {
+    font-size: 15px;
+  }
+}
+
+/* ---------- reduced motion: everything happens at once; the room still darkens ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .pj *,
+  .pj *::before,
+  .pj *::after,
+  .pj-bg i {
+    transition: none !important;
+    animation: none !important;
+  }
+}
