@@ -645,9 +645,12 @@
        height and sits at the top; the sheet stays the same size either way. */
     --card-w: 836px;
     --sheet-pad: 18px;
-    --cf-card-h: min(calc(100svh - 3rem), 58rem);
+    /* the sheet's own chrome: the line above the card and the foot below it */
+    --sheet-chrome: 124px;
+    /* the whole sheet fits one screen under the results title; the card gets what is left inside it */
+    --sheet-h: clamp(560px, calc(100svh - 130px), 900px);
+    --cf-card-h: calc(var(--sheet-h) - var(--sheet-chrome));
     --sheet-w: min(calc(var(--card-w) + 2 * var(--sheet-pad)), 100%);
-    --sheet-h: calc(var(--cf-card-h) + 150px);
     display: flex;
     gap: var(--s5);
     max-width: none;
@@ -688,14 +691,21 @@
     height: var(--cf-card-h);
     margin-top: 0;
   }
-  .sheets .nk-print {
-    --nk-card-h: var(--cf-card-h);
+  /* the case file sets its own card height on .cf; on a sheet the sheet decides */
+  .sheets .cf.cf-print {
+    --cf-card-h: calc(var(--sheet-h) - var(--sheet-chrome));
   }
+
   .sheets .sheet.has-card {
     padding: var(--sheet-pad);
   }
+  .sheets .sheet.has-card .s-top {
+    margin-bottom: var(--s3);
+  }
   .sheets .sheet.has-card .s-foot {
     margin-top: auto;
+    padding-top: var(--s2);
+    border-top: 0;
   }
   .sheets .fit {
     height: 100%;
@@ -825,12 +835,12 @@
 .s-card {
   margin-top: 0;
 }
-.cf-print .cf-sheet.is-card,
-.nk-print .nk-sheet.is-card {
+.cf-print .cf-sheet.is-card {
   border: 0;
   border-radius: 0;
   scroll-margin-top: 0;
 }
+/* (the Nike card's printed form is in nike.css, which is not layered and would win over this file) */
 .cf-print .cf-sheet.is-card:target {
   box-shadow: none;
 }

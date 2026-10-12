@@ -2202,3 +2202,16 @@
     transition: none !important;
   }
 }
+
+/* ---------- printed on the home page ----------
+ * A card printed on its own sheet (src/app/printer.css): the sheet is its paper and gives it its height. */
+.nk-print .nk-sheet.is-card {
+  border: 0;
+  border-radius: 0;
+  scroll-margin-top: 0;
+}
+@media (min-width: 761px) and (min-height: 620px) {
+  .nk.nk-print {
+    --nk-card-h: var(--cf-card-h);
+  }
+}
