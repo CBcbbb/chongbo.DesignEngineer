@@ -20,7 +20,6 @@ const OVER_LIMIT: Record<string, number> = {
   "hhcd-data-platform#workshop": 684,
   "hhcd-data-platform#four-types": 666,
   "components-for-any-data#shapes": 652,
-  "design-system#three-layers": 815,
   "design-system#in-code": 774,
   "design-system#fixed-lightness": 740,
 };

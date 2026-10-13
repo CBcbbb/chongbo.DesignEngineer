@@ -402,7 +402,8 @@
   --ov-prod-t: #3a3935; --ov-prod-l: #2f2e2b; --ov-prod-r: #252422;
   --ov-stud-s: #23221f; --ov-stud-c: #3d3c38; --ov-user: #4a4945;
   --ov-piece: #e6e2d9; --ov-night: #151413; --ov-own: #2c2b28; }
-.dsm .ds-layers2 svg { display: block; width: 100%; height: auto; min-width: 660px; overflow: visible; }
+/* never narrower than 744px, so its labels stay 13px or more; narrower screens scroll it sideways */
+.dsm .ds-layers2 svg { display: block; width: 100%; height: auto; min-width: 744px; overflow: visible; }
 .dsm .ds-layers2 .ob polygon { stroke: var(--ov-line); stroke-width: .9; stroke-linejoin: round; }
 .dsm .ds-layers2 .o-base .t { fill: var(--ov-base-t); }
 .dsm .ds-layers2 .o-base .l { fill: var(--ov-base-l); }
@@ -443,13 +444,23 @@
 .dsm .ds-layers2 .pc-notch { fill: var(--case-bg); stroke: none; }
 .dsm .ds-layers2 .pc-slit { stroke-width: 1.1; stroke-linecap: round; }
 .dsm .ds-layers2 .o-shadow { fill: #000; opacity: .12; }
-.dsm .ds-layers2 .o-callname { font: 600 14px var(--sans); fill: var(--case-ink); }
+.dsm .ds-layers2 .o-callname { font: 600 17px var(--sans); fill: var(--case-ink); }
 .dsm .ds-layers2 .o-leader { stroke: var(--ov-hair); stroke-width: .8; }
 .dsm .ds-layers2 .o-tick { fill: var(--ov-line); }
 .dsm .ds-layers2 .o-num { fill: var(--case-bg); stroke: var(--ov-line); stroke-width: 1.1; }
-.dsm .ds-layers2 .o-numt { font: 600 11.5px var(--mono); fill: var(--case-ink); }
-.dsm .ds-layers2 .o-ln { font: 600 15.5px var(--sans); fill: var(--case-ink); }
-.dsm .ds-layers2 .o-ls { font: 500 12px var(--mono); fill: var(--case-dim); }
+.dsm .ds-layers2 .o-numt { font: 600 16.75px var(--mono); fill: var(--case-ink); }
+.dsm .ds-layers2 .o-ln { font: 600 17.5px var(--sans); fill: var(--case-ink); }
+.dsm .ds-layers2 .o-ls { font: 500 16.75px var(--mono); fill: var(--case-dim); }
+/* 01.3 on computers: the build rises beside the text. Its tall left end (the first product's users) stands under the
+   claim, and the reasoning sits over its open top right, so the card is the drawing's height, not the text's plus the
+   drawing's. Both share the card's one grid cell; the drawing is dropped by a share of its own width, so the gap holds
+   as it scales. */
+@media (min-width: 1000px) {
+  [data-palette="design-system"] :is([data-card="three-layers"], #three-layers) > :is(.cf-head, .cf-evidence) { grid-area: 1 / 1; }
+  [data-palette="design-system"] :is([data-card="three-layers"], #three-layers) > .cf-head { position: relative; z-index: 1; }
+  [data-palette="design-system"] :is([data-card="three-layers"], #three-layers) > .cf-evidence { margin-top: 0; padding-top: 10.5%; }
+  [data-palette="design-system"] :is([data-card="three-layers"], #three-layers) .ds-layers2 { margin-top: 0; }
+}
 /* the nav sits at the top of the app frame: its callout hangs below the tab instead */
 .dsm .show-ratios .tp-tabs [data-r] { bottom: auto; top: calc(100% + 5px); }
 .dsm .show-ratios .tp-tabs [data-r] .ds-ratio::after { top: auto; bottom: 100%; border-top: 0; border-bottom: 4px solid #151515; }
