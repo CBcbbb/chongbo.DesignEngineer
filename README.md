@@ -1,5 +1,7 @@
 # Chongbo Ning — Design Engineer
 
+![The home page: the Accessibility card is chosen, Print is pressed, the printer reports its steps and the matching case-file cards appear as printed sheets.](docs/screenshots/printing.gif)
+
 The portfolio of Chongbo Ning, a design engineer in London. A red ticket printer sits on the page: type what your team cares about, press **Print**, and it prints a ticket with the part of my work that answers it. Every project is also a short case file you can read without asking anything.
 
 - `/` — the machine and the tray of case files
@@ -31,6 +33,7 @@ npm run build
 npm run contrast    # WCAG AA check of every colour pairing in use
 npm run test:e2e    # Playwright + axe at 1440 and 390 (needs `npm run build` first)
 npm run screenshots # writes docs/screenshots/*.png
+node scripts/printing-gif.mjs  # writes docs/screenshots/printing.gif (needs ffmpeg and `npx next start -p 3100`)
 ```
 
 Playwright uses a system Chromium at `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` by default. Elsewhere, run `npx playwright install chromium` and set `PW_CHROMIUM` to that binary (or remove `executablePath` from `playwright.config.ts`).
