@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { profile } from "@content";
 import { Pill, WorkPill } from "@/components/nav/Pill";
+import { ThemeLamp } from "@/components/nav/ThemeLamp";
 
 export function SiteHeader({ current }: { current?: "work" | "about" }) {
   return (
@@ -18,6 +19,9 @@ export function SiteHeader({ current }: { current?: "work" | "about" }) {
           </li>
           <li>
             <Pill kind="about" href="/about" label="About" current={current === "about"} />
+          </li>
+          <li>
+            <ThemeLamp />
           </li>
         </ul>
       </nav>

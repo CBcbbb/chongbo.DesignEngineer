@@ -132,3 +132,19 @@ export function quoteBrief(brief: string): string {
 }
 
 export const pad2 = (n: number) => String(n).padStart(2, "0");
+
+/**
+ * When a request names no role and no skill (a name, "hello", random letters), the printer still prints where to start,
+ * and says why. A brief of one to three capitalised words reads as a name, so the reply says hello instead.
+ * The brief is only echoed back here: never stored, never sent to analytics.
+ */
+export function notUnderstoodLine(brief: string): string {
+  const b = brief.trim().replace(/\s+/g, " ");
+  if (!b) return "";
+  const name = /^[A-Z][a-z'’-]+(?: [A-Z][a-z'’-]+){0,2}$/.test(b) ? b.split(" ")[0] : "";
+  const first = name ? `Nice to meet you, ${name}.` : `I couldn’t find a role or a skill in “${b.length > 60 ? `${b.slice(0, 60).trimEnd()}…` : b}”.`;
+  return `${first} Here are three places to start. For a closer match, pick a skill above or describe the role, for example “design systems for a fintech app”.`;
+}
+
+/** After a failed print: the way out (the links are added where it is shown). */
+export const JAM_LINE = { before: "Something jammed. Try again in a moment, ", all: "browse all work", or: ", or ", email: "email me", after: "." };

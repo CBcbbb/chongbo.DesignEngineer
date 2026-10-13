@@ -40,12 +40,30 @@
   body {
     min-height: 100%;
   }
+  /* the studio photograph behind the first screen, fading into the page colour below it */
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: max(100vh, 760px);
+    z-index: -1;
+    pointer-events: none;
+    background: var(--backdrop) center top / cover no-repeat;
+    -webkit-mask: linear-gradient(#000 60%, transparent);
+    mask: linear-gradient(#000 60%, transparent);
+  }
+  @media (max-aspect-ratio: 4/5) {
+    body::before {
+      background-image: var(--backdrop-tall);
+    }
+  }
   body {
     margin: 0;
     background-color: var(--studio);
     background-image: radial-gradient(90% 55% at 50% 30%, var(--studio-hi), var(--studio) 70%);
     background-repeat: no-repeat;
     background-attachment: fixed;
+    position: relative;
     color: var(--ink);
     font-family: var(--sans);
     font-size: 16px;

@@ -115,6 +115,119 @@
 .pill-space {
   display: inline-block;
 }
+/* ---------- the light switch: a pendant lamp with a pull chain (src/components/nav/ThemeLamp.tsx) ---------- */
+.lamp-wrap {
+  position: relative;
+  display: inline-flex;
+}
+.lamp {
+  --focus: var(--ink);
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--ink-2);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: color 0.15s;
+}
+.lamp:hover,
+.lamp:focus-visible {
+  color: var(--ink);
+}
+.lamp:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+.lamp-ico {
+  width: 22px;
+  height: 22px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.lamp-ico .lamp-bead {
+  fill: currentColor;
+  stroke: none;
+}
+.lamp-ico .lamp-cone {
+  fill: url(#lamp-cone-g);
+  stroke: none;
+  opacity: 0;
+}
+.lamp-ico .lamp-rim {
+  stroke: var(--lamp-light);
+  stroke-width: 1.1;
+  opacity: 0;
+}
+/* lit in dark mode: the shade solid, the bulb warm, a soft cone of light from the rim */
+:root[data-theme="dark"] .lamp-ico .lamp-shade {
+  fill: currentColor;
+}
+:root[data-theme="dark"] .lamp-ico .lamp-bulb {
+  fill: var(--lamp-light);
+  stroke: var(--lamp-light);
+}
+:root[data-theme="dark"] .lamp-ico .lamp-cone,
+:root[data-theme="dark"] .lamp-ico .lamp-rim {
+  opacity: 1;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .lamp-ico .lamp-shade {
+    fill: currentColor;
+  }
+  :root:not([data-theme="light"]) .lamp-ico .lamp-bulb {
+    fill: var(--lamp-light);
+    stroke: var(--lamp-light);
+  }
+  :root:not([data-theme="light"]) .lamp-ico .lamp-cone,
+  :root:not([data-theme="light"]) .lamp-ico .lamp-rim {
+    opacity: 1;
+  }
+}
+/* after a tap: what the site does now */
+.lamp-note {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 20;
+  padding: 7px 11px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--studio);
+  font: 500 12.5px/1.3 var(--sans);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  translate: 0 -4px;
+  transition:
+    opacity 0.2s,
+    translate 0.2s var(--ease-out);
+}
+.lamp-note.on {
+  opacity: 1;
+  translate: 0 0;
+}
+.lamp-note small {
+  display: block;
+  font-size: 12.5px;
+  opacity: 0.8;
+}
+/* the page changes as the light does: only while the lamp switches it, never on load (ThemeLamp sets data-switching) */
+:root[data-switching] body {
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
 @media (max-width: 420px) {
   .who span {
     display: none;
@@ -126,9 +239,14 @@
 }
 
 /* ---------- ticket output ---------- */
+/* a ticket torn off at the tear bar: the serrated bottom edge photographed from real thermal paper */
 .torn {
-  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%;
-  mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%;
+  -webkit-mask:
+    linear-gradient(#000, #000) 0 0 / 100% calc(100% - 5px) no-repeat,
+    url(/shell/cut-edge-mask.png) 0 100% / 105px 6px repeat-x;
+  mask:
+    linear-gradient(#000, #000) 0 0 / 100% calc(100% - 5px) no-repeat,
+    url(/shell/cut-edge-mask.png) 0 100% / 105px 6px repeat-x;
 }
 .torn-sm {
   -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 12px 100%;
@@ -141,7 +259,9 @@
   background: var(--paper);
   color: var(--paper-ink);
   padding: 30px 30px 46px;
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0) 26px);
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0) 26px), url(/shell/paper-grain.png);
+  background-size: auto, 256px;
+  background-blend-mode: normal, soft-light;
 }
 /* Tickets receive focus programmatically (tabindex -1) after printing; they are not controls, so no ring. */
 .ticket:focus,

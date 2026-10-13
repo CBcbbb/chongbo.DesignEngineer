@@ -1,5 +1,5 @@
 import { getProject, projects } from "@content";
-import { OG_CONTENT_TYPE, OG_SIZE, ticketImage } from "@/lib/og";
+import { OG_CONTENT_TYPE, OG_SIZE, shareImage } from "@/lib/og";
 import { projectNumber } from "@/lib/site";
 
 export const alt = "Case file from Chongbo Ning's portfolio";
@@ -13,11 +13,5 @@ export function generateStaticParams() {
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const p = getProject(slug) ?? projects[0]!;
-  return ticketImage({
-    head: "Case file · Chongbo Ning",
-    right: "",
-    big: projectNumber(p),
-    title: p.title,
-    line: p.oneLiner,
-  });
+  return shareImage({ sheet: { kicker: `Case file ${projectNumber(p)}`, title: p.title, line: p.oneLiner } });
 }

@@ -1,4 +1,4 @@
-import { projects, SIGNALS } from "@content";
+import { projects, SIGNALS, type Signal } from "@content";
 import { TOPICS, type Topic } from "./printed";
 import { caseHref } from "./site";
 
@@ -11,6 +11,8 @@ export type SheetCard = {
   body: string[];
   /** The section's first two signals, as plain labels. */
   tags: string[];
+  /** Every signal the section carries: the printer counts the cards that match a request from these. */
+  signals: Signal[];
   href: string;
   hasMedia: boolean;
 };
@@ -30,6 +32,7 @@ export function buildCardIndex(): CardIndex {
         title: s.title,
         body: s.body,
         tags: s.signals.slice(0, 2).map((sig) => SIGNALS[sig]),
+        signals: [...s.signals],
         href: caseHref(p.slug, s.id),
         hasMedia: Boolean(s.media),
       };
