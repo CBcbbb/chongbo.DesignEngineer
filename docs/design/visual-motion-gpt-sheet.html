@@ -1,5 +1,5 @@
-<title>GPT Detail Sheet</title>
-<meta name="description" content="Five detail images for the chongboning.com shell, each with its prompt ready to copy into GPT." />
+<title>GPT Image Pack</title>
+<meta name="description" content="Every image GPT should make for the chongboning.com shell, with a style brief and each prompt ready to copy." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" />
 <style>
@@ -34,7 +34,7 @@
   dl { margin: 0; display: grid; grid-template-columns: 6.5em minmax(0, 1fr); gap: 4px 12px; font-size: 14px; }
   dt { color: var(--ink-2); }
   dd { margin: 0; min-width: 0; }
-  dd code { font: 500 12.5px var(--mono); background: var(--code); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+  .how code, dd code { font: 500 12.5px var(--mono); background: var(--code); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
   .prompt { position: relative; }
   pre { margin: 0; padding: 14px 14px 52px; border-radius: 6px; background: var(--code); box-shadow: inset 0 0 0 1px var(--rule); font: 400 13px/1.55 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
   .copy { position: absolute; right: 10px; bottom: 10px; min-height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--ink); background: var(--ink); color: var(--studio); font: 600 13px var(--sans); cursor: pointer; }
@@ -49,17 +49,32 @@
 <div class="page">
   <header>
     <p class="eyebrow">Printed to order · detail images</p>
-    <h1>给 GPT 的五张细节图</h1>
-    <p class="lede">机器已经定了。这五张让整页从"一张好看的图"变成"一个完整的物件世界"：晚上的灯光、拍摄背景、纸的质感、热敏纸的切口、和图标。</p>
+    <h1>给 GPT 的图片包</h1>
+    <p class="lede">机器已经定了。下面这些让整页从"一张好看的图"变成"一个完整的物件世界"。按顺序做，做完一张就存一张。</p>
   </header>
 
-  <p class="how"><b>怎么用：</b>每张都在 GPT 里新开一个对话。需要上传参考图的，先上传，再点"复制提示词"粘贴发送。出来的图直接发给我，抠图、调色、做成无缝、量坐标都由我来。</p>
+  <p class="how"><b>文件夹：</b>我在你桌面上建好了 <code>chongbo-gpt</code>，里面已经放了参考图 <code>00-reference-printer.png</code>（定稿打印机）。GPT 自己没法把图存到你的电脑上，所以每张图出来后点下载，存进这个文件夹，<b>用下面写的文件名</b>。省事的办法：在浏览器的下载设置里把下载位置改成这个文件夹（或者打开"每次询问保存位置"）。存进去我就能直接拿到，不用再发给我。</p>
+
+  <section class="sheet" aria-labelledby="h0a">
+    <div class="top"><h2 id="h0a">0 · 风格说明（每个新对话先发这一段）</h2><span>不出图</span></div>
+    <dl><dt>作用</dt><dd>让 GPT 在整个对话里记住同一种光、材质和规矩。之后每条提示词都在这个对话里接着发，一个对话可以连做好几张。</dd></dl>
+    <div class="prompt"><pre id="p0">You are making images for a personal website built around one photographed object: a low, wide 1970s Italian-style desktop printer with a warm cream body, softly rounded ends, a ribbed dark rubber base, a dark green-tinted display window in a polished frame, and a glossy red key (close to #c9372a) in a knurled chrome ring.
+
+For every image in this conversation:
+- Photographic, premium and calm, like a high-end product catalogue. Real materials, fine detail, small real-world imperfections.
+- One large softbox from the upper left, gentle falloff, no lens flare, no dramatic shadows.
+- Warm neutral colours: studio grey close to #e9e7e2, paper close to #fbfaf7, ink close to #1c1b19. Red is the only strong colour.
+- Never any text, numbers, logos, watermarks or symbols, unless I ask for them.
+- When I give a background colour, make it flat and exactly that colour, with nothing else in it.
+
+Reply "Ready" and wait for my first request.</pre><button class="copy" type="button" data-for="p0">复制提示词</button></div>
+  </section>
 
   <section class="sheet" aria-labelledby="h1a">
-    <div class="top"><h2 id="h1a">1 · 夜间的机器（深色模式）</h2><span>printer-v3-night.png</span></div>
+    <div class="top"><h2 id="h1a">1 · 夜间的机器（深色模式）</h2><span>存为 01-printer-night.png</span></div>
     <dl>
       <dt>用在</dt><dd>深色模式下的首页机器。现在深色下还是白天的光，奶油色在黑底上太亮、像贴上去的。</dd>
-      <dt>上传</dt><dd>你上次给我的定稿渲染（奶油色、罗纹底座、滚花红键那张）</dd>
+      <dt>上传</dt><dd>文件夹里的 <code>00-reference-printer.png</code></dd>
       <dt>尺寸</dt><dd>和原图一样，横版最大尺寸</dd>
     </dl>
     <div class="prompt"><pre id="p1">Edit the attached product photograph. Keep the machine, the camera, the framing and every part exactly where it is and at exactly the same size. Change only the lighting.
@@ -73,7 +88,7 @@ Background: flat solid #1a1918. No floor and no shadow under the machine. No tex
   </section>
 
   <section class="sheet" aria-labelledby="h2a">
-    <div class="top"><h2 id="h2a">2 · 拍摄背景（浅色和深色各一张）</h2><span>studio-light.jpg · studio-dark.jpg</span></div>
+    <div class="top"><h2 id="h2a">2 · 拍摄背景（浅色和深色各一张）</h2><span>存为 02-studio-light.png · 02-studio-dark.png</span></div>
     <dl>
       <dt>用在</dt><dd>全站背景。现在是纯色加一圈渐变；换成真的摄影棚无缝纸，机器和纸张才像真的放在那里。</dd>
       <dt>上传</dt><dd>不用</dd>
@@ -88,7 +103,7 @@ An extremely subtle paper fibre texture, visible only up close. Nothing else in 
   </section>
 
   <section class="sheet" aria-labelledby="h3a">
-    <div class="top"><h2 id="h3a">3 · 纸的质感</h2><span>paper-grain.png</span></div>
+    <div class="top"><h2 id="h3a">3 · 纸的质感</h2><span>存为 03-paper-grain.png</span></div>
     <dl>
       <dt>用在</dt><dd>输入的那张纸、打印出来的纸（纸边，不进卡片内容）、技能卡、About 收据、404。很淡，大约 4%，只在近看时感觉得到。</dd>
       <dt>上传</dt><dd>不用</dd>
@@ -101,7 +116,7 @@ Only the paper's fine fibres and a very faint tooth, low in contrast. The paper 
   </section>
 
   <section class="sheet" aria-labelledby="h4a">
-    <div class="top"><h2 id="h4a">4 · 热敏纸的锯齿切口</h2><span>cut-edge.png</span></div>
+    <div class="top"><h2 id="h4a">4 · 热敏纸的锯齿切口</h2><span>存为 04-cut-edge.png</span></div>
     <dl>
       <dt>用在</dt><dd>About 收据和 404 的底边（替换现在 CSS 画的锯齿），输入纸的顶边。打印出来的纸不加，保证和案例卡完全一样。</dd>
       <dt>上传</dt><dd>不用</dd>
@@ -114,10 +129,10 @@ Shot straight on with flat, even lighting. The paper fills the top two thirds of
   </section>
 
   <section class="sheet" aria-labelledby="h5a">
-    <div class="top"><h2 id="h5a">5 · 红键图标</h2><span>key-icon.png</span></div>
+    <div class="top"><h2 id="h5a">5 · 红键图标</h2><span>存为 05-key-icon.png</span></div>
     <dl>
       <dt>用在</dt><dd>手机收藏到桌面的图标（180px）、浏览器标签图标（32px）。16px 那一档还用现在的矢量图。</dd>
-      <dt>上传</dt><dd>定稿渲染（同第 1 张），让按键和机器上的一模一样</dd>
+      <dt>上传</dt><dd><code>00-reference-printer.png</code>，让按键和机器上的一模一样</dd>
       <dt>尺寸</dt><dd>正方形最大尺寸</dd>
     </dl>
     <div class="prompt"><pre id="p5">A product photograph of the round red push key from the attached printer, on its own: the same glossy, gently domed red cap (close to #c9372a) in the same polished chrome bezel with a fine knurled edge.
@@ -126,6 +141,52 @@ Seen straight from the front, centred, filling about 80% of a square frame. One 
 
 Background: flat warm grey #e9e7e2. No text, no symbols on the key, no shadow on the background.</pre><button class="copy" type="button" data-for="p5">复制提示词</button></div>
     <p class="avoid"><b>避免：</b>斜着拍；按键上有字或符号；和机器上的按键颜色不一样。</p>
+  </section>
+
+
+  <section class="sheet" aria-labelledby="h6a">
+    <div class="top"><h2 id="h6a">6 · 卡纸（出错状态）</h2><span>存为 06-printer-jam.png</span></div>
+    <dl>
+      <dt>用在</dt><dd>请求失败或断网时：机器换成卡纸的样子，屏幕写 Paper jam。现在出错时机器看起来一切正常。</dd>
+      <dt>上传</dt><dd><code>00-reference-printer.png</code></dd>
+      <dt>尺寸</dt><dd>和原图一样</dd>
+    </dl>
+    <div class="prompt"><pre id="p6">Edit the attached product photograph. Keep the machine, the camera, the framing, the lighting and every part exactly where it is and at exactly the same size.
+
+Add only this: a sheet of off-white paper jammed in the front output slot. It comes out a little way, crumpled into a few soft folds and slightly askew, as if the printer has just jammed. The paper is blank, with no print.
+
+The display stays switched off and blank. Background: flat solid #e9e7e2. No text or logos anywhere.</pre><button class="copy" type="button" data-for="p6">复制提示词</button></div>
+    <p class="avoid"><b>避免：</b>纸上有字；纸太多像垃圾；机器其他地方变了。</p>
+  </section>
+
+  <section class="sheet" aria-labelledby="h7a">
+    <div class="top"><h2 id="h7a">7 · 手机用的竖版背景</h2><span>存为 07-studio-light-tall.png · 07-studio-dark-tall.png</span></div>
+    <dl>
+      <dt>用在</dt><dd>手机上的全站背景。横版背景在竖屏上会被裁得只剩中间一条，光的方向就丢了。</dd>
+      <dt>上传</dt><dd>不用。在做第 2 张的同一个对话里接着发效果最好</dd>
+      <dt>尺寸</dt><dd>竖版最大尺寸</dd>
+    </dl>
+    <div class="prompt"><pre id="p7">Make the same studio backdrop again, in a tall portrait format for a phone screen: the same warm light grey seamless sweep, the same softbox from above and slightly to the left, so the top third is a little brighter and the bottom falls off very gently. Nothing else in the frame.
+
+(Then the same again in the dark version.)</pre><button class="copy" type="button" data-for="p7">复制提示词</button></div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h8a">
+    <div class="top"><h2 id="h8a">8 · 一卷热敏纸（可选）</h2><span>存为 08-paper-roll.png</span></div>
+    <dl>
+      <dt>用在</dt><dd>About 页收据旁边，或者"没有找到匹配"时的空状态：一卷纸，说明这台机器真的在用纸。只在你喜欢时用。</dd>
+      <dt>上传</dt><dd>不用</dd>
+      <dt>尺寸</dt><dd>正方形</dd>
+    </dl>
+    <div class="prompt"><pre id="p8">A single roll of off-white thermal receipt paper standing on its end, with a short length unrolled towards the camera and lying flat, its serrated cut edge at the front. A small dark cardboard core. Three-quarter view from slightly above.
+
+Blank paper, no print. Background: flat solid #e9e7e2. Soft contact shadow under the roll only.</pre><button class="copy" type="button" data-for="p8">复制提示词</button></div>
+  </section>
+
+  <section class="sheet" aria-labelledby="h9a">
+    <div class="top"><h2 id="h9a">9 · 出现偏差时用的修正语</h2><span>不出图</span></div>
+    <dl><dt>作用</dt><dd>GPT 改多了、加了字、换了角度时，在同一个对话里回它这一句。</dd></dl>
+    <div class="prompt"><pre id="p9">That changed too much. Keep everything exactly as in the attached original: the same camera, framing, proportions, materials and lighting. Make only the change I asked for, and add no text, logos or new parts.</pre><button class="copy" type="button" data-for="p9">复制提示词</button></div>
   </section>
 
   <p class="not"><b>GPT 不适合做的：</b>所有会动的东西（按键、出纸、屏幕、读取光，都是代码）；精确的颜色和无缝拼接（我在后期调）；分享图（你说不需要，不做了）。</p>
