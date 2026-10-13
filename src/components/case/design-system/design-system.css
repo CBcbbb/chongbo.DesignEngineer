@@ -338,15 +338,21 @@
 .dsm .ds-light .row-l { font: 600 13.5px var(--sans); fill: var(--case-ink); }
 .dsm .ds-light .band { fill: none; stroke: var(--accent); stroke-width: 1.5; }
 .dsm .ds-light circle { stroke: var(--case-bg); stroke-width: 1.5; }
+/* the text steps are the claim: full colour, a firm band and ink labels. The other steps are free to move, so they
+   stand back: faint dots, a dashed band, labels in the dim tone (still AA on the dark sheet) */
+.dsm .ds-light .is-text .band { stroke-width: 2; }
+.dsm .ds-light .is-free .band { stroke: var(--case-dim); stroke-width: 1; stroke-dasharray: 3 4; opacity: .55; }
+.dsm .ds-light .is-free circle { opacity: .38; }
+.dsm .ds-light .is-free .row-l { fill: var(--case-dim); font-weight: 500; }
 .dsm .ds-light-chart { overflow-x: auto; }
 @media (max-width: 760px) {
 .dsm .ds-light-chart svg { min-width: 640px; }
 }
 .dsm .ds-metrics { list-style: none; margin: 0; padding: 16px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: 1px solid var(--case-rule); }
+/* two figures, both results, both in the accent */
 .dsm .ds-metrics li { display: grid; gap: 6px; min-width: 0; }
 /* the figures back up the chart rather than lead the card, so they sit at 3rem and the card keeps room to breathe */
 .dsm .ds-metrics li b { font: 600 clamp(2.6rem, 7vw, 3rem)/0.95 var(--sans); letter-spacing: -0.045em; color: var(--accent); font-variant-numeric: tabular-nums; }
-.dsm .ds-metrics li:last-child b { color: var(--case-ink); }
 .dsm .ds-metrics span { font: 500 12.5px/1.35 var(--mono); color: var(--case-dim); }
 @media (max-width: 600px) {
 .dsm .ds-metrics { grid-template-columns: minmax(0, 1fr); }

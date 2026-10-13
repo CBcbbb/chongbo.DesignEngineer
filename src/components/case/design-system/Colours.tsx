@@ -90,8 +90,10 @@ function LightChart() {
         const mn = Math.min(...ls);
         const mx = Math.max(...ls);
         const hs = order.filter((h) => REAL_L[st][h] != null);
+        // only the text steps are held to one lightness: they are the claim; the other steps are drawn faint, free
+        const isText = st === "600" || st === "700";
         return (
-          <g key={st}>
+          <g key={st} className={isText ? "is-text" : "is-free"}>
             <text className="row-l" x="0" y={y + 4}>
               {job}
             </text>
@@ -165,10 +167,6 @@ export function Lightness() {
         <li>
           <b>5.16:1</b>
           <span>lowest: amber text on white</span>
-        </li>
-        <li>
-          <b>2</b>
-          <span>modes: light and dark</span>
         </li>
       </ul>
     </div>
