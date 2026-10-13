@@ -12,12 +12,11 @@ import { track } from "@/lib/analytics";
 import { DrawnArrow } from "./shell/DrawnArrow";
 import { ShareLink } from "./shell/ShareLink";
 import type { PrintedCard } from "./PrintedCard";
+import { printCards } from "./print-cards";
 import { Sheet } from "./Sheet";
 
 type Props = {
   cards: CardIndex;
-  /** Each card as its case page renders it, in its project's shell, keyed by cardKey (`printedCards`). */
-  printed: Record<string, PrintedCard>;
   /** id of the page h1, which names the paper form. */
   labelledBy: string;
   /** The skills cards to offer: those some shown project has work for (default: all). */
@@ -28,6 +27,8 @@ type Result = {
   title: string;
   asked: string;
   cards: SheetCard[];
+  /** The printed cards, as their case pages render them, keyed by cardKey: fetched for this print only (`printCards`). */
+  printed: Record<string, PrintedCard>;
   missing: string;
   provenance: string;
   byModel?: boolean;
@@ -73,7 +74,7 @@ async function ask(brief: string, topics: string[]): Promise<Outcome> {
   }
 }
 
-export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: Props) {
+export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
   const [brief, setBrief] = useState("");
   const [picked, setPicked] = useState<string[]>([]);
   const [focused, setFocused] = useState(false);
@@ -197,6 +198,11 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
       cards: sheets.map((c) => cardKey(c.project, c.section)),
       start_here: startHere,
     });
+    // The chosen cards are rendered on the server now, while the steps and the feed play: no extra wait in most cases.
+    // If that fails, each sheet falls back to its card's words (`Sheet`).
+    const printing: Promise<Record<string, PrintedCard>> = sheets.length
+      ? printCards(sheets.map((c) => cardKey(c.project, c.section))).catch(() => ({}))
+      : Promise.resolve({});
     const next = [...list];
     if (!labels.length && outcome.ok && !startHere) next[1] = outcome.data.asked.slice(0, 2).map((s) => SIGNALS[s]).join(", ");
     next[2] = !outcome.ok
@@ -216,7 +222,7 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
       void feed.offsetWidth;
       feed.classList.add("go");
     }
-    await sleep(FEED_MS);
+    const [, printed] = await Promise.all([sleep(FEED_MS), printing]);
 
     const r: Result = outcome.ok
       ? {
@@ -224,12 +230,13 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
           title: resultTitle({ asked: outcome.data.asked, startHere, picked: labels }),
           asked: quoteBrief(text),
           cards: sheets,
+          printed,
           missing: missingLine(outcome.data.missing),
           provenance: provenanceLine(outcome.data.source, sheets.length),
           byModel: outcome.data.source === "model",
           topics: [...outcome.data.asked],
         }
-      : { title: outcome.message, asked: quoteBrief(text), cards: [], missing: "", provenance: "", error: true };
+      : { title: outcome.message, asked: quoteBrief(text), cards: [], printed: {}, missing: "", provenance: "", error: true };
     introRef.current = true;
     setCur(0);
     setResult(r);
@@ -491,7 +498,7 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
               onKeyDown={onStripKey}
             >
               {result.cards.map((card, i) => {
-                const pc = printed[cardKey(card.project, card.section)];
+                const pc = result.printed[cardKey(card.project, card.section)];
                 return (
                   <li key={cardKey(card.project, card.section)} className="sheet" style={{ animationDelay: `${80 + 110 * i}ms` }}>
                     <article className="s-paper" aria-labelledby={pc?.headingId ?? `sh-${i}`}>
