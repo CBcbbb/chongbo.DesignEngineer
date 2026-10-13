@@ -174,8 +174,9 @@ function draw(activeId: string) {
     const [X, Y] = P(x - CX, y + CY, Z.client - T.client / 2);
     g += line([X - 4, Y], [X - 24, Y], "o-leader") + `<circle class="o-tick" cx="${f1(X - 4)}" cy="${f1(Y)}" r="2"/><text class="o-callname" x="${f1(X - 30)}" y="${f1(Y + 5)}" text-anchor="end">${act.name}</text>`;
   }
-  // callouts, numbered, to a legend on the right; anchored on the right-hand product
-  const LX = 712;
+  // callouts, numbered, to a legend on the right; anchored on the right-hand product. Its type is set so it reads at
+  // 13px or more where the drawing is about 750px wide (playbook §6), so the legend starts a little further left
+  const LX = 676;
   const kR = cliC(CLIENTS[5]!);
   const pr = PRODS[2]!.r;
   const [ux, uy] = P(kR[0], kR[1] - U, Z.user - 4);
@@ -186,9 +187,9 @@ function draw(activeId: string) {
     [1, "Shared package", "sets every token", P(bx1, by1 - U / 2, -T.base / 2)],
   ];
   rows.forEach(([n, t, s2, [ax, ay]]) => {
-    g += line([ax + 4, ay], [LX - 22, ay], "o-leader") + `<circle class="o-tick" cx="${f1(ax + 4)}" cy="${f1(ay)}" r="2.2"/>`;
-    g += `<circle class="o-num" cx="${LX - 10}" cy="${f1(ay)}" r="10"/><text class="o-numt" x="${LX - 10}" y="${f1(ay + 4)}" text-anchor="middle">${n}</text>`;
-    g += `<text class="o-ln" x="${LX + 8}" y="${f1(ay - 2)}">${t}</text><text class="o-ls" x="${LX + 8}" y="${f1(ay + 15)}">${s2}</text>`;
+    g += line([ax + 4, ay], [LX - 27, ay], "o-leader") + `<circle class="o-tick" cx="${f1(ax + 4)}" cy="${f1(ay)}" r="2.2"/>`;
+    g += `<circle class="o-num" cx="${LX - 13}" cy="${f1(ay)}" r="13"/><text class="o-numt" x="${LX - 13}" y="${f1(ay + 5.5)}" text-anchor="middle">${n}</text>`;
+    g += `<text class="o-ln" x="${LX + 9}" y="${f1(ay - 3)}">${t}</text><text class="o-ls" x="${LX + 9}" y="${f1(ay + 17)}">${s2}</text>`;
   });
   return g;
 }

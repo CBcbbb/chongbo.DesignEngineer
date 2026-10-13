@@ -107,16 +107,18 @@
 .dsm .ds-check { display: inline-flex; align-items: center; gap: 8px; font: 500 12.5px/1 var(--sans); color: var(--case-dim); cursor: pointer; }
 .dsm .ds-check input { accent-color: var(--case-ink); width: 16px; height: 16px; margin: 0; }
 /* ---------- 01.1 three products, fanned like printouts on a desk ---------- */
-.dsm .ds-fan { position: relative; height: clamp(300px, 34vw, 380px); margin-top: 8px; }
-.dsm .ds-fan-card { position: absolute; top: 0; width: 46%; margin: 0; display: grid; gap: 8px; transition: transform 0.35s var(--ease); }
-.dsm .ds-fan-card.is-1 { left: 0.5%; transform: rotate(-3deg) translateY(18px); z-index: 1; }
-.dsm .ds-fan-card.is-2 { left: 26.5%; transform: rotate(0.5deg); z-index: 2; }
-.dsm .ds-fan-card.is-3 { left: 52.5%; transform: rotate(3deg) translateY(26px); z-index: 3; }
+/* the three sit in one grid cell, so the fan is as tall as its tallest printout (never a fixed height with empty paper
+   under it); the padding leaves room for the turn and the drop of the outer two */
+.dsm .ds-fan { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; margin-top: 8px; padding-bottom: 38px; }
+.dsm .ds-fan-card { position: relative; grid-area: 1 / 1; width: 46%; margin: 0; display: grid; gap: 8px; transition: transform 0.35s var(--ease); }
+.dsm .ds-fan-card.is-1 { margin-left: 0.5%; transform: rotate(-3deg) translateY(18px); z-index: 1; }
+.dsm .ds-fan-card.is-2 { margin-left: 26.5%; transform: rotate(0.5deg); z-index: 2; }
+.dsm .ds-fan-card.is-3 { margin-left: 52.5%; transform: rotate(3deg) translateY(26px); z-index: 3; }
 .dsm .ds-fan-card .pfw, .dsm .ds-fan-card .mp { box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08), 0 18px 40px -18px rgb(0 0 0 / 0.35); }
 .dsm .ds-tag { justify-self: start; padding: 4px 7px; border-radius: 4px; background: var(--case-ink); color: var(--case-bg); }
 @media (max-width: 760px) {
-.dsm .ds-fan { height: auto; display: grid; gap: 18px; }
-.dsm .ds-fan-card { position: static; width: 100%; transform: none !important; }
+.dsm .ds-fan { height: auto; display: grid; gap: 18px; padding-bottom: 0; }
+.dsm .ds-fan-card { position: static; grid-area: auto; width: 100%; margin-left: 0 !important; transform: none !important; }
 }
 .dsm .mp { --mp-brand: #3453d3; --mp-ink: #18181b; --mp-dim: #6b6b74; --mp-rule: #e4e4e7; --mp-bg: #ffffff; --mp-tint: #f1f5ff;
   background: var(--mp-bg); color: var(--mp-ink); border-radius: 10px; overflow: hidden; font-family: var(--mp-font); font-size: 13px; min-width: 0; }
@@ -190,7 +192,8 @@
 .dsm .ds-f2c-tabs button { font: 500 12px/1 var(--mono); color: #8b949e; background: none; border: 0; padding: 10px 12px; cursor: pointer; white-space: nowrap; border-right: 1px solid var(--w-line); }
 .dsm .ds-f2c-tabs button[aria-selected="true"] { color: #e6edf3; background: var(--w-bg); box-shadow: inset 0 2px 0 var(--ds-mark, #f2c94c); }
 .dsm .ds-f2c-tabs button:focus-visible { outline: 2px solid var(--ds-mark, #f2c94c); outline-offset: -2px; }
-.dsm .ds-f2c-src { margin: 0; padding: 14px 0; overflow: auto; font: 400 12.5px/1.6 var(--mono); color: #e6edf3; counter-reset: ln; tab-size: 2; min-height: 380px; }
+/* one size whichever file is open: the longest (20 lines) sets it */
+.dsm .ds-f2c-src { margin: 0; padding: 9px 0; overflow: auto; font: 400 12.5px/1.4 var(--mono); color: #e6edf3; counter-reset: ln; tab-size: 2; min-height: calc(20 * 12.5px * 1.4 + 18px); }
 .dsm .ds-f2c-src:focus-visible { outline: 2px solid var(--ds-mark, #f2c94c); outline-offset: -2px; }
 .dsm .ds-f2c-src .ln { display: block; padding: 0 16px 0 52px; position: relative; white-space: pre; }
 .dsm .ds-f2c-src .ln::before { counter-increment: ln; content: counter(ln); position: absolute; left: 0; width: 36px; text-align: right; color: #484f58; }
@@ -313,24 +316,26 @@
   content: ""; position: absolute; right: 10px; top: 100%; border: 4px solid transparent; border-top-color: #151515; border-bottom: 0; }
 .dsm .show-ratios .ui-link + [data-r], .dsm .show-ratios p [data-r] { margin-left: 6px; }
 /* ---------- 02.1 roles: a wall of the scales ---------- */
-.dsm .ds-wall { overflow-x: auto; margin-inline: calc(-1 * var(--cf-pad)); padding-inline: var(--cf-pad); }
+/* the wall runs to the card's edges so it can scroll sideways on phones; its grid spans the text column, edge to edge */
+.dsm .ds-wall { overflow-x: auto; margin-inline: calc(-1 * var(--cf-pad)); padding-inline: var(--cf-pad); max-width: calc(100% + 2 * var(--cf-pad)); }
 .dsm .ds-wall-grid { display: grid; grid-template-columns: 8.5rem repeat(5, minmax(4.5rem, 1fr)); gap: 3px; min-width: 620px; }
 .dsm .ds-wall-h { font: 500 12px/1.25 var(--mono); color: var(--case-dim); padding: 0 2px 8px; align-self: end; }
 .dsm .ds-wall-h b { display: block; font: 600 13px/1.2 var(--sans); color: var(--case-ink); margin-bottom: 2px; }
 .dsm .ds-wall-role { display: grid; align-content: center; padding-right: 10px; }
 .dsm .ds-wall-role b { font: 600 16px/1.1 var(--sans); color: var(--case-ink); letter-spacing: -0.01em; }
 .dsm .ds-wall-role span { font: 500 11.5px/1.3 var(--mono); color: var(--case-dim); }
-.dsm .ds-wall-c { height: 64px; display: flex; align-items: flex-end; justify-content: space-between; padding: 8px 9px; font: 600 15px/1 var(--sans); }
+.dsm .ds-wall-c { height: 56px; display: flex; align-items: flex-end; justify-content: space-between; padding: 8px 9px; font: 600 15px/1 var(--sans); }
 .dsm .ds-wall-row > .ds-wall-c:nth-child(2) { border-radius: 10px 0 0 10px; }
 .dsm .ds-wall-row > .ds-wall-c:last-child { border-radius: 0 10px 10px 0; }
 .dsm .ds-wall-c small { font: 500 11px/1 var(--mono); }
 .dsm .ds-wall-row { display: contents; }
 /* ---------- 02.2 lightness, on the dark sheet ---------- */
-.dsm .ds-light { display: grid; gap: clamp(18px, 3vw, 28px); }
+.dsm .ds-light { display: grid; gap: clamp(12px, 1vw, 16px); }
 .dsm .ds-light svg { display: block; width: 100%; height: auto; overflow: visible; }
 .dsm .ds-light .ax { stroke: var(--case-rule); }
-.dsm .ds-light .tick text, .dsm .ds-light .lbl { font: 500 12px var(--mono); fill: var(--case-dim); }
-.dsm .ds-light .row-l { font: 600 13px var(--sans); fill: var(--case-ink); }
+/* drawn 760 wide and shown about 750 wide: labels at 13.25 read at 13px (playbook §6) */
+.dsm .ds-light .tick text, .dsm .ds-light .lbl { font: 500 13.25px var(--mono); fill: var(--case-dim); }
+.dsm .ds-light .row-l { font: 600 13.5px var(--sans); fill: var(--case-ink); }
 .dsm .ds-light .band { fill: none; stroke: var(--accent); stroke-width: 1.5; }
 .dsm .ds-light circle { stroke: var(--case-bg); stroke-width: 1.5; }
 .dsm .ds-light-chart { overflow-x: auto; }
@@ -339,7 +344,7 @@
 }
 .dsm .ds-metrics { list-style: none; margin: 0; padding: 14px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: 1px solid var(--case-rule); }
 .dsm .ds-metrics li { display: grid; gap: 6px; min-width: 0; }
-.dsm .ds-metrics li b { font: 600 clamp(2.6rem, 7vw, 5.4rem)/0.95 var(--sans); letter-spacing: -0.045em; color: var(--accent); font-variant-numeric: tabular-nums; }
+.dsm .ds-metrics li b { font: 600 clamp(2.6rem, 7vw, 5rem)/0.95 var(--sans); letter-spacing: -0.045em; color: var(--accent); font-variant-numeric: tabular-nums; }
 .dsm .ds-metrics li:last-child b { color: var(--case-ink); }
 .dsm .ds-metrics span { font: 500 12.5px/1.35 var(--mono); color: var(--case-dim); }
 @media (max-width: 600px) {
@@ -399,7 +404,8 @@
   --ov-prod-t: #3a3935; --ov-prod-l: #2f2e2b; --ov-prod-r: #252422;
   --ov-stud-s: #23221f; --ov-stud-c: #3d3c38; --ov-user: #4a4945;
   --ov-piece: #e6e2d9; --ov-night: #151413; --ov-own: #2c2b28; }
-.dsm .ds-layers2 svg { display: block; width: 100%; height: auto; min-width: 660px; overflow: visible; }
+/* never narrower than 744px, so its labels stay 13px or more; narrower screens scroll it sideways */
+.dsm .ds-layers2 svg { display: block; width: 100%; height: auto; min-width: 744px; overflow: visible; }
 .dsm .ds-layers2 .ob polygon { stroke: var(--ov-line); stroke-width: .9; stroke-linejoin: round; }
 .dsm .ds-layers2 .o-base .t { fill: var(--ov-base-t); }
 .dsm .ds-layers2 .o-base .l { fill: var(--ov-base-l); }
@@ -440,13 +446,32 @@
 .dsm .ds-layers2 .pc-notch { fill: var(--case-bg); stroke: none; }
 .dsm .ds-layers2 .pc-slit { stroke-width: 1.1; stroke-linecap: round; }
 .dsm .ds-layers2 .o-shadow { fill: #000; opacity: .12; }
-.dsm .ds-layers2 .o-callname { font: 600 14px var(--sans); fill: var(--case-ink); }
+.dsm .ds-layers2 .o-callname { font: 600 17px var(--sans); fill: var(--case-ink); }
 .dsm .ds-layers2 .o-leader { stroke: var(--ov-hair); stroke-width: .8; }
 .dsm .ds-layers2 .o-tick { fill: var(--ov-line); }
 .dsm .ds-layers2 .o-num { fill: var(--case-bg); stroke: var(--ov-line); stroke-width: 1.1; }
-.dsm .ds-layers2 .o-numt { font: 600 11.5px var(--mono); fill: var(--case-ink); }
-.dsm .ds-layers2 .o-ln { font: 600 15.5px var(--sans); fill: var(--case-ink); }
-.dsm .ds-layers2 .o-ls { font: 500 12px var(--mono); fill: var(--case-dim); }
+.dsm .ds-layers2 .o-numt { font: 600 16.75px var(--mono); fill: var(--case-ink); }
+.dsm .ds-layers2 .o-ln { font: 600 17.5px var(--sans); fill: var(--case-ink); }
+.dsm .ds-layers2 .o-ls { font: 500 16.75px var(--mono); fill: var(--case-dim); }
+/* 02.2 on computers: a short claim, so the reasoning takes the wider column and runs a line shorter over the window */
+@media (min-width: 1000px) {
+  [data-palette="design-system"] :is([data-card="in-code"], #in-code) > .cf-head { grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr); }
+  [data-palette="design-system"] :is([data-card="in-code"], #in-code) > .cf-evidence { margin-top: 0.875rem; }
+}
+/* 03.2 on computers: the readout follows the claim a step closer */
+@media (min-width: 1000px) {
+  [data-palette="design-system"] :is([data-card="fixed-lightness"], #fixed-lightness) > .cf-evidence { margin-top: 0.875rem; }
+}
+/* 01.3 on computers: the build rises beside the text. Its tall left end (the first product's users) stands under the
+   claim, and the reasoning sits over its open top right, so the card is the drawing's height, not the text's plus the
+   drawing's. Both share the card's one grid cell; the drawing is dropped by a share of its own width, so the gap holds
+   as it scales. */
+@media (min-width: 1000px) {
+  [data-palette="design-system"] :is([data-card="three-layers"], #three-layers) > :is(.cf-head, .cf-evidence) { grid-area: 1 / 1; }
+  [data-palette="design-system"] :is([data-card="three-layers"], #three-layers) > .cf-head { position: relative; z-index: 1; }
+  [data-palette="design-system"] :is([data-card="three-layers"], #three-layers) > .cf-evidence { margin-top: 0; padding-top: 10.5%; }
+  [data-palette="design-system"] :is([data-card="three-layers"], #three-layers) .ds-layers2 { margin-top: 0; }
+}
 /* the nav sits at the top of the app frame: its callout hangs below the tab instead */
 .dsm .show-ratios .tp-tabs [data-r] { bottom: auto; top: calc(100% + 5px); }
 .dsm .show-ratios .tp-tabs [data-r] .ds-ratio::after { top: auto; bottom: 100%; border-top: 0; border-bottom: 4px solid #151515; }
@@ -456,8 +481,8 @@
 .dsm .ds-ico .s { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .dsm .ds-ico .o { fill: none; stroke: currentColor; stroke-width: 1.8; }
 /* the clients sit side by side, square to the page, so the three looks can be compared */
-.dsm .ds-fan.is-clients { height: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.dsm .ds-fan.is-clients .ds-fan-card { position: static; width: auto; transform: none; }
+.dsm .ds-fan.is-clients { height: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-bottom: 0; }
+.dsm .ds-fan.is-clients .ds-fan-card { position: static; grid-area: auto; width: auto; margin-left: 0; transform: none; }
 @media (max-width: 760px) {
 .dsm .ds-fan.is-clients { grid-template-columns: minmax(0, 1fr); }
 }
@@ -584,7 +609,7 @@
 .dsm .ide-nav { display: none; }
 }
 /* 03.2: one OKLCH value read part by part; the lightness is the part that stays */
-.dsm .ds-oklch { display: grid; gap: 8px; padding-bottom: 16px; margin-bottom: 4px; border-bottom: 1px solid var(--case-rule); }
+.dsm .ds-oklch { display: grid; gap: 8px; padding-bottom: 14px; margin-bottom: 4px; border-bottom: 1px solid var(--case-rule); }
 .dsm .ok-row { display: grid; grid-template-columns: 22px auto 1fr; align-items: center; gap: 12px; }
 .dsm .ok-row i { width: 22px; height: 22px; border-radius: 6px; box-shadow: 0 0 0 1px rgb(255 255 255 / .15); }
 .dsm .ok-row code { font: 500 clamp(15px, 1.9vw, 19px)/1 var(--mono); color: var(--case-ink); letter-spacing: -.01em; }
@@ -596,6 +621,13 @@
 .dsm .ok-row em { font: 600 13px/1 var(--mono); font-style: normal; color: var(--case-ink); margin-left: 8px; }
 .dsm .ok-key { display: flex; gap: 18px; padding-left: 34px; font: 500 11px/1 var(--mono); color: var(--case-dim); }
 .dsm .ok-key .l { color: var(--accent); }
+/* on computers the key stands between the two values and their contrast, so the readout is two lines tall */
+@media (min-width: 1000px) {
+.dsm .ds-oklch { grid-template-columns: 22px auto minmax(0, 1fr) auto; align-items: center; gap: 8px 12px; }
+.dsm .ok-row { display: contents; }
+.dsm .ok-row span { grid-column: 4; }
+.dsm .ok-key { grid-column: 3; grid-row: 1 / span 2; flex-direction: column; gap: 7px; padding-left: clamp(12px, 3vw, 40px); }
+}
 @media (max-width: 760px) {
 .dsm .ok-row { grid-template-columns: 22px 1fr; }
 .dsm .ok-row span { grid-column: 2; justify-self: start; }

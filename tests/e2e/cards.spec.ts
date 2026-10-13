@@ -20,11 +20,6 @@ const OVER_LIMIT: Record<string, number> = {
   "hhcd-data-platform#workshop": 684,
   "hhcd-data-platform#four-types": 666,
   "components-for-any-data#shapes": 652,
-  "design-system#drift": 686,
-  "design-system#three-layers": 815,
-  "design-system#in-code": 774,
-  "design-system#roles": 684,
-  "design-system#fixed-lightness": 740,
 };
 
 /** Every card on a case page, measured once its images have loaded. */
