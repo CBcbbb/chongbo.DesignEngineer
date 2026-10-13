@@ -112,7 +112,7 @@ export type Media =
        */
       kind: "deck";
       label: string;
-      items: { asset: string; title: string; text: string }[];
+      items: { asset: string; title: string }[];
       need: string;
       caption?: string;
     }

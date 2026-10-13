@@ -91,14 +91,6 @@ const TABLE_HEAD = [
   { label: "Methods", x: CELL.method[0] },
   { label: "Supported by", x: CELL.partner },
 ];
-/** What the reader is looking at, at each step (shown under the stage, and read out). */
-const NOTES = [
-  "Each type becomes one question",
-  "One person's answers",
-  "One row per person · duplicate removed · spelling unified",
-  "Split by type · repeated entries merge into one",
-  "Linked through the projects · every entry the same weight",
-];
 const DESCRIBE = [
   "The four types, each turned into a question: people, who are you; projects, what did you work on; methods, which methods did you use; partners, who supported it.",
   "Person A's answers: Project 1 and Project 2; Workshops and Interviews; Partner X.",
@@ -106,12 +98,6 @@ const DESCRIBE = [
   "Four columns: people, projects, methods and partners. Project 2 and Workshops, given by both people, become one entry each; methods are Workshops, Interviews and Mapping.",
   "The entries as a network: people link to projects, and projects to methods and partners.",
 ];
-
-const Arrow = ({ flip }: { flip?: boolean }) => (
-  <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-    <path d={flip ? "M10 3.5 5.5 8l4.5 4.5" : "M6 3.5 10.5 8 6 12.5"} />
-  </svg>
-);
 
 export function DataFlow({ steps }: { steps: string[] }) {
   const [step, setStep] = useState(0);
@@ -135,28 +121,14 @@ export function DataFlow({ steps }: { steps: string[] }) {
           </li>
         ))}
       </ol>
-      <div className="cf-pipe-caption">
-        <p className="cf-pipe-text" aria-live="polite">
-          <span className="sr-only">
-            Step {step + 1} of {steps.length}:{" "}
-          </span>
-          {steps[step]}
-          <span className="sr-only"> {DESCRIBE[step]}</span>
-        </p>
-        <span className="cf-pipe-nav">
-          <button type="button" onClick={() => go(step - 1)} disabled={step === 0} aria-label="Previous step">
-            <Arrow flip />
-          </button>
-          <button type="button" className="is-next" onClick={() => go(step + 1)} disabled={step === steps.length - 1} aria-label="Next step">
-            <span aria-hidden="true">Next</span>
-            <Arrow />
-          </button>
-        </span>
-      </div>
+      {/* the step on show, read out; on screen it is the stage's title */}
+      <p className="sr-only" aria-live="polite">
+        Step {step + 1} of {steps.length}: {steps[step]} {DESCRIBE[step]}
+      </p>
       <div className="cf-pipe-stage" data-step={step} aria-hidden="true">
-        {/* what this step shows, as the figure's label above the picture */}
+        {/* the step's sentence is the stage's title */}
         <p className="cf-pipe-meta">
-          <span className="cf-pipe-note">{NOTES[step]}</span>
+          <span className="cf-pipe-title">{steps[step]}</span>
           <span className="cf-pipe-sample">Sample labels</span>
         </p>
         <div className="cf-pipe-scroller">

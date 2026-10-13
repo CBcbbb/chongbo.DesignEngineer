@@ -45,23 +45,23 @@ I coded each prototype idea, so people could try it rather than imagine it. That
 
 *Evidence:* an early prototype with sample entries.
 
-### 01.4 `workshop`: A 75-minute workshop with 14 stakeholders
+### 01.4 `workshop`: All seven organisations tested the prototypes
 
-I led the workshop with members of all seven organisations, and designed its process around the data the platform needed. Each took a stakeholder card, from eco-social artist to EU cluster coordinator, and judged the prototypes from that person's point of view.
+I designed the workshop around the data the platform needed, and led it with a fellow researcher. Fourteen people worked in pairs: each pair took a stakeholder card and judged the prototypes from that person's point of view. Their answers went up on three walls.
 
-*Evidence:* the seven stakeholder cards as a hand, dealt into a fan; the picked card's words beside it (the cards' own words, below). The three walls in a row across the foot, each photo (cropped to 2:1, sheet whole) over its finding; each photo opens larger.
+*Evidence:* the seven stakeholder cards as a hand, dealt into a fan, labelled "Stakeholder cards" under it; the picked card lifts (its role is announced to screen readers). The three walls in a row across the foot, each photo over its finding; each photo opens larger.
 
-*Cards (their own words):* The Eco-Social Artist applying for funding for a new project and seeking ideas for digital methods. · The Digital Artist has just got a new commission to work with their local community and they are looking to learn more about social arts methods. · The Community Leader just received funding to create a community garden and wants to work with an artist to create a sound installation for the site, but has never commissioned an artist before and wants to learn more about this type of work. · The Local Councillor wants to work with an artist to encourage local people to get involved in a consultation on a new plan for a public transport network. · The Student writing their dissertation on the history of digital arts and needs information about past projects. · The Academic Researcher beginning a new research project about the role of local citizens in environmental governance projects across Europe, and wants to find some arts-based case studies. · The EU Cluster Coordinator writing-up an evidence report for justifications for a potential new call-out for arts-based approaches to environmental governance, and is looking for case studies.
+*Cards (names only):* The Eco-Social Artist · The Digital Artist · The Community Leader · The Local Councillor · The Student · The Academic Researcher · The EU Cluster Coordinator
 
-1. **Wall 1 · Content.** Every type got a consistent structure, and methods were linked to the projects and people that used them.
-2. **Wall 2 · Scope.** Entries should touch at least two of three themes: technology, community and environment. The scope went beyond Europe.
-3. **Wall 3 · Functionality.** Filters, search and visible connections ranked highest. Translation scored low, but participants argued it was essential for inclusion, so we kept it.
+1. **Wall 1 · Content.** The same fields for every entry, and each method linked to who used it.
+2. **Wall 2 · Scope.** At least two of three themes: technology, community, environment.
+3. **Wall 3 · Functionality.** Filters, search and connections first. Translation kept, for inclusion.
 
 ### 01.5 `four-types`: Why the data is collected by person but mapped by type
 
 To make the survey easy to fill in, I started it from each person's own work: their projects, the methods they used and who supported them. Collecting was easy, but every row of the spreadsheet had a person at its centre. So I gave the map four linked types of equal weight, and decided what each entry stands for.
 
-*Evidence:* one stage the reader steps through (sample labels: Person A: Project 1, Project 2 · Workshops, Interviews · Partner X; Person B: Project 2 · Mapping, workshop · Partner Y; a repeat of Person A's row); the same entries move: questions (each → its type) → one person's answers → one row per person, cleaned → four typed columns, repeats merged → linked. *Tabs:* Decide · Survey · Clean · Split · Link. *Notes on the stage:* Each question becomes one type · One person's answers · One row per person · duplicate removed · spelling unified · Split by type · repeated entries merge into one · Linked through the projects · every entry the same weight
+*Evidence:* one stage the reader steps through (sample labels: Person A: Project 1, Project 2 · Workshops, Interviews · Partner X; Person B: Project 2 · Mapping, workshop · Partner Y; a repeat of Person A's row); the same entries move: questions (each → its type) → one person's answers → one row per person, cleaned → four typed columns, repeats merged → linked. *Steps:* Decide · Survey · Clean · Split · Link, as a numbered line across the card; the step's sentence (below) is the stage's title.
 
 1. Decide what the platform needs to know.
 2. Survey each person about their own work.
