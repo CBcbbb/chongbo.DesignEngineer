@@ -2840,7 +2840,7 @@
    follow and no other project's cards change. Words, images and the type scale are untouched.
    ========================================================================================================== */
 
-/* ---------- 01.4 the workshop: 684px → 618px at 1180px and up ---------- */
+/* ---------- 01.4 the workshop: 684px → about 560px at 1180px and up ---------- */
 /* each wall's label and title share one line ("WALL 1  Content"), so the three walls cost one row less */
 @media (min-width: 760px) {
   [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-steps li {
@@ -2881,6 +2881,14 @@
   [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read p {
     text-align: left;
   }
+}
+
+/* the picked role's name only, set like the walls' titles */
+[data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read strong {
+  display: block;
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
 }
 
 /* ---------- 01.5 data collection: 665px → 632px at 1180px and up ---------- */

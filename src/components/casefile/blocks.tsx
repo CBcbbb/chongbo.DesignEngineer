@@ -326,7 +326,7 @@ export function CaseMedia({
     case "deck": {
       const cards = media.items.flatMap((it) => {
         const d = imageSize(it.asset);
-        return d && assetExists(it.asset) ? [{ src: src(it.asset), width: d.width, height: d.height, title: it.title, text: it.text }] : [];
+        return d && assetExists(it.asset) ? [{ src: src(it.asset), width: d.width, height: d.height, title: it.title }] : [];
       });
       if (!cards.length) return <Missing asset={media.items[0]?.asset ?? ""} need={media.need} />;
       return <CardDeck label={media.label} cards={cards} />;

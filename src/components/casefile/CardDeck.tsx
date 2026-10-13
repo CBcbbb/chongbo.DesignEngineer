@@ -14,14 +14,13 @@ type Card = {
   width: number;
   height: number;
   title: string;
-  text: string;
 };
 
 /**
  * A workshop's role cards as a hand of cards. When the hand comes into view, the cards are dealt from a stack into a
  * fan (once; with reduced motion they are simply fanned). The reader picks a card by pointing at it, clicking it, or
- * with the arrow keys: it lifts and straightens, and its words are set under the hand as live text, so it can be read
- * at any size. The images are decorative copies of those words.
+ * with the arrow keys: it lifts and straightens, and its role's name is set under the hand as live text. The cards'
+ * own words stay on the pictures; the case file names the roles only.
  */
 export function CardDeck({
   label,
@@ -140,7 +139,7 @@ export function CardDeck({
                 {String(i + 1).padStart(2, "0")} /{" "}
                 {String(cards.length).padStart(2, "0")}
               </span>
-              <strong>{c.title}</strong> {c.text}
+              <strong>{c.title}</strong>
             </p>
           ))}
         </div>
