@@ -121,3 +121,13 @@ From the seven card originals you sent:
 - The originals are 362 × 602, so the cards are shown at most about 140px wide, sharp on high-density screens; the live text carries the reading.
 - `workshop-cards.png` (the old composite) is no longer used; the file stays in `public/assets/hhcd`.
 - **01.5's sample data matches across all five steps** (your note at 11:02): Person A answers Project 1, Project 2 · Workshops, Interviews · Partner X; Person B answers Project 2 · Mapping, "workshop" · Partner Y; a repeat of Person A's row is removed in step 3. Step 4 has three methods (Workshops, Interviews, Mapping) and step 5 the same nine entries.
+
+## The workshop card, rewritten (13 Oct, evening)
+
+Approved by Chongbo in conversation:
+
+- Heading: "All seven organisations tested the prototypes" (was "A 75-minute workshop: 14 participants, seven stakeholder roles"). The 75 minutes is cut; 14 and seven are said once each.
+- Body: the list of roles ("from eco-social artist to EU cluster coordinator") is cut, since the cards show them; it ends "Their answers went up on three walls."
+- Walls keep their titles (Content, Scope, Functionality); each finding is now two lines at most. Left out to keep them short: that the scope went beyond Europe, and that translation scored low before participants argued for it.
+- The role cards show the role's name only; the cards' own words stay on the pictures.
+
