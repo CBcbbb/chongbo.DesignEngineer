@@ -7,7 +7,7 @@ import { projectNumber, trayMeta } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Work",
-  description: "Every case file: design systems, accessible data tools, brand work and this site.",
+  description: "Every case file: design systems, accessible data tools and brand work.",
   alternates: { canonical: "/work" },
 };
 
