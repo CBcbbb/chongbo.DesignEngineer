@@ -315,14 +315,15 @@
   content: ""; position: absolute; right: 10px; top: 100%; border: 4px solid transparent; border-top-color: #151515; border-bottom: 0; }
 .dsm .show-ratios .ui-link + [data-r], .dsm .show-ratios p [data-r] { margin-left: 6px; }
 /* ---------- 02.1 roles: a wall of the scales ---------- */
-.dsm .ds-wall { overflow-x: auto; margin-inline: calc(-1 * var(--cf-pad)); padding-inline: var(--cf-pad); }
+/* the wall runs to the card's edges so it can scroll sideways on phones; its grid spans the text column, edge to edge */
+.dsm .ds-wall { overflow-x: auto; margin-inline: calc(-1 * var(--cf-pad)); padding-inline: var(--cf-pad); max-width: calc(100% + 2 * var(--cf-pad)); }
 .dsm .ds-wall-grid { display: grid; grid-template-columns: 8.5rem repeat(5, minmax(4.5rem, 1fr)); gap: 3px; min-width: 620px; }
 .dsm .ds-wall-h { font: 500 12px/1.25 var(--mono); color: var(--case-dim); padding: 0 2px 8px; align-self: end; }
 .dsm .ds-wall-h b { display: block; font: 600 13px/1.2 var(--sans); color: var(--case-ink); margin-bottom: 2px; }
 .dsm .ds-wall-role { display: grid; align-content: center; padding-right: 10px; }
 .dsm .ds-wall-role b { font: 600 16px/1.1 var(--sans); color: var(--case-ink); letter-spacing: -0.01em; }
 .dsm .ds-wall-role span { font: 500 11.5px/1.3 var(--mono); color: var(--case-dim); }
-.dsm .ds-wall-c { height: 64px; display: flex; align-items: flex-end; justify-content: space-between; padding: 8px 9px; font: 600 15px/1 var(--sans); }
+.dsm .ds-wall-c { height: 56px; display: flex; align-items: flex-end; justify-content: space-between; padding: 8px 9px; font: 600 15px/1 var(--sans); }
 .dsm .ds-wall-row > .ds-wall-c:nth-child(2) { border-radius: 10px 0 0 10px; }
 .dsm .ds-wall-row > .ds-wall-c:last-child { border-radius: 0 10px 10px 0; }
 .dsm .ds-wall-c small { font: 500 11px/1 var(--mono); }

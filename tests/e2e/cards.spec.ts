@@ -22,7 +22,6 @@ const OVER_LIMIT: Record<string, number> = {
   "components-for-any-data#shapes": 652,
   "design-system#three-layers": 815,
   "design-system#in-code": 774,
-  "design-system#roles": 684,
   "design-system#fixed-lightness": 740,
 };
 
