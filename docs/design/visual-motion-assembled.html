@@ -372,7 +372,7 @@
       <dt>卡纸</dt><dd>请求失败时机器换成卡纸那张图，屏幕写 Paper jam / Try again in a moment，你的请求原样退回纸上，机器下面出现一行：Something jammed. Try again in a moment, browse all work, or email me.（都是文案提案）卡纸会一直留着，直到下一次按 PRINT。和 404 是两回事：404 是页面不存在，这里是打印失败。</dd>
       <dt>图标和分享图</dt><dd>红键做手机桌面图标和浏览器标签图标。分享图用代码合成：摄影棚背景 + 定稿打印机 + 网站自己的文字，所以字永远清楚，每个案例自动生成。</dd>
       <dt>AI 分析</dt><dd>和 v3 一样的五步：读、等、懂、找、印。</dd>
-      <dt>没读懂</dt><dd>输入里找不到任何角色或技能时（比如名字、"hello"、乱打的字），屏幕先说 No role or skill found，再打三张"从这里开始"的纸，标题上面一行写清楚：<i>I couldn’t find a role or a skill in “…”. Here are three places to start. For a closer match, pick a skill above or describe the role, for example “design systems for a fintech app”.</i> 如果输入看起来就是一个名字，开头换成 <i>Nice to meet you, Sarah.</i>（都是文案提案）。名字不保存、不发给统计。现在线上的网站遇到这种输入只会默默打三张，不解释。点"试试输入名字"可以看。</dd>
+      <dt>没读懂</dt><dd>输入里找不到任何角色或技能时（比如名字、"hello"、乱打的字），不用卡纸图（卡纸是打印失败，什么都没出来；这里还会打出有用的纸）。机器打个嗝：抖两下（0.42 秒），屏幕先说 No role or skill found，再打三张"从这里开始"的纸，标题上面一行写清楚：<i>I couldn’t find a role or a skill in “…”. Here are three places to start. For a closer match, pick a skill above or describe the role, for example “design systems for a fintech app”.</i> 如果输入看起来就是一个名字，开头换成 <i>Nice to meet you, Sarah.</i>（都是文案提案）。名字不保存、不发给统计。现在线上的网站遇到这种输入只会默默打三张，不解释。点"试试输入名字"可以看。</dd>
       <dt>夜间机器</dt><dd>GPT 那张把机器重新画了（两端变圆、底座和部件位置都变了），对不上叠加的位置，所以没用。我把白天那张重新打光：暖色台灯从左上照下来，右端暗一点，顶边一道冷色轮廓光，形状完全不变。</dd>
     </dl>
   </section>
@@ -584,7 +584,8 @@
     let n = 0;
     while (!answer) { if (abort) return null; disp("Reading your request", PROJECTS[n++ % PROJECTS.length], 0, true); await new Promise((r) => setTimeout(r, 110)); }
     if (answer.startHere) {
-      // 3'. understood nothing: a shake of the head on the screen, then the three places to start
+      // 3'. understood nothing: a hiccup, not a jam. The machine shudders twice, the screen says why, then it prints where to start.
+      if (!reduced()) await m.animate([{ translate: "0 0" }, { translate: "1.2px 0" }, { translate: "-1.2px 0" }, { translate: "0 0", offset: 0.5 }, { translate: "1px 0" }, { translate: "-1px 0" }, { translate: "0 0" }], { duration: 420, easing: "steps(6)" }).finished;
       disp("No role or skill found", "In your request", 1); await sleep(900); if (abort) return null;
       disp("Printing where to start", "Three sheets", 3);
       return answer;
