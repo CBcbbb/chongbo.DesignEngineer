@@ -306,7 +306,8 @@ test.describe("shell (approved UX proposals)", () => {
     await expect(foot.locator(".ft-note")).toHaveText("AI fetches the work. I made it.");
     await expect(foot.locator(".ft-mail > span").first()).toHaveText("Want the human? Say hello.");
     await expect(foot.getByRole("link", { name: "Say hello" })).toHaveAttribute("href", /^mailto:[^@]+@[^@]+$/);
-    await expect(foot.getByRole("button", { name: "Copy email address" })).toBeVisible();
+    await expect(foot.locator(".ft-mail a .ft-plane")).toBeVisible();
+    await expect(foot.getByRole("button")).toHaveCount(0);
     await expect(foot.locator("a")).toHaveCount(1);
   });
 });

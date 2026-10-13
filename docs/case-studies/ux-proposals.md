@@ -182,6 +182,8 @@
 
 **新文案（待确认）：** 你选中的那一句；复制按钮的 "Copied"；复制按钮的读屏标签 "Copy email address"。
 
+**更新（10 月 14 日）：** 复制按钮去掉了。"Say hello" 旁边换成一个纸飞机，和文字一起是同一个 mailto 链接，地址作为悬停提示显示。
+
 **成本。** 大约四分之一天，`SiteFooter.tsx` 和 `components.css`。LinkedIn 留在 About。
 
 ---
