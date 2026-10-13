@@ -15,3 +15,6 @@ src/temp
 
 # Granola's JD for the printer eval (their copy, kept local)
 tests/eval/granola-jd.txt
+
+# Results of npm run eval:ask (local only)
+.eval

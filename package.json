@@ -15,7 +15,8 @@
     "test:e2e": "playwright test",
     "contrast": "tsx scripts/contrast.ts",
     "screenshots": "playwright test --project=screenshots",
-    "eval:printer": "NODE_OPTIONS=--conditions=react-server tsx --env-file=.env.local scripts/eval-printer.ts"
+    "eval:printer": "NODE_OPTIONS=--conditions=react-server tsx --env-file=.env.local scripts/eval-printer.ts",
+    "eval:ask": "NODE_OPTIONS=--conditions=react-server tsx --env-file-if-exists=.env.local scripts/eval-ask.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.133.0",

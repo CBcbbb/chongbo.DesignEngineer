@@ -10,8 +10,15 @@ const WORDS: Record<string, number> = { one: 1, two: 2, three: 3, four: 4, five:
  */
 export type RequestedCount = { n: number; unit: "projects" | "cards" };
 
+/**
+ * Counts are read in a short ask only. A pasted job description's numbers ("include 2-3 case studies", "lead 2
+ * projects at a time") are about the job, not about what to print. Same length as the home page's one-line input.
+ */
+export const COUNT_BRIEF_MAX = 300;
+
 /** A number up to three words before project / case study / example / piece / card, within the sheet limit. */
 export function requestedCount(brief: string): RequestedCount | null {
+  if (brief.length > COUNT_BRIEF_MAX) return null;
   const m = brief
     .toLowerCase()
     .match(/\b([1-6]|one|two|three|four|five|six)\b(?:\W+[a-z-]+){0,3}?\W+(projects?|case ?stud(?:y|ies)|examples?|pieces?|works?|cards?)\b/);

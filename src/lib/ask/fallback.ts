@@ -30,18 +30,21 @@ import {
  */
 export const KEYS: Record<Signal, string[]> = {
   accessibility: ["access", "a11y", "wcag", "screen reader", "screenreader", "keyboard", "inclusiv", "contrast", "disab", "assistive", "aria!", "blind", "low vision", "colour blind", "color blind"],
-  "design-systems": ["design system", "token", "component librar", "figma", "consisten", "style guide", "styleguide", "theming", "theme", "variables"],
+  // Colour is a system's job here (scales, roles, dark mode), not typography's.
+  "design-systems": ["design system", "token", "component librar", "figma", "consisten", "style guide", "styleguide", "theming", "theme", "variables", "colour", "color", "palette", "dark mode", "white label"],
   "cross-platform": ["platform", "multiple product", "product line", "several product", "many product", "scale", "scaling", "cross platform", "multi brand", "ios!", "android", "web and mobile"],
   "design-eng-gap": ["engineer", "handoff", "hand off", "developer", "dev!", "devs!", "front end", "frontend", "code", "coding", "bridge", "gap", "react", "typescript", "tailwind", "css!", "html!", "implement", "between design"],
   "end-to-end": ["end to end", "ship", "from scratch", "solo", "alone", "own!", "ownership", "deliver", "launch", "zero to one", "idea to", "whole thing", "full stack", "fullstack"],
   // Not "website": a marketing website is a brand ask, and SEO only when they say so.
   "seo-performance": ["seo!", "performance", "fast", "search engine", "lighthouse", "speed", "web vitals", "metadata", "static", "discoverab"],
-  "publishing-workflow": ["cms!", "publish", "content", "template", "workflow", "editor", "admin"],
+  // Not "workflow" or "content" alone: "complex workflows" and "content design" are not publishing, and no card shows
+  // publishing, so a loose match prints "No work to show yet for Publishing workflows" on JDs that never asked.
+  "publishing-workflow": ["cms!", "publish", "content management", "content model", "content editor", "headless", "template"],
   "reusable-components": ["reusab", "reuse", "component", "modular", "pattern librar", "building block"],
-  "brand-storytelling": ["brand", "marketing", "story", "stories", "storytell", "landing", "campaign", "editorial", "narrative", "consumer", "website", "web site", "web!"],
+  "brand-storytelling": ["brand", "marketing", "story!", "stories", "storytell", "landing", "campaign", "editorial", "narrative", "consumer", "website", "web site", "web!"],
   conversion: ["conversion", "convert", "growth", "ab test", "a b test", "split test", "experiment", "click", "tap through", "sales", "revenue", "funnel", "engagement"],
   "motion-interaction": ["motion", "animat", "interaction", "micro", "delight", "polish", "detail", "feel", "transition", "craft", "playful", "tactile"],
-  typography: ["typograph", "type!", "typeface", "font", "layout", "visual design", "hierarchy", "grid", "colour", "color"],
+  typography: ["typograph", "type!", "typeface", "font", "layout", "visual design", "hierarchy", "grid"],
   "data-architecture": ["api!", "apis", "back end", "backend", "server", "schema", "data contract", "data layer", "data model", "architecture", "full stack", "fullstack", "endpoint", "integration"],
   data: ["data", "visualis", "visualiz", "chart", "graph", "dashboard", "d3!", "network", "table", "spreadsheet", "messy"],
   prototyping: ["prototyp", "explor", "invent", "new interaction", "test idea", "early", "concept", "sketch", "iterat"],
@@ -82,7 +85,8 @@ export const MISSING_ASKS: { label: string; pattern: RegExp }[] = [
   { label: "Swift", pattern: /\bswift(ui)?\b/ },
   { label: "Kotlin", pattern: /\b(kotlin|jetpack compose)\b/ },
   { label: "databases", pattern: /\b(databases?|sql|postgres(ql)?|mysql|mongo(db)?)\b/ },
-  { label: "analytics", pattern: /\b(analytics|amplitude|mixpanel)\b/ },
+  // "Analytics dashboards" are dashboards (data work some cards show), not product analytics.
+  { label: "analytics", pattern: /\b(analytics(?! dashboards?\b)|amplitude|mixpanel)\b/ },
 ];
 
 /** Names and places in a brief that point at one project. */
@@ -336,6 +340,21 @@ export function lineFor(asked: Signal[], sheets: Sheet[], missing: string[], sta
 
 /** Words that name people or organisations, never a skill: such labels are not "missing work". */
 const NOT_A_SKILL = /\b(employers?|company|companies|customers?|clients?|salary|salaries|contact|address|prompt|instructions?|projects?)\b/;
+/** The employer's name appears on the About page only, never on anything the printer prints (playbook §9). */
+const EMPLOYER = /\btigris\b/;
+/** Joining words a label may add to the visitor's own words. */
+const JOINERS = new Set(["a", "an", "and", "or", "of", "in", "on", "to", "for", "the", "with"]);
+
+/**
+ * A label the model wrote in its own words is printed only if the visitor wrote those words: every word of it is in the
+ * brief. So nothing the model makes up (an injected sentence, a line of the prompt, a name it knows) reaches the page.
+ * Common asks and capability names are the site's own labels and need no such check.
+ */
+export function inBrief(label: string, brief: string): boolean {
+  const words = new Set(normalise(brief).trim().split(" ").filter(Boolean).map(stem));
+  const own = normalise(label).trim().split(" ").filter((w) => w && !JOINERS.has(w));
+  return own.length > 0 && own.every((w) => words.has(stem(w)) || words.has(w));
+}
 /** Project names, shown or hidden (hidden ones aren't in `projects`, so they are listed here too). */
 const NAMES = [...projects.flatMap((p) => [p.slug.replace(/-/g, " "), p.title]), "wildecho", "wild echo", "this site", "this website", "this portfolio", "hhcd", "helen hamlyn", "voice", "nike"]
   .map((t) => normalise(t).trim())
@@ -346,7 +365,8 @@ const STACK = new Set(projects.flatMap((p) => p.stack.flatMap((s) => normalise(s
  * The model's "missing" labels, checked before they are printed as "No work to show yet for …":
  *  - a common ask the content never mentions (A/B testing, Kotlin, databases) is kept;
  *  - a label naming a project (shown or hidden), a person or an organisation is dropped;
- *  - a label for a tool in a project's stack, or a capability some card shows, is dropped: the work shows it.
+ *  - a label for a tool in a project's stack, or a capability some card shows, is dropped: the work shows it;
+ *  - any other label is kept only if its words are the visitor's own (inBrief).
  * The fallback's own missing asks for the brief are added, so both paths say the same.
  */
 export function verifyMissing(labels: string[], brief: string, asked: Signal[] = []): string[] {
@@ -358,12 +378,13 @@ export function verifyMissing(labels: string[], brief: string, asked: Signal[] =
       if (!common.pattern.test(CONTENT_TEXT)) out.push(common.label);
       continue;
     }
-    if (NOT_A_SKILL.test(q) || NAMES.some((n) => q.includes(` ${n} `))) continue;
+    if (NOT_A_SKILL.test(q) || EMPLOYER.test(q) || NAMES.some((n) => q.includes(` ${n} `))) continue;
     if (q.trim().split(" ").some((w) => STACK.has(w))) continue;
     const hits = Object.keys(signalHits(label)) as Signal[];
     if (hits.some((s) => SHOWN.has(s))) continue;
     // "SEO", "SEO and performance optimisation": one capability, said one way.
-    out.push(hits.length ? SIGNALS[hits[0]!] : label);
+    if (hits.length) out.push(SIGNALS[hits[0]!]);
+    else if (inBrief(label, brief)) out.push(label);
   }
   const unshown = asked.filter((s) => !SHOWN.has(s)).map((s) => SIGNALS[s]);
   const seen = new Set<string>();
