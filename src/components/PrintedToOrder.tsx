@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from "react";
 import { SIGNALS } from "@content/schema";
 import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type AskResponse } from "@/lib/ask/schema";
 import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
-import { EXAMPLES, PICKED_HINT, TOPICS, missingLine, pad2, printedCount, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
+import { BROWSE_ALL, EXAMPLES, PICKED_HINT, TOPICS, missingLine, pad2, printedCount, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
 import { Pill } from "./nav/Pill";
 import type { PrintedCard } from "./PrintedCard";
 import { Sheet } from "./Sheet";
@@ -20,7 +21,7 @@ type Props = {
   topics?: Topic[];
 };
 
-type Result = { title: string; asked: string; cards: SheetCard[]; missing: string; provenance: string; error?: boolean };
+type Result = { title: string; asked: string; cards: SheetCard[]; missing: string; provenance: string; byModel?: boolean; error?: boolean };
 
 /** Per step of the paper's checklist. Four steps plus the feed: under two seconds, long enough to read. */
 const STEP_MS = 320;
@@ -28,7 +29,7 @@ const FEED_MS = 600;
 /** A sheet is never scaled below this to fit a short window: the card's type stays comfortable to read. */
 const MIN_SCALE = 0.85;
 /** Room kept under the sheet, so its foot doesn't touch the window's edge. */
-const FOOT_ROOM = 12;
+const FOOT_ROOM = 16;
 
 const prefersReduced = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -201,6 +202,7 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
           cards: sheets,
           missing: missingLine(outcome.data.missing),
           provenance: provenanceLine(outcome.data.source, sheets.length),
+          byModel: outcome.data.source === "model",
         }
       : { title: outcome.message, asked: quoteBrief(text), cards: [], missing: "", provenance: "", error: true };
     introRef.current = true;
@@ -260,8 +262,9 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
       const above = papers[0]!.parentElement!.getBoundingClientRect().top - results.getBoundingClientRect().top;
       const margin = parseFloat(getComputedStyle(results).scrollMarginTop) || 0;
       const room = window.innerHeight - margin - above - FOOT_ROOM;
-      const scale = Math.max(MIN_SCALE, Math.min(1, room / h));
-      strip.style.setProperty("--s", scale.toFixed(4));
+      // rounded down, so the sheet never ends a fraction of a pixel past the window
+      const scale = Math.max(MIN_SCALE, Math.min(1, Math.floor((room / h) * 1000) / 1000));
+      strip.style.setProperty("--s", String(scale));
       strip.style.setProperty("--sheet-h", `${h}px`);
     };
     fit();
@@ -432,7 +435,17 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
               </h2>
               {result.asked && <p>{result.asked}</p>}
             </div>
-            {result.provenance && <p className="provenance">{result.provenance}</p>}
+            {result.provenance && (
+              <p className="provenance">
+                {result.provenance}
+                {result.byModel && (
+                  <>
+                    {" "}
+                    <Link href="/work">{BROWSE_ALL}</Link>
+                  </>
+                )}
+              </p>
+            )}
           </div>
           {result.cards.length > 0 && (
             <ol

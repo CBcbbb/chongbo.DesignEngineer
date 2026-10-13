@@ -499,6 +499,11 @@
   font: 500 12.5px/1.5 var(--mono);
   color: var(--ink-2);
 }
+.rhead .provenance a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 /* ---------- the printed sheets ----------
  * Each sheet is a piece of paper carrying the case-file card itself (Sheet.tsx, PrintedCard.tsx): the same markup,
  * shell and CSS as on its case page, at the same width, so it is the same card. Nothing here reaches inside .s-card.
@@ -588,17 +593,23 @@
     translate: 0 0;
   }
 }
-/* the top line and the foot: clear of the paper's edges, in line with the card's */
+/* a sheet's top line (also the /work cards' top line) */
 .s-top {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  flex-wrap: wrap;
-  gap: 4px 16px;
-  padding: 18px 2px 14px;
+  gap: 10px;
+  margin-bottom: var(--s4);
   font: 500 11.5px var(--mono);
   letter-spacing: 0.06em;
   color: var(--paper-dim);
+}
+/* on the printed sheet: clear of the paper's edges, in line with the card's */
+.s-paper > .s-top {
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-bottom: 0;
+  padding: 18px 2px 14px;
 }
 .s-proj {
   font: 600 13px var(--sans);

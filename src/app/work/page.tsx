@@ -29,7 +29,7 @@ export default function WorkIndex() {
                 <h2>{p.title}</h2>
                 <p>{p.oneLiner}</p>
                 <span className="go" aria-hidden="true">
-                  Full project →
+                  See the whole project →
                 </span>
               </Link>
             </li>

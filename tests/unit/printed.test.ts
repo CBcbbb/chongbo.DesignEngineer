@@ -77,7 +77,8 @@ describe("wording", () => {
     expect(printedCount(cards.slice(0, 3))).toBe("Three sheets");
     // One project only: the sheet counter says it already.
     expect(projectRuns(cards.slice(0, 3))).toEqual([null, null, null]);
-    expect(provenanceLine("model", 4)).toBe("Chosen by Claude from my case files. The words are mine.");
+    expect(provenanceLine("model", 4)).toBe("Picked by AI from my case files, so it may miss something.");
+    expect(provenanceLine("fallback", 4)).toBe("Picked from my case files.");
   });
 });
 

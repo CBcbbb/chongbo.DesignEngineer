@@ -85,11 +85,15 @@ export function topicsToLabels(signals: readonly string[]): string[] {
   return TOPICS.filter((t) => signals.includes(t.signals[0]!)).map((t) => t.label);
 }
 
-/** Under the results title: who chose the sheets, so the reader knows the words are mine. */
+/** Under the results title: who chose the sheets. When the AI chose them, the line says it may miss something and
+ * is followed by a link to all the work (BROWSE_ALL). */
 export function provenanceLine(source: "model" | "fallback", count: number): string {
   if (!count) return "";
-  return source === "model" ? "Chosen by Claude from my case files. The words are mine." : "Picked from my case files.";
+  return source === "model" ? "Picked by AI from my case files, so it may miss something." : "Picked from my case files.";
 }
+
+/** The link after the AI's provenance line, to /work. */
+export const BROWSE_ALL = "Browse all my work.";
 
 /**
  * Where each printed card sits within its project's run: cards from one project are printed together, so a run of
