@@ -78,11 +78,13 @@
 
   /* ---------- 1. pull cord ---------- */
   .cord-g { transition: none; }
-  .t-cord .cone { fill: var(--glow); stroke: none; opacity: 0; }
-  .site[data-mode="dark"] .t-cord .cone { opacity: 0.16; }
+  .t-cord .cone { fill: url(#coneG); stroke: none; opacity: 0; }
+  .t-cord .shade { fill: none; }
+  .t-cord .rimglow { stroke: var(--glow); stroke-width: 1.1; opacity: 0; }
+  .site[data-mode="dark"] .t-cord .cone, .site[data-mode="dark"] .t-cord .rimglow { opacity: 1; }
   .site[data-mode="dark"] .t-cord .bulb-glass { fill: var(--glow); stroke: var(--glow); }
-  .t-cord .rays path { stroke: var(--glow); opacity: 0; }
-  .site[data-mode="dark"] .t-cord .rays path { opacity: 1; }
+  /* lit, the shade reads as a solid object, with the warm light along its rim */
+  .site[data-mode="dark"] .t-cord .shade { fill: currentColor; }
   .t-cord .ico { overflow: visible; }
 
   /* ---------- 2. the sleeping eye ---------- */
@@ -150,12 +152,15 @@
           <!-- 1. pull cord: a bulb on a cord; a tap pulls the cord and the bulb answers -->
           <button class="tsw t-cord" type="button" data-idea="cord">
             <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
-              <path class="cone" d="M7.6 13.4h8.8l3.4 9.4H4.2z"/>
-              <path d="M12.1 0.4c-.1 1.6 0 3.3-.1 5"/>
-              <path class="shade" d="M5.2 12.6c.3-4.2 3.1-7.1 6.8-7.1s6.6 2.9 6.9 7.1c-4.6.3-9.1.3-13.7 0z"/>
-              <path class="bulb-glass" d="M9.9 12.9c0 1.4.9 2.4 2.1 2.4s2.2-1 2.2-2.4"/>
-              <g class="rays"><path d="M12.1 17.4v2.2"/><path d="M15.6 16.6l1.3 1.8"/></g>
-              <g class="cord-g"><path d="M7.4 12.9c.1 1.6 0 3.2-.1 4.6"/><circle class="fill" cx="7.3" cy="19.1" r="1.45"/></g>
+              <defs><linearGradient id="coneG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--glow)" stop-opacity="0.55"/><stop offset="1" stop-color="var(--glow)" stop-opacity="0"/></linearGradient></defs>
+              <!-- the light: its top edge is the shade's rim, so the two always meet -->
+              <path class="cone" d="M4.9 13c4.7.7 9.5.7 14.2 0l3.9 10.6H1z"/>
+              <path d="M12 .6c.1 1.5 0 3 .1 4.5"/>
+              <path class="cap" d="M10.5 5.1h3.1c.2.4.2.9 0 1.3h-3.1c-.2-.4-.2-.9 0-1.3z"/>
+              <path class="bulb-glass" d="M9.8 13.4c.1 1.3 1 2.1 2.2 2.1s2.1-.8 2.2-2.1"/>
+              <path class="shade" d="M4.9 13c.3-3.9 3.1-6.6 7.1-6.6s6.8 2.7 7.1 6.6c-4.8.7-9.5.7-14.2 0z"/>
+              <path class="rimglow" d="M6.2 13.9c3.9.5 7.7.5 11.6 0"/>
+              <g class="cord-g"><path d="M16.9 13.6c.1 1.2 0 2.5 0 3.7"/><circle class="fill" cx="16.9" cy="18.9" r="1.35"/></g>
             </svg>
           </button>
           <!-- 2. the sleeping eye -->
@@ -263,8 +268,7 @@
       if (site.dataset.mode === "dark") {
         // the filament catches: a flicker, then steady
         glass.animate([{ opacity: 0.4 }, { opacity: 1, offset: 0.3 }, { opacity: 0.6, offset: 0.5 }, { opacity: 1 }], { duration: 260, easing: "steps(4, end)" });
-        $(".cone", btn).animate([{ opacity: 0 }, { opacity: 0.1, offset: 0.3 }, { opacity: 0.04, offset: 0.5 }, { opacity: 0.16 }], { duration: 300, easing: "steps(4, end)" });
-        $$(".rays path", btn).forEach((p, i) => p.animate([{ opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1 }], { duration: 220, delay: 40 + i * 40, easing: OUT, fill: "backwards" }));
+        $(".cone", btn).animate([{ opacity: 0 }, { opacity: 0.7, offset: 0.3 }, { opacity: 0.25, offset: 0.5 }, { opacity: 1 }], { duration: 300, easing: "steps(4, end)" });
       }
       g.animate([{ translate: "0 3.2px" }, { translate: "0 -1.2px", offset: 0.55 }, { translate: "0 0" }], { duration: 380, easing: SPRING, fill: "forwards" });
     });
