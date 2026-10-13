@@ -135,18 +135,12 @@ export function Lightness() {
           <code>
             oklch(<b className="l">0.50</b> <b className="c">0.20</b> <b className="h">268</b>)
           </code>
-          <span>
-            Brand text on white <em>6.3:1</em>
-          </span>
         </div>
         <div className="ok-row">
           <i style={{ background: "oklch(0.5 0.145 148)" }} aria-hidden="true" />
           <code>
             oklch(<b className="l">0.50</b> <b className="c">0.145</b> <b className="h">148</b>)
           </code>
-          <span>
-            Green text on white <em>5.6:1</em>
-          </span>
         </div>
         <div className="ok-key">
           <span className="l">L lightness, the same</span>
@@ -165,10 +159,6 @@ export function Lightness() {
         <li>
           <b>5.16:1</b>
           <span>lowest: amber text on white</span>
-        </li>
-        <li>
-          <b>2</b>
-          <span>modes: light and dark</span>
         </li>
       </ul>
     </div>
