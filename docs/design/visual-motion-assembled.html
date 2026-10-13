@@ -86,8 +86,16 @@
 
   /* paper: a fine grain, and the top edge cut by the tear bar */
   .sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: url(shell/paper-grain.png) 0 0 / 256px; mix-blend-mode: soft-light; opacity: 0.55; }
-  .sheet { -webkit-mask: url(shell/cut-edge-mask-up.png) 0 0 / 105px 6px repeat-x, linear-gradient(#000, #000) 0 5px / 100% calc(100% - 5px) no-repeat;
-    mask: url(shell/cut-edge-mask-up.png) 0 0 / 105px 6px repeat-x, linear-gradient(#000, #000) 0 5px / 100% calc(100% - 5px) no-repeat; }
+  /* a printed sheet was cut off by the tear bar: its trailing (bottom) edge is serrated. The card on it is unchanged. */
+  .card { -webkit-mask: linear-gradient(#000, #000) 0 0 / 100% calc(100% - 5px) no-repeat, url(shell/cut-edge-mask.png) 0 100% / 105px 6px repeat-x;
+    mask: linear-gradient(#000, #000) 0 0 / 100% calc(100% - 5px) no-repeat, url(shell/cut-edge-mask.png) 0 100% / 105px 6px repeat-x; border-radius: 4px 4px 0 0; }
+  /* the mask would cut off a box-shadow, so the shadow comes from the sheet's own outline */
+  .strip > li, #fly, .tray-sheet { filter: drop-shadow(0 18px 18px rgba(30, 26, 20, 0.22)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.06)); }
+  .card { box-shadow: none !important; }
+
+  /* after a jam: the way out, under the machine */
+  .jam-note { margin: 0 auto; max-width: 46ch; text-align: center; font-size: 15px; color: var(--ink-2); }
+  .jam-note a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
   .lede { display: grid; gap: 6px; text-align: center; }
   .eyebrow { margin: 0; font: 500 11.5px var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); }
   h1 { margin: 0; font: 600 clamp(28px, 4.4vw, 40px) / 1.05 var(--sans); letter-spacing: -0.035em; text-wrap: balance; }
@@ -298,6 +306,8 @@
     </div>
   </section>
 
+  <p class="jam-note" id="jamNote" role="status" hidden>Something jammed. Try again in a moment, <a href="#work">browse all work</a>, or <a href="mailto:ningchongbo2000@gmail.com">email me</a>.</p>
+
   <div class="ctls">
     <button class="ctl" type="button" id="slow" aria-pressed="false">慢速网络（3 秒）</button>
     <button class="ctl" type="button" id="rm" aria-pressed="false">预览减少动效</button>
@@ -352,9 +362,9 @@
     <h2>这一版放进了什么</h2>
     <dl>
       <dt>背景</dt><dd>GPT 的摄影棚无缝纸，按网站的灰调过色，在第一屏下面淡进页面底色。手机竖屏用竖版那张。</dd>
-      <dt>纸</dt><dd>输入纸有很淡的纸纹，顶边是热敏纸的锯齿切口。打印出来的卡片不加，保证和案例卡完全一样。</dd>
+      <dt>纸</dt><dd>输入的纸是一张新纸：很淡的纸纹，边是干净的。打印出来的纸是被切纸刀切下来的，所以<b>下边</b>是锯齿；纸上的案例卡本身一点不变。About 收据同理。</dd>
       <dt>拉绳灯</dt><dd>右上角。从系统设置开始，点一下切换并记住；切回和系统一样的那种就重新跟随系统。读屏名说它要做什么。页面最上面一小段脚本在第一次绘制前读出记住的选择，所以刷新不闪。</dd>
-      <dt>卡纸</dt><dd>请求失败时机器换成卡纸那张图，屏幕写 Paper jam / Try again，你的请求原样退回纸上。（屏幕文字是文案提案）</dd>
+      <dt>卡纸</dt><dd>请求失败时机器换成卡纸那张图，屏幕写 Paper jam / Try again in a moment，你的请求原样退回纸上，机器下面出现一行：Something jammed. Try again in a moment, browse all work, or email me.（都是文案提案）卡纸会一直留着，直到下一次按 PRINT。和 404 是两回事：404 是页面不存在，这里是打印失败。</dd>
       <dt>图标和分享图</dt><dd>红键做手机桌面图标和浏览器标签图标。分享图用代码合成：摄影棚背景 + 定稿打印机 + 网站自己的文字，所以字永远清楚，每个案例自动生成。</dd>
       <dt>AI 分析</dt><dd>和 v3 一样的五步：读、等、懂、找、印。</dd>
     </dl>
@@ -583,6 +593,7 @@
     if (busy) { abort = true; return; }
     if (!ta.value.trim()) { ta.value = EXAMPLES[0]; sheet.classList.add("typed"); }
     busy = true; abort = false; clearTimeout(restT);
+    if (!$("#jamNote").hidden) { $("#jamNote").hidden = true; const ph = $(".photo"); ph.src = "shell/printer-v3.webp"; ph.srcset = "shell/printer-v3-1x.webp 990w, shell/printer-v3.webp 1979w"; }
     ta.blur(); state("working"); results.hidden = true; $("#fly").innerHTML = "";
     thunk();
     if (jamSim) {
@@ -592,11 +603,10 @@
       const photo = $(".photo");
       photo.srcset = ""; photo.src = "shell/printer-v3-jam.webp";
       if (!reduced()) m.animate([{ translate: "0 0" }, { translate: "1.5px 0" }, { translate: "-1.5px 0" }, { translate: "0 0" }], { duration: 240, easing: "steps(4)" });
-      disp("Paper jam", "Try again");
+      disp("Paper jam", "Try again in a moment");
       await restore(true);
-      await sleep(1800);
-      photo.src = "shell/printer-v3.webp"; photo.srcset = "shell/printer-v3-1x.webp 990w, shell/printer-v3.webp 1979w";
-      busy = false; state(ta.value.trim() ? "ready" : "idle"); setReady(); return;
+      $("#jamNote").hidden = false;
+      busy = false; state(ta.value.trim() ? "ready" : "idle"); return;
     }
     const answer = await analyse(ta.value.trim());
     if (!answer) {
