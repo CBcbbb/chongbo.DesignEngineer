@@ -54,10 +54,11 @@ export default async function AskPage({ searchParams }: Props) {
   }
 
   const index = buildCardIndex();
-  const printed = printedCards(projects);
   const sheets = (result?.sheets ?? [])
     .map((s) => index[cardKey(s.project, s.section)])
     .filter((c): c is SheetCard => Boolean(c));
+  // only the cards this answer prints
+  const printed = printedCards(projects, new Set(sheets.map((c) => cardKey(c.project, c.section))));
   const runs = projectRuns(sheets);
   const picked = !brief.trim() ? topicsToLabels(topics) : [];
   const title = result ? resultTitle({ asked: result.asked, startHere: result.matched === "start-here", picked }) : (error ?? "What are you looking for?");
