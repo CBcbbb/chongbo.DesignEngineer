@@ -1,62 +1,48 @@
-# Asset prompts (round 1: the master render)
+# Asset prompts
 
-Direction: printer v2, redesigned around the interface (prototype: `docs/design/visual-motion-machine-v2.html`). It replaces the earlier A+ prompt, which only edited the old render.
+The machine's look is GPT's job. What is fixed by the interface (proportions, where each part sits, how big it is) comes from `docs/design/visual-motion-machine-v2.html`. The drawn machine in that prototype is a layout stand-in only, not a style reference.
 
-Only one image is needed from GPT in this round. Everything that moves or lights up is built from it in code, so the parts line up exactly:
+Everything that moves or lights up is built in code over the chosen render: the key cap (cut from the render), the display text and status dot, the reading light, the ready glow, the floor shadow and the dark-mode light pool. GPT is the wrong tool for any of the animation.
 
-- the key cap is cut out of this same render and sits on the socket that is part of the render;
-- the display text, the status dot, the reading light, the ready glow and the PRINT word on the key are live HTML and CSS over the blank, switched-off parts of the render;
-- the floor shadow and the dark-mode light pool are CSS.
+## Round 1: exploration (three retro directions)
 
-GPT is the wrong tool for anything animated (the key travel, the paper feed, the display redraw, the word marking). That stays in code. A dark-mode render comes in round 2, only if the CSS light pool isn't enough.
-
----
-
-## 1. `printer-v2.png`
-
-- **Used for:** the home page machine (`public/printer.webp` once cut and exported) and the Open Graph image.
-- **Size:** landscape, the largest size GPT offers (1536 × 1024 or larger). The machine is centred and fills about 92% of the width, about 1410px, enough for the 640px display width at 2x. Export to WebP at 1x (720px) and 2x (1440px).
-- **Format:** PNG with a transparent background. If transparency isn't offered, a flat warm grey (#e9e7e2); I'll cut it out.
-- **Upload as the reference:** `docs/design/printer-v2-blueprint.png`. It is the design drawing: every part's size and position is decided there. Ask GPT to render it, not to redesign it.
-- **Second reference (optional):** `docs/design/printer-cut.png`, for the warm off-white material and the soft studio light only, never for the shape.
-- **Ask for three versions** with the same layout and slightly different materials (see the last line of the prompt), so we can pick by eye.
+One image per style, 1536 × 1024 landscape. Use the same prompt three times, changing only the last line. Optional reference: `docs/design/printer-cut.png`, for material and light only, never the shape.
 
 ### Prompt
 
 ```
-Render the attached design drawing as a high-end product photograph. The drawing is final: keep every part exactly where it is and at the same size and proportions. Only the materials, light and fine detail change.
+A high-end product photograph of a desktop printer, designed as a refined retro object: premium, calm and precise, with real craft in the details.
 
-The object is a low, wide desktop printer, about 2.7 times as wide as it is tall. The camera is square-on to the front, slightly above it, with a long lens: the front face shows almost no perspective, and the top surface is visible as a shallow band behind the rounded front edge.
+Composition (keep exactly): a straight front view, the camera slightly above the machine with a long lens, so the front face shows almost no perspective and the top surface is visible as a shallow band. The whole machine is centred and fills about 90% of the width. It is low and wide, about 2.7 times as wide as it is tall. Plain warm light-grey studio background, soft contact shadow.
 
-Parts, from top to bottom:
-- Top surface: a long, narrow paper slot running almost the full width, dark inside, with a fine highlight on its front lip. No paper.
-- The rounded edge between the top and the front catches a soft line of light along its whole length.
-- Front panel: recessed by a few millimetres, one shade deeper than the body, with a crisp shadow line round its edge.
-- On the left of the panel, a wide display window: dark smoked glass set flush into a slightly darker frame, with a thin chamfered lip that catches the light along the bottom. The display is switched off and completely blank: no text, no pixels, no glow, only a faint diagonal reflection.
-- On the right of the panel, a large round red key (close to #c9372a): a glossy, gently domed cap sitting in a polished chrome bezel, with one clean highlight at its upper left. Nothing written on it.
-- Below, centred, a wide front slot, dark inside, with a brushed stainless steel tray coming out of it: fine horizontal grain, a slightly rounded front edge.
-- Two small dark rubber feet.
+Layout (keep exactly):
+- Top surface: one long, narrow paper slot running almost the full width, dark inside. Nothing else near it. No paper.
+- Front, left: a wide display window, about 40% of the machine's width, dark tinted glass behind a bevelled frame. The display is switched off and completely blank.
+- Front, right: one large round red push key (close to #c9372a), about 11% of the machine's width, in a chrome bezel. Nothing written on it.
+- Front, centred below: a wide output slot with a short metal tray coming out of it.
+- No other controls.
 
-Materials: the body is powder-coated aluminium in warm off-white (close to #ece8e0) with a very fine bead-blasted texture and softly rounded corners. Calm, precise, premium; like a piece of modern studio equipment.
+Fine details to get right: crisp shadow lines where parts meet, softly radiused edges that catch the light, a believable surface texture, small real-world imperfections in the finish, a clean highlight on the red key.
 
-Lighting: one large softbox from the upper left, gentle falloff across the top, soft reflections, no hard specular streaks, no lens flare. Sharp at every edge, no depth-of-field blur.
+Lighting: one large softbox from the upper left, gentle falloff, no lens flare, sharp at every edge.
 
-Background: transparent. No floor and no shadow under the machine.
-
-Make three versions with exactly this layout: one matte and soft, one with a slightly more satin finish, one with slightly crisper edges and shadow lines.
+Style: [one of the three style lines]
 ```
 
-### Avoid
+### Style lines
 
-- any text, numbers, logos or icons anywhere, including on the display and the key;
-- a lit or glowing display, a coloured lamp, paper in either slot;
-- moving, resizing or adding parts: no extra buttons, knobs, dials, vents, screws, grilles, labels or a name plate;
-- a three-quarter view, a wide-angle look or any change to the proportions;
-- glossy plastic, a toy or retro-kitsch look, a cartoon or 3D-icon look, colour casts, vignetting;
-- cropping any part of the machine.
+1. `1960s German industrial design: an ivory body with a brushed aluminium front plate, fine engraved hairlines, matte, quiet and exact.`
+2. `1970s Italian office machine: warm cream, softer rounded volumes, a satin finish, a ribbed dark rubber strip along the base.`
+3. `1980s Japanese hi-fi component: a low aluminium front with fine brushing, the display behind dark green-tinted glass, small knurled chrome details.`
 
-### When it comes back
+### Avoid (every time)
 
-Send me the version you like. I'll check its pixels (sharpness, edges, the blank display), cut the background if needed, measure the overlay positions (display, key, top slot, front slot) against the blueprint and put the real render into the prototype, so you can feel it on your phone before anything goes into the site.
+- any text, numbers or logos, including on the display and the key;
+- a lit or coloured display; paper;
+- extra buttons, knobs or a name plate;
+- a three-quarter view or wide-angle distortion;
+- a plastic toy look, a cartoon or icon style.
 
-If GPT has shifted something, that's fine: it only means new coordinates, which I measure from the image.
+## Round 2: the final render
+
+Written once a direction is chosen: the same camera, a transparent background, the largest size GPT offers, with the display blank and switched off. The overlay positions are then measured from the image.
