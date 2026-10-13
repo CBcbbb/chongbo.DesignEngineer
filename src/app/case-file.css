@@ -2840,8 +2840,27 @@
    follow and no other project's cards change. Words, images and the type scale are untouched.
    ========================================================================================================== */
 
-/* ---------- 01.4 the workshop: 684px → about 560px at 1180px and up ---------- */
-/* each wall's label and title share one line ("WALL 1  Content"), so the three walls cost one row less */
+/* ---------- 01.4 the workshop, composed for the 40rem card ----------
+   Three parts, read in order: the text and the hand of role cards side by side (how the workshop ran), then the
+   three walls across the foot (what came out of it). The picked role's name sits centred under the hand. */
+/* the hand: the picked role's count and name centred under it, at every width */
+[data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-in {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+[data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read {
+  justify-items: center;
+}
+[data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read p {
+  text-align: center;
+}
+[data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read strong {
+  display: block;
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+/* each wall's label and title on one line ("WALL 1  Content"), its finding under them */
 @media (min-width: 760px) {
   [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-steps li {
     grid-row: span 3;
@@ -2860,104 +2879,116 @@
     margin-top: 0;
   }
 }
-/* beside the text: the count moves up to the index line, the hand keeps only the room the picked card lifts into
-   (it may rise into the card's top padding), and the words under the hand align left with the count */
+@media (min-width: 761px) {
+  [data-palette="hhcd"] .cf-sheet.is-side:is([data-card="workshop"], #workshop) .cf-deck-hand {
+    --cw: min(112px, 22cqi);
+  }
+}
+/* 1180px and up: text on the left (0.4), the hand on the right (0.6), as large as the band allows; walls under both */
 @media (min-width: 1180px) {
-  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-in {
-    position: relative;
+  [data-palette="hhcd"] .cf-sheet.is-card.is-side:is([data-card="workshop"], #workshop) {
+    grid-template-columns: minmax(0, 0.4fr) minmax(0, 0.6fr);
+    column-gap: 2.5rem;
   }
-  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-hand {
-    height: calc(var(--cw) * var(--ar) + 46px);
+  /* a wide, curved hand: the outer cards turn 18deg, so every role's title shows */
+  [data-palette="hhcd"] .cf-sheet.is-side:is([data-card="workshop"], #workshop) .cf-deck-hand {
+    --cw: min(124px, 30cqi);
+    --pad: calc(var(--cw) * 0.42);
+    height: calc(var(--cw) * var(--ar) + 74px);
   }
-  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-count {
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: 0;
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-card {
+    transform: translateY(calc(var(--o2) * 3.4px)) rotate(calc(var(--o) * 6deg));
   }
-  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read {
-    justify-items: start;
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-card:hover {
+    transform: translateY(calc(var(--o2) * 3.4px - 10px)) rotate(calc(var(--o) * 6deg));
   }
-  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read p {
-    text-align: left;
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-card[aria-checked="true"] {
+    transform: translateY(-22px) rotate(0deg) scale(1.08);
+  }
+  /* before the deal: one pile in the middle, as everywhere else */
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-hand.is-stacked .cf-deck-card {
+    transform: translateY(24px) rotate(calc(var(--o) * 1.6deg));
+  }
+  [data-palette="hhcd"] .is-side:is([data-card="workshop"], #workshop) .cf-evidence[data-split="deck"] > .cf-figure {
+    align-self: start;
+  }
+  [data-palette="hhcd"] .is-side:is([data-card="workshop"], #workshop) .cf-evidence[data-split="deck"] > .cf-steps {
+    margin-top: 2rem;
   }
 }
 
-/* the picked role's name only, set like the walls' titles */
-[data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read strong {
-  display: block;
-  font-size: 17px;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-}
-
-/* ---------- 01.5 data collection: 665px → 632px at 1180px and up ---------- */
-/* the five steps are the control, drawn as a process line: a numbered stop per step, joined by a rule that is ink
-   up to the step on show. Previous and Next go. The step's sentence keeps its own row, with room round it */
+/* ---------- 01.5 data collection, composed for the 40rem card ----------
+   The five steps and the step on show share one row: numbered stops joined by a rule (ink up to the step on show),
+   then that step's sentence, whose first word is the step's name. Previous and Next go. The stage keeps its size. */
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-nav {
   display: none;
 }
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe {
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 1.75rem;
+  align-items: center;
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe > * {
+  grid-column: 1 / -1;
+}
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs {
+  grid-column: 1;
   display: flex;
   gap: 0;
 }
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-caption {
+  grid-column: 2;
+  grid-row: 1;
+  min-height: calc(2lh + 4px);
+  padding: 0;
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-text {
+  line-height: 1.3;
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-stage {
+  margin-top: 1.25rem;
+}
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li {
   display: flex;
-  flex: 1 1 0;
   align-items: center;
-  min-width: 0;
 }
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:last-child {
-  flex: none;
-}
-/* the rule to the next stop */
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:not(:last-child)::after {
   content: "";
-  flex: 1;
-  min-width: 12px;
+  width: 22px;
   height: 1px;
-  margin: 0 14px;
+  margin: 0 4px;
   background: var(--case-rule);
   transition: background-color 0.3s var(--ease);
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:has(> button[data-done])::after {
   background: var(--case-ink);
 }
+/* a stop: the number in a ring, as large as a fingertip; the step's name is its accessible name and the sentence */
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button {
-  flex: none;
-  flex-wrap: nowrap;
-  gap: 10px;
-  align-items: center;
-  width: auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
   min-height: 44px;
   padding: 0;
   border: 0;
-  border-radius: 999px;
-  color: var(--case-dim);
-  white-space: nowrap;
+  border-radius: 50%;
+  font-size: 0;
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-n {
-  display: inline-grid;
+  display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   box-shadow: inset 0 0 0 1px var(--case-line);
   background: var(--case-bg);
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--case-dim);
   transition: background-color 0.25s var(--ease), color 0.25s var(--ease), box-shadow 0.25s var(--ease);
-}
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:hover,
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[data-done] {
-  color: var(--case-ink);
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:hover .cf-pipe-n,
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[data-done] .cf-pipe-n {
   box-shadow: inset 0 0 0 1px var(--case-ink);
-  color: var(--case-ink);
-}
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[aria-current="step"] {
   color: var(--case-ink);
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[aria-current="step"] .cf-pipe-n {
@@ -2967,41 +2998,16 @@
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:focus-visible {
   outline: 2px solid var(--case-ink);
-  outline-offset: 3px;
+  outline-offset: 1px;
 }
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-caption {
-  padding: 14px 0 16px;
-}
-/* narrow sheets: each stop over its word, spread across the row; the rules give way */
+/* narrow sheets: the stops over the sentence */
 @container (max-width: 34rem) {
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs {
-    justify-content: space-between;
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-caption {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 8px;
   }
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li,
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:last-child {
-    flex: none;
-  }
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li::after {
-    display: none;
-  }
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button {
-    flex-direction: column;
-    gap: 6px;
-    padding-top: 4px;
-    border-radius: 8px;
-  }
-}
-@media (min-width: 761px) {
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-evidence {
-    margin-top: 0.75rem;
-  }
-  /* the stage 12px shorter; every step's picture still fits whole */
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-stage {
-    height: 240px;
-  }
-}
-@media (min-width: 1180px) {
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-evidence {
-    margin-top: 1.25rem;
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:not(:last-child)::after {
+    width: 14px;
   }
 }
