@@ -17,9 +17,6 @@ const LIMIT = 640;
  * other card goes over the limit, when one of these grows, or when one of these fits and should leave the list.
  */
 const OVER_LIMIT: Record<string, number> = {
-  "hhcd-data-platform#workshop": 684,
-  "hhcd-data-platform#four-types": 666,
-  "components-for-any-data#shapes": 652,
   "design-system#drift": 686,
   "design-system#three-layers": 815,
   "design-system#in-code": 774,
