@@ -2883,44 +2883,105 @@
   }
 }
 
-/* ---------- 01.5 data collection: 665px → 636px at 1180px and up ---------- */
-/* the five tabs are the control, drawn as one segmented control so they read as pressable; Previous and Next go.
-   The step's sentence keeps its own row, with room above and below it */
+/* ---------- 01.5 data collection: 665px → 632px at 1180px and up ---------- */
+/* the five steps are the control, drawn as a process line: a numbered stop per step, joined by a rule that is ink
+   up to the step on show. Previous and Next go. The step's sentence keeps its own row, with room round it */
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-nav {
   display: none;
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs {
-  gap: 4px;
-  padding: 4px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--case-ink) 5%, transparent);
-  box-shadow: inset 0 0 0 1px var(--cf-hair);
+  display: flex;
+  gap: 0;
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  min-width: 0;
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:last-child {
+  flex: none;
+}
+/* the rule to the next stop */
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:not(:last-child)::after {
+  content: "";
+  flex: 1;
+  min-width: 12px;
+  height: 1px;
+  margin: 0 14px;
+  background: var(--case-rule);
+  transition: background-color 0.3s var(--ease);
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:has(> button[data-done])::after {
+  background: var(--case-ink);
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button {
+  flex: none;
+  flex-wrap: nowrap;
+  gap: 10px;
   align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  padding: 0 10px;
+  width: auto;
+  min-height: 44px;
+  padding: 0;
   border: 0;
-  border-radius: 8px;
-  color: var(--case-body);
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  border-radius: 999px;
+  color: var(--case-dim);
+  white-space: nowrap;
 }
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:hover {
-  background: color-mix(in srgb, var(--case-ink) 7%, transparent);
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-n {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px var(--case-line);
+  background: var(--case-bg);
+  font-size: 11px;
+  color: var(--case-dim);
+  transition: background-color 0.25s var(--ease), color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:hover,
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[data-done] {
+  color: var(--case-ink);
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:hover .cf-pipe-n,
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[data-done] .cf-pipe-n {
+  box-shadow: inset 0 0 0 1px var(--case-ink);
   color: var(--case-ink);
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[aria-current="step"] {
-  background: var(--case-bg);
   color: var(--case-ink);
-  box-shadow: 0 0 0 1px var(--cf-hair), 0 1px 3px rgb(0 0 0 / 0.1);
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[aria-current="step"] .cf-pipe-n {
+  background: var(--case-ink);
+  box-shadow: none;
+  color: var(--case-bg);
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:focus-visible {
   outline: 2px solid var(--case-ink);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-caption {
-  padding: 16px 0 14px;
+  padding: 14px 0 16px;
+}
+/* narrow sheets: each stop over its word, spread across the row; the rules give way */
+@container (max-width: 34rem) {
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs {
+    justify-content: space-between;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li,
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:last-child {
+    flex: none;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li::after {
+    display: none;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button {
+    flex-direction: column;
+    gap: 6px;
+    padding-top: 4px;
+    border-radius: 8px;
+  }
 }
 @media (min-width: 761px) {
   [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-evidence {
@@ -2933,15 +2994,6 @@
 }
 @media (min-width: 1180px) {
   [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-evidence {
-    margin-top: 1rem;
+    margin-top: 1.25rem;
   }
-}
-/* dark: the picked tab is lighter than its track, so it still reads as raised */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[aria-current="step"] {
-    background: color-mix(in srgb, var(--case-ink) 14%, var(--case-bg));
-  }
-}
-:root[data-theme="dark"] [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[aria-current="step"] {
-  background: color-mix(in srgb, var(--case-ink) 14%, var(--case-bg));
 }
