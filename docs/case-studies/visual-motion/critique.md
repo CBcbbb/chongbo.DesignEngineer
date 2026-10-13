@@ -146,3 +146,17 @@
 1. **Rauno Freiberg，[Invisible Details of Interaction Design](https://rauno.me/craft/interaction-design)。** 他举 iOS 设置页的例子：返回手势不能打断正在滑动的页面，所以显得比 App 切换器迟钝。对应第 9 条：打印中应能再按一次停下来。他还提到动作应带着手势的动量结束，所以"拿起纸"那一下不应该每次都一模一样（第 1 条里加一点随机角度）。
 2. **Emil Kowalski，[You Don't Need Animations](https://emilkowal.ski/ui/you-dont-need-animations)。** 他的分界是使用频率：每天用几百次的东西（Raycast 打开）不该有动画，偶尔看到的东西才配有惊喜，UI 动画一般在 300ms 内。对应第 8 条（循环动画要停）和第 20 条（收据打印只做一次）。
 3. **[Granola 首页](https://www.granola.ai/)。** 产品窗口本身是干净的白色界面，所有质感都放在它背后：几张带颗粒和印刷纹理的海报拼贴。往下滚时，同一个笔记窗口一直留在画面里，状态从输入变成 "Transcribing"。两点可以借：质感只放在背景（第 24 条）；主物体不离场，只换状态（第 1 条：机器在纸出来时仍在画面里）。
+
+---
+
+## 25. 深浅色开关（新加）
+
+网站已经支持两种主题（默认跟随系统，`<html data-theme>` 可以手动覆盖，见 `src/app/tokens.css` 和 `case-palettes.css`），但页面上没有开关。原型：`docs/design/visual-motion-theme-switch.html`，三个想法：
+
+1. **拉绳吊灯（推荐）**：点一下拉绳往下 3px，灯在最低点亮或灭，拉绳回弹，共约 0.5 秒。深色模式下灯是亮的。
+2. **睡着的眼睛**：深色时闭眼飘出 z。和 About 的眼睛重复。
+3. **复写纸翻面**：白纸翻到深色的一面。最贴主题，但 22px 时不够好认。
+
+共用规则：从系统设置开始；点一下切换并记住（localStorage，try/catch）；切回和系统一样的那种时自动清掉记忆、重新跟随系统；点完在图标下出现一行小字说明现在的状态（文案提案："Dark mode / until you switch back"，"Light mode / following your system"）；读屏名是 "Switch to dark mode" / "Switch to light mode"；聚焦和悬停一样；44px；减少动效时直接切换；`<head>` 内联脚本在首次绘制前设置 `data-theme`，不闪；打印机和打印的纸颜色不变。
+
+等你选定后写进实施提示词。

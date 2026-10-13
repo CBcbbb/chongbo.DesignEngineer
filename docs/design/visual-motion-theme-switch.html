@@ -1,0 +1,325 @@
+<title>Theme Switch</title>
+<meta name="description" content="Three light and dark switches for the chongboning.com header, to try on a phone." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" />
+<style>
+  /* Layout: the page chrome follows the viewer; inside, a mock of the site (.site) follows its own theme, which the switch sets. */
+  :root {
+    --bg: #f3f1ec;
+    --fg: #1c1b19;
+    --fg-2: #5b5853;
+    --line: #d3d0c9;
+    --chip: #ffffff;
+    --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --out: cubic-bezier(0.16, 1, 0.3, 1);
+    --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #141312; --fg: #eeece8; --fg-2: #aba79f; --line: #3a3835; --chip: #242220; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --bg: #141312; --fg: #eeece8; --fg-2: #aba79f; --line: #3a3835; --chip: #242220; color-scheme: dark; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 400 15px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+  .page { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .eyebrow { margin: 0; font: 500 11.5px var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--fg-2); }
+  h1 { margin: 4px 0 0; font: 600 clamp(26px, 5vw, 38px) / 1.06 var(--sans); letter-spacing: -0.03em; }
+  .lede { margin: 8px 0 0; max-width: 62ch; color: var(--fg-2); }
+  .ctls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .ctls span { font: 500 12px var(--mono); color: var(--fg-2); margin-right: 4px; }
+  .seg { display: inline-flex; gap: 3px; padding: 3px; border-radius: 999px; background: var(--chip); box-shadow: 0 0 0 1px var(--line); }
+  .seg button { min-height: 36px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; color: var(--fg-2); font: 500 13px var(--sans); cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+  .seg button:focus-visible, .ghost:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+  .ghost { min-height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--chip); color: var(--fg-2); font: 500 13px var(--sans); cursor: pointer; }
+
+  /* ---------- the mock site ---------- */
+  .site {
+    --studio: #e9e7e2; --studio-hi: #f5f4f0; --ink: #1c1b19; --ink-2: #5b5853; --rule: #d3d0c9; --paper: #fbfaf7; --paper-ink: #1c1b19; --red: #c9372a;
+    --glow: #f6c35a;
+    position: relative; border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px var(--line), 0 30px 60px -40px rgba(0, 0, 0, 0.5);
+    background: radial-gradient(120% 70% at 50% 0%, var(--studio-hi), var(--studio) 60%); color: var(--ink);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .site[data-mode="dark"] { --studio: #1a1918; --studio-hi: #2a2826; --ink: #eeece8; --ink-2: #aba79f; --rule: #3a3835; }
+  /* a cross-fade of the whole surface, so the switch reads as the light changing, not as a repaint */
+  .site .wash { position: absolute; inset: 0; pointer-events: none; opacity: 0; background: var(--studio); z-index: 5; }
+  .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px clamp(12px, 3vw, 28px); font-size: 14px; }
+  .who { display: inline-flex; gap: 10px; align-items: baseline; min-height: 44px; align-content: center; flex-wrap: wrap; }
+  .who b { font-weight: 600; }
+  .who span { color: var(--ink-2); }
+  nav ul { display: flex; gap: 4px; margin: 0; padding: 0; list-style: none; align-items: center; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 8px; color: var(--ink-2); font: 500 14px/1 var(--sans); text-decoration: none; border-radius: 6px; }
+  .ico { flex: none; width: 20px; height: 20px; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .ico .fill { fill: currentColor; stroke: none; }
+  @media (max-width: 460px) { .who span { display: none; } .pill { padding: 0 5px; font-size: 13px; } }
+
+  /* the switch: an icon alone, a 44px target, focus looks like hover */
+  .tsw { position: relative; display: inline-grid; place-items: center; width: 44px; height: 44px; margin: 0; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--ink-2); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .tsw:hover, .tsw:focus-visible { color: var(--ink); }
+  .tsw:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+  .tsw .ico { width: 22px; height: 22px; }
+  .tsw[hidden] { display: none; }
+
+  /* the note under the switch after a tap: what the site does now */
+  .note { position: absolute; right: clamp(12px, 3vw, 28px); top: 58px; z-index: 6; padding: 7px 11px; border-radius: 8px; background: var(--ink); color: var(--studio);
+    font: 500 12.5px/1.3 var(--sans); white-space: nowrap; pointer-events: none; opacity: 0; translate: 0 -4px; transition: opacity 0.2s, translate 0.2s var(--out); }
+  .note.on { opacity: 1; translate: 0 0; }
+  .note small { display: block; font-weight: 400; opacity: 0.75; }
+
+  .hero { display: grid; justify-items: center; gap: 6px; padding: 18px 16px 8px; text-align: center; }
+  .hero .k { margin: 0; font: 500 11px var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); }
+  .hero h2 { margin: 0; font: 600 clamp(24px, 4.4vw, 36px) / 1.05 var(--sans); letter-spacing: -0.035em; }
+  .hero p { margin: 4px 0 0; max-width: 46ch; color: var(--ink-2); font-size: 14px; }
+  .machine { width: min(560px, 92%); margin: 10px auto 0; aspect-ratio: 1979 / 595; position: relative; }
+  .machine img { position: absolute; inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 16px 16px rgba(20, 16, 10, 0.22)); }
+  .sheet { width: min(420px, 82%); margin: 18px auto 26px; background: var(--paper); color: var(--paper-ink); border-radius: 4px; padding: 14px 16px; box-shadow: 0 18px 30px -24px rgba(0, 0, 0, 0.45); font-size: 13.5px; }
+  .sheet b { display: block; font: 600 16px/1.2 var(--sans); letter-spacing: -0.02em; margin: 6px 0 4px; }
+  .sheet span { font: 500 11px var(--mono); color: #5e5b55; }
+
+  /* ---------- 1. pull cord ---------- */
+  .cord-g { transition: none; }
+  .t-cord .cone { fill: var(--glow); stroke: none; opacity: 0; }
+  .site[data-mode="dark"] .t-cord .cone { opacity: 0.16; }
+  .site[data-mode="dark"] .t-cord .bulb-glass { fill: var(--glow); stroke: var(--glow); }
+  .t-cord .rays path { stroke: var(--glow); opacity: 0; }
+  .site[data-mode="dark"] .t-cord .rays path { opacity: 1; }
+  .t-cord .ico { overflow: visible; }
+
+  /* ---------- 2. the sleeping eye ---------- */
+  .t-eye .lid-open { transform-origin: 12px 12px; }
+  .t-eye .closed, .t-eye .zz { opacity: 0; }
+  .site[data-mode="dark"] .t-eye .lid-open { opacity: 0; }
+  .site[data-mode="dark"] .t-eye .closed { opacity: 1; }
+  .site[data-mode="dark"] .t-eye .zz { opacity: 0.9; }
+  .t-eye .zz { font: 600 7px var(--mono); fill: currentColor; stroke: none; }
+
+  /* ---------- 3. carbon copy: a sheet that turns over ---------- */
+  .flip { position: relative; width: 22px; height: 22px; perspective: 120px; display: block; }
+  .flip-in { position: absolute; inset: 0; transform-style: preserve-3d; transition: none; }
+  .flip-in > svg { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .flip-in > svg.back { transform: rotateY(180deg); }
+  .site[data-mode="dark"] .flip-in { transform: rotateY(180deg); }
+  .flip .back .fill { fill: currentColor; }
+  .flip .back .lines { stroke: var(--studio); stroke-width: 1.4; }
+
+  /* notes */
+  .notes { display: grid; gap: 14px; border-top: 1px solid var(--line); padding-top: 20px; }
+  .notes h2 { margin: 0; font: 600 20px/1.2 var(--sans); letter-spacing: -0.02em; }
+  .notes dl { margin: 0; display: grid; grid-template-columns: 7em minmax(0, 1fr); gap: 10px 16px; }
+  .notes dt { font: 500 12px var(--mono); color: var(--fg-2); padding-top: 2px; }
+  .notes dd { margin: 0; min-width: 0; }
+  .notes code { font: 500 12.5px var(--mono); }
+  @media (max-width: 560px) { .notes dl { grid-template-columns: 1fr; gap: 2px; } .notes dd { margin-bottom: 10px; } }
+
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  .rm *, .rm *::before, .rm *::after { animation: none !important; transition: none !important; }
+</style>
+
+<div class="page">
+  <header>
+    <p class="eyebrow">Printed to order · header</p>
+    <h1>深浅色开关：三个想法</h1>
+    <p class="lede">点右上角的图标试一下。三个想法用同一套规则，只是图标和动作不同。下面可以假装把系统设置改成浅色或深色，看它怎么"跟随系统"。</p>
+  </header>
+
+  <div class="ctls">
+    <div class="seg" role="group" aria-label="Idea">
+      <button type="button" data-idea="cord" aria-pressed="true">1 拉绳灯</button>
+      <button type="button" data-idea="eye" aria-pressed="false">2 睡着的眼睛</button>
+      <button type="button" data-idea="flip" aria-pressed="false">3 复写纸</button>
+    </div>
+  </div>
+  <div class="ctls">
+    <span>假装系统是</span>
+    <div class="seg" role="group" aria-label="Pretend system setting">
+      <button type="button" data-sys="light" aria-pressed="false">浅色</button>
+      <button type="button" data-sys="dark" aria-pressed="false">深色</button>
+      <button type="button" data-sys="real" aria-pressed="true">你手机的真实设置</button>
+    </div>
+    <button class="ghost" type="button" id="rm" aria-pressed="false">减少动效</button>
+  </div>
+
+  <section class="site" id="site" data-mode="light" aria-label="A mock of the site">
+    <span class="wash" aria-hidden="true"></span>
+    <div class="bar">
+      <span class="who"><b>Chongbo Ning</b><span>Design Engineer, London</span></span>
+      <nav aria-label="Main"><ul>
+        <li><a class="pill" href="#work"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4.4 19.7c2.6-3.3 5.5-6.4 8.7-9.3"/><path d="M13.4 3.6c2.2 2.1 4.4 4.3 6.5 6.5-1.1 1-2.1 2-3.2 3.1-2.2-2.1-4.3-4.3-6.4-6.5 1-1.1 2-2.1 3.1-3.1z"/></svg>Work</a></li>
+        <li><a class="pill" href="#about"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 6.4c2.1.1 3.5 2.7 3.4 5.8-.1 3-1.6 5.5-3.6 5.4-2-.1-3.4-2.7-3.3-5.7.1-3 1.5-5.6 3.5-5.5z"/><path d="M17.2 6.2c2.1.1 3.5 2.7 3.4 5.8-.1 3-1.6 5.5-3.6 5.4-2-.1-3.4-2.7-3.3-5.7.1-3 1.5-5.6 3.5-5.5z"/><path d="M3.2 3.4c1.3-1.4 3.3-1.9 5.6-1.2"/><path d="M15.4 1.8c2.3-.5 4.2.2 5.4 1.7"/><circle class="fill" cx="8.3" cy="10.6" r="2.05"/><circle class="fill" cx="18.4" cy="10.4" r="2.05"/></svg>About</a></li>
+        <li>
+          <!-- 1. pull cord: a bulb on a cord; a tap pulls the cord and the bulb answers -->
+          <button class="tsw t-cord" type="button" data-idea="cord">
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <path class="cone" d="M7.6 13.4h8.8l3.4 9.4H4.2z"/>
+              <path d="M12.1 0.4c-.1 1.6 0 3.3-.1 5"/>
+              <path class="shade" d="M5.2 12.6c.3-4.2 3.1-7.1 6.8-7.1s6.6 2.9 6.9 7.1c-4.6.3-9.1.3-13.7 0z"/>
+              <path class="bulb-glass" d="M9.9 12.9c0 1.4.9 2.4 2.1 2.4s2.2-1 2.2-2.4"/>
+              <g class="rays"><path d="M12.1 17.4v2.2"/><path d="M15.6 16.6l1.3 1.8"/></g>
+              <g class="cord-g"><path d="M7.4 12.9c.1 1.6 0 3.2-.1 4.6"/><circle class="fill" cx="7.3" cy="19.1" r="1.45"/></g>
+            </svg>
+          </button>
+          <!-- 2. the sleeping eye -->
+          <button class="tsw t-eye" type="button" data-idea="eye" hidden>
+            <svg class="ico" viewBox="0 0 24 24" aria-hidden="true">
+              <g class="lid-open"><path d="M2.8 12.2c2.4-3.6 5.6-5.5 9.3-5.5s6.8 1.9 9.1 5.4c-2.3 3.4-5.4 5.3-9.2 5.3s-6.8-1.8-9.2-5.2z"/><circle class="fill pupil" cx="12.3" cy="11.6" r="2.4"/></g>
+              <g class="closed"><path d="M3 11.4c2.4 3 5.5 4.5 9.1 4.5s6.7-1.5 9-4.4"/><path d="M6.4 14.4l-1.2 2"/><path d="M12.1 15.9v2.3"/><path d="M17.8 14.3l1.2 2"/></g>
+              <g class="zz"><text x="17.6" y="6.4">z</text><text x="20.6" y="3.2">z</text></g>
+            </svg>
+          </button>
+          <!-- 3. carbon copy: the sheet turns over to its dark side -->
+          <button class="tsw t-flip" type="button" data-idea="flip" hidden>
+            <span class="flip" aria-hidden="true"><span class="flip-in">
+              <svg class="ico front" viewBox="0 0 24 24"><path d="M6.2 3.4h8.6l4 4.1v13.1H6.1c.1-5.7.1-11.5.1-17.2z"/><path d="M14.7 3.6v4h4"/><path d="M8.9 11.4h6.6"/><path d="M8.9 14.6h4.8"/></svg>
+              <svg class="ico back" viewBox="0 0 24 24"><path class="fill" d="M6.2 3.4h8.6l4 4.1v13.1H6.1c.1-5.7.1-11.5.1-17.2z"/><path class="lines" d="M8.6 11.4h6.6"/><path class="lines" d="M10.4 14.6h4.8"/></svg>
+            </span></span>
+          </button>
+        </li>
+      </ul></nav>
+    </div>
+    <div class="note" id="note" aria-hidden="true"></div>
+    <div class="hero">
+      <p class="k">Printed to order</p>
+      <h2>What are you looking for?</h2>
+      <p>The printer and the printed sheet keep their colours in both modes.</p>
+    </div>
+    <div class="machine"><img src="printer-v3.webp" alt="" /></div>
+    <div class="sheet"><span>Helen Hamlyn Centre Data Platform · 1 of 2</span><b>Accessibility as the starting point</b>A printed sheet stays paper in dark mode: it is an object, like the printer.</div>
+  </section>
+  <p id="live" role="status" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"></p>
+
+  <section class="notes">
+    <h2>三个想法共用的规则</h2>
+    <dl>
+      <dt>开始</dt><dd>跟随系统。第一次点：切到另一种，并记住（localStorage，读写都包在 try/catch 里）。</dd>
+      <dt>回到系统</dt><dd>不加第三个状态。只要你切回的那一种和系统一样，就自动清掉记住的选择，重新跟随系统。所以"点两次"就是"回到系统"。点完后图标下面出现一行小字说清楚现在的状态：<b>Dark mode / until you switch back</b> 或 <b>Light mode / following your system</b>（文案提案）。</dd>
+      <dt>读屏名</dt><dd>说它要做什么：<code>Switch to dark mode</code> / <code>Switch to light mode</code>，切换后的小字也会读出来。</dd>
+      <dt>键盘和手机</dt><dd>聚焦和悬停一样；44px 点击区；手机上没有悬停，动作只在点的时候发生。</dd>
+      <dt>减少动效</dt><dd>图标直接换成另一种状态，页面直接换色，不淡入。</dd>
+      <dt>不闪</dt><dd>正式版在 &lt;head&gt; 里放一小段内联脚本，在第一次绘制前读出记住的选择，设置 <code>&lt;html data-theme&gt;</code>。</dd>
+      <dt>物件不变</dt><dd>打印机和打印出来的纸两种模式下颜色都不变（playbook §7）。</dd>
+    </dl>
+    <h2>三个想法的区别</h2>
+    <dl>
+      <dt>1 拉绳灯</dt><dd>一盏吊灯，灯罩边上挂一根拉绳。点：拉绳往下 3px，在最低点灯亮或灭，拉绳带一点回弹弹回（共 0.5 秒）。深色模式下灯是亮的：灯泡暖黄，灯罩下一束淡淡的光，灯丝先闪两下再稳住。天黑了才开灯，所以说得通。和锤子一样是"手里的动作"。<b>我推荐这个。</b></dd>
+      <dt>2 睡着的眼睛</dt><dd>一只眼睛，深色时闭上并飘出两个 z。可爱，但导航里已经有 About 的一双眼睛，再加一只会抢戏，也容易被看成"隐藏"或"查看"的意思。</dd>
+      <dt>3 复写纸</dt><dd>一张小纸翻面：正面是白纸，背面是深色的复写纸（0.45 秒 3D 翻转，带一点过冲）。最贴"打印"这个主题，但 22px 时翻面的立体感不太明显，也比灯泡难一眼看懂是开关。</dd>
+    </dl>
+  </section>
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const site = $("#site"), note = $("#note"), live = $("#live");
+  const KEY = "theme-proto";
+  let forceRM = false, sysSim = "real", idea = "cord", noteT;
+  const reduced = () => forceRM || matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const OUT = "cubic-bezier(0.16, 1, 0.3, 1)", SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+
+  const store = {
+    get() { try { const v = localStorage.getItem(KEY); return v === "light" || v === "dark" ? v : null; } catch { return null; } },
+    set(v) { try { v ? localStorage.setItem(KEY, v) : localStorage.removeItem(KEY); } catch {} },
+  };
+  const system = () => (sysSim !== "real" ? sysSim : matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const mode = () => store.get() ?? system();
+
+  function paint() {
+    const m = mode();
+    site.dataset.mode = m;
+    const next = m === "dark" ? "light" : "dark";
+    $$(".tsw").forEach((b) => b.setAttribute("aria-label", `Switch to ${next} mode`));
+  }
+  function say() {
+    const m = mode(), chosen = store.get() !== null;
+    const head = m === "dark" ? "Dark mode" : "Light mode";
+    const tail = chosen ? "until you switch back" : "following your system";
+    note.innerHTML = `${head}<small>${tail}</small>`;
+    note.classList.add("on");
+    live.textContent = `${head}, ${tail}.`;
+    clearTimeout(noteT); noteT = setTimeout(() => note.classList.remove("on"), 2200);
+  }
+
+  // The page changes as the light does: a quick wash of the new studio colour, then it lifts.
+  function wash() {
+    if (reduced()) return;
+    $(".wash").animate([{ opacity: 0.55 }, { opacity: 0 }], { duration: 320, easing: "ease-out" });
+  }
+
+  function toggle() {
+    const next = mode() === "dark" ? "light" : "dark";
+    // matching the system again means following it again
+    store.set(next === system() ? null : next);
+    paint(); wash(); say();
+  }
+
+  // ---- 1. pull cord: down 3px in 0.12s, the switch at the bottom, back up on a spring (0.38s) ----
+  function cord(btn) {
+    const g = $(".cord-g", btn);
+    if (reduced()) { toggle(); return; }
+    g.animate([{ translate: "0 0" }, { translate: "0 3.2px" }], { duration: 120, easing: "ease-in", fill: "forwards" }).finished.then(() => {
+      toggle();
+      const glass = $(".bulb-glass", btn);
+      if (site.dataset.mode === "dark") {
+        // the filament catches: a flicker, then steady
+        glass.animate([{ opacity: 0.4 }, { opacity: 1, offset: 0.3 }, { opacity: 0.6, offset: 0.5 }, { opacity: 1 }], { duration: 260, easing: "steps(4, end)" });
+        $(".cone", btn).animate([{ opacity: 0 }, { opacity: 0.1, offset: 0.3 }, { opacity: 0.04, offset: 0.5 }, { opacity: 0.16 }], { duration: 300, easing: "steps(4, end)" });
+        $$(".rays path", btn).forEach((p, i) => p.animate([{ opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1 }], { duration: 220, delay: 40 + i * 40, easing: OUT, fill: "backwards" }));
+      }
+      g.animate([{ translate: "0 3.2px" }, { translate: "0 -1.2px", offset: 0.55 }, { translate: "0 0" }], { duration: 380, easing: SPRING, fill: "forwards" });
+    });
+  }
+  // ---- 2. the eye: the lid comes down (0.22s), the z's drift up and fade (0.5s); waking, the lid lifts with a blink ----
+  function eye(btn) {
+    const toDark = mode() !== "dark";
+    if (reduced()) { toggle(); return; }
+    const open = $(".lid-open", btn);
+    if (toDark) {
+      open.animate([{ transform: "scaleY(1)" }, { transform: "scaleY(0.08)" }], { duration: 220, easing: "ease-in" }).finished.then(() => {
+        toggle();
+        $$(".zz text", btn).forEach((z, i) => z.animate([{ translate: "-3px 4px", opacity: 0 }, { translate: "0 0", opacity: 0.9 }], { duration: 420, delay: i * 90, easing: OUT, fill: "backwards" }));
+      });
+    } else {
+      toggle();
+      open.animate([{ transform: "scaleY(0.08)" }, { transform: "scaleY(1)", offset: 0.5 }, { transform: "scaleY(0.2)", offset: 0.7 }, { transform: "scaleY(1)" }], { duration: 480, easing: "ease-out" });
+    }
+  }
+  // ---- 3. carbon copy: the sheet turns over in 0.45s with a slight overshoot, the switch at half way ----
+  function flip(btn) {
+    const inner = $(".flip-in", btn);
+    const toDark = mode() !== "dark";
+    if (reduced()) { toggle(); return; }
+    const a = toDark ? 0 : 180, b = toDark ? 180 : 0, over = toDark ? 192 : -12;
+    inner.animate([{ transform: `rotateY(${a}deg)` }, { transform: `rotateY(${over}deg)`, offset: 0.75 }, { transform: `rotateY(${b}deg)` }], { duration: 450, easing: "cubic-bezier(0.3, 0.7, 0.3, 1)" });
+    setTimeout(toggle, 200);
+  }
+
+  const acts = { cord, eye, flip };
+  $$(".tsw").forEach((btn) => {
+    btn.addEventListener("click", () => acts[btn.dataset.idea](btn));
+    // hover and keyboard focus: a hint of the action, never a switch
+    const hint = () => {
+      if (reduced()) return;
+      if (btn.dataset.idea === "cord") $(".cord-g", btn).animate([{ translate: "0 0" }, { translate: "0 1.2px" }, { translate: "0 0" }], { duration: 360, easing: SPRING });
+      if (btn.dataset.idea === "eye" && mode() !== "dark") $(".lid-open", btn).animate([{ transform: "scaleY(1)" }, { transform: "scaleY(0.55)", offset: 0.5 }, { transform: "scaleY(1)" }], { duration: 300, easing: "ease-in-out" });
+      if (btn.dataset.idea === "flip") $(".flip-in", btn).animate([{ transform: `rotateY(${mode() === "dark" ? 180 : 0}deg)` }, { transform: `rotateY(${mode() === "dark" ? 160 : 20}deg)`, offset: 0.5 }, { transform: `rotateY(${mode() === "dark" ? 180 : 0}deg)` }], { duration: 360, easing: "ease-in-out" });
+    };
+    btn.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && hint());
+    btn.addEventListener("focus", () => btn.matches(":focus-visible") && hint());
+  });
+
+  $$("[data-idea]").forEach((b) => b.tagName === "BUTTON" && !b.classList.contains("tsw") && b.addEventListener("click", () => {
+    idea = b.dataset.idea;
+    $$(".seg [data-idea]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    $$(".tsw").forEach((t) => (t.hidden = t.dataset.idea !== idea));
+  }));
+  $$("[data-sys]").forEach((b) => b.addEventListener("click", () => {
+    sysSim = b.dataset.sys;
+    $$("[data-sys]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    paint(); say();
+  }));
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { paint(); });
+  $("#rm").onclick = (e) => { forceRM = !forceRM; e.currentTarget.setAttribute("aria-pressed", String(forceRM)); document.documentElement.classList.toggle("rm", forceRM); };
+  paint();
+})();
+</script>
