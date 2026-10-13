@@ -8,9 +8,9 @@ import { useEffect, useRef } from "react";
  * acts on that host's hover and keyboard focus:
  *   grow  – a stub at rest; draws out towards the host's `[data-arrow-to]` (the next case file's name), stopping
  *           about 85% of the way: a wave, a bow or, now and then, a small loop
- *   nudge – a stub at rest; draws out to the arrow's own width ("Read it in context")
+ *   nudge – a stub at rest; draws out to the arrow's own width (unused since "Read it in context" became still)
  *   out   – a short stub turned up and out (links that leave the site); draws a little further
- *   still – drawn once, never moves (the deck bar's buttons)
+ *   still – drawn once, never moves (the deck bar's buttons, "Read it in context")
  * Plain Web Animations API. With reduced motion the arrow is drawn in full at once. The shell only: case-file cards
  * keep their own controls (playbook §7).
  */

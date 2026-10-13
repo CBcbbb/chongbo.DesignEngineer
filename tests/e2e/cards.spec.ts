@@ -109,7 +109,7 @@ test.describe("printed sheets", () => {
     expect(html.length, "home page HTML in bytes").toBeLessThan(80_000);
   });
 
-  for (const skill of ["Accessibility", "Design systems", "Web and brand"]) {
+  for (const skill of ["Accessibility", "Design systems", "Front‑end", "Web and brand"]) {
     test(`each sheet printed for ${skill} carries its case card unchanged`, async ({ page, browser }) => {
       await print(page, skill);
       const sheets = page.locator(".sheets .sheet");

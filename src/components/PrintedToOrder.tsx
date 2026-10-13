@@ -11,7 +11,6 @@ import { BROWSE_ALL, EXAMPLES, JAM_LINE, NUM, PICKED_HINT, SIGNAL_SHORT, TOPICS,
 import { Pill } from "./nav/Pill";
 import { track } from "@/lib/analytics";
 import { DrawnArrow } from "./shell/DrawnArrow";
-import { ShareLink } from "./shell/ShareLink";
 import type { PrintedCard } from "./PrintedCard";
 import { printCards } from "./print-cards";
 import { Sheet } from "./Sheet";
@@ -34,8 +33,6 @@ type Result = {
   missing: string;
   provenance: string;
   byModel?: boolean;
-  /** The signal keys the printer understood: the shared link (`/ask?topics=`) is built from these. */
-  topics?: string[];
   /** Nothing in the request named a role or a skill: the three places to start, and a line saying why. */
   notUnderstood?: string;
   error?: boolean;
@@ -437,7 +434,6 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
       missing: missingLine(data.missing),
       provenance: provenanceLine(data.source, sheets.length),
       byModel: data.source === "model",
-      topics: [...data.asked],
       notUnderstood: startHere && text.trim() ? notUnderstoodLine(text) : undefined,
     };
     introRef.current = true;
@@ -841,7 +837,6 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
                 </p>
               )}
             </div>
-            {result.cards.length > 0 && result.topics && <ShareLink topics={result.topics} />}
           </div>
           {result.cards.length > 0 && (
             <ol

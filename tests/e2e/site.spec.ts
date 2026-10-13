@@ -108,10 +108,7 @@ test.describe("printing", () => {
     await page.keyboard.press("Enter");
     await expect(page.locator("#r-title")).toBeFocused({ timeout: 10_000 });
     await expect(page.locator("#r-title")).toHaveText(/Design systems/);
-    // Tab reaches "Share this print" beside the title, then the strip of sheets, then, past any controls on the
-    // card itself, the first sheet's link.
-    await page.keyboard.press("Tab");
-    await expect(page.getByRole("button", { name: "Share this print" })).toBeFocused();
+    // Tab reaches the strip of sheets, then, past any controls on the card itself, the first sheet's link.
     await page.keyboard.press("Tab");
     await expect(page.locator(".sheets")).toBeFocused();
     for (let i = 0; i < 12; i++) {
@@ -148,6 +145,26 @@ test.describe("printing", () => {
       await expect(heading).toHaveCount(1);
       await expect(sheet.locator("article")).toHaveAttribute("aria-labelledby", (await heading.getAttribute("id"))!);
       await expect(sheet.locator(".full")).toHaveAttribute("href", new RegExp(`^/work/[a-z-]+#${await card.getAttribute("data-card")}$`));
+    }
+  });
+
+  test("a print from a skills card alone never says something is missing, for every card", async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop", "the same answer on every screen; once is enough");
+    // eight full prints, each with the machine's read, display and feed
+    test.setTimeout(120_000);
+    await page.goto("/");
+    const cards = page.locator(".topics .topic");
+    const n = await cards.count();
+    expect(n).toBeGreaterThan(0);
+    for (let i = 0; i < n; i++) {
+      const label = (await cards.nth(i).locator("b").textContent())!;
+      await cards.nth(i).click();
+      await page.getByRole("button", { name: "Print" }).click();
+      await expect(page.locator("#r-title"), label).toHaveText(label, { timeout: 10_000 });
+      await expect(page.locator(".sheets .sheet").first(), label).toBeVisible({ timeout: 10_000 });
+      await expect(page.locator(".missing"), label).toHaveCount(0);
+      await page.getByRole("button", { name: "New request" }).click();
+      await expect(page.locator("#r-title")).toHaveCount(0);
     }
   });
 
@@ -267,22 +284,6 @@ test.describe("analytics", () => {
 });
 
 test.describe("shell (approved UX proposals)", () => {
-  test("the share link reopens the same sheets on /ask", async ({ page, context, browserName }, info) => {
-    test.skip(info.project.name !== "desktop", "touch screens open the share sheet instead");
-    test.skip(browserName !== "chromium");
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await page.goto("/");
-    await printAccessibility(page);
-    const printed = await page.locator(".sheets .full").evaluateAll((els) => els.map((e) => e.getAttribute("href")));
-    await page.getByRole("button", { name: "Share this print" }).click();
-    await expect(page.locator(".share-wrap [aria-live]")).toHaveText("Link copied");
-    const url = await page.evaluate(() => navigator.clipboard.readText());
-    expect(url).toMatch(/\/ask\?topics=[a-z-]+(,[a-z-]+)*$/);
-    await page.goto(url);
-    const reprinted = await page.locator(".sheet-list .full").evaluateAll((els) => els.map((e) => e.getAttribute("href")));
-    expect(reprinted).toEqual(printed);
-  });
-
   test("/work: four cards, the role and period lined up at the foot of each row", async ({ page }) => {
     await page.goto("/work");
     const cards = page.locator(".work-card");
@@ -305,12 +306,14 @@ test.describe("shell (approved UX proposals)", () => {
     }
   });
 
-  test("the footer holds the note about AI and the email, nothing else", async ({ page }) => {
+  test("the footer holds the note about AI and a way to say hello, nothing else", async ({ page }) => {
     await page.goto("/about");
     const foot = page.locator("footer.foot");
     await expect(foot.locator(".ft-note")).toHaveText("AI fetches the work. I made it.");
-    await expect(foot.locator(".ft-mail a")).toHaveAttribute("href", /^mailto:/);
-    await expect(foot.getByRole("button", { name: "Copy email address" })).toBeVisible();
+    await expect(foot.locator(".ft-mail > span").first()).toHaveText("Want the human? Say hello.");
+    await expect(foot.getByRole("link", { name: "Say hello" })).toHaveAttribute("href", /^mailto:[^@]+@[^@]+$/);
+    await expect(foot.locator(".ft-mail a .ft-plane")).toBeVisible();
+    await expect(foot.getByRole("button")).toHaveCount(0);
     await expect(foot.locator("a")).toHaveCount(1);
   });
 });

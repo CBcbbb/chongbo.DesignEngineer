@@ -50,7 +50,7 @@ export function Sheet({ card, index, total, printed, headingId, as: H = "h3", ru
         <span className="s-from">Case file: {card.projectTitle}</span>
         <Link className="full" href={card.href}>
           Read it in context<span className="sr-only">: {card.projectTitle}, {card.title}</span>
-          <DrawnArrow kind="nudge" className="full-ga" />
+          <DrawnArrow kind="still" className="full-ga" />
         </Link>
       </div>
     </>
