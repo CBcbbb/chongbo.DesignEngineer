@@ -16,11 +16,7 @@ const LIMIT = 640;
  * composition (approved by Chongbo; never by changing the words or shrinking every card). The test fails when any
  * other card goes over the limit, when one of these grows, or when one of these fits and should leave the list.
  */
-const OVER_LIMIT: Record<string, number> = {
-  "hhcd-data-platform#workshop": 684,
-  "hhcd-data-platform#four-types": 666,
-  "components-for-any-data#shapes": 652,
-};
+const OVER_LIMIT: Record<string, number> = {};
 
 /** Every card on a case page, measured once its images have loaded. */
 async function caseCards(page: Page, slug: string) {

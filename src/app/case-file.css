@@ -2833,3 +2833,83 @@
     font-size: 10.5px;
   }
 }
+
+/* ==========================================================================================================
+   Cards over the 40rem limit, recomposed one at a time (playbook §7, "One card, one height").
+   Each rule is scoped to one HHCD card, `[data-palette="hhcd"] :is([data-card="…"], #…)`, so printed copies
+   follow and no other project's cards change. Words, images and the type scale are untouched.
+   ========================================================================================================== */
+
+/* ---------- 01.4 the workshop: 684px → 618px at 1180px and up ---------- */
+/* each wall's label and title share one line ("WALL 1  Content"), so the three walls cost one row less */
+@media (min-width: 760px) {
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-steps li {
+    grid-row: span 3;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 12px;
+    align-items: baseline;
+  }
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-step-img,
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-steps p:not(.cf-step-label) {
+    grid-column: 1 / -1;
+  }
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-step-label::after {
+    display: none;
+  }
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-steps h4 {
+    margin-top: 0;
+  }
+}
+/* beside the text: the count moves up to the index line, the hand keeps only the room the picked card lifts into
+   (it may rise into the card's top padding), and the words under the hand align left with the count */
+@media (min-width: 1180px) {
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-in {
+    position: relative;
+  }
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-hand {
+    height: calc(var(--cw) * var(--ar) + 46px);
+  }
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-count {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+  }
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read {
+    justify-items: start;
+  }
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read p {
+    text-align: left;
+  }
+}
+
+/* ---------- 01.5 data collection: 665px → 628px at 1180px and up ---------- */
+/* Previous and Next join the tabs on one row, the step's sentence under them; the stage keeps its size */
+@media (min-width: 761px) {
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-evidence {
+    margin-top: 0.5rem;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: clamp(1rem, 2.4cqi, 1.5rem);
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe > * {
+    grid-column: 1 / -1;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-caption {
+    display: contents;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-nav {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-text {
+    grid-column: 1 / -1;
+    padding: 10px 0 12px;
+  }
+}

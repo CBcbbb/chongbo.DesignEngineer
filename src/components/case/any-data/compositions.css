@@ -429,3 +429,25 @@
     }
   }
 }
+
+/* ==========================================================================================================
+   Cards over the 40rem limit, recomposed (playbook §7, "One card, one height"); scoped to the one card, so
+   printed copies follow and no other card changes. Words and the type scale are untouched.
+   ========================================================================================================== */
+
+/* ---------- 01.1 different shapes: 652px → 619px at 1180px and up ---------- */
+/* the missing value's dashed box fits the strip's row, so the third strip is as tall as the other two */
+@media (min-width: 761px) {
+  [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) .ac-cell.is-missing {
+    margin: 4px 8px;
+    padding: 4px 10px;
+  }
+}
+/* the claim's column is as wide as its longest line needs; the context takes the rest, one line shorter */
+@media (min-width: 1180px) {
+  @container ad-sheets (min-width: 640px) {
+    [data-palette="components-for-any-data"] :is([data-card="shapes"], #shapes) {
+      grid-template-columns: minmax(0, 0.7fr) minmax(0, 1fr);
+    }
+  }
+}
