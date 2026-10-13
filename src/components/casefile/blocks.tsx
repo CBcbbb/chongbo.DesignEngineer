@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import type { CSSProperties } from "react";
 import type { Check, Media, Metric, Section, Specimen, Step } from "@content";
 import { assetExists, imageSize } from "@/lib/assets";
@@ -348,11 +348,17 @@ export function CaseMedia({
       const webm = media.asset.replace(/\.mp4$/, ".webm");
       const poster = media.poster && assetExists(media.poster) ? media.poster : undefined;
       const dim = poster ? imageSize(poster) : undefined;
+      // The poster goes through the image optimiser like every other picture (sized, AVIF or WebP, quality 90);
+      // the plate chooses the size that fits once it nears the screen.
+      const posterSet =
+        poster && dim
+          ? getImageProps({ src: src(poster), alt: "", width: dim.width, height: dim.height, quality: Q, sizes: "(min-width: 1100px) 860px, 100vw" }).props.srcSet
+          : undefined;
       return (
         <VideoPlate
           src={src(media.asset)}
           webm={assetExists(webm) ? src(webm) : undefined}
-          poster={poster ? src(poster) : undefined}
+          posterSet={posterSet}
           label={media.alt}
           url={url}
           ratio={dim ? dim.width / dim.height : 16 / 10}

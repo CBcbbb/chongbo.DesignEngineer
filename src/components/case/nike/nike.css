@@ -1259,7 +1259,20 @@
   position: relative;
   width: 100%;
   aspect-ratio: 1920 / 1080;
-  background: url("/assets/nike/gift-box-end.png") center / contain no-repeat;
+}
+/* the last frame, until the animation is ready: only once the stage is near (GiftBox), and through the image
+   optimiser (AVIF or WebP, quality 90), not the 820 KB PNG */
+.nk-lottie.is-near {
+  background: center / contain no-repeat;
+  background-image: url("/_next/image?url=%2Fassets%2Fnike%2Fgift-box-end.png&w=1080&q=90");
+  background-image: -webkit-image-set(
+    url("/_next/image?url=%2Fassets%2Fnike%2Fgift-box-end.png&w=1080&q=90") 1x,
+    url("/_next/image?url=%2Fassets%2Fnike%2Fgift-box-end.png&w=1920&q=90") 2x
+  );
+  background-image: image-set(
+    url("/_next/image?url=%2Fassets%2Fnike%2Fgift-box-end.png&w=1080&q=90") 1x,
+    url("/_next/image?url=%2Fassets%2Fnike%2Fgift-box-end.png&w=1920&q=90") 2x
+  );
 }
 .nk-lottie.is-ready {
   background: none;

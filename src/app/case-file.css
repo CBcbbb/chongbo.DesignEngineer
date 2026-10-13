@@ -1940,10 +1940,18 @@
   place-items: center;
   min-height: 0;
 }
+/* the picture's box takes its height from its width and the file's ratio (Zoom.tsx sets --ar): without it, WebKit
+   (Safari's engine) sizes the subgrid's rows from the files' natural heights once they are cached, and the workshop
+   card grows to about 740px */
+.cf-step-img .cf-zoom {
+  display: block;
+  width: 100%;
+  aspect-ratio: var(--ar);
+}
 .cf-step-img .cf-zoom img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: 6px;
 }
 .cf-step-label {
@@ -2848,6 +2856,10 @@
 }
 /* each wall's label and title on one line ("WALL 1  Content"), its finding under them */
 @media (min-width: 760px) {
+  /* three rows, matching each wall's span, so no empty fourth row is left over from the base rule */
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-steps {
+    grid-template-rows: auto auto auto;
+  }
   [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-steps li {
     grid-row: span 3;
     grid-template-columns: auto minmax(0, 1fr);

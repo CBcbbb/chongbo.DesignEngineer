@@ -32,11 +32,16 @@ npm test            # unit tests (Vitest)
 npm run build
 npm run contrast    # WCAG AA check of every colour pairing in use
 npm run test:e2e    # Playwright + axe at 1440 and 390 (needs `npm run build` first)
+npx playwright test --project=webkit-desktop --project=webkit-mobile   # the same in Safari's engine (and firefox-…)
 npm run screenshots # writes docs/screenshots/*.png
 node scripts/printing-gif.mjs  # writes docs/screenshots/printing.gif (needs ffmpeg and `npx next start -p 3100`)
 ```
 
 Playwright uses a system Chromium at `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` by default. Elsewhere, run `npx playwright install chromium` and set `PW_CHROMIUM` to that binary (or remove `executablePath` from `playwright.config.ts`).
+
+Each engine has a desktop (1440 × 1000) and a phone (390 × 844) project: `desktop` and `mobile` (Chromium), `webkit-desktop` and `webkit-mobile`, `firefox-desktop` and `firefox-mobile`. Run `npx playwright install chromium webkit firefox` once. Where a system Chromium exists at `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` (or `PW_CHROMIUM`), the Chromium projects use it. `.github/workflows/e2e.yml` runs the three engines on every branch push and on pull requests into `main`.
+
+Printing a case file (`src/app/case-print.css`) gives one sheet per page, without the site's navigation, light whatever the theme. Cmd+P (Ctrl+P) first loads the pictures and posters still waiting to be scrolled to, for a few seconds at most (`src/lib/print.ts`); printing from the browser's menu prints what has loaded.
 
 ## Environment variables
 

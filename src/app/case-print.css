@@ -1,0 +1,74 @@
+/*
+ * Printing a case file (Cmd+P, Save as PDF): one sheet per page, the cards as the case page draws them, no navigation.
+ *
+ * Cards are composed by the window's width (1180px, 1000px, 760px), and in print that width is the paper's: about
+ * 790px for A4 and 816px for Letter, in portrait, whatever page size the CSS asks for. Both fall in the tablet band
+ * (761px to 999px), so a printed card has its tablet composition, at about the width it was composed for: the page
+ * less side margins of 16px, the least a printer leaves. A portrait page holds the tallest of those cards.
+ *
+ * Scoped to a page holding a case file (a named page, and :has), because a route's CSS stays loaded after the
+ * reader moves on to another page. The page prints light whatever the reader's theme (CasePrint.tsx), and with its
+ * colours: the fields, the dark cards and the canvases are evidence, not decoration.
+ */
+@page case-file {
+  size: portrait;
+  /* the space round each sheet: a margin on the sheet itself is dropped at a page break */
+  margin: 24px 16px;
+}
+
+@media print {
+  /* the whole document, so it doesn't open on an unnamed (blank) page before the case file */
+  body:has(.cf-sheets, .nk-sheets) {
+    page: case-file;
+  }
+  html:has(.cf-sheets, .nk-sheets) {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  html:has(.cf-sheets, .nk-sheets),
+  html:has(.cf-sheets, .nk-sheets) body {
+    background: var(--paper) !important;
+  }
+
+  /* the site round the case file, and the case file's own navigation */
+  html:has(.cf-sheets, .nk-sheets) :is(.skip, header.bar, footer.foot, .cf-toc, .nk-toc, .nx-wrap) {
+    display: none !important;
+  }
+
+  /* the sheets across the page */
+  .cf-frame,
+  .nk-frame,
+  .cf-sheets,
+  .nk-sheets {
+    display: block;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* one sheet per page */
+  .cf-sheets > *,
+  .nk-sheets > * {
+    break-before: page;
+    break-inside: avoid;
+    margin: 0;
+  }
+  .cf-sheets > :first-child,
+  .nk-sheets > :first-child {
+    break-before: auto;
+  }
+
+  /* screen-only states: the card being read, the "Printed for" highlight */
+  .cf-sheet,
+  .nk-sheet {
+    box-shadow: none !important;
+  }
+
+  /* controls that only work on a screen: the play button over a recording, the animation's pause button, the
+     enlarge badge on a picture */
+  .cf-bigplay,
+  .nk-stage-pause,
+  .cf-zoom-badge {
+    display: none !important;
+  }
+}

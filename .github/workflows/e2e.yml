@@ -1,0 +1,45 @@
+name: e2e
+
+# The Playwright suite in each engine (Chromium, WebKit, Firefox), at the desktop and phone sizes.
+# Runs on every branch push except main (main only deploys) and on pull requests into main.
+on:
+  push:
+    branches-ignore: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit, firefox]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.engine }}
+      - run: npm run build
+      - name: Playwright (${{ matrix.engine }})
+        run: |
+          if [ "${{ matrix.engine }}" = chromium ]; then
+            npx playwright test --project=desktop --project=mobile
+          else
+            npx playwright test --project=${{ matrix.engine }}-desktop --project=${{ matrix.engine }}-mobile
+          fi
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.engine }}
+          path: test-results/
+          retention-days: 7

@@ -8,6 +8,8 @@ import {
   type CSSProperties,
   type KeyboardEvent,
 } from "react";
+import { flushSync } from "react-dom";
+import { onPrint } from "@/lib/print";
 
 type Card = {
   src: string;
@@ -53,14 +55,24 @@ export function CardDeck({
       ([e]) => {
         if (!e?.isIntersecting) return;
         io.disconnect();
+        offPrint();
         setDealing(true);
         setStacked(false);
         window.setTimeout(() => setDealing(false), 1400);
       },
       { threshold: 0.55 },
     );
+    // printed before it was seen: fanned, without the deal (lib/print.ts)
+    const offPrint = onPrint(() => {
+      io.disconnect();
+      offPrint();
+      flushSync(() => setStacked(false));
+    });
     io.observe(el);
-    return () => io.disconnect();
+    return () => {
+      io.disconnect();
+      offPrint();
+    };
   }, []);
 
   const pick = (i: number, focus = false) => {

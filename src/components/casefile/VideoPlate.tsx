@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
+import { onPrint } from "@/lib/print";
 import { BrowserFrame } from "./Frame";
 
 /** Pauses every other video and audio element on the page, so only one thing plays at a time. */
@@ -26,7 +28,7 @@ function PlayMorph({ playing }: { playing: boolean }) {
 export function VideoPlate({
   src,
   webm,
-  poster,
+  posterSet,
   label,
   url,
   ratio,
@@ -35,7 +37,9 @@ export function VideoPlate({
   src: string;
   /** A VP9 version for browsers without H.264 (some Chromium builds). */
   webm?: string;
-  poster?: string;
+  /** The poster as an image srcset (blocks.tsx). A poster can't be lazy-loaded or given a srcset, so the plate sets it
+   * itself: once it is within a screen of view, at the width it is shown at. */
+  posterSet?: string;
   label: string;
   url: string;
   ratio: number;
@@ -46,7 +50,42 @@ export function VideoPlate({
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(seconds ?? 0);
+  const [poster, setPoster] = useState<string>();
   const total = duration || 1;
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v || !posterSet) return;
+    const candidates = posterSet
+      .split(", ")
+      .map((c) => {
+        const i = c.lastIndexOf(" ");
+        return { url: c.slice(0, i), w: parseInt(c.slice(i + 1), 10) };
+      })
+      .sort((a, b) => a.w - b.w);
+    const choose = () => {
+      const need = v.clientWidth * (window.devicePixelRatio || 1);
+      setPoster((candidates.find((c) => c.w >= need) ?? candidates.at(-1))?.url);
+    };
+    // a printed sheet shows its card at once; a case page waits until the plate is near; a printout needs them all
+    if (v.closest(".s-card") || !("IntersectionObserver" in window)) {
+      choose();
+      return;
+    }
+    const io = new IntersectionObserver(([e]) => e?.isIntersecting && load(), { rootMargin: "100% 0px" });
+    // before printing, the poster is in the page at once (lib/print.ts)
+    const offPrint = onPrint(() => flushSync(load));
+    const stop = () => {
+      io.disconnect();
+      offPrint();
+    };
+    function load() {
+      stop();
+      choose();
+    }
+    io.observe(v);
+    return stop;
+  }, [posterSet]);
 
   // The metadata may load before hydration, so read the length directly as well as on the event.
   useEffect(() => {

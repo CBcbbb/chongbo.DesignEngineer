@@ -187,6 +187,78 @@ test.describe("printing", () => {
   });
 });
 
+test.describe("focus and motion", () => {
+  for (const route of ROUTES) {
+    test(`visible focus: every Tab stop is drawn differently when focused: ${route}`, async ({ page }) => {
+      await page.goto(route);
+      await page.waitForTimeout(600);
+      const missing: string[] = [];
+      let stops = 0;
+      for (let i = 0; i < 90; i++) {
+        await page.keyboard.press("Tab");
+        const stop = await page.evaluate(() => {
+          const el = document.activeElement as HTMLElement | null;
+          if (!el || el === document.body) return null;
+          // back at a stop already checked: the walk has gone round
+          const w = window as unknown as { __stops?: WeakSet<Element> };
+          w.__stops ??= new WeakSet();
+          if (w.__stops.has(el)) return "repeat" as const;
+          w.__stops.add(el);
+          // what can draw the ring: the element, its pseudo-elements, and the label or box round a hidden input
+          const chain: Element[] = [el];
+          for (let a = el.parentElement, k = 0; a && k < 3; a = a.parentElement, k++) chain.push(a);
+          const look = () =>
+            chain
+              .flatMap((e) => [getComputedStyle(e), getComputedStyle(e, "::before"), getComputedStyle(e, "::after")])
+              .map((s) => [s.outlineStyle, s.outlineWidth, s.outlineColor, s.boxShadow, s.borderColor, s.backgroundColor].join())
+              .join("|");
+          const focused = look();
+          el.blur();
+          const blurred = look();
+          el.focus({ preventScroll: true });
+          const name = (el.getAttribute("aria-label") || el.textContent || el.id || el.tagName).trim().slice(0, 40);
+          // a text field shows its caret
+          const caret = el.matches("textarea, input:is([type=text], [type=search], [type=email], :not([type]))");
+          return { name, drawn: caret || focused !== blurred };
+        });
+        if (!stop) continue;
+        if (stop === "repeat") break;
+        stops++;
+        if (!stop.drawn) missing.push(stop.name);
+      }
+      expect(stops).toBeGreaterThan(0);
+      expect(missing, missing.join("\n")).toEqual([]);
+    });
+  }
+
+  test("reduced motion: nothing moves on any page", async ({ browser }) => {
+    test.setTimeout(120_000);
+    const context = await browser.newContext({ reducedMotion: "reduce" });
+    const page = await context.newPage();
+    for (const route of ROUTES) {
+      await page.goto(route);
+      // in-view motion starts as the reader scrolls, so scroll through the page first (stepped from here: a page's
+      // own timers can be slowed while the suite's other worker is busy)
+      const height = await page.evaluate(() => document.body.scrollHeight);
+      for (let y = 0; y < height; y += 700) {
+        await page.evaluate((top) => scrollTo(0, top), y);
+        await page.waitForTimeout(60);
+      }
+      await page.evaluate(() => scrollTo(0, 0));
+      await page.waitForTimeout(600);
+      const moving = await page.evaluate(() => [
+        ...document
+          .getAnimations()
+          .filter((a) => a.playState === "running")
+          .map((a) => `${(a as CSSAnimation).animationName ?? "animation"} on ${(a.effect as KeyframeEffect | null)?.target?.className}`),
+        ...[...document.querySelectorAll("video")].filter((v) => !v.paused).map((v) => `video ${v.currentSrc.split("/").pop()}`),
+      ]);
+      expect(moving, `${route}: ${moving.join(", ")}`).toEqual([]);
+    }
+    await context.close();
+  });
+});
+
 test.describe("without JavaScript", () => {
   test("the paper form GETs /ask and prints the sheets as a list", async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
@@ -289,7 +361,7 @@ test.describe("shell (approved UX proposals)", () => {
   });
 
   test("every case file ends with the same next-case control", async ({ page }, info) => {
-    const phone = info.project.name === "mobile";
+    const phone = /mobile$/.test(info.project.name);
     for (const p of projects) {
       await page.goto(`/work/${p.slug}`);
       const nx = page.locator(".nx");

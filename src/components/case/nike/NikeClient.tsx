@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from "react";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
+import { onPrint } from "@/lib/print";
 
 /* ---------------------------------------------------------------------------------------------
  * The recording. Moments are timed from the footage: the chapter list plays them in the player,
@@ -106,7 +107,8 @@ export function RecordingPlayer({ chapters, full }: { chapters: Moment[]; full: 
         <video
           ref={ref}
           src="/assets/nike/recording.mp4"
-          poster="/assets/nike/recording-poster.jpg"
+          // through the image optimiser at its own width (AVIF or WebP, quality 90): about a third of the JPEG
+          poster="/_next/image?url=%2Fassets%2Fnike%2Frecording-poster.jpg&w=750&q=90"
           width={750}
           height={1624}
           playsInline
@@ -620,6 +622,7 @@ export function GiftBox({ src, label }: { src: string; label: string }) {
   const held = useRef(false);
   const hold = useRef(0);
   const [ready, setReady] = useState(false);
+  const [near, setNear] = useState(false);
   const [paused, setPaused] = useState(false);
 
   const load = useCallback(() => {
@@ -659,19 +662,40 @@ export function GiftBox({ src, label }: { src: string; label: string }) {
     if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) held.current = true;
+    const settle = (a: import("lottie-web").AnimationItem) => {
+      if (reduce) a.goToAndStop(a.totalFrames - 1, true);
+      else if (visible.current && !held.current) a.play();
+      else a.pause();
+    };
+    // The animation is 1.5 MB: it loads once the stage is within a screen of view (or the page is printed), not
+    // with the page. An observer's first callback comes at once for every element, in view or not.
+    const fetchIt = () => {
+      setNear(true);
+      void load().then(settle);
+    };
+    const nearby = new IntersectionObserver(([entry]) => {
+      if (!entry?.isIntersecting) return;
+      nearby.disconnect();
+      fetchIt();
+    }, { rootMargin: "100% 0px" });
     const io = new IntersectionObserver(
       ([entry]) => {
         visible.current = !!entry?.isIntersecting;
-        void load().then((a) => {
-          if (reduce) a.goToAndStop(a.totalFrames - 1, true);
-          else if (visible.current && !held.current) a.play();
-          else a.pause();
-        });
+        if (loading.current) void loading.current.then(settle);
       },
       { threshold: 0.4 },
     );
+    nearby.observe(el);
     io.observe(el);
+    // printed: the last frame, as with reduced motion (lib/print.ts)
+    const offPrint = onPrint(() => {
+      nearby.disconnect();
+      flushSync(() => setNear(true));
+      void load().then((a) => a.goToAndStop(a.totalFrames - 1, true));
+    });
     return () => {
+      nearby.disconnect();
+      offPrint();
       io.disconnect();
       window.clearTimeout(hold.current);
       anim.current?.destroy();
@@ -688,7 +712,7 @@ export function GiftBox({ src, label }: { src: string; label: string }) {
 
   return (
     <div className="nk-stage nk-box" onClick={toggle}>
-      <div className={`nk-lottie${ready ? " is-ready" : ""}`}>
+      <div className={`nk-lottie${near ? " is-near" : ""}${ready ? " is-ready" : ""}`}>
         <div ref={box} className="nk-lottie-box" role="img" aria-label={label} />
       </div>
       <button
