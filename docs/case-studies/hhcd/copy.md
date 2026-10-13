@@ -49,7 +49,7 @@ I coded each prototype idea, so people could try it rather than imagine it. That
 
 I designed the workshop around the data the platform needed, and led it with a fellow researcher. Fourteen people worked in pairs: each pair took a stakeholder card and judged the prototypes from that person's point of view. Their answers went up on three walls.
 
-*Evidence:* the seven stakeholder cards as a hand, dealt into a fan; the picked card's role name beside it. The three walls in a row across the foot, each photo over its finding; each photo opens larger.
+*Evidence:* the seven stakeholder cards as a hand, dealt into a fan, labelled "Stakeholder cards" under it; the picked card lifts (its role is announced to screen readers). The three walls in a row across the foot, each photo over its finding; each photo opens larger.
 
 *Cards (names only):* The Eco-Social Artist · The Digital Artist · The Community Leader · The Local Councillor · The Student · The Academic Researcher · The EU Cluster Coordinator
 
@@ -61,7 +61,7 @@ I designed the workshop around the data the platform needed, and led it with a f
 
 To make the survey easy to fill in, I started it from each person's own work: their projects, the methods they used and who supported them. Collecting was easy, but every row of the spreadsheet had a person at its centre. So I gave the map four linked types of equal weight, and decided what each entry stands for.
 
-*Evidence:* one stage the reader steps through (sample labels: Person A: Project 1, Project 2 · Workshops, Interviews · Partner X; Person B: Project 2 · Mapping, workshop · Partner Y; a repeat of Person A's row); the same entries move: questions (each → its type) → one person's answers → one row per person, cleaned → four typed columns, repeats merged → linked. *Tabs:* Decide · Survey · Clean · Split · Link. *Notes on the stage:* Each question becomes one type · One person's answers · One row per person · duplicate removed · spelling unified · Split by type · repeated entries merge into one · Linked through the projects · every entry the same weight
+*Evidence:* one stage the reader steps through (sample labels: Person A: Project 1, Project 2 · Workshops, Interviews · Partner X; Person B: Project 2 · Mapping, workshop · Partner Y; a repeat of Person A's row); the same entries move: questions (each → its type) → one person's answers → one row per person, cleaned → four typed columns, repeats merged → linked. *Steps:* Decide · Survey · Clean · Split · Link, as a numbered line across the card; the step's sentence (below) is the stage's title.
 
 1. Decide what the platform needs to know.
 2. Survey each person about their own work.

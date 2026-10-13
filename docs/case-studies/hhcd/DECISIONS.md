@@ -131,3 +131,8 @@ Approved by Chongbo in conversation:
 - Walls keep their titles (Content, Scope, Functionality); each finding is now two lines at most. Left out to keep them short: that the scope went beyond Europe, and that translation scored low before participants argued for it.
 - The role cards show the role's name only; the cards' own words stay on the pictures.
 
+## 01.4 and 01.5 composed for the 40rem card (13 Oct, evening)
+
+- 01.4 (about 625px): the text beside a curved hand of role cards, then the three walls. No role name under the hand; a small label, "Stakeholder cards", says what the cards are. The picked role is still announced to screen readers.
+- 01.5 (about 635px): the five steps run the card's width as a numbered line. Each step's sentence is now the stage's title, replacing the mono notes that used to sit there ("Each type becomes one question", "One person's answers", and so on). Previous and Next are gone. The stage keeps its full size.
+

@@ -566,6 +566,15 @@
     text-align: left;
   }
 }
+/* what the hand is, centred under it */
+.cf-deck-label {
+  margin: 0;
+  text-align: center;
+  font: 500 11px/1.4 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--case-dim);
+}
 .cf-deck-count {
   display: block;
   margin-bottom: 4px;
@@ -815,10 +824,11 @@
   box-shadow: 0 0 0 1.5px var(--case-ink);
   font-weight: 600;
 }
-.cf-pipe-note {
-  font: 600 11.5px/1.3 var(--mono);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.cf-pipe-title {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
   color: var(--case-ink);
 }
 .cf-pipe-sample {
@@ -2840,25 +2850,12 @@
    follow and no other project's cards change. Words, images and the type scale are untouched.
    ========================================================================================================== */
 
-/* ---------- 01.4 the workshop, composed for the 40rem card ----------
-   Three parts, read in order: the text and the hand of role cards side by side (how the workshop ran), then the
-   three walls across the foot (what came out of it). The picked role's name sits centred under the hand. */
-/* the hand: the picked role's count and name centred under it, at every width */
+/* ---------- 01.4 the workshop, composed for the 40rem card (about 625px at 1180 and up) ----------
+   Three parts, read in order: the text beside the hand of role cards (how the workshop ran), then the three walls
+   across the foot (what came out of it). The cards speak for themselves; the hand's label sits centred under it. */
 [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-in {
   grid-template-columns: minmax(0, 1fr);
-  gap: 14px;
-}
-[data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read {
-  justify-items: center;
-}
-[data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read p {
-  text-align: center;
-}
-[data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-read strong {
-  display: block;
-  font-size: 17px;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
+  gap: 24px;
 }
 /* each wall's label and title on one line ("WALL 1  Content"), its finding under them */
 @media (min-width: 760px) {
@@ -2872,119 +2869,111 @@
   [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-steps p:not(.cf-step-label) {
     grid-column: 1 / -1;
   }
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-step-label {
+    margin-top: 16px !important;
+  }
   [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-step-label::after {
     display: none;
   }
   [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-steps h4 {
     margin-top: 0;
   }
-}
-@media (min-width: 761px) {
-  [data-palette="hhcd"] .cf-sheet.is-side:is([data-card="workshop"], #workshop) .cf-deck-hand {
-    --cw: min(112px, 22cqi);
+  [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-steps p:not(.cf-step-label) {
+    margin-top: 8px;
   }
 }
-/* 1180px and up: text on the left (0.4), the hand on the right (0.6), as large as the band allows; walls under both */
+/* 1180px and up: the text (0.4) beside the hand (0.6), the hand centred on the text; the walls under both */
 @media (min-width: 1180px) {
   [data-palette="hhcd"] .cf-sheet.is-card.is-side:is([data-card="workshop"], #workshop) {
     grid-template-columns: minmax(0, 0.4fr) minmax(0, 0.6fr);
-    column-gap: 2.5rem;
+    gap: 3.75rem 3rem;
+  }
+  [data-palette="hhcd"] .is-side:is([data-card="workshop"], #workshop) .cf-evidence[data-split="deck"] > .cf-figure {
+    align-self: center;
   }
   /* a wide, curved hand: the outer cards turn 18deg, so every role's title shows */
   [data-palette="hhcd"] .cf-sheet.is-side:is([data-card="workshop"], #workshop) .cf-deck-hand {
-    --cw: min(124px, 30cqi);
-    --pad: calc(var(--cw) * 0.42);
-    height: calc(var(--cw) * var(--ar) + 74px);
+    --cw: min(116px, 27cqi);
+    --pad: calc(var(--cw) * 0.46);
+    height: calc(var(--cw) * var(--ar) + 84px);
   }
   [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-card {
-    transform: translateY(calc(var(--o2) * 3.4px)) rotate(calc(var(--o) * 6deg));
+    transform: translateY(calc(var(--o2) * 3.2px)) rotate(calc(var(--o) * 6deg));
   }
   [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-card:hover {
-    transform: translateY(calc(var(--o2) * 3.4px - 10px)) rotate(calc(var(--o) * 6deg));
+    transform: translateY(calc(var(--o2) * 3.2px - 10px)) rotate(calc(var(--o) * 6deg));
   }
   [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-card[aria-checked="true"] {
-    transform: translateY(-22px) rotate(0deg) scale(1.08);
+    transform: translateY(-20px) rotate(0deg) scale(1.08);
   }
   /* before the deal: one pile in the middle, as everywhere else */
   [data-palette="hhcd"] :is([data-card="workshop"], #workshop) .cf-deck-hand.is-stacked .cf-deck-card {
     transform: translateY(24px) rotate(calc(var(--o) * 1.6deg));
   }
-  [data-palette="hhcd"] .is-side:is([data-card="workshop"], #workshop) .cf-evidence[data-split="deck"] > .cf-figure {
-    align-self: start;
-  }
+  /* the space above the walls is the grid's row gap, not a margin: the walls fill their row, so a margin would push
+     them into the card's padding */
   [data-palette="hhcd"] .is-side:is([data-card="workshop"], #workshop) .cf-evidence[data-split="deck"] > .cf-steps {
-    margin-top: 2rem;
+    margin-top: 0;
   }
 }
 
 /* ---------- 01.5 data collection, composed for the 40rem card ----------
-   The five steps and the step on show share one row: numbered stops joined by a rule (ink up to the step on show),
-   then that step's sentence, whose first word is the step's name. Previous and Next go. The stage keeps its size. */
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-nav {
-  display: none;
-}
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe {
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: 1.75rem;
-  align-items: center;
-}
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe > * {
-  grid-column: 1 / -1;
-}
+   The five steps run the card's width as a process line: a numbered stop and its name per step, joined by a rule
+   that is ink up to the step on show. The step's sentence is the stage's title. The stage keeps its full size. */
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs {
-  grid-column: 1;
   display: flex;
   gap: 0;
 }
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-caption {
-  grid-column: 2;
-  grid-row: 1;
-  min-height: calc(2lh + 4px);
-  padding: 0;
-}
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-text {
-  line-height: 1.3;
-}
-[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-stage {
-  margin-top: 1.25rem;
-}
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li {
   display: flex;
+  flex: 1 1 0;
   align-items: center;
+  min-width: 0;
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:last-child {
+  flex: none;
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:not(:last-child)::after {
   content: "";
-  width: 22px;
+  flex: 1;
+  min-width: 12px;
   height: 1px;
-  margin: 0 4px;
+  margin: 0 14px;
   background: var(--case-rule);
   transition: background-color 0.3s var(--ease);
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:has(> button[data-done])::after {
   background: var(--case-ink);
 }
-/* a stop: the number in a ring, as large as a fingertip; the step's name is its accessible name and the sentence */
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button {
-  display: grid;
-  place-items: center;
-  width: 44px;
+  flex: none;
+  flex-wrap: nowrap;
+  gap: 10px;
+  align-items: center;
+  width: auto;
   min-height: 44px;
-  padding: 0;
+  padding: 0 4px 0 0;
   border: 0;
-  border-radius: 50%;
-  font-size: 0;
+  border-radius: 999px;
+  color: var(--case-dim);
+  white-space: nowrap;
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-n {
-  display: grid;
+  display: inline-grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   box-shadow: inset 0 0 0 1px var(--case-line);
   background: var(--case-bg);
-  font-size: 11.5px;
+  font-size: 11px;
   color: var(--case-dim);
   transition: background-color 0.25s var(--ease), color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:hover,
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[data-done],
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[aria-current="step"] {
+  color: var(--case-ink);
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:hover .cf-pipe-n,
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[data-done] .cf-pipe-n {
@@ -2998,16 +2987,39 @@
 }
 [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:focus-visible {
   outline: 2px solid var(--case-ink);
-  outline-offset: 1px;
+  outline-offset: 3px;
 }
-/* narrow sheets: the stops over the sentence */
-@container (max-width: 34rem) {
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-caption {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    margin-top: 8px;
+/* the stage: its title bar holds the step's sentence; the picture under it keeps its full height */
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-stage {
+  margin-top: 1.25rem;
+}
+@media (min-width: 761px) {
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-meta {
+    min-height: 48px;
   }
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:not(:last-child)::after {
-    width: 14px;
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-stage {
+    height: calc(220px + 48px);
+  }
+}
+/* narrow sheets: each stop over its name, spread across the row; the rules give way */
+@container (max-width: 34rem) {
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs {
+    justify-content: space-between;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li,
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li:last-child {
+    flex: none;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs li::after {
+    display: none;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button {
+    flex-direction: column;
+    gap: 6px;
+    padding: 4px 0 0;
+    border-radius: 8px;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-meta {
+    padding-block: 10px;
   }
 }

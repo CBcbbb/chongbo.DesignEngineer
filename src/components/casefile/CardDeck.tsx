@@ -19,8 +19,8 @@ type Card = {
 /**
  * A workshop's role cards as a hand of cards. When the hand comes into view, the cards are dealt from a stack into a
  * fan (once; with reduced motion they are simply fanned). The reader picks a card by pointing at it, clicking it, or
- * with the arrow keys: it lifts and straightens, and its role's name is set under the hand as live text. The cards'
- * own words stay on the pictures; the case file names the roles only.
+ * with the arrow keys: it lifts and straightens, and its role is announced to screen readers. On screen the cards speak
+ * for themselves, with the hand's label under them.
  */
 export function CardDeck({
   label,
@@ -128,21 +128,13 @@ export function CardDeck({
             </button>
           ))}
         </div>
-        <div className="cf-deck-read" aria-live="polite">
-          {cards.map((c, i) => (
-            <p
-              key={c.title}
-              data-on={i === on || undefined}
-              aria-hidden={i !== on}
-            >
-              <span className="cf-deck-count" aria-hidden="true">
-                {String(i + 1).padStart(2, "0")} /{" "}
-                {String(cards.length).padStart(2, "0")}
-              </span>
-              <strong>{c.title}</strong>
-            </p>
-          ))}
-        </div>
+        {/* what the hand is, as a label under it; the picked role is announced, not printed (the cards show it) */}
+        <p className="cf-deck-label" aria-hidden="true">
+          {label}
+        </p>
+        <p className="sr-only" aria-live="polite">
+          {cards[on]?.title}, {on + 1} of {cards.length}
+        </p>
       </div>
     </figure>
   );
