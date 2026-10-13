@@ -50,6 +50,19 @@ describe("skills cards", () => {
       expect(r.sheets.every((s) => t.signals.includes(s.signal)), t.id).toBe(true);
     }
   });
+
+  it("a print made from cards alone never has a missing line: every card, every pair, all of them", () => {
+    const shown = new Set(projects.flatMap((p) => p.sections.flatMap((s) => s.signals)));
+    const ids = shownTopics().map((t) => t.id);
+    // each card stands only for signals some shown project carries
+    for (const t of shownTopics()) for (const s of t.signals) expect(shown.has(s), `${t.id}: ${s}`).toBe(true);
+    const sets = [...ids.map((a) => [a]), ...ids.flatMap((a, i) => ids.slice(i + 1).map((b) => [a, b])), ids];
+    for (const set of sets) {
+      const r = fallbackAnswer(AskRequestSchema.parse({ topics: topicsToSignals(set).slice(0, 6) }));
+      expect(r.missing, set.join("+")).toEqual([]);
+      expect(missingLine(r.missing), set.join("+")).toBe("");
+    }
+  });
 });
 
 describe("wording", () => {

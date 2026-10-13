@@ -11,19 +11,22 @@ export type PrintedCard = { node: ReactNode; headingId: string };
 export const printPrefix = (slug: string) => `p-${slug}-`;
 
 /**
- * Every card of every shown project, printed: the same component the case page renders, inside the same project
+ * The cards asked for (all of them when `only` is left out), printed: the same component the case page renders, inside the same project
  * shell (palette, fonts, the sheets' container), so nothing outside the card restyles it. The printed sheet adds
  * only the paper, its top line and its foot (`Sheet`). Projects without a case-file layout print nothing here,
  * and their sheets fall back to the card's words.
  */
-export function printedCards(projects: Project[]): Record<string, PrintedCard> {
+export function printedCards(projects: Project[], only?: ReadonlySet<string>): Record<string, PrintedCard> {
   const out: Record<string, PrintedCard> = {};
+  const wanted = (slug: string, id: string) => !only || only.has(cardKey(slug, id));
   for (const project of projects) {
+    if (only && !project.sections.some((s) => wanted(project.slug, s.id))) continue;
     const pre = printPrefix(project.slug);
     if (project.template === "case-file") {
       const idx = cardIndexes(project);
       const url = caseUrl(project);
       for (const s of project.sections) {
+        if (!wanted(project.slug, s.id)) continue;
         out[cardKey(project.slug, s.id)] = {
           headingId: `${pre}${s.id}-title`,
           node: (
@@ -38,7 +41,7 @@ export function printedCards(projects: Project[]): Record<string, PrintedCard> {
     } else if (project.slug === "nike-athletes-closet") {
       const cards = nikeCards(project, pre);
       for (const s of project.sections) {
-        if (!cards[s.id]) continue;
+        if (!cards[s.id] || !wanted(project.slug, s.id)) continue;
         out[cardKey(project.slug, s.id)] = {
           headingId: `${pre}${s.id}-h`,
           node: (

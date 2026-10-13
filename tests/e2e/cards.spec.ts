@@ -102,7 +102,14 @@ test.describe("case-file cards", () => {
 });
 
 test.describe("printed sheets", () => {
-  for (const skill of ["Accessibility", "Design systems", "Web and brand"]) {
+  test("the home page ships no case cards until something is printed", async ({ request }) => {
+    // the cards are fetched per print (src/components/print-cards.ts); the first payload carries none of them
+    const html = await (await request.get("/")).text();
+    expect(html).not.toContain("data-card=");
+    expect(html.length, "home page HTML in bytes").toBeLessThan(80_000);
+  });
+
+  for (const skill of ["Accessibility", "Design systems", "Front‑end", "Web and brand"]) {
     test(`each sheet printed for ${skill} carries its case card unchanged`, async ({ page, browser }) => {
       await print(page, skill);
       const sheets = page.locator(".sheets .sheet");

@@ -6,11 +6,16 @@ import type { Signal } from "@content/schema";
 
 export type Topic = { id: string; label: string; signals: Signal[] };
 
-/** The skills cards, in order. Each maps to the content signals it stands for, the first weighing most. */
+/**
+ * The skills cards, in order. Each maps to the content signals it stands for, the first weighing most. A card lists
+ * only signals some shown project carries: a print made from cards alone never says something is missing
+ * (tests/unit/printed.test.ts checks every card, alone and together).
+ */
 export const TOPICS: Topic[] = [
   { id: "a11y", label: "Accessibility", signals: ["accessibility"] },
   { id: "systems", label: "Design systems", signals: ["design-systems", "cross-platform"] },
-  { id: "front", label: "Front‑end", signals: ["design-eng-gap", "seo-performance", "reusable-components"] },
+  // No seo-performance: no shown project carries it, so the card printed "No work to show yet for SEO and performance".
+  { id: "front", label: "Front‑end", signals: ["design-eng-gap", "reusable-components"] },
   { id: "motion", label: "Motion", signals: ["motion-interaction", "prototyping"] },
   { id: "brand", label: "Web and brand", signals: ["brand-storytelling", "conversion", "typography"] },
   { id: "ai", label: "AI tools", signals: ["ai-tools"] },

@@ -5,7 +5,6 @@ import { printedCards } from "@/components/PrintedCard";
 import { Sheet } from "@/components/Sheet";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { ShareLink } from "@/components/shell/ShareLink";
 import { answerAsk } from "@/lib/ask/answer";
 import { askLimiter, clientKey } from "@/lib/ask/rate-limit";
 import {
@@ -54,10 +53,11 @@ export default async function AskPage({ searchParams }: Props) {
   }
 
   const index = buildCardIndex();
-  const printed = printedCards(projects);
   const sheets = (result?.sheets ?? [])
     .map((s) => index[cardKey(s.project, s.section)])
     .filter((c): c is SheetCard => Boolean(c));
+  // only the cards this answer prints
+  const printed = printedCards(projects, new Set(sheets.map((c) => cardKey(c.project, c.section))));
   const runs = projectRuns(sheets);
   const picked = !brief.trim() ? topicsToLabels(topics) : [];
   const title = result ? resultTitle({ asked: result.asked, startHere: result.matched === "start-here", picked }) : (error ?? "What are you looking for?");
@@ -83,7 +83,6 @@ export default async function AskPage({ searchParams }: Props) {
                   )}
                 </p>
               </div>
-              {sheets.length > 0 && <ShareLink topics={result.asked} />}
             </div>
             <h2 id="sheets-title" className="sr-only">
               Printed sheets

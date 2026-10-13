@@ -1,6 +1,8 @@
 import { profile, projects } from "@content";
-import { printedCards } from "@/components/PrintedCard";
 import { PrintedToOrder } from "@/components/PrintedToOrder";
+// Nothing from the case files is rendered here, but printed cards arrive from `printCards` after a print, and their
+// client parts and stylesheets have to belong to this page. Importing the module registers them; it ships no cards.
+import "@/components/PrintedCard";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { buildCardIndex, shownTopics } from "@/lib/cards";
@@ -37,7 +39,7 @@ export default function Home() {
           <b>I&apos;m Chongbo, a design engineer in {profile.location}.</b> Pick what your role needs, or paste the job description,
           and my printer turns out the parts of my work that match.
         </p>
-        <PrintedToOrder cards={buildCardIndex()} printed={printedCards(projects)} labelledBy="home-title" topics={shownTopics()} />
+        <PrintedToOrder cards={buildCardIndex()} labelledBy="home-title" topics={shownTopics()} />
       </main>
       <SiteFooter />
       <script
