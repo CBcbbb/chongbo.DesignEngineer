@@ -114,12 +114,14 @@
 }
 
 /* ---------- the printer ----------
-   Sized so the whole machine, with the paper above it, sits in the first screen on a laptop:
-   the width follows the viewport height, between 440px and 680px, and the paper's idle height scales with it. */
+   A photographed machine (public/shell/printer*.webp, 1979 × 595) with its live parts laid over it at percentages
+   measured on the render: the display, the key, the reading light, the two slots. The night and jam renders share the
+   geometry. Sized so the paper and the machine sit in the first screen on a laptop: the width follows the viewport
+   height, between 440px and 760px. */
 .stage {
   --ph: clamp(100px, 13vh, 136px);
   position: relative;
-  width: clamp(440px, calc((100svh - 500px) * 2.2), 680px);
+  width: clamp(440px, calc((100svh - 430px) * 3.1), 760px);
   max-width: 100%;
   /* --pm is the paper's measured height (set from the client), so a taller sheet pushes the machine down instead of covering the cards */
   margin: calc(var(--pm, var(--ph)) + var(--s5)) auto 0;
@@ -127,12 +129,12 @@
 }
 .machine {
   position: relative;
-  aspect-ratio: 1100 / 494;
+  aspect-ratio: 1979 / 595;
   z-index: 2;
-  /* the engraving's type is sized from the machine itself, so it fits the plate at every width */
+  /* the display's type is sized from the machine itself */
   container-type: inline-size;
 }
-.machine > img {
+.machine > .photo {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -140,135 +142,265 @@
   display: block;
   user-select: none;
   -webkit-user-drag: none;
-  filter: drop-shadow(0 30px 34px rgba(30, 26, 20, 0.22));
+  filter: drop-shadow(0 18px 18px rgba(30, 26, 20, 0.2)) drop-shadow(0 3px 3px rgba(30, 26, 20, 0.18));
 }
-.plate {
+/* the room's light: the lamp-lit render in dark mode (the machine keeps its colours; only its lighting changes) */
+.machine > .photo-night,
+.key .key-night {
+  display: none;
+}
+:root[data-theme="dark"] .machine > .photo-day,
+:root[data-theme="dark"] .key .key-day {
+  display: none;
+}
+:root[data-theme="dark"] .machine > .photo-night,
+:root[data-theme="dark"] .key .key-night {
+  display: block;
+}
+:root[data-theme="dark"] .machine > .photo {
+  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.55));
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .machine > .photo-day,
+  :root:not([data-theme="light"]) .key .key-day {
+    display: none;
+  }
+  :root:not([data-theme="light"]) .machine > .photo-night,
+  :root:not([data-theme="light"]) .key .key-night {
+    display: block;
+  }
+  :root:not([data-theme="light"]) .machine > .photo {
+    filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.55));
+  }
+}
+/* a jam replaces the machine with the one with paper stuck in its front slot */
+.machine.jammed > .photo:not(.photo-jam) {
+  visibility: hidden;
+}
+
+/* the reading light at the top slot, on while the request goes in */
+.slot-light {
   position: absolute;
-  left: 14.1%;
-  top: 52.4%;
-  width: 14.5%;
-  height: 10%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 0.9%;
-  /* "DESIGN ENGINEER" is the longer line: about 9.5em wide, inside a plate 13% of the machine wide */
-  font: 500 min(9px, 1.33cqi) / 1.3 var(--mono);
-  color: #6e6a63;
-  letter-spacing: 0.03em;
-  white-space: nowrap;
+  left: 9.8%;
+  right: 9.6%;
+  top: 2.6%;
+  height: 7%;
+  z-index: 4;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(50% 100% at 50% 100%, var(--vfd), var(--vfd-glow) 38%, transparent 76%);
+  mix-blend-mode: screen;
+}
+
+/* the display: live text on the render's own glass, as a dot-matrix screen */
+.disp {
+  position: absolute;
+  left: 6.55%;
+  top: 31.1%;
+  width: 46%;
+  height: 24.4%;
+  z-index: 3;
   overflow: hidden;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+  border-radius: 0.5cqi;
+  background: linear-gradient(180deg, rgba(8, 40, 26, 0.18), rgba(4, 22, 14, 0.12));
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
   pointer-events: none;
 }
-.led {
+.disp::before {
+  content: "";
   position: absolute;
-  left: 9.9%;
-  top: 56.1%;
-  width: 1.1%;
-  aspect-ratio: 1;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(110deg, rgba(255, 255, 255, 0.08) 0 24%, rgba(255, 255, 255, 0.015) 24.5% 62%, transparent 62.5%);
+}
+.disp::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(circle, transparent 0.6px, rgba(8, 9, 8, 0.42) 1px) 0 0 / 2px 2px;
+}
+.disp-in {
+  position: absolute;
+  inset: 0 4.5%;
+  display: grid;
+  align-content: center;
+  gap: 0.42em;
+  color: var(--vfd);
+  text-shadow:
+    0 0 0.3em var(--vfd-glow),
+    0 0 1.1em var(--vfd-glow);
+  font: 500 min(13px, 1.95cqi) / 1.1 var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.disp-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+  overflow: hidden;
+}
+.disp-l1,
+.disp-l2 {
+  display: block;
+  overflow: hidden;
+}
+.disp-l1 > span,
+.disp-l2 > span {
+  display: inline-block;
+}
+.disp-l2 {
+  color: var(--vfd-dim);
+  text-shadow: none;
+  font-size: 0.84em;
+}
+.disp-dot {
+  flex: none;
+  align-self: center;
+  width: 0.55em;
+  height: 0.55em;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  transition:
-    background 0.3s,
-    box-shadow 0.3s;
+  background: var(--vfd-faint);
 }
-/* the lamp: green once there is something to print, amber while printing */
-.machine[data-state="ready"] .led {
-  background: var(--lamp-ready);
-  box-shadow: 0 0 9px 3px rgba(111, 207, 124, 0.65);
+.machine[data-state="ready"] .disp-dot,
+.machine[data-state="working"] .disp-dot {
+  background: var(--vfd);
+  box-shadow: 0 0 6px var(--vfd-glow);
 }
-.machine[data-state="working"] .led {
-  background: var(--lamp-busy);
-  box-shadow: 0 0 10px 4px rgba(255, 180, 80, 0.75);
-  animation: blink 0.55s steps(2) infinite;
+.machine[data-state="working"] .disp-dot {
+  animation: blink 0.5s steps(2) infinite;
 }
 @keyframes blink {
   50% {
-    opacity: 0.25;
+    opacity: 0.2;
   }
 }
-/* The Print button: invisible, over the photographed red button. At least 44px on phones. */
-.pk {
+.disp-bar {
+  display: flex;
+  gap: 0.3em;
+}
+.disp-bar i {
+  flex: 1;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--vfd-faint);
+}
+.disp-bar i.on {
+  background: var(--vfd);
+  box-shadow: 0 0 6px var(--vfd-glow);
+}
+/* on a phone the screen keeps one line, at a readable size */
+@container (max-width: 560px) {
+  .disp-in {
+    font-size: 10px;
+    gap: 0.5em;
+  }
+  .disp-l2 {
+    display: none;
+  }
+}
+
+/* the key: its cap is cut from the same render and travels into a dark socket */
+.socket,
+.key,
+.halo {
   position: absolute;
-  left: 86.1%;
-  top: 59.8%;
-  width: max(10.4%, 44px);
+  left: 82.72%;
+  top: 45.38%;
   aspect-ratio: 1;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
-  border: 0;
+  translate: -50% -50%;
+}
+.socket {
+  width: 9.2%;
+  z-index: 2;
+  background: radial-gradient(circle at 50% 30%, #2a0b07, #0d0302 70%);
+}
+.key {
+  /* the button is never under 44px; the key's picture stays its own size (9.2% of the machine) in the middle */
+  width: max(44px, 9.2%);
+  z-index: 4;
+  margin: 0;
   padding: 0;
+  border: 0;
+  background: none;
   cursor: pointer;
-  background: transparent;
+  -webkit-tap-highlight-color: transparent;
 }
-.pk::after {
-  content: "";
+.key img {
   position: absolute;
-  inset: 14%;
-  border-radius: 50%;
-  transition:
-    box-shadow 0.2s,
-    background 0.1s,
-    transform 0.1s;
+  left: 50%;
+  top: 50%;
+  width: 9.2cqi;
+  height: 9.2cqi;
+  translate: -50% -50%;
+  pointer-events: none;
+  user-select: none;
 }
-.pk:hover::after {
+.key:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: min(10px, 1.4cqi);
+}
+.halo {
+  width: 11.6%;
+  z-index: 3;
+  pointer-events: none;
+}
+/* ready: two breaths, then a steady faint ring */
+.machine[data-state="ready"] .halo {
   box-shadow:
-    0 0 0 3px rgba(201, 55, 42, 0.18),
-    0 0 22px 4px rgba(201, 55, 42, 0.28);
-}
-.pk:active::after,
-.pk[aria-busy="true"]::after {
-  background: radial-gradient(circle at 50% 40%, rgba(0, 0, 0, 0.08), rgba(60, 0, 0, 0.32));
-  transform: translateY(2px) scale(0.97);
-}
-.machine.ready .pk::after {
-  animation: invite 1.8s ease-in-out infinite;
+    0 0 0 0 rgba(201, 55, 42, 0.1),
+    0 0 16px 2px rgba(201, 55, 42, 0.16);
+  animation: invite 1.8s ease-in-out 2;
 }
 @keyframes invite {
-  0%,
-  100% {
-    box-shadow: 0 0 0 0 rgba(201, 55, 42, 0);
-  }
   50% {
     box-shadow:
-      0 0 0 5px rgba(201, 55, 42, 0.22),
-      0 0 30px 8px rgba(201, 55, 42, 0.36);
+      0 0 0 4px rgba(201, 55, 42, 0.18),
+      0 0 30px 8px rgba(201, 55, 42, 0.3);
   }
 }
-.pk:focus-visible {
-  outline-offset: 2px;
-  border-radius: 50%;
+.machine:has(.key:hover) .halo {
+  box-shadow:
+    0 0 0 3px rgba(201, 55, 42, 0.16),
+    0 0 22px 4px rgba(201, 55, 42, 0.26);
 }
-/* The word under the button, engraved like the name plate. It lights up when there is something to print. */
-.pk-label {
+/* the word under the key, engraved; red when there is something to print */
+.engrave {
   position: absolute;
-  left: 86.1%;
-  top: 74.2%;
-  transform: translateX(-50%);
-  font: 600 clamp(6px, 0.8vw, 9px) / 1 var(--mono);
-  letter-spacing: 0.2em;
+  left: 82.72%;
+  top: 66.4%;
+  translate: -50% 0;
+  z-index: 2;
+  padding-left: 0.24em;
+  font: 600 min(10px, 1.25cqi) / 1 var(--mono);
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: #7c776f;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
+  color: #8a8378;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
   pointer-events: none;
   transition: color 0.3s;
 }
-.machine.ready .pk-label,
-.pk:hover ~ .pk-label {
+.machine.ready .engrave,
+.machine:has(.key:hover) .engrave {
   color: var(--red);
 }
 
-/* paper rising from the top slot */
+/* paper rising from the top slot; the box clips at the slot, so a sheet drawn in disappears into the machine */
 .paperbox {
   position: absolute;
-  left: 15.5%;
-  width: 69%;
-  bottom: calc(100% - 7.7%);
+  left: 10.7%;
+  width: 78.6%;
+  bottom: calc(100% - 7.6%);
   min-height: var(--ph);
   z-index: 3;
   margin: 0;
+  overflow: hidden;
+  padding: 24px 12px 0;
+  margin-inline: -12px;
+  box-sizing: content-box;
   transition: min-height 0.5s var(--ease);
 }
 .paperbox[data-size="focus"] {
@@ -277,17 +409,7 @@
 .paperbox[data-size="full"] {
   min-height: calc(var(--ph) + 40px);
 }
-.paperbox::after {
-  content: "";
-  position: absolute;
-  left: -1%;
-  right: -1%;
-  bottom: -3px;
-  height: 7px;
-  border-radius: 4px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0));
-  pointer-events: none;
-}
+
 /* The sheet grows upwards with what is on it (chips, steps); the field keeps at least three lines. */
 .paper {
   --focus: var(--paper-ink);
@@ -304,7 +426,12 @@
   box-shadow:
     0 -1px 0 rgba(0, 0, 0, 0.04),
     0 10px 30px -14px rgba(0, 0, 0, 0.25);
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.05));
+  /* a new sheet: a faint grain, a clean edge, and a shade where it meets the slot */
+  background-image:
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.05)),
+    url(/shell/paper-grain.png);
+  background-size: auto, 256px;
+  background-blend-mode: normal, soft-light;
 }
 .field {
   position: relative;
@@ -351,6 +478,32 @@
 .field.on .ghost {
   display: none;
 }
+/* while it is read: the request as words, with the ones the printer recognises marked one after another */
+.read {
+  font: 400 17px/1.5 var(--mono);
+  color: var(--paper-ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  min-height: 4.6em;
+}
+.read mark {
+  background: transparent;
+  color: inherit;
+  border-radius: 2px;
+  animation: found 0.25s calc(160ms + var(--i, 0) * 90ms) both;
+}
+@keyframes found {
+  to {
+    background: var(--found);
+    box-shadow: inset 0 -2px 0 var(--found-line);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .read mark {
+    background: var(--found);
+    box-shadow: inset 0 -2px 0 var(--found-line);
+  }
+}
 .paper .chips {
   display: flex;
   flex-wrap: wrap;
@@ -376,82 +529,61 @@
   content: "×";
   color: var(--paper-dim);
 }
-.steps {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  font: 400 15px/1.4 var(--mono);
-}
-.steps li {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  color: var(--paper-ink);
-  opacity: 0;
-  transform: translateY(4px);
-  transition:
-    opacity 0.25s,
-    transform 0.25s;
-}
-.steps li::before {
-  content: "";
-  flex: none;
-  margin-top: 0.42em;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  box-sizing: border-box;
-  border: 1.5px solid currentColor;
-}
-.steps li.now,
-.steps li.done {
-  opacity: 1;
-  transform: none;
-}
-.steps li.done::before {
-  background: currentColor;
-}
-.steps li.now::before {
-  border-color: currentColor transparent currentColor currentColor;
-  animation: spin 0.7s linear infinite;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* sheet edge feeding out of the front opening */
+/* the front slot: the first sheet comes out of it onto the tray; clipped only at the slot's top lip */
 .outfeed {
   position: absolute;
-  left: 14%;
-  width: 65%;
-  top: 76%;
+  left: 23.9%;
+  width: 52.2%;
+  top: 64.6%;
   height: 40%;
-  overflow: hidden;
-  z-index: 3;
+  z-index: 5;
   pointer-events: none;
+  clip-path: inset(0 -40% -400% -40%);
 }
-.outfeed i {
+.feed-sheet {
   position: absolute;
-  left: 4%;
-  right: 4%;
   top: 0;
-  height: 100%;
-  background: var(--paper);
-  transform: translateY(-100%);
-  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.3);
+  translate: 0 -101%;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
 }
-.outfeed.go i {
-  animation: feed 0.9s steps(14, end) forwards;
+/* the first sheet on its way from the slot to the strip */
+.fly-sheet {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 50;
+  pointer-events: none;
+  transform-origin: 0 0;
+  will-change: transform;
+  filter: drop-shadow(0 30px 30px rgba(30, 26, 20, 0.3));
 }
-@keyframes feed {
-  to {
-    transform: translateY(-10%);
-  }
+.fly-sheet > .s-paper {
+  margin: 0;
+}
+
+/* nothing in the request named a role or a skill: why these sheets, and how to get a closer match */
+.rhead .not-found {
+  max-width: 64ch;
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+/* after a jam: the way out, under the machine */
+.jam-note {
+  max-width: 46ch;
+  margin: var(--s4) auto 0;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.jam-note a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
 }
 
 .alt {
@@ -549,8 +681,10 @@
 }
 /* --s (set on the strip by the printer) scales the sheet to fit a short window; 1 everywhere else */
 .sheet {
+  position: relative;
   width: calc(var(--sheet-w) * var(--s, 1));
-  animation: deal 0.55s var(--ease-out) both;
+  /* a mask would cut a box-shadow off, so the paper's shadow follows its outline */
+  filter: drop-shadow(0 18px 18px rgba(30, 26, 20, 0.18)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.06));
 }
 .s-paper {
   --focus: var(--paper-ink);
@@ -562,22 +696,21 @@
   border-radius: 4px;
   background: var(--paper);
   color: var(--paper-ink);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.6) inset,
-    0 1px 2px rgba(0, 0, 0, 0.06),
-    0 24px 40px -28px rgba(30, 26, 20, 0.45);
+  /* cut from the roll at both ends: serrated top and bottom, with the paper's grain. The card on it is unchanged. */
+  border-radius: 0;
+  background-image: url(/shell/paper-grain.png);
+  background-size: 256px;
+  background-blend-mode: soft-light;
+  -webkit-mask:
+    url(/shell/cut-edge-mask-up.png) 0 0 / 105px 6px repeat-x,
+    linear-gradient(#000, #000) 0 5px / 100% calc(100% - 10px) no-repeat,
+    url(/shell/cut-edge-mask.png) 0 100% / 105px 6px repeat-x;
+  mask:
+    url(/shell/cut-edge-mask-up.png) 0 0 / 105px 6px repeat-x,
+    linear-gradient(#000, #000) 0 5px / 100% calc(100% - 10px) no-repeat,
+    url(/shell/cut-edge-mask.png) 0 100% / 105px 6px repeat-x;
   transform: scale(var(--s, 1));
   transform-origin: 0 0;
-}
-@keyframes deal {
-  from {
-    opacity: 0;
-    translate: 0 -18px;
-  }
-  to {
-    opacity: 1;
-    translate: 0 0;
-  }
 }
 /* a sheet's top line (also the /work cards' top line) */
 .s-top {

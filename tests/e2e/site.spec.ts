@@ -57,7 +57,8 @@ test.describe("printing", () => {
     const title = page.locator("#r-title");
     await expect(title).toHaveText("Accessibility", { timeout: 10_000 });
     await expect(title).toBeFocused();
-    await expect(page.getByRole("status")).toHaveText(await title.innerText());
+    // The printer's own live region (the lamp in the header has another).
+    await expect(page.getByRole("main").getByRole("status")).toHaveText(await title.innerText());
     await expect(page.locator(".sheets .sheet").first()).toContainText("A dual view: the network and a list");
     await expect(page.locator(".sheets .sheet").first().locator(".full")).toHaveAttribute("href", "/work/hhcd-data-platform#dual-view");
     // HHCD's cards and the design system's colour cards print; with two projects, each sheet says which of its
@@ -157,7 +158,7 @@ test.describe("printing", () => {
     await expect(page.locator(".missing")).toHaveText(/^No work to show yet for .*Swift/, { timeout: 10_000 });
   });
 
-  test("rate limited: the reason is printed as the title", async ({ page }) => {
+  test("rate limited: the machine jams and says why; the request is back", async ({ page }) => {
     await page.route("**/api/ask", (route) =>
       route.fulfill({
         status: 429,
@@ -168,8 +169,11 @@ test.describe("printing", () => {
     await page.goto("/");
     await page.fill("#brief", "accessibility");
     await page.press("#brief", "Enter");
-    await expect(page.locator("#r-title")).toContainText("cool down", { timeout: 10_000 });
-    await expect(page.getByRole("status")).toContainText("cool down");
+    await expect(page.locator(".jam-note")).toContainText("cool down", { timeout: 10_000 });
+    await expect(page.getByRole("main").getByRole("status")).toContainText("cool down");
+    await expect(page.locator(".machine")).toHaveClass(/jammed/);
+    await expect(page.locator("#r-title")).toHaveCount(0);
+    await expect(page.locator("#brief")).toHaveValue("accessibility");
   });
 
   test("reduced motion: the result appears without the print animation", async ({ browser }) => {

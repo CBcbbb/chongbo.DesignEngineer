@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { profile } from "@content";
 import { SITE_URL } from "@/lib/site";
+import { THEME_SCRIPT } from "@/components/nav/ThemeLamp";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -35,8 +36,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    // data-theme is set by THEME_SCRIPT before the first paint, so React may find it already there
+    <html lang="en-GB" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
       <body>
+        {/* The remembered light or dark choice, applied before anything in the body is parsed or painted (ThemeLamp). */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
         <a className="skip sr-only-focusable" href="#main">
           Skip to content
         </a>

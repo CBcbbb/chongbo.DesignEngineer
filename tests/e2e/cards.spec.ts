@@ -161,26 +161,24 @@ test.describe("printed sheets", () => {
   }
 });
 
-test.describe("the printer's engraving", () => {
-  test("the name plate and the word PRINT are never clipped, from 320px to 1920px", async ({ page }) => {
+test.describe("the printer's display and engraving", () => {
+  test("the display's lines and the word PRINT are never clipped, from 320px to 1920px", async ({ page }) => {
     await page.goto("/");
     for (const width of [320, 340, 360, 375, 390, 414, 480, 600, 768, 900, 1024, 1280, 1440, 1680, 1920]) {
       await page.setViewportSize({ width, height: 900 });
       await page.waitForTimeout(100);
       const problems = await page.evaluate(() => {
         const out: string[] = [];
-        const plate = document.querySelector<HTMLElement>(".plate")!;
-        const p = plate.getBoundingClientRect();
-        for (const line of plate.querySelectorAll<HTMLElement>("span")) {
-          const r = document.createRange();
-          r.selectNodeContents(line);
-          const t = r.getBoundingClientRect();
-          if (t.left < p.left - 0.5 || t.right > p.right + 0.5 || t.top < p.top - 0.5 || t.bottom > p.bottom + 0.5) out.push(`plate: ${line.textContent}`);
+        const disp = document.querySelector<HTMLElement>(".disp")!.getBoundingClientRect();
+        for (const line of document.querySelectorAll<HTMLElement>(".disp-l1 > span, .disp-l2 > span")) {
+          if (getComputedStyle(line.parentElement!).display === "none") continue;
+          const t = line.getBoundingClientRect();
+          if (t.left < disp.left - 0.5 || t.right > disp.right + 0.5 || t.top < disp.top - 0.5 || t.bottom > disp.bottom + 0.5) out.push(`display: ${line.textContent}`);
         }
         const machine = document.querySelector(".machine")!.getBoundingClientRect();
-        const label = document.querySelector(".pk-label")!.getBoundingClientRect();
+        const label = document.querySelector(".engrave")!.getBoundingClientRect();
         if (label.left < machine.left || label.right > machine.right || label.bottom > machine.bottom) out.push("PRINT");
-        if (label.right > innerWidth || p.right > innerWidth) out.push("off screen");
+        if (label.right > innerWidth || disp.right > innerWidth) out.push("off screen");
         return out;
       });
       expect(problems, `${width}px`).toEqual([]);

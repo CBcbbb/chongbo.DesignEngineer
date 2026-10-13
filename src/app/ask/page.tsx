@@ -18,7 +18,7 @@ import {
 } from "@/lib/ask/schema";
 import { projects, type Signal } from "@content";
 import { buildCardIndex, cardKey, type SheetCard } from "@/lib/cards";
-import { BROWSE_ALL, missingLine, projectRuns, provenanceLine, quoteBrief, resultTitle, topicsToLabels } from "@/lib/printed";
+import { BROWSE_ALL, missingLine, notUnderstoodLine, projectRuns, provenanceLine, quoteBrief, resultTitle, topicsToLabels } from "@/lib/printed";
 
 export const metadata: Metadata = {
   title: "Your answer",
@@ -73,7 +73,11 @@ export default async function AskPage({ searchParams }: Props) {
             <div className="rhead">
               <div>
                 <h1 id="r-title">{title}</h1>
-                {brief.trim() && <p>{quoteBrief(brief)}</p>}
+                {result.matched === "start-here" && brief.trim() ? (
+                  <p className="not-found">{notUnderstoodLine(brief)}</p>
+                ) : (
+                  brief.trim() && <p>{quoteBrief(brief)}</p>
+                )}
                 <p className="provenance">
                   {provenanceLine(result.source, sheets.length)}
                   {result.source === "model" && sheets.length > 0 && (

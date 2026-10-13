@@ -76,6 +76,48 @@ function pairs(t: Record<string, string>, theme: string): Pair[] {
   ];
 }
 
+/** An rgba() token laid over a solid colour: what the eye actually sees. */
+function over(rgba: string, bg: string): string {
+  const m = rgba.match(/rgba\(\s*(\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\s*\)/);
+  if (!m) return rgba;
+  const a = Number(m[4]);
+  const b = bg.replace("#", "");
+  return `#${[1, 2, 3]
+    .map((i) => Math.round(Number(m[i]) * a + parseInt(b.slice((i - 1) * 2, (i - 1) * 2 + 2), 16) * (1 - a)))
+    .map((v) => v.toString(16).padStart(2, "0"))
+    .join("")}`;
+}
+const rgbaToken = (name: string) => {
+  const m = css.match(new RegExp(`--${name}:\\s*(rgba\\([^)]*\\))`));
+  if (!m) throw new Error(`Missing rgba token --${name}`);
+  return m[1]!;
+};
+// The display's glass in the renders: its brightest pixel (the reflection), day and night (sampled from public/shell).
+const GLASS_DAY = "#2c3a2e";
+const GLASS_NIGHT = "#262c21";
+
+/** The machine shell: the display, the reading light's marks, the jam, and the header lamp. */
+function shellPairs(t: Record<string, string>, theme: string): Pair[] {
+  const T = (k: string) => {
+    const v = t[k];
+    if (!v) throw new Error(`Missing token --${k}`);
+    return v;
+  };
+  const glass = theme === "dark" ? GLASS_NIGHT : GLASS_DAY;
+  return [
+    { fg: T("vfd"), bg: glass, where: `${theme}: display, first line on the glass`, min: TEXT },
+    { fg: over(rgbaToken("vfd-dim"), glass), bg: glass, where: `${theme}: display, second line on the glass`, min: TEXT },
+    { fg: T("paper-ink"), bg: T("found"), where: `${theme}: words the printer recognised, marked on the paper`, min: TEXT },
+    { fg: T("ink-2"), bg: T("studio"), where: `${theme}: the jam line under the machine`, min: TEXT },
+    { fg: T("ink"), bg: T("studio"), where: `${theme}: the jam line's links (all work, email me)`, min: TEXT },
+    { fg: T("ink-2"), bg: T("studio"), where: `${theme}: "Nice to meet you" / not-found line`, min: TEXT },
+    { fg: T("studio"), bg: T("ink"), where: `${theme}: the lamp's note after a tap`, min: TEXT },
+    theme === "dark"
+      ? { fg: T("lamp-light"), bg: T("studio"), where: `${theme}: the lit lamp in the header`, min: LARGE }
+      : { fg: T("ink-2"), bg: T("studio"), where: `${theme}: the lamp icon in the header`, min: LARGE },
+  ];
+}
+
 /** Case-file template (case-file.css): the reading surface follows the theme. */
 function casePairs(t: Record<string, string>, theme: string): Pair[] {
   const T = (k: string) => {
@@ -191,6 +233,8 @@ const all = [
   ...browserFrame,
   ...pairs(light, "light"),
   ...pairs(dark, "dark"),
+  ...shellPairs(light, "light"),
+  ...shellPairs(dark, "dark"),
   ...casePairs(light, "light"),
   ...casePairs(dark, "dark"),
   ...palettePairs(),

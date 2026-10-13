@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from "react";
-import { SIGNALS } from "@content/schema";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from "react";
 import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type AskResponse } from "@/lib/ask/schema";
+import { markPattern } from "@/lib/ask/keys";
+import { profile } from "@content";
 import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
-import { BROWSE_ALL, EXAMPLES, PICKED_HINT, TOPICS, missingLine, pad2, printedCount, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
+import { BROWSE_ALL, EXAMPLES, JAM_LINE, NUM, PICKED_HINT, SIGNAL_SHORT, TOPICS, missingLine, notUnderstoodLine, pad2, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
 import { Pill } from "./nav/Pill";
 import { track } from "@/lib/analytics";
 import { DrawnArrow } from "./shell/DrawnArrow";
@@ -14,6 +15,7 @@ import { ShareLink } from "./shell/ShareLink";
 import type { PrintedCard } from "./PrintedCard";
 import { printCards } from "./print-cards";
 import { Sheet } from "./Sheet";
+import { Display, type DisplayState } from "./printer/Display";
 
 type Props = {
   cards: CardIndex;
@@ -34,12 +36,25 @@ type Result = {
   byModel?: boolean;
   /** The signal keys the printer understood: the shared link (`/ask?topics=`) is built from these. */
   topics?: string[];
+  /** Nothing in the request named a role or a skill: the three places to start, and a line saying why. */
+  notUnderstood?: string;
   error?: boolean;
 };
 
-/** Per step of the paper's checklist. Four steps plus the feed: under two seconds, long enough to read. */
-const STEP_MS = 320;
-const FEED_MS = 600;
+/*
+ * The analysis, on the display (approved in docs/design/visual-motion-assembled.html):
+ *   read (the request passes the reading light into the slot) → wait (only while the answer is out) →
+ *   understand (each capability locks in) → search (the count of cards rolls down) → print.
+ * The answer and the printed cards are fetched as soon as the key is pressed, so the steps never add to a slow answer;
+ * the read step's pass into the slot is the floor.
+ */
+const READ_DELAY = 240;
+const PASS_MS = 1600;
+const LEAF_MS = 110;
+const LOCK_MS = 380;
+const COUNT_STEPS = 9;
+const FEED_MS = 900;
+const FLIGHT_MS = 840;
 /** A sheet is never scaled below this to fit a short window: the card's type stays comfortable to read. */
 const MIN_SCALE = 0.85;
 /** Room kept under the sheet, so its foot doesn't touch the window's edge. */
@@ -51,7 +66,37 @@ const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, prefersRedu
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 
-type Outcome = { ok: true; data: AskResponse } | { ok: false; message: string };
+/** A damped spring sampled into CSS linear(), so moving parts land with weight. Falls back to a stock overshoot. */
+function spring(k: number, c: number): { easing: string; duration: number } {
+  let x = 0;
+  let v = 0;
+  const pts = [0];
+  const dt = 1 / 60;
+  for (let i = 0; i < 240; i++) {
+    v += (-k * (x - 1) - c * v) * dt;
+    x += v * dt;
+    pts.push(+x.toFixed(4));
+    if (Math.abs(x - 1) < 0.001 && Math.abs(v) < 0.01) break;
+  }
+  pts[pts.length - 1] = 1;
+  const duration = Math.round((pts.length - 1) * dt * 1000);
+  const ok = typeof CSS !== "undefined" && CSS.supports?.("animation-timing-function", "linear(0, 1)");
+  return { easing: ok ? `linear(${pts.join(",")})` : "cubic-bezier(0.34, 1.4, 0.64, 1)", duration };
+}
+const KEY_UP = spring(420, 16);
+const SHEET_BACK = spring(210, 22);
+const DEAL = spring(170, 21);
+
+const MARKS = markPattern();
+const esc = (t: string) => t.replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]!);
+/** The request as the printer reads it: the visitor's words, with the ones it recognises marked. */
+function markedHtml(text: string): string {
+  let i = 0;
+  return esc(text).replace(MARKS, (w) => `<mark style="--i:${i++}">${w}</mark>`);
+}
+const say = (n: number) => (NUM[n] ?? String(n)).toUpperCase();
+
+type Outcome = { ok: true; data: AskResponse } | { ok: false; message: string; kind?: "limit" | "offline" };
 
 async function ask(brief: string, topics: string[]): Promise<Outcome> {
   try {
@@ -66,11 +111,11 @@ async function ask(brief: string, topics: string[]): Promise<Outcome> {
       if (parsed.success) return { ok: true, data: parsed.data };
       return { ok: false, message: "Something jammed. Try again, or browse all work." };
     }
-    if (res.status === 429) return { ok: false, message: RATE_LIMIT_MESSAGE };
+    if (res.status === 429) return { ok: false, message: RATE_LIMIT_MESSAGE, kind: "limit" };
     const err = AskErrorSchema.safeParse(json);
     return { ok: false, message: err.success ? err.data.message : "Something jammed. Try again, or browse all work." };
   } catch {
-    return { ok: false, message: "The printer is offline. Check your connection and try again." };
+    return { ok: false, message: "The printer is offline. Check your connection and try again.", kind: "offline" };
   }
 }
 
@@ -79,14 +124,18 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
   const [picked, setPicked] = useState<string[]>([]);
   const [focused, setFocused] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [steps, setSteps] = useState<string[] | null>(null);
-  const [stepAt, setStepAt] = useState(-1);
+  /** While the request is read: the visitor's words with the recognised ones marked. */
+  const [reading, setReading] = useState<string | null>(null);
+  const [disp, setDisp] = useState<DisplayState>({ l1: "Chongbo Ning", l2: "Design engineer" });
+  const [jam, setJam] = useState<null | { message: string; kind?: "limit" | "offline" }>(null);
   const [ghost, setGhost] = useState(EXAMPLES[0]!);
   const [result, setResult] = useState<Result | null>(null);
   const [cur, setCur] = useState(0);
   const [live, setLive] = useState("");
 
   const busyRef = useRef(false);
+  const abortRef = useRef(false);
+  const restRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const introRef = useRef(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -97,14 +146,25 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
   const machineRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
   const paperRef = useRef<HTMLDivElement>(null);
+  const lightRef = useRef<HTMLSpanElement>(null);
+  const keyRef = useRef<HTMLButtonElement>(null);
 
-  // ---------- typed examples on the paper; a still hint once a skill is picked ----------
+  const projectNames = useMemo(() => [...new Set(Object.values(cards).map((c) => c.projectTitle))], [cards]);
+  const total = useMemo(() => Object.keys(cards).length, [cards]);
+
+  // ---------- typed examples on the paper: twice round, then they rest on the last one; a still hint once a skill is picked ----------
   const anyPicked = picked.length > 0;
   const ghostText = anyPicked ? PICKED_HINT : ghost;
   useEffect(() => {
-    if (anyPicked || prefersReduced()) return;
+    if (anyPicked) return;
+    if (prefersReduced()) {
+      // no typing: the last example, still
+      const t = setTimeout(() => setGhost(EXAMPLES[EXAMPLES.length - 1]!), 0);
+      return () => clearTimeout(t);
+    }
     let ex = 0;
     let i = EXAMPLES[0]!.length;
+    let rounds = 0;
     let timer: ReturnType<typeof setTimeout>;
     const tick = () => {
       const s = EXAMPLES[ex % EXAMPLES.length]!;
@@ -112,14 +172,15 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
         i++;
         setGhost(s.slice(0, i));
         timer = setTimeout(tick, 55);
-      } else {
-        timer = setTimeout(() => {
-          ex++;
-          i = 0;
-          setGhost("");
-          tick();
-        }, 1800);
+        return;
       }
+      if (ex % EXAMPLES.length === EXAMPLES.length - 1 && ++rounds >= 2) return;
+      timer = setTimeout(() => {
+        ex++;
+        i = 0;
+        setGhost("");
+        tick();
+      }, 1800);
     };
     timer = setTimeout(tick, 0);
     return () => clearTimeout(timer);
@@ -135,6 +196,30 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
     return () => ro.disconnect();
   }, []);
 
+  // ---------- the display at rest: the name, or Ready once there is something to print ----------
+  const ready = Boolean(brief.trim() || picked.length) && !busy;
+  const [restTick, setRestTick] = useState(0);
+  useEffect(() => {
+    // a "Printed" or "Stopped" line, or a jam, holds the display until it ends
+    if (busy || jam || restRef.current) return;
+    setDisp(ready ? { l1: "Ready", l2: "Press print" } : { l1: "Chongbo Ning", l2: "Design engineer" });
+  }, [ready, busy, jam, restTick]);
+  /** Show a line for a while, then hand the display back to the resting state. */
+  const rest = (d: DisplayState, ms: number) => {
+    setDisp(d);
+    if (restRef.current) clearTimeout(restRef.current);
+    restRef.current = setTimeout(() => {
+      restRef.current = null;
+      setRestTick((t) => t + 1);
+    }, ms);
+  };
+  useEffect(
+    () => () => {
+      if (restRef.current) clearTimeout(restRef.current);
+    },
+    [],
+  );
+
   // ---------- skills cards ----------
   const toggle = (id: string, el?: HTMLElement | null) => {
     if (busyRef.current) return;
@@ -145,23 +230,61 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
       el.animate([{ rotate: "0deg" }, { rotate: `${rnd(-2.4, 2.4)}deg`, offset: 0.35 }, { rotate: "0deg" }], { duration: 480, easing: SPRING });
   };
 
-  /** The button goes down and the whole machine takes the knock, a little differently each time. */
+  // ---------- the key and the machine ----------
+  const keyDown = () => {
+    if (prefersReduced()) return;
+    keyRef.current?.animate([{ translate: "-50% -50%" }, { translate: "-50% calc(-50% + 4%)" }], { duration: 60, easing: "ease-out", fill: "forwards" });
+  };
+  const keyUp = () => {
+    if (prefersReduced()) return;
+    keyRef.current?.animate([{ translate: "-50% calc(-50% + 4%)" }, { translate: "-50% -50%" }], { duration: KEY_UP.duration, easing: KEY_UP.easing, fill: "forwards" });
+  };
+  /** The machine takes the knock, a little differently each time. */
   const thunk = () => {
     const m = machineRef.current;
     if (!m || prefersReduced()) return;
     m.animate(
       [
         { translate: "0 0", rotate: "0deg" },
-        { translate: `0 ${rnd(1.5, 3)}px`, rotate: `${rnd(-0.25, 0.25)}deg`, offset: 0.3 },
+        { translate: `0 ${rnd(1, 2)}px`, rotate: `${rnd(-0.2, 0.2)}deg`, offset: 0.3 },
         { translate: "0 0", rotate: "0deg" },
       ],
-      { duration: 420, easing: SPRING },
+      { duration: 380, easing: SPRING },
     );
+  };
+  const shake = (dx: number, ms: number, steps: number) => {
+    const m = machineRef.current;
+    if (!m || prefersReduced()) return Promise.resolve();
+    const frames = steps > 4
+      ? [{ translate: "0 0" }, { translate: `${dx}px 0` }, { translate: `${-dx}px 0` }, { translate: "0 0", offset: 0.5 }, { translate: `${dx * 0.8}px 0` }, { translate: `${-dx * 0.8}px 0` }, { translate: "0 0" }]
+      : [{ translate: "0 0" }, { translate: `${dx}px 0` }, { translate: `${-dx}px 0` }, { translate: "0 0" }];
+    return m.animate(frames, { duration: ms, easing: `steps(${steps})` }).finished.then(() => undefined, () => undefined);
+  };
+  const hum = (on: boolean): Animation | null => {
+    const m = machineRef.current;
+    if (!on || !m || prefersReduced()) return null;
+    return m.animate([{ translate: "0 0" }, { translate: "0.4px 0" }, { translate: "-0.3px 0.2px" }, { translate: "0 0" }], { duration: 120, iterations: Infinity, easing: "steps(4)" });
+  };
+
+  /** A fresh sheet rises out of the top slot (or the same one comes back, when a print is stopped or jams). */
+  const paperBack = async (fromCurrent: boolean) => {
+    const p = paperRef.current;
+    if (!p) return;
+    const from = fromCurrent ? getComputedStyle(p).translate : "0 104%";
+    p.getAnimations().forEach((a) => a.cancel());
+    if (prefersReduced()) return;
+    await p
+      .animate([{ translate: from && from !== "none" ? from : "0 104%" }, { translate: "0 0" }], { duration: SHEET_BACK.duration, easing: SHEET_BACK.easing })
+      .finished.catch(() => undefined);
   };
 
   // ---------- printing ----------
   const run = useCallback(async () => {
-    if (busyRef.current) return;
+    // a second press while printing stops it
+    if (busyRef.current) {
+      abortRef.current = true;
+      return;
+    }
     const text = brief;
     const ids = [...picked];
     if (!text.trim() && !ids.length) {
@@ -169,87 +292,170 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
       return;
     }
     busyRef.current = true;
+    abortRef.current = false;
+    if (restRef.current) {
+      clearTimeout(restRef.current);
+      restRef.current = null;
+    }
     setBusy(true);
+    setJam(null);
     thunk();
-    const pending = ask(text, topicsToSignals(ids));
+    const answer: { o?: Outcome } = {};
+    void ask(text, topicsToSignals(ids)).then((o) => (answer.o = o));
     const labels = ids.map((id) => topicById(id)?.label ?? id);
-    const list = [
-      `Reading ${text.trim().length > 200 ? "the job description" : "your request"}`,
-      labels.length ? labels.join(", ") : "Looking for a match",
-      "Choosing where to start",
-      "Printing",
-    ];
-    setSteps(list);
-    setStepAt(0);
-    setLive("Printing.");
+    const stopped = () => abortRef.current;
 
-    const [, outcome] = await Promise.all([sleep(STEP_MS), pending]);
-    const startHere = outcome.ok && outcome.data.matched === "start-here";
-    const sheets = outcome.ok
-      ? outcome.data.sheets.map((s) => cards[cardKey(s.project, s.section)]).filter((c): c is SheetCard => Boolean(c))
-      : [];
+    // 1. read: the request passes the reading light into the slot; the words the printer knows are marked
+    setReading(text.trim() ? markedHtml(text.trim()) : "");
+    setDisp({ l1: text.trim().length > 200 ? "Reading the job description" : "Reading your request", seg: 0 });
+    setLive("Printing.");
+    await sleep(READ_DELAY);
+    const light = lightRef.current;
+    const flicker = light && !prefersReduced() ? light.animate([{ opacity: 0.65 }, { opacity: 1 }, { opacity: 0.8 }], { duration: 240, iterations: Infinity }) : null;
+    if (light) light.style.opacity = "1";
+    const paper = paperRef.current;
+    const pass =
+      paper && !prefersReduced()
+        ? paper.animate([{ translate: "0 0" }, { translate: "0 6px", offset: 0.08 }, { translate: "0 8px", offset: 0.14 }, { translate: "0 104%" }], {
+            duration: PASS_MS,
+            easing: "cubic-bezier(0.5, 0, 0.35, 1)",
+            fill: "forwards",
+          })
+        : null;
+    const lightOff = () => {
+      flicker?.cancel();
+      if (light) light.style.opacity = "0";
+    };
+    const stop = async () => {
+      lightOff();
+      pass?.pause();
+      setDisp({ l1: "Stopped", l2: "Your request is back" });
+      await paperBack(true);
+      setReading(null);
+      finish();
+      rest({ l1: "Stopped", l2: "Your request is back" }, 2200);
+    };
+    const finish = () => {
+      busyRef.current = false;
+      abortRef.current = false;
+      setBusy(false);
+    };
+    for (let t = 0; t < PASS_MS; t += 100) {
+      if (stopped()) return stop();
+      await sleep(100);
+    }
+    lightOff();
+
+    // 2. wait: only while the answer is still out, the second line leafs through the case files
+    let n = 0;
+    while (!answer.o) {
+      if (stopped()) return stop();
+      setDisp({ l1: "Reading your request", l2: projectNames[n++ % projectNames.length], seg: 0, instant: true });
+      await new Promise((r) => setTimeout(r, LEAF_MS));
+    }
+    const o = answer.o;
+
+    // a failed print: the paper jams, the request comes back, and there's a way out
+    if (!o.ok) {
+      track("printed", { skills: labels, brief_chars: text.trim().length, ok: false, source: null, asked: [], cards: [], start_here: false });
+      setJam({ message: o.message, kind: o.kind });
+      await shake(1.5, 240, 4);
+      setDisp({ l1: "Paper jam", l2: "Try again in a moment" });
+      await paperBack(true);
+      setReading(null);
+      setLive(o.kind ? o.message : `${JAM_LINE.before}${JAM_LINE.all}${JAM_LINE.or}${JAM_LINE.email}${JAM_LINE.after}`);
+      finish();
+      return;
+    }
+
+    const data = o.data;
+    const startHere = data.matched === "start-here";
+    const sheets = data.sheets.map((s) => cards[cardKey(s.project, s.section)]).filter((c): c is SheetCard => Boolean(c));
     // what was asked for and what printed; a brief's words are never sent, only how long it was
     track("printed", {
       skills: labels,
       brief_chars: text.trim().length,
-      ok: outcome.ok,
-      source: outcome.ok ? outcome.data.source : null,
-      asked: outcome.ok ? outcome.data.asked : [],
+      ok: true,
+      source: data.source,
+      asked: data.asked,
       cards: sheets.map((c) => cardKey(c.project, c.section)),
       start_here: startHere,
     });
-    // The chosen cards are rendered on the server now, while the steps and the feed play: no extra wait in most cases.
-    // If that fails, each sheet falls back to its card's words (`Sheet`).
+    // The chosen cards are rendered on the server while the display runs. If that fails, a sheet falls back to its words.
     const printing: Promise<Record<string, PrintedCard>> = sheets.length
       ? printCards(sheets.map((c) => cardKey(c.project, c.section))).catch(() => ({}))
       : Promise.resolve({});
-    const next = [...list];
-    if (!labels.length && outcome.ok && !startHere) next[1] = outcome.data.asked.slice(0, 2).map((s) => SIGNALS[s]).join(", ");
-    next[2] = !outcome.ok
-      ? "Paper jam"
-      : startHere || !sheets.length
-        ? "Choosing where to start"
-        : printedCount(sheets);
-    setSteps(next);
-    for (let i = 1; i <= 4; i++) {
-      setStepAt(i);
-      if (i < 4) await sleep(STEP_MS);
-    }
+    const projects = new Set(sheets.map((c) => c.project)).size;
 
-    const feed = outfeedRef.current;
-    if (feed) {
-      feed.classList.remove("go");
-      void feed.offsetWidth;
-      feed.classList.add("go");
+    if (startHere) {
+      // 3'. nothing understood: a hiccup, not a jam. The machine shudders twice and says why, then prints where to start.
+      await shake(1.2, 420, 6);
+      setDisp({ l1: "No role or skill found", l2: "In your request", seg: 1 });
+      await sleep(900);
+      if (stopped()) return stop();
+      setDisp({ l1: "Printing where to start", l2: `${say(sheets.length)} sheets`, seg: 3 });
+    } else {
+      // 3. understand: each capability locks in
+      const asked = labels.length ? labels : data.asked.slice(0, 2).map((sig) => SIGNAL_SHORT[sig]);
+      let got = "";
+      for (const a of asked) {
+        got = got ? `${got}, ${a}` : a;
+        setDisp({ l1: got, l2: "Understood", seg: 1 });
+        await sleep(LOCK_MS);
+        if (stopped()) return stop();
+      }
+      // 4. search: every card, then the cards that carry what was asked, then the ones chosen
+      const match = Object.values(cards).filter((c) => c.signals.some((sig) => data.asked.includes(sig))).length || sheets.length;
+      setDisp({ l1: got, l2: `Searching ${total} cards`, seg: 2 });
+      await sleep(300);
+      for (let i = 1; i <= COUNT_STEPS; i++) {
+        setDisp({ l1: got, l2: `${Math.round(total - ((total - match) * i) / COUNT_STEPS)} cards match`, seg: 2, instant: true });
+        await sleep(40);
+        if (stopped()) return stop();
+      }
+      await sleep(380);
+      setDisp({ l1: got, l2: `Choosing ${say(sheets.length).toLowerCase()}`, seg: 2 });
+      await sleep(420);
+      if (stopped()) return stop();
+      // 5. print
+      setDisp({
+        l1: `${say(sheets.length)} ${sheets.length === 1 ? "sheet" : "sheets"} from ${say(projects).toLowerCase()} ${projects === 1 ? "project" : "projects"}`,
+        l2: "Printing",
+        seg: 3,
+      });
     }
-    const [, printed] = await Promise.all([sleep(FEED_MS), printing]);
+    const hummer = hum(true);
+    const [printed] = await Promise.all([printing, sleep(360)]);
+    hummer?.cancel();
 
-    const r: Result = outcome.ok
-      ? {
-          // Cards picked without words: the title is what was picked. Words typed: what the machine understood.
-          title: resultTitle({ asked: outcome.data.asked, startHere, picked: labels }),
-          asked: quoteBrief(text),
-          cards: sheets,
-          printed,
-          missing: missingLine(outcome.data.missing),
-          provenance: provenanceLine(outcome.data.source, sheets.length),
-          byModel: outcome.data.source === "model",
-          topics: [...outcome.data.asked],
-        }
-      : { title: outcome.message, asked: quoteBrief(text), cards: [], printed: {}, missing: "", provenance: "", error: true };
+    const r: Result = {
+      // Cards picked without words: the title is what was picked. Words typed: what the machine understood.
+      title: resultTitle({ asked: data.asked, startHere, picked: labels }),
+      asked: startHere ? "" : quoteBrief(text),
+      cards: sheets,
+      printed,
+      missing: missingLine(data.missing),
+      provenance: provenanceLine(data.source, sheets.length),
+      byModel: data.source === "model",
+      topics: [...data.asked],
+      notUnderstood: startHere && text.trim() ? notUnderstoodLine(text) : undefined,
+    };
     introRef.current = true;
     setCur(0);
     setResult(r);
-    setLive(r.title);
-    setTimeout(() => feed?.classList.remove("go"), prefersReduced() ? 0 : 400);
+    setLive(r.notUnderstood ? `${r.title} ${r.notUnderstood}` : r.title);
 
-    setSteps(null);
-    setStepAt(-1);
+    setReading(null);
     setBrief("");
     setPicked([]);
-    busyRef.current = false;
-    setBusy(false);
-  }, [brief, picked, cards]);
+    await paperBack(false);
+    const done: DisplayState = {
+      l1: `Printed: ${say(sheets.length).toLowerCase()} ${sheets.length === 1 ? "sheet" : "sheets"}`,
+      l2: startHere ? "Where to start" : `From ${say(projects).toLowerCase()} ${projects === 1 ? "project" : "projects"}`,
+    };
+    finish();
+    rest(done, 3200);
+  }, [brief, picked, cards, projectNames, total]);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -264,13 +470,116 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
     if (e.key === "Escape") setBrief("");
   };
 
-  // A new print: move focus to the title and bring the results into view.
+  // ---------- a new print: out of the front slot, picked up, carried into the strip; the others dealt from under it ----------
   useLayoutEffect(() => {
     if (!result || !introRef.current) return;
     introRef.current = false;
-    if (stripRef.current) stripRef.current.scrollLeft = 0;
-    titleRef.current?.focus({ preventScroll: true });
-    resultsRef.current?.scrollIntoView({ behavior: prefersReduced() ? "auto" : "smooth", block: "start" });
+    const strip = stripRef.current;
+    const results = resultsRef.current;
+    if (strip) strip.scrollLeft = 0;
+    // A hidden element can't hold focus, so the title takes it as the results appear.
+    const focusTitle = () => titleRef.current?.focus({ preventScroll: true });
+    const items = strip ? (Array.from(strip.children) as HTMLElement[]) : [];
+    const first = items[0];
+    const out = outfeedRef.current;
+    if (prefersReduced() || !first || !out || !results) {
+      focusTitle();
+      results?.scrollIntoView({ behavior: "auto", block: "start" });
+      return;
+    }
+    const paperEl = first.querySelector<HTMLElement>(".s-paper");
+    if (!paperEl) {
+      focusTitle();
+      results.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    let cancelled = false;
+    // the results wait for the sheet: they appear as it is picked up
+    results.style.visibility = "hidden";
+    items.forEach((li) => (li.style.visibility = "hidden"));
+    const fullW = paperEl.getBoundingClientRect().width;
+    const fullH = paperEl.getBoundingClientRect().height;
+    // the copy that comes out of the slot: the real first sheet, scaled to the slot's width
+    const slot = out.getBoundingClientRect();
+    const k = (slot.width * 0.94) / fullW;
+    const feeder = document.createElement("div");
+    feeder.className = "feed-sheet";
+    feeder.setAttribute("aria-hidden", "true");
+    // a picture of the sheet: its links can't be reached while it travels
+    feeder.inert = true;
+    feeder.style.cssText = `left:3%;width:${fullW * k}px;height:${fullH * k}px`;
+    const inner = paperEl.cloneNode(true) as HTMLElement;
+    inner.removeAttribute("id");
+    inner.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+    inner.style.cssText = `width:${fullW}px;transform:scale(${k});transform-origin:0 0;margin:0`;
+    feeder.appendChild(inner);
+    out.appendChild(feeder);
+    const run = async () => {
+      // a thermal printer feeds in visible steps
+      await feeder.animate([{ translate: "0 -101%" }, { translate: "0 -3%" }], { duration: FEED_MS, easing: "steps(16, end)", fill: "forwards" }).finished.catch(() => undefined);
+      await sleep(200);
+      if (cancelled) return;
+      const from = feeder.getBoundingClientRect();
+      const to = first.getBoundingClientRect();
+      const sx = from.left + scrollX;
+      const sy = from.top + scrollY;
+      const tx = to.left + scrollX;
+      const ty = to.top + scrollY;
+      const fly = document.createElement("div");
+      fly.className = "fly-sheet";
+      fly.setAttribute("aria-hidden", "true");
+      fly.inert = true;
+      inner.style.transform = "none";
+      fly.appendChild(inner);
+      document.body.appendChild(fly);
+      feeder.remove();
+      results.style.visibility = "";
+      const tilt = rnd(-1.6, 1.6);
+      const flight = fly.animate(
+        [
+          { transform: `translate(${sx}px, ${sy}px) scale(${k}) rotate(0deg)` },
+          { transform: `translate(${(sx + tx) / 2}px, ${(sy + ty) / 2 - 30}px) scale(${(k + 1) / 2 + 0.06}) rotate(${tilt}deg)`, offset: 0.45 },
+          { transform: `translate(${tx}px, ${ty}px) scale(1) rotate(0deg)` },
+        ],
+        { duration: FLIGHT_MS, easing: "cubic-bezier(0.3, 0.7, 0.1, 1)", fill: "forwards" },
+      );
+      // the page scrolls with the sheet, so the title ends at the top
+      const margin = parseFloat(getComputedStyle(results).scrollMarginTop) || 0;
+      const target = Math.min(results.getBoundingClientRect().top + scrollY - margin, document.documentElement.scrollHeight - innerHeight);
+      const y0 = scrollY;
+      const t0 = performance.now();
+      const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+      await new Promise<void>((res) => {
+        const step = (now: number) => {
+          const p = Math.min(1, (now - t0) / FLIGHT_MS);
+          window.scrollTo(0, y0 + (target - y0) * ease(p));
+          if (p < 1 && !cancelled) requestAnimationFrame(step);
+          else res();
+        };
+        requestAnimationFrame(step);
+      });
+      await flight.finished.catch(() => undefined);
+      if (cancelled) return;
+      first.style.visibility = "";
+      fly.remove();
+      items.forEach((li) => (li.style.visibility = ""));
+      // once every sheet can be reached, the title takes focus (the live region has already announced it)
+      focusTitle();
+      items.slice(1).forEach((li, i) => {
+        li.style.zIndex = String(items.length - i);
+        const dx = li.offsetLeft - first.offsetLeft;
+        li.animate([{ translate: `${-dx}px 0` }, { translate: "0 0" }], { duration: DEAL.duration, easing: DEAL.easing, delay: 90 * i, fill: "backwards" });
+      });
+      first.style.zIndex = String(items.length + 1);
+    };
+    void run();
+    return () => {
+      cancelled = true;
+      feeder.remove();
+      document.querySelectorAll(".fly-sheet").forEach((el) => el.remove());
+      results.style.visibility = "";
+      items.forEach((li) => (li.style.visibility = ""));
+    };
   }, [result]);
 
   // Each sheet is the case page's card at its own size. Where the window is too short for the whole sheet under the
@@ -364,9 +673,9 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
   };
 
   // ---------- render ----------
-  const working = steps !== null;
-  const ready = Boolean(brief.trim() || picked.length) && !busy;
+  const working = busy;
   const size = working || brief.length > 120 || picked.length ? "full" : focused || brief ? "focus" : "idle";
+  const state = working ? "working" : ready ? "ready" : "idle";
 
   return (
     <>
@@ -392,7 +701,7 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
       </section>
 
       <div className="stage" ref={stageRef}>
-        <div ref={machineRef} className={`machine${ready ? " ready" : ""}`} data-state={working ? "working" : ready ? "ready" : "idle"}>
+        <div ref={machineRef} className={`machine${ready ? " ready" : ""}${jam ? " jammed" : ""}`} data-state={state}>
           <form
             ref={formRef}
             id="order"
@@ -405,7 +714,7 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
             onSubmit={onSubmit}
           >
             <div className="paper" ref={paperRef}>
-              <div className={`field${brief || focused ? " on" : ""}`} hidden={working}>
+              <div className={`field${brief || focused ? " on" : ""}`} hidden={reading !== null}>
                 <label htmlFor="brief" className="sr-only">
                   Describe the role or paste a job description.
                 </label>
@@ -424,45 +733,90 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
                   {ghostText}
                 </div>
               </div>
+              {reading !== null && reading !== "" && (
+                // the request as the printer reads it (the same words; the ones it recognises marked)
+                <div className="read" aria-hidden="true" dangerouslySetInnerHTML={{ __html: reading }} />
+              )}
               <input type="hidden" name="topics" value={topicsToSignals(picked).join(",")} />
-              <div className="chips" aria-label="Selected skills" role="group" hidden={working || !picked.length}>
+              <div className="chips" aria-label="Selected skills" role="group" hidden={!picked.length}>
                 {picked.map((id) => {
                   const label = topicById(id)?.label ?? id;
                   return (
-                    <button key={id} type="button" aria-label={`Remove ${label}`} onClick={() => toggle(id)}>
+                    <button key={id} type="button" aria-label={`Remove ${label}`} disabled={working} onClick={() => toggle(id)}>
                       {label}
                     </button>
                   );
                 })}
               </div>
-              {steps && (
-                <ul className="steps" aria-hidden="true">
-                  {steps.map((s, i) => (
-                    <li key={i} className={i < stepAt ? "done" : i === stepAt ? "now" : undefined}>
-                      {s}
-                    </li>
-                  ))}
-                </ul>
-              )}
             </div>
           </form>
-          <Image src="/printer.webp" alt="" width={1100} height={494} priority draggable={false} sizes="(min-width: 800px) 760px, 100vw" />
-          <div className="plate" aria-hidden="true">
-            <span>CHONGBO NING</span>
-            <span>DESIGN ENGINEER</span>
-          </div>
-          <span className="led" aria-hidden="true" />
-          <button className="pk" type="submit" form="order" aria-label="Print" aria-busy={busy || undefined} />
-          <span className="pk-label" aria-hidden="true">
+          {/* The machine is lit by the room: the day render in light mode, the lamp-lit one in dark mode; the jam replaces both. */}
+          <Image className="photo photo-day" src="/shell/printer.webp" alt="" width={1979} height={595} priority draggable={false} sizes="(min-width: 800px) 760px, 100vw" />
+          <Image className="photo photo-night" src="/shell/printer-night.webp" alt="" width={1979} height={595} draggable={false} sizes="(min-width: 800px) 760px, 100vw" />
+          {jam && (
+            <>
+              <Image className="photo photo-day photo-jam" src="/shell/printer-jam.webp" alt="" width={1979} height={595} draggable={false} sizes="(min-width: 800px) 760px, 100vw" />
+              <Image className="photo photo-night photo-jam" src="/shell/printer-jam-night.webp" alt="" width={1979} height={595} draggable={false} sizes="(min-width: 800px) 760px, 100vw" />
+            </>
+          )}
+          <span className="slot-light" ref={lightRef} aria-hidden="true" />
+          <Display {...disp} />
+          <span className="halo" aria-hidden="true" />
+          <span className="socket" aria-hidden="true" />
+          <button
+            ref={keyRef}
+            className="key"
+            type="submit"
+            form="order"
+            aria-label={working ? "Stop printing" : "Print"}
+            aria-busy={working || undefined}
+            onPointerDown={keyDown}
+            onPointerUp={keyUp}
+            onPointerLeave={(e) => e.buttons && keyUp()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                keyDown();
+                setTimeout(keyUp, 110);
+              }
+            }}
+            onClick={(e) => {
+              // while printing, the key stops the print instead of submitting the form again
+              if (busyRef.current) {
+                e.preventDefault();
+                abortRef.current = true;
+              }
+            }}
+          >
+            {/* the key's two faces swap with the theme in CSS; tiny, so plain images */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="key-day" src="/shell/printer-key.webp" alt="" draggable={false} />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="key-night" src="/shell/printer-night-key.webp" alt="" draggable={false} loading="lazy" />
+          </button>
+          <span className="engrave" aria-hidden="true">
             Print
           </span>
-          <div className="outfeed" ref={outfeedRef} aria-hidden="true">
-            <i />
-          </div>
+          <div className="outfeed" ref={outfeedRef} aria-hidden="true" />
         </div>
       </div>
 
-      <div className="alt" hidden={Boolean(result)}>
+      {jam && (
+        <p className="jam-note">
+          {jam.kind ? (
+            jam.message
+          ) : (
+            <>
+              {JAM_LINE.before}
+              <Link href="/work">{JAM_LINE.all}</Link>
+              {JAM_LINE.or}
+              <a href={`mailto:${profile.contact.email}`}>{JAM_LINE.email}</a>
+              {JAM_LINE.after}
+            </>
+          )}
+        </p>
+      )}
+
+      <div className="alt" hidden={Boolean(result || jam)}>
         <Pill kind="all" href="/work" label="Or browse all work" />
       </div>
 
@@ -473,6 +827,7 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
               <h2 id="r-title" ref={titleRef} tabIndex={-1}>
                 {result.title}
               </h2>
+              {result.notUnderstood && <p className="not-found">{result.notUnderstood}</p>}
               {result.asked && <p>{result.asked}</p>}
               {result.provenance && (
                 <p className="provenance">
@@ -500,7 +855,7 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
               {result.cards.map((card, i) => {
                 const pc = result.printed[cardKey(card.project, card.section)];
                 return (
-                  <li key={cardKey(card.project, card.section)} className="sheet" style={{ animationDelay: `${80 + 110 * i}ms` }}>
+                  <li key={cardKey(card.project, card.section)} className="sheet">
                     <article className="s-paper" aria-labelledby={pc?.headingId ?? `sh-${i}`}>
                       <Sheet card={card} index={i} total={result.cards.length} headingId={`sh-${i}`} run={runs[i]} printed={pc?.node} />
                     </article>

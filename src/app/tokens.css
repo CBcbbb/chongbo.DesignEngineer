@@ -43,6 +43,19 @@
   /* the printer's lamp: ready and working */
   --lamp-ready: #6fcf7c;
   --lamp-busy: #ffc46b;
+  /* the header lamp's light (ThemeLamp) */
+  --lamp-light: #f6c35a;
+  /* the studio: a photographed paper sweep behind the first screen (globals.css) */
+  --backdrop: url(/shell/studio-light.webp);
+  --backdrop-tall: url(/shell/studio-light-tall.webp);
+  /* the printer's display: green dot-matrix light on dark glass (an object: the same in both themes) */
+  --vfd: #b9f5d2;
+  --vfd-dim: rgba(185, 245, 210, 0.62);
+  --vfd-faint: rgba(185, 245, 210, 0.14);
+  --vfd-glow: rgba(110, 235, 170, 0.55);
+  /* the words the printer recognises in a request, marked on the paper */
+  --found: #d6f3e2;
+  --found-line: #2f8f5b;
 
   /* case file: the reading surface of a project page (template "case-file"). Follows the theme. */
   --case-bg: #fbfaf7;
@@ -85,6 +98,8 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --studio: #1a1918;
+    --backdrop: url(/shell/studio-dark.webp);
+    --backdrop-tall: url(/shell/studio-dark-tall.webp);
     --studio-hi: #2a2826;
     --ink: #eeece8;
     --ink-2: #aba79f;
@@ -108,6 +123,8 @@
 
 :root[data-theme="dark"] {
   --studio: #1a1918;
+  --backdrop: url(/shell/studio-dark.webp);
+  --backdrop-tall: url(/shell/studio-dark-tall.webp);
   --studio-hi: #2a2826;
   --ink: #eeece8;
   --ink-2: #aba79f;

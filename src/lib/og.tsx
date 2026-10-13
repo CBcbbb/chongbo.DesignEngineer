@@ -21,175 +21,82 @@ async function fonts() {
   ];
 }
 
-/** Zig-zag torn edge as an SVG strip (Satori has no CSS masks). */
-function TornEdge({ width }: { width: number }) {
-  const tooth = 16;
-  const n = Math.ceil(width / tooth);
-  let d = `M0 0 H${width} V2`;
-  for (let i = n; i > 0; i--) d += ` L${(i - 0.5) * tooth} 12 L${(i - 1) * tooth} 2`;
-  d += " Z";
-  return (
-    <svg width={width} height={14} viewBox={`0 0 ${width} 14`} style={{ display: "flex" }}>
-      <path d={d} fill="#FBFBF8" />
-    </svg>
-  );
-}
+const asset = async (name: string) =>
+  `data:image/png;base64,${(await fs.readFile(path.join(process.cwd(), "src/lib/og-assets", name))).toString("base64")}`;
 
-type Ticket = { head: string; right: string; big: string; small?: string; title: string; line: string };
+type Share = {
+  /** The home card: the eyebrow and the question over the machine. */
+  headline?: { eyebrow: string; title: string };
+  /** Case files and About: a sheet rising out of the top slot. */
+  sheet?: { kicker: string; title: string; line: string };
+};
 
-export async function ticketImage({ head, right, big, small, title, line }: Ticket) {
-  const paperW = 760;
+/**
+ * The share image: the studio photograph, the printer at the foot with my name on its display, and either the home
+ * question or a sheet rising from its slot. Composed from the site's own type, so it stays sharp and every case file
+ * gets one automatically. Satori draws it: flex layout, absolute positions, no masks.
+ */
+export async function shareImage({ headline, sheet }: Share) {
+  const [studio, printer] = await Promise.all([asset("studio.png"), asset("printer.png")]);
+  const mw = 912;
+  const mh = 274;
+  const ml = (1200 - mw) / 2;
+  const mt = 630 + 18 - mh;
+  const muted = "#5B5853";
   return new ImageResponse(
     (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          background: "radial-gradient(120% 90% at 50% 10%, #F7F7F4 0%, #ECECE8 65%)",
-          fontFamily: "Geist",
-          color: "#1A1A18",
-        }}
-      >
-        {/* machine */}
-        <div
-          style={{
-            marginTop: 0,
-            width: 920,
-            height: 92,
-            display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "center",
-            paddingBottom: 14,
-            borderRadius: "0 0 26px 26px",
-            background: "linear-gradient(180deg, #D63A2A 0%, #A92B1C 100%)",
-            boxShadow: "0 30px 50px -20px rgba(110,25,15,0.55)",
-          }}
-        >
-          <div style={{ width: 840, height: 14, borderRadius: 8, background: "#2A0E09", display: "flex" }} />
+      <div style={{ width: "100%", height: "100%", display: "flex", position: "relative", fontFamily: "Geist", color: "#1C1B19", background: "#E9E7E2" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+        <img src={studio} width={1200} height={630} style={{ position: "absolute", left: 0, top: 0 }} />
+        <div style={{ position: "absolute", left: 36, top: 30, display: "flex", fontFamily: "Geist Mono", fontSize: 18, letterSpacing: 2.5, color: muted }}>
+          CHONGBO NING · DESIGN ENGINEER · LONDON
         </div>
-        {/* ticket */}
-        <div style={{ display: "flex", flexDirection: "column", width: paperW, marginTop: -6 }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              background: "#FBFBF8",
-              padding: "34px 44px 30px",
-              backgroundImage: "linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0) 30px)",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                fontFamily: "Geist Mono",
-                fontSize: 18,
-                letterSpacing: 1.5,
-                textTransform: "uppercase",
-                color: "#5C5C57",
-              }}
-            >
-              <span>{head}</span>
-              <span
-                style={{
-                  color: "#C2311F",
-                  border: "2px solid #C2311F",
-                  padding: "4px 10px",
-                  borderRadius: 4,
-                  transform: "rotate(-4deg)",
-                  letterSpacing: 3,
-                }}
-              >
-                {right}
-              </span>
-            </div>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 18, marginTop: 14 }}>
-              <span style={{ fontSize: 104, fontWeight: 700, letterSpacing: -5, lineHeight: 1 }}>{big}</span>
-              {small && (
-                <span style={{ fontFamily: "Geist Mono", fontSize: 20, letterSpacing: 1.5, textTransform: "uppercase", color: "#5C5C57" }}>
-                  {small}
-                </span>
-              )}
-            </div>
-            <div style={{ display: "flex", fontSize: 46, fontWeight: 600, letterSpacing: -1.5, lineHeight: 1.1, marginTop: 14 }}>{title}</div>
-            <div style={{ display: "flex", fontSize: 26, fontWeight: 500, lineHeight: 1.35, color: "#33332F", marginTop: 12 }}>{line}</div>
+        {headline && (
+          <div style={{ position: "absolute", left: 0, right: 0, top: 92, display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <div style={{ display: "flex", fontFamily: "Geist Mono", fontSize: 20, letterSpacing: 5, color: muted }}>{headline.eyebrow.toUpperCase()}</div>
+            <div style={{ display: "flex", marginTop: 12, fontSize: 72, fontWeight: 600, letterSpacing: -3 }}>{headline.title}</div>
           </div>
-          <TornEdge width={paperW} />
-        </div>
+        )}
+        {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+        <img src={printer} width={mw} height={mh} style={{ position: "absolute", left: ml, top: mt }} />
         <div
           style={{
-            marginTop: "auto",
-            marginBottom: 34,
-            width: 1056,
+            position: "absolute",
+            left: ml + mw * 0.0655 + 18,
+            top: mt + mh * 0.311,
+            height: mh * 0.244,
             display: "flex",
-            justifyContent: "space-between",
+            flexDirection: "column",
+            justifyContent: "center",
             fontFamily: "Geist Mono",
             fontSize: 18,
-            letterSpacing: 1.5,
-            textTransform: "uppercase",
-            color: "#5C5C57",
+            letterSpacing: 2,
+            color: "#B9F5D2",
           }}
         >
-          <span>Chongbo Ning · Design Engineer · London</span>
-          <span>Ask, and a ticket prints</span>
+          <span style={{ display: "flex", textShadow: "0 0 6px rgba(110,235,170,0.6)" }}>CHONGBO NING</span>
+          <span style={{ display: "flex", marginTop: 4, color: "rgba(185,245,210,0.7)" }}>DESIGN ENGINEER</span>
         </div>
-      </div>
-    ),
-    { ...OG_SIZE, fonts: await fonts() },
-  );
-}
-
-/** The home card: the Printed to order headline over the photographed printer, paper rising from its slot. */
-export async function printerImage({ eyebrow, title }: { eyebrow: string; title: string }) {
-  const png = await fs.readFile(path.join(process.cwd(), "src/lib/og-printer.png"));
-  const src = `data:image/png;base64,${png.toString("base64")}`;
-  const w = 760;
-  const h = Math.round((w * 494) / 1100);
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          background: "radial-gradient(90% 70% at 50% 30%, #F5F4F0 0%, #E9E7E2 70%)",
-          fontFamily: "Geist",
-          color: "#1C1B19",
-        }}
-      >
-        <div style={{ display: "flex", marginTop: 56, fontFamily: "Geist Mono", fontSize: 20, letterSpacing: 5, color: "#5B5853" }}>
-          {eyebrow.toUpperCase()}
-        </div>
-        <div style={{ display: "flex", marginTop: 10, fontSize: 64, fontWeight: 600, letterSpacing: -2.5 }}>{title}</div>
-        <div style={{ display: "flex", position: "relative", width: w, height: h, marginTop: 120 }}>
-          {/* paper rising from the slot: bottom at 7.7% of the image, 15.5% in, 69% wide */}
+        {sheet && (
           <div
             style={{
               position: "absolute",
-              left: w * 0.155,
-              width: w * 0.69,
-              bottom: h * (1 - 0.077),
-              height: 110,
+              left: ml + mw * 0.107,
+              width: mw * 0.786,
+              top: 96,
+              height: mt + mh * 0.076 - 96,
               display: "flex",
-              padding: "18px 22px",
+              flexDirection: "column",
+              padding: "30px 36px",
               background: "#FBFAF7",
-              borderRadius: "3px 3px 0 0",
-              fontFamily: "Geist Mono",
-              fontSize: 19,
-              lineHeight: 1.5,
-              color: "#75716A",
+              boxShadow: "0 14px 30px -18px rgba(0,0,0,0.35)",
             }}
           >
-            A design engineer for our marketing website, strong in React and motion
+            <div style={{ display: "flex", fontFamily: "Geist Mono", fontSize: 18, letterSpacing: 2.5, color: "#5E5B55" }}>{sheet.kicker.toUpperCase()}</div>
+            <div style={{ display: "flex", marginTop: 14, fontSize: 50, fontWeight: 600, letterSpacing: -1.8, lineHeight: 1.04 }}>{sheet.title}</div>
+            <div style={{ display: "flex", marginTop: 12, fontSize: 24, fontWeight: 500, lineHeight: 1.35, color: "#38352F" }}>{sheet.line}</div>
           </div>
-          {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
-          <img src={src} width={w} height={h} style={{ position: "absolute", left: 0, top: 0 }} />
-        </div>
+        )}
       </div>
     ),
     { ...OG_SIZE, fonts: await fonts() },
