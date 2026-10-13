@@ -254,13 +254,13 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
 .wc { display: grid; grid-template-rows: auto 1fr; height: 100%; padding: 10px; border-radius: 10px; background: var(--paper); color: var(--paper-ink);
   box-shadow: 0 0 0 1px rgba(60,50,40,.07), 0 22px 36px -24px rgba(40,30,20,.5); transition: translate .35s var(--ease), box-shadow .35s var(--ease); }
 .wc:hover, .wc:focus-visible { translate: 0 -4px; box-shadow: 0 0 0 1px rgba(60,50,40,.1), 0 32px 46px -26px rgba(40,30,20,.55); }
-.wc .tx { display: grid; gap: 6px; padding: 18px 12px 10px; align-content: start; }
+.wc .tx { display: flex; flex-direction: column; gap: 6px; padding: 18px 12px 10px; }
 .wc .meta { font: 500 11.5px var(--mono); letter-spacing: .04em; color: var(--paper-dim); }
 .wc .ttl { display: flex; align-items: center; gap: 10px; }
 .wc h2 { margin: 0; font: 600 24px/1.15 var(--sans); letter-spacing: -.025em; text-wrap: balance; }
 .wc .ttl .ga { flex: none; width: 64px; color: var(--paper-ink); }
-.wc p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--paper-body); max-width: 48ch; }
-.wc .role { display: flex; justify-content: space-between; gap: 6px 14px; margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--paper-rule); font: 500 14px var(--sans); color: var(--paper-ink); }
+.wc p { margin: 0 0 10px; font-size: 15px; line-height: 1.5; color: var(--paper-body); max-width: 48ch; }
+.wc .role { display: flex; justify-content: space-between; gap: 6px 14px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--paper-rule); font: 500 14px var(--sans); color: var(--paper-ink); }
 .wc .role span:last-child { font: 400 13px var(--mono); color: var(--paper-dim); }
 @container vp (max-width: 700px) {
   .work-now, .work-2 { grid-template-columns: minmax(0, 1fr); gap: 16px; margin-top: 24px; }
@@ -424,8 +424,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
 
   <section class="d-intro">
     <div>
-      <h1>Round three, revised</h1>
-      <p>Your notes from this evening, built in. The covers and the eyes are settled. The arrow on 03 now draws all the way to the name, with more curve and now and then a loop. The footer is redesigned from what it should hold: one quiet line, the email and a note about AI that claims the work, not the words, with four ways to say it. Revised this evening: the arrow stops a little short of the name, phones get their own next-case design with no arrow, and the footer line is reworked from your draft. Everything on this page still moves: hover it, or scroll to it on a phone.</p>
+      <h1>Approved: the final set</h1>
+      <p>Every proposal is now decided, from your notes of 13 October. Each section opens on the approved option, marked Approved; the others stay for the record. The micro-interactions are live: hover them, or scroll to them on a phone. Nothing is built yet: the next step is the build, on its own branch.</p>
       <div class="d-legend">
         <span><i class="nw-key"></i> proposed wording</span>
         <span><span class="rec-key">Rec.</span> recommended</span>
@@ -435,24 +435,24 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
     </div>
     <ol class="d-sum">
       <li><a href="#p1"><span class="n">01</span><b>Covers, made as one set</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Approved. A field and one drawing each, with their motion</em></a></li>
-      <li><a href="#p2"><span class="n">02</span><b>/work, 2 × 2</b><span class="cost"><i class="on"></i><i class="on"></i><i></i></span><em>Rec. A: each cover moves on hover; the drawn arrow after the title</em></a></li>
-      <li><a href="#p3"><span class="n">03</span><b>Next case file, one control</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>The arrow a touch shorter; on phones, the next cover instead of the arrow</em></a></li>
-      <li><a href="#p4"><span class="n">04</span><b>Share this print</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Rec. B: in the results header; the deck bar gets its styles back</em></a></li>
-      <li><a href="#p5"><span class="n">05</span><b>The footer, two things only</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>One line: the email and the AI note. Rec. A: "AI fetches the work. I made it."</em></a></li>
+      <li><a href="#p2"><span class="n">02</span><b>/work, 2 × 2</b><span class="cost"><i class="on"></i><i class="on"></i><i></i></span><em>Approved: A. Covers move on hover; no arrow; card feet aligned</em></a></li>
+      <li><a href="#p3"><span class="n">03</span><b>Next case file, one control</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Approved: the drawn arrow on desktop; on phones, the next cover (A)</em></a></li>
+      <li><a href="#p4"><span class="n">04</span><b>Share this print</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Approved: B, in the results header; the deck bar gets its styles back</em></a></li>
+      <li><a href="#p5"><span class="n">05</span><b>The footer, two things only</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Approved: one line, "AI fetches the work. I made it." and the email</em></a></li>
       <li><a href="#p6"><span class="n">06</span><b>The eyes, take two</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Chosen: B, looking up, with brows</em></a></li>
-      <li><a href="#p7"><span class="n">07</span><b>One arrow for every way on</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Where the drawn arrow replaces "→"</em></a></li>
+      <li><a href="#p7"><span class="n">07</span><b>One arrow for every way on</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Approved: the drawn arrow wherever a link leads on</em></a></li>
     </ol>
   </section>
 
   <section class="decided" aria-labelledby="dec-t">
-    <h2 id="dec-t">Settled so far</h2>
+    <h2 id="dec-t">Decided</h2>
     <ul>
-      <li><b>Approved</b><span>01: the covers as one set, with their motion. 06: the eyes, B. No full sentences in mono.</span></li>
-      <li><b>On hold</b><span>The covers row on the home page (1 B), with the smaller printer. Shown in 01 only to check the covers at that size.</span></li>
-      <li><b>Dropped</b><span>The CV, for now. The contact line on case pages. "Every word in them is mine": AI helped with the wording, so the claim is the work (05).</span></li>
-      <li><b>Changed</b><span>03: the arrow draws further and looser. 05: the footer, redone from its content.</span></li>
-      <li><b>Open</b><span>02 A or B, 04 A or B, and the footer's wording.</span></li>
-      <li><b>Filled in</b><span>HHCD: 2025–2026. Nike: 2023, still to confirm.</span></li>
+      <li><b>Approved</b><span>01 the covers as one set. 02 /work 2 × 2, covers move (A), no arrow, card feet aligned. 03 the next case file, the arrow on desktop, the next cover on phones (A).</span></li>
+      <li><b>Approved</b><span>04 Share this print in the results header (B), and the deck bar fix. 05 the footer, one line: "AI fetches the work. I made it." and the email. 06 the eyes, B. 07 one drawn arrow.</span></li>
+      <li><b>Approved</b><span>No full sentences in mono. Years: HHCD 2025–2026, Nike 2023, "Current role" for the two logistics projects.</span></li>
+      <li><b>On hold</b><span>The covers row on the home page (1 B), with the smaller printer.</span></li>
+      <li><b>Dropped</b><span>The CV, for now. The contact line on case pages. "Every word in them is mine".</span></li>
+      <li><b>Next</b><span>The build, on a branch from design/printer-v2, merged only when you say so.</span></li>
     </ul>
   </section>
 
@@ -503,11 +503,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
       <div>
         <div class="k">Proposal 02 · /work</div>
         <h2>/work, 2 × 2, with the set</h2>
-        <p>The whole card is the link. No circled arrow: at rest there's no arrow at all; on hover the drawn arrow writes itself after the title, and the cover's drawing does what its project is about.</p>
+        <p>The whole card is the link, with no arrow on it: on hover the card lifts and the cover's drawing does what its project is about. The role and years sit at the foot of every card, on one line across each row, however long the title.</p>
       </div>
       <div class="seg" role="group" aria-label="Variant">
         <button type="button" data-set="now" aria-pressed="false">Now</button>
-        <button type="button" data-set="a" class="r" aria-pressed="true">A · Covers move</button>
+        <button type="button" data-set="a" class="ok" aria-pressed="true">A · Covers move</button>
         <button type="button" data-set="b" aria-pressed="false">B · Covers still</button>
       </div>
     </div>
@@ -519,11 +519,11 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
       <div><h3>What changes</h3>
         <p data-show="a b">Cover, then the place and number in mono, the title, the one-liner, and role and years under a rule. "Full project →" goes.</p>
         <p data-show="a">On hover: the map's marks ripple outward, the wires redraw from field to chip, the design system's layers lift apart, the shoebox rises. Each under 0.8s.</p>
-        <p data-show="b">On hover: the card lifts and the arrow draws. The covers stay still.</p>
+        <p data-show="b">On hover: the card lifts. The covers stay still.</p>
         <p data-show="now">The page today.</p>
       </div>
       <div><h3>Why</h3>
-        <ul data-show="a b"><li>Role and years answer the recruiter's first two questions about each project.</li><li data-show="a">/work is the shell, where play belongs (playbook §7). Each motion is the project's idea in half a second, like the hammer for Work.</li><li data-show="b">Calmer, and the arrow is the one gesture used everywhere.</li><li>On phones there's no hover: the drawing plays once as the card comes into view.</li></ul>
+        <ul data-show="a b"><li>Role and years answer the recruiter's first two questions about each project.</li><li data-show="a">/work is the shell, where play belongs (playbook §7). Each motion is the project's idea in half a second, like the hammer for Work.</li><li data-show="b">Calmer.</li><li>On phones there's no hover: the drawing plays once as the card comes into view.</li></ul>
         <p data-show="now">Switch to A or B.</p>
       </div>
       <div><h3>Cost</h3>
@@ -544,7 +544,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
       </div>
       <div class="seg" role="group" aria-label="Variant">
         <button type="button" data-set="now" aria-pressed="false">Now</button>
-        <button type="button" data-set="a" class="r" aria-pressed="true">A · Phone: next cover</button>
+        <button type="button" data-set="a" class="ok" aria-pressed="true">A · Phone: next cover</button>
         <button type="button" data-set="b" aria-pressed="false">B · Phone: plain</button>
       </div>
     </div>
@@ -593,7 +593,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
       <div class="seg" role="group" aria-label="Variant">
         <button type="button" data-set="now" aria-pressed="false">Now</button>
         <button type="button" data-set="a" aria-pressed="false">A · At the end</button>
-        <button type="button" data-set="b" class="r" aria-pressed="true">B · In the header</button>
+        <button type="button" data-set="b" class="ok" aria-pressed="true">B · In the header</button>
       </div>
     </div>
     <div class="d-frames">
@@ -625,7 +625,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
       </div>
       <div class="seg" role="group" aria-label="Wording">
         <button type="button" data-set="now" aria-pressed="false">Now</button>
-        <button type="button" data-set="a" class="r" aria-pressed="true">A · Fetches, made</button>
+        <button type="button" data-set="a" class="ok" aria-pressed="true">A · Fetches, made</button>
         <button type="button" data-set="b" aria-pressed="false">B · Three beats</button>
         <button type="button" data-set="c" aria-pressed="false">C · Your draft, fixed</button>
         <button type="button" data-set="d" aria-pressed="false">D · Finding</button>
@@ -700,7 +700,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
       <thead><tr><th>Where</th><th>Now</th><th>Proposed</th><th>Live</th></tr></thead>
       <tbody>
         <tr><td>Next case file (03)</td><td>none</td><td>stub, draws out to the name</td><td><a class="arrow-demo" href="#p3" data-arrow="grow" style="display:inline-flex;align-items:center;gap:10px;min-height:40px;color:inherit;text-decoration:none"><span style="font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase">Next</span><svg class="ga" style="width:140px" aria-hidden="true"></svg></a></td></tr>
-        <tr><td>/work cards (02)</td><td>"Full project →"</td><td>none at rest, drawn after the title on hover</td><td><a href="#p2" data-arrow="appear" style="display:inline-flex;align-items:center;gap:10px;min-height:40px;color:inherit;text-decoration:none;font-weight:600">Nike Athletes Closet<svg class="ga" style="width:56px" aria-hidden="true"></svg></a></td></tr>
+        <tr><td>/work cards (02)</td><td>"Full project →"</td><td>none: the whole card is the link, and the cover moves instead</td><td>see 02</td></tr>
         <tr><td>Sheets: "Read it in context"</td><td>"→" character</td><td>stub, a little longer on hover</td><td><a href="#p4" data-arrow="nudge" style="display:inline-flex;align-items:center;gap:8px;min-height:40px;color:inherit;text-decoration:none;font-weight:600">Read it in context<svg class="ga" style="width:40px" aria-hidden="true"></svg></a></td></tr>
         <tr><td>Deck bar (04)</td><td>"←" "→" as bare text</td><td>the stub, both ways, in round buttons</td><td><span class="deck" data-deck><button type="button" aria-label="Previous sheet"></button><span>01 / 06</span><button type="button" aria-label="Next sheet"></button></span></td></tr>
         <tr><td>LinkedIn, the live platform, archive</td><td>"↗" character</td><td>the same stub at 45°, drawn up and out</td><td><a href="#p7" data-arrow="out" style="display:inline-flex;align-items:center;gap:6px;min-height:40px;color:inherit;text-decoration:none;font-weight:500">LinkedIn<svg class="ga" style="width:22px;height:22px" aria-hidden="true"></svg></a></td></tr>
@@ -744,10 +744,10 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
         <li><span class="wc-now"><span class="top"><span>04</span><span>Nike app</span></span><h2>Nike Athletes Closet</h2><p>Style stories from fashion influencers, designed to be read, shopped and returned to.</p><span class="go">Full project →</span></span></li>
       </ul>
       <ul class="work-2" data-show="a b">
-        <li><a class="wc" href="#p2" data-arrow="appear"><div class="cv" data-cover="hhcd"></div><div class="tx"><span class="meta">01 · RCA</span><span class="ttl"><h2>Helen Hamlyn Centre Data Platform</h2><svg class="ga" aria-hidden="true"></svg></span><p>A research repository that anyone can explore, with a mouse, a keyboard or on a phone.</p><span class="role"><span>Research Assistant</span><span>2025–2026</span></span></div></a></li>
-        <li><a class="wc" href="#p2" data-arrow="appear"><div class="cv" data-cover="any"></div><div class="tx"><span class="meta">02 · Logistics</span><span class="ttl"><h2>Components for Any Data</h2><svg class="ga" aria-hidden="true"></svg></span><p>One component library that draws any customer's data, from the stream to the chart.</p><span class="role"><span>Design Engineer</span><span class="nw">Current role</span></span></div></a></li>
-        <li><a class="wc" href="#p2" data-arrow="appear"><div class="cv" data-cover="ds"></div><div class="tx"><span class="meta">03 · Logistics</span><span class="ttl"><h2>One Design System, Three Products, Any Brand</h2><svg class="ga" aria-hidden="true"></svg></span><p>Started in Figma, shipped as code, and layered so anyone can restyle it without breaking contrast.</p><span class="role"><span>Design Engineer</span><span class="nw">Current role</span></span></div></a></li>
-        <li><a class="wc" href="#p2" data-arrow="appear"><div class="cv" data-cover="nike"></div><div class="tx"><span class="meta">04 · Nike app</span><span class="ttl"><h2>Nike Athletes Closet</h2><svg class="ga" aria-hidden="true"></svg></span><p>Style stories from fashion influencers, designed to be read, shopped and returned to.</p><span class="role"><span>UI Designer</span><span>2023</span></span></div></a></li>
+        <li><a class="wc" href="#p2"><div class="cv" data-cover="hhcd"></div><div class="tx"><span class="meta">01 · RCA</span><h2>Helen Hamlyn Centre Data Platform</h2><p>A research repository that anyone can explore, with a mouse, a keyboard or on a phone.</p><span class="role"><span>Research Assistant</span><span>2025–2026</span></span></div></a></li>
+        <li><a class="wc" href="#p2"><div class="cv" data-cover="any"></div><div class="tx"><span class="meta">02 · Logistics</span><h2>Components for Any Data</h2><p>One component library that draws any customer's data, from the stream to the chart.</p><span class="role"><span>Design Engineer</span><span class="nw">Current role</span></span></div></a></li>
+        <li><a class="wc" href="#p2"><div class="cv" data-cover="ds"></div><div class="tx"><span class="meta">03 · Logistics</span><h2>One Design System, Three Products, Any Brand</h2><p>Started in Figma, shipped as code, and layered so anyone can restyle it without breaking contrast.</p><span class="role"><span>Design Engineer</span><span class="nw">Current role</span></span></div></a></li>
+        <li><a class="wc" href="#p2"><div class="cv" data-cover="nike"></div><div class="tx"><span class="meta">04 · Nike app</span><h2>Nike Athletes Closet</h2><p>Style stories from fashion influencers, designed to be read, shopped and returned to.</p><span class="role"><span>UI Designer</span><span>2023</span></span></div></a></li>
       </ul>
     </main>
   </div>
