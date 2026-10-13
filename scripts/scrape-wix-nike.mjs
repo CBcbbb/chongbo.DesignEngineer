@@ -98,14 +98,6 @@ function sanitiseName(name) {
     .replace(/^-|-$/g, "");
 }
 
-const EXT_BY_TYPE = {
-  "image/png": "png",
-  "image/jpeg": "jpg",
-  "image/gif": "gif",
-  "image/webp": "webp",
-  "image/svg+xml": "svg",
-};
-
 /**
  * Extract unique image records from the HTML.
  * Each record: { fileId, originalFilename, ext, originalUrl }

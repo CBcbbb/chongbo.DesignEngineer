@@ -21,13 +21,6 @@ export function findEntry(project: string, section: string): CatalogueEntry | un
   return catalogue.find((e) => e.project.slug === project && e.section.id === section);
 }
 
-/** First sentence of the first paragraph, trimmed for the prompt. */
-export function excerpt(section: Section, max = 150): string {
-  const first = section.body[0] ?? "";
-  const sentence = first.match(/^.+?[.!?](\s|$)/)?.[0]?.trim() ?? first;
-  return sentence.length > max ? `${sentence.slice(0, max - 1).trimEnd()}…` : sentence;
-}
-
 /** A section's whole body on one line, for the model's catalogue. */
 export function fullText(section: Section): string {
   return section.body.join(" ").replace(/\s+/g, " ").trim();

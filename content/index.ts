@@ -41,11 +41,3 @@ export const profile: Profile = {
     archive: "https://ningchongbo.wixsite.com/homepage",
   },
 };
-
-/** Suggested questions for the ask box, written as a recruiter would ask. */
-export const suggestedQuestions = [
-  "What matters most to us is accessibility.",
-  "Show me something you built end to end.",
-  "Have you built a design system?",
-  "Show me brand or marketing work.",
-];

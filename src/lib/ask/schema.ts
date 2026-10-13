@@ -8,8 +8,6 @@
 import { z } from "zod";
 import { SIGNALS, type Signal } from "@content/schema";
 
-/** Length of the home page's one-line input (legacy `question`). */
-export const QUESTION_MAX = 300;
 export const BRIEF_MAX = 4000;
 export const ASKED_MAX = 6;
 export const MAX_SHEETS = 6;

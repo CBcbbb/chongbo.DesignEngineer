@@ -56,7 +56,3 @@ export function kindLabel(project: Project, section: Section): string {
 export function caseHref(slug: string, section?: string): string {
   return section ? `/work/${slug}#${section}` : `/work/${slug}`;
 }
-
-export function askHref(q: string): string {
-  return `/ask?q=${encodeURIComponent(q)}`;
-}

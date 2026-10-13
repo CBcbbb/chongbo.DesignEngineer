@@ -338,17 +338,3 @@ export function Empty({
 export function Swatch({ role }: { role: RoleKey }) {
   return <i className="ad-sw" data-role={role} aria-hidden="true" />;
 }
-
-export function Axes({ mapping, roles = ["category", "value"] }: { mapping: Record<RoleKey, string>; roles?: RoleKey[] }): ReactNode {
-  return (
-    <p className="ad-axes">
-      {roles
-        .map((r) => (
-          <span key={r}>
-            <Swatch role={r} />
-            {r} ← <b>{mapping[r] || "none"}</b>
-          </span>
-        ))}
-    </p>
-  );
-}

@@ -137,8 +137,8 @@ const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 /** For each role, the best field of the right type and how sure the match is. One matcher for the picker and the panel. */
 export function suggest(fields: Field[]): { mapping: Mapping; confs: Confidences } {
   const used = new Set<string>();
-  const mapping = { category: "", value: "" } as Mapping;
-  const confs = { category: null, value: null } as Confidences;
+  const mapping: Mapping = { category: "", value: "" };
+  const confs: Confidences = { category: null, value: null };
   for (const r of ROLES) {
     const typed = fields.filter((f) => f.type === r.type && !used.has(f.name));
     const v = VOCAB[r.key];
@@ -207,23 +207,6 @@ export function totals(stream: Stream, mapping: Mapping): Datum[] {
     arr = arr.slice(0, 5).concat({ k: "Other", v: rest });
   }
   return arr;
-}
-
-/** Reads a CSV in the browser. Types are guessed from the values: numbers, dates, or text. */
-export function parseCSV(name: string, text: string, id: string): Stream | null {
-  const lines = text.split(/\r?\n/).filter((l) => l.trim());
-  if (lines.length < 2) return null;
-  const split = (l: string) => l.split(",").map((x) => x.trim().replace(/^"|"$/g, ""));
-  const head = split(lines[0]!);
-  const rows = lines.slice(1, 2001).map(split);
-  const fields: Field[] = head.map((h, i) => {
-    const col = rows.map((r) => r[i]).filter((v): v is string => v !== undefined && v !== "");
-    const isNum = col.length > 0 && col.every((v) => /^-?[\d,.]+$/.test(v));
-    const isDate = !isNum && col.length > 0 && col.every((v) => /\d{1,4}[-/]\d{1,2}[-/]\d{1,4}/.test(v));
-    return { name: h || `column_${i + 1}`, type: isNum ? "number" : isDate ? "date" : "text" };
-  });
-  const data = rows.map((r) => r.map((v, i) => (fields[i]?.type === "number" ? Number(String(v).replace(/,/g, "")) : v)));
-  return { id, name, rows: rows.length, fields, data };
 }
 
 export const fmt = (n: number) => (Math.round(n * 10) / 10).toLocaleString("en-GB");
