@@ -3,6 +3,7 @@ import Link from "next/link";
 import { earlierProjects, mainProjects, profile } from "@content";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { DrawnArrow } from "@/components/shell/DrawnArrow";
 import { projectNumber } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -49,7 +50,7 @@ export default function About() {
                   <li key={l.href}>
                     <a href={l.href} rel="noopener me" target="_blank">
                       {l.label}
-                      <span aria-hidden="true">↗</span>
+                      <DrawnArrow kind="out" className="out-ga" />
                       <span className="sr-only"> (opens in a new tab)</span>
                     </a>
                   </li>

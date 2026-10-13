@@ -2400,17 +2400,6 @@
 .cf-sheet.is-dark .cf-tag {
   color: var(--on-dark-2);
 }
-.cf-next strong {
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  line-height: 1.05;
-  letter-spacing: -0.035em;
-  font-weight: 600;
-  color: var(--case-ink);
-}
-.cf-next span:last-child {
-  font-size: 0.9375rem;
-  color: var(--case-body);
-}
 
 /* ---------- reduced motion: everything stands still ---------- */
 @media (prefers-reduced-motion: reduce) {

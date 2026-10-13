@@ -468,16 +468,7 @@
   padding-top: var(--s3);
   scroll-margin-top: var(--s4);
 }
-.rhead {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 4px 16px;
-  max-width: 1100px;
-  /* one line over the sheet, so the whole sheet fits under it on a laptop screen */
-  margin: 0 auto var(--s2);
-}
+/* .rhead's layout and the provenance line: shell.css */
 .rhead h2,
 .rhead h1 {
   margin: 0;
@@ -493,11 +484,6 @@
   color: var(--ink-2);
   font-size: 15px;
   overflow-wrap: anywhere;
-}
-.rhead .provenance {
-  margin: 0;
-  font: 500 12.5px/1.5 var(--mono);
-  color: var(--ink-2);
 }
 .rhead .provenance a {
   color: var(--ink);
@@ -730,55 +716,6 @@
   color: var(--studio);
   font: 600 14px var(--sans);
   cursor: pointer;
-}
-
-/* /work index */
-.work-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-  gap: 22px;
-  max-width: 1100px;
-  margin: 36px auto 0;
-  padding: 0;
-  list-style: none;
-}
-.work-card {
-  --focus: var(--paper-ink);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  height: 100%;
-  min-height: 220px;
-  padding: 22px;
-  background: var(--paper);
-  color: var(--paper-ink);
-  border-radius: 2px;
-  text-decoration: none;
-  box-shadow:
-    0 1px 1px rgba(0, 0, 0, 0.06),
-    0 22px 36px -22px rgba(40, 30, 20, 0.5);
-  transition: transform 0.25s var(--ease);
-}
-.work-card:hover {
-  transform: translateY(-4px);
-}
-.work-card h2 {
-  margin: 0;
-  font: 600 22px/1.2 var(--sans);
-  letter-spacing: -0.02em;
-}
-.work-card p {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.55;
-  color: var(--paper-body);
-  flex: 1;
-}
-.work-card .go {
-  font: 600 14px var(--sans);
-  text-decoration: underline;
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 5px;
 }
 
 /* ---------- case file: parts rail and part navigation ---------- */

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import type { SheetCard } from "@/lib/cards";
 import { pad2 } from "@/lib/printed";
+import { DrawnArrow } from "./shell/DrawnArrow";
 
 type Props = {
   card: SheetCard;
@@ -49,7 +50,7 @@ export function Sheet({ card, index, total, printed, headingId, as: H = "h3", ru
         <span className="s-from">Case file: {card.projectTitle}</span>
         <Link className="full" href={card.href}>
           Read it in context<span className="sr-only">: {card.projectTitle}, {card.title}</span>
-          <span aria-hidden="true">&nbsp;→</span>
+          <DrawnArrow kind="nudge" className="full-ga" />
         </Link>
       </div>
     </>

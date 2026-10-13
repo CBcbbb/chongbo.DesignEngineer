@@ -29,3 +29,14 @@ Open points from the shell work of 11 October 2026 (`shell/micro-interactions`).
 21. `MediaSlot` compact images are sized for a sheet (820px) instead of 340px (one line in a shared file; noted in SHARED-CHANGES).
 22. **Why some sheets have no image**: eight sections have no media at all (`this-site` × 3, `wildecho` × 3, `hhcd/role`, `nike/outcome`, `components-for-any-data/takeaway`), and the fallback often picks them because it ignores media when scoring. Sheets of case-file projects now print the card's real evidence block (specimens, compare, toggle, code, modules); the selection preference is proposed to the AI conversation in SHARED-CHANGES, not changed here. Giving `this-site` sections media (a screenshot of the machine, of a case file) would fix the most visible case: that's content, yours.
 23. **The title when cards are picked is the cards' names** ("Front‑end · Motion"); when words are typed, the short labels of what the machine understood. The earlier mismatch (card "Front‑end" titled "Design–engineering · SEO and performance · Reusable components") was a labelling bug on the shell, not the AI.
+
+## 13 October: the approved UX proposals, built (`shell/ux-final`)
+
+Everything in `docs/case-studies/ux-proposals.md` (定稿) except the home page's covers row, which stays on hold. Open points:
+
+24. **The period's dash.** HHCD reads "2025–2026" with an en dash, the usual mark for a range; it is not an em dash. Say if you'd rather have "2025-2026" or "2025 to 2026".
+25. **The live platform link on HHCD's cover keeps its "↗".** It sits inside the case file, whose controls stay serious (playbook §7); the drawn arrow is used only in the shell (About's links, the sheets' foot, the deck bar, the next case file).
+26. **A shared link after a typed brief.** "Share this print" carries only the topics the printer understood, never the visitor's words. When a print came from picked cards, `/ask` reprints exactly the same sheets (tested). When it came from a typed brief answered by the model, `/ask?topics=` answers from the topics alone, so the sheets can differ slightly.
+27. **On touch screens** the covers on /work and the next case file play their motion once as they come into view; the footer's signature draws once in view; the About eyes blink every 6 to 9 seconds and glance at each tap. All still with reduced motion.
+28. **The prototype's HHCD cover** (`docs/design/ux-proposals.html`) was missing the orange project diamonds (an extraction fault); the site's cover has them.
+29. **Local builds** still need the `src/components/case/fonts.ts` stub here (Google Fonts unreachable); it was not committed.

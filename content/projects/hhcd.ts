@@ -12,6 +12,7 @@ export const hhcd: Project = {
   oneLiner: "A research repository that anyone can explore, with a mouse, a keyboard or on a phone.",
   context: "First built for VOICE, an EU-funded arts research project. Now used by the Helen Hamlyn Centre for Design, Royal College of Art.",
   role: "Research Assistant",
+  period: "2025–2026",
   roleSplit: [
     { with: "team", what: "Data collection and analysis", note: "with the team" },
     { with: "solo", what: "Data modelling, design and build", note: "on my own" },

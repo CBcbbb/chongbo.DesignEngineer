@@ -1720,30 +1720,6 @@
   color: var(--nk-on-black-2);
 }
 
-/* ---------- next ---------- */
-.nk-next {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: baseline;
-  justify-content: space-between;
-  padding-top: 2rem;
-}
-.nk-next span {
-  font: 400 0.8125rem/1 var(--mono);
-  color: var(--nk-dim);
-}
-.nk-next a {
-  font-size: clamp(1.5rem, 3.4vw, 2.3rem);
-  font-weight: 600;
-  letter-spacing: -0.035em;
-  text-decoration: none;
-  color: var(--nk-ink);
-}
-.nk-next a:hover {
-  color: var(--nk-accent);
-}
-
 /* ---------- narrow ---------- */
 
 /* ---------- evidence that fills a card ---------- */
@@ -2089,8 +2065,7 @@
   min-height: 32px;
   align-items: center;
 }
-.nk-outlink,
-.nk-next a {
+.nk-outlink {
   display: inline-flex;
   gap: 0.3em;
   align-items: center;

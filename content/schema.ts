@@ -282,6 +282,8 @@ export type Project = {
   /** Where and when, e.g. "Helen Hamlyn Centre for Design · 2025". */
   context: string;
   role: string;
+  /** When, shown on /work beside the role: "2025–2026", "2023", or "Current role". */
+  period?: string;
   stack: string[];
   links: ProjectLink[];
   /** Main cards are dealt on the table; earlier work sits in the archive drawer. */
