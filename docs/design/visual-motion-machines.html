@@ -1,0 +1,680 @@
+<title>Printer Directions</title>
+<meta name="description" content="Three machine directions for chongboning.com, with the print sequence to feel on a phone." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" />
+<style>
+  /* Layout: one column; a direction switcher, the machine on the studio, the printed strip bleeding to the window's edges, then notes. */
+  :root {
+    --studio: #e9e7e2;
+    --studio-hi: #f5f4f0;
+    --ink: #1c1b19;
+    --ink-2: #5b5853;
+    --rule: #d3d0c9;
+    --paper: #fbfaf7;
+    --paper-ink: #1c1b19;
+    --paper-dim: #5e5b55;
+    --paper-ghost: #75716a;
+    --paper-rule: #e2dfd8;
+    --red: #c9372a;
+    --lamp-ready: #6fcf7c;
+    --lamp-busy: #ffc46b;
+    --floor: rgba(40, 30, 20, 0.22);
+    --pool: rgba(255, 236, 205, 0);
+    --chip: #ffffff;
+    --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --studio: #1a1918;
+      --studio-hi: #2a2826;
+      --ink: #eeece8;
+      --ink-2: #aba79f;
+      --rule: #3a3835;
+      --floor: rgba(0, 0, 0, 0.6);
+      --pool: rgba(255, 226, 180, 0.13);
+      --chip: #242220;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --studio: #1a1918;
+    --studio-hi: #2a2826;
+    --ink: #eeece8;
+    --ink-2: #aba79f;
+    --rule: #3a3835;
+    --floor: rgba(0, 0, 0, 0.6);
+    --pool: rgba(255, 226, 180, 0.13);
+    --chip: #242220;
+    color-scheme: dark;
+  }
+
+  [hidden] { display: none !important; }
+  html, body { overflow-x: clip; }
+  body {
+    margin: 0;
+    background: radial-gradient(120% 70% at 50% 18%, var(--studio-hi), var(--studio) 60%) fixed, var(--studio);
+    color: var(--ink);
+    font: 400 15px/1.55 var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { max-width: 980px; margin: 0 auto; padding: 20px 16px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  header.top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  header.top b { font-weight: 600; }
+  header.top span { color: var(--ink-2); font-size: 13px; }
+  .lede { display: grid; gap: 6px; text-align: center; }
+  .eyebrow { margin: 0; font: 500 11.5px var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); }
+  h1 { margin: 0; font: 600 clamp(28px, 4.4vw, 40px) / 1.05 var(--sans); letter-spacing: -0.035em; text-wrap: balance; }
+  .lede p { margin: 4px auto 0; max-width: 56ch; color: var(--ink-2); text-wrap: pretty; }
+
+  /* direction switcher */
+  .switch { display: flex; justify-content: center; }
+  .seg { min-width: 0; display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--chip); box-shadow: 0 0 0 1px var(--rule); max-width: 100%; overflow-x: auto; }
+  .seg button {
+    border: 0; background: transparent; color: var(--ink-2); cursor: pointer;
+    min-height: 40px; padding: 0 14px; border-radius: 999px; white-space: nowrap;
+    font: 500 14px var(--sans); transition: background 0.2s, color 0.2s;
+  }
+  .seg button small { font: 500 11px var(--mono); margin-right: 6px; opacity: 0.8; }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--studio); }
+  .seg button:focus-visible, .ctl:focus-visible, .deck button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  /* ---------- the stage ---------- */
+  .stage { --w: min(680px, 100%); position: relative; width: var(--w); margin: 0 auto; padding-top: clamp(118px, 17vw, 150px); }
+  .stage::before {
+    /* the floor: a soft contact shadow, and in dark mode a warm lamp pool the machine sits in */
+    content: ""; position: absolute; left: -12%; right: -12%; bottom: -14%; height: 70%; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(50% 20% at 50% 88%, var(--floor), transparent 70%),
+      radial-gradient(60% 60% at 50% 70%, var(--pool), transparent 72%);
+  }
+  .machine { position: relative; z-index: 2; aspect-ratio: 1100 / 494; container-type: inline-size; }
+  .dir[hidden] { display: none; }
+
+  /* paper above the slot (A and B). The box clips at the slot, so a sheet drawn in disappears into the machine. */
+  .feed { position: absolute; z-index: 3; overflow: hidden; }
+  .sheetin {
+    position: relative; min-height: clamp(100px, 15vw, 136px); box-sizing: border-box;
+    background: var(--paper); color: var(--paper-ink);
+    border-radius: 3px 3px 0 0; padding: clamp(12px, 2.4cqi, 18px) clamp(14px, 3cqi, 22px) 12px;
+    box-shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.25);
+    background-image: linear-gradient(180deg, transparent 70%, rgba(0, 0, 0, 0.05));
+  }
+  .sheetin textarea, .sheetin .ghost {
+    display: block; width: 100%; margin: 0; padding: 0; border: 0; resize: none; background: transparent; outline: none;
+    font: 400 clamp(14px, 2.5cqi, 17px) / 1.5 var(--mono); color: var(--paper-ink); caret-color: var(--red);
+    min-height: 4.5em;
+  }
+  .sheetin .ghost { position: absolute; inset: inherit; top: clamp(12px, 2.4cqi, 18px); left: clamp(14px, 3cqi, 22px); right: clamp(14px, 3cqi, 22px); color: var(--paper-ghost); pointer-events: none; white-space: pre-wrap; min-height: 0; }
+  .sheetin .ghost::after { content: ""; display: inline-block; width: 2px; height: 1.05em; margin-left: 1px; vertical-align: -3px; background: var(--red); animation: caret 1s steps(2) infinite; }
+  .sheetin.typed .ghost { display: none; }
+  @keyframes caret { 50% { opacity: 0; } }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font: 400 clamp(13px, 2.2cqi, 15px) / 1.4 var(--mono); }
+  .steps li { display: flex; gap: 10px; align-items: flex-start; opacity: 0; translate: 0 4px; transition: opacity 0.22s, translate 0.22s var(--ease-out); }
+  .steps li::before { content: ""; flex: none; margin-top: 0.4em; width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid currentColor; box-sizing: border-box; }
+  .steps li.on { opacity: 1; translate: 0 0; }
+  .steps li.done::before { background: currentColor; }
+
+  /* outfeed: the sheet comes out of the front opening onto the tray; clipped only at the opening's top lip */
+  .out { position: absolute; z-index: 4; pointer-events: none; clip-path: inset(0 -40% -400% -40%); }
+  .tray-sheet { position: absolute; left: 0; top: 0; transform-origin: 0 0; translate: 0 -101%; }
+
+  /* the mini sheet and the full sheet are the same markup at two sizes */
+  .card {
+    width: var(--cw, 560px); aspect-ratio: 560 / 440; box-sizing: border-box; padding: 18px 22px 16px;
+    display: flex; flex-direction: column; gap: 12px;
+    background: var(--paper); color: var(--paper-ink); border-radius: 4px;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, 0 1px 2px rgba(0, 0, 0, 0.06), 0 24px 40px -28px rgba(30, 26, 20, 0.45);
+  }
+  .card .ct { display: flex; justify-content: space-between; gap: 12px; font: 500 11.5px var(--mono); color: var(--paper-dim); letter-spacing: 0.04em; }
+  .card .ct b { font: 600 12.5px var(--sans); color: var(--paper-ink); letter-spacing: -0.01em; }
+  .card h3 { margin: 6px 0 0; font: 600 clamp(20px, 3vw, 26px) / 1.12 var(--sans); letter-spacing: -0.03em; text-wrap: balance; max-width: 18ch; }
+  .card .ev {
+    flex: 1; border-radius: 6px; border: 1px solid var(--paper-rule); display: grid; place-items: center;
+    font: 500 11.5px var(--mono); color: var(--paper-dim); text-align: center; padding: 8px;
+    background-image: radial-gradient(circle, rgba(60, 50, 40, 0.16) 1px, transparent 1.2px); background-size: 14px 14px;
+  }
+  .card .cf { display: flex; justify-content: space-between; font: 400 11.5px var(--mono); color: var(--paper-dim); }
+  .card .cf u { font: 600 13px var(--sans); color: var(--paper-ink); text-underline-offset: 4px; }
+
+  /* ---------- A: the photograph, with the parts that move as their own layers ---------- */
+  .a-photo { position: absolute; inset: 0; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; filter: drop-shadow(0 30px 34px rgba(30, 26, 20, 0.22)); }
+  .a-feed { left: 15.5%; width: 69%; bottom: calc(100% - 7.7%); }
+  .a-plate { position: absolute; left: 14.1%; top: 52.4%; width: 14.5%; height: 10%; display: flex; flex-direction: column; justify-content: center; padding-left: 0.9%; font: 500 min(9px, 1.33cqi) / 1.3 var(--mono); color: #6e6a63; letter-spacing: 0.03em; white-space: nowrap; overflow: hidden; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6); }
+  .a-lens { position: absolute; left: 9.9%; top: 56.1%; width: 2.3%; aspect-ratio: 1; border-radius: 50%; translate: -50% -50%;
+    /* an unlit lens over the photographed (lit) lamp: what the new render should show at rest */
+    background: radial-gradient(circle at 45% 40%, #d9d3c9, #b9b2a6 60%, #a39b8f); box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.25), 0 1px 0 rgba(255, 255, 255, 0.6); }
+  .a-lens i { position: absolute; inset: 22%; border-radius: 50%; transition: background 0.25s, box-shadow 0.25s; }
+  [data-lamp="ready"] .a-lens i, [data-lamp="ready"] .lamp i { background: var(--lamp-ready); box-shadow: 0 0 8px 3px rgba(111, 207, 124, 0.6); }
+  [data-lamp="busy"] .a-lens i, [data-lamp="busy"] .lamp i { background: var(--lamp-busy); box-shadow: 0 0 9px 4px rgba(255, 180, 80, 0.7); animation: blink 0.5s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0.3; } }
+  .a-socket, .a-cap { position: absolute; left: 86.1%; top: 59.8%; width: 9.6%; aspect-ratio: 1; border-radius: 50%; translate: -50% -50%; }
+  .a-socket { background: radial-gradient(circle at 50% 30%, #2a0c08, #120403 70%); }
+  .a-cap { overflow: hidden; border: 0; padding: 0; margin: 0; background: none; cursor: pointer; }
+  .a-cap img { position: absolute; width: 1041.67%; left: -846.9%; top: -229.4%; max-width: none; pointer-events: none; }
+  .a-cap::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(circle at 50% 35%, transparent 40%, rgba(60, 0, 0, 0.0)); transition: background 0.12s; }
+  .a-cap.down::after { background: radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 0.04), rgba(60, 0, 0, 0.28)); }
+  .cap-halo { position: absolute; left: 86.1%; top: 59.8%; width: 12.4%; aspect-ratio: 1; border-radius: 50%; translate: -50% -50%; pointer-events: none; }
+  .ready .cap-halo { animation: invite 1.8s ease-in-out 2 forwards; }
+  @keyframes invite { 0%, 100% { box-shadow: 0 0 0 0 rgba(201, 55, 42, 0.12), 0 0 14px 2px rgba(201, 55, 42, 0.16); } 50% { box-shadow: 0 0 0 5px rgba(201, 55, 42, 0.2), 0 0 30px 8px rgba(201, 55, 42, 0.32); } }
+  .ready .cap-halo { box-shadow: 0 0 0 0 rgba(201, 55, 42, 0.12), 0 0 14px 2px rgba(201, 55, 42, 0.16); }
+  .a-cap:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .a-label { position: absolute; left: 86.1%; top: 74.2%; translate: -50% 0; font: 600 clamp(6px, 1.3cqi, 9px) / 1 var(--mono); letter-spacing: 0.2em; text-transform: uppercase; color: #7c776f; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55); transition: color 0.3s; }
+  .ready .a-label { color: var(--red); }
+  .a-out { left: 13.6%; width: 65.6%; top: 74.6%; height: 40%; }
+
+  /* ---------- B: a document reader. Paper leans on a tray at the back, is read by a light as it goes in. ---------- */
+  .b .machine { aspect-ratio: 1100 / 520; }
+  .b-feed { left: 17%; width: 66%; bottom: calc(100% - 17%); perspective: 900px; overflow: hidden; }
+  .b-feed .sheetin { transform: rotateX(16deg); transform-origin: 50% 100%; }
+  .b-body { position: absolute; inset: 14% 2% 6% 2%; border-radius: 4.5% / 10%;
+    background: linear-gradient(180deg, #f3efe8 0%, #ece6dc 34%, #d9d1c4 36%, #e2dbd0 60%, #cfc6b8 100%);
+    box-shadow: 0 30px 40px -24px rgba(30, 26, 20, 0.45), inset 0 2px 0 rgba(255, 255, 255, 0.8), inset 0 -3px 6px rgba(0, 0, 0, 0.12); }
+  .b-slot { position: absolute; left: 15%; right: 15%; top: 17%; height: 1.4%; border-radius: 4px; background: #1d1a17; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7); z-index: 5; }
+  .b-light { position: absolute; left: 15%; right: 15%; top: 13%; height: 5%; z-index: 4; opacity: 0; pointer-events: none;
+    background: radial-gradient(50% 100% at 50% 100%, rgba(200, 255, 230, 0.95), rgba(150, 240, 210, 0.35) 45%, transparent 75%); filter: blur(1px); }
+  .b-panel { position: absolute; left: 6%; right: 6%; top: 42%; bottom: 14%; border-radius: 2.4% / 7%;
+    background: linear-gradient(180deg, #d6cec2, #ddd6cb); box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.14), 0 1px 0 rgba(255, 255, 255, 0.7); }
+  .b-display { position: absolute; left: 10%; top: 49%; width: 34%; height: 15%; border-radius: 6px; background: linear-gradient(180deg, #1a1d1a, #262a26); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 1px 0 rgba(255, 255, 255, 0.6);
+    display: flex; align-items: center; padding: 0 3%; overflow: hidden; font: 500 clamp(8px, 1.9cqi, 13px) var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: #b7f0c8; text-shadow: 0 0 6px rgba(150, 240, 180, 0.6); white-space: nowrap; }
+  .b-name { position: absolute; left: 10%; top: 67%; font: 500 clamp(6px, 1.25cqi, 10px) / 1.3 var(--mono); letter-spacing: 0.08em; color: #6e6a63; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6); }
+  .b-open { position: absolute; left: 22%; right: 22%; top: 76%; height: 4.5%; border-radius: 3px; background: #15120f; box-shadow: inset 0 3px 4px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 255, 255, 0.6); z-index: 3; }
+  .b-tray { position: absolute; left: 20%; right: 20%; top: 80%; height: 13%; border-radius: 0 0 8px 8px; background: linear-gradient(180deg, #c9cbcc, #a9acae 60%, #8d9092); box-shadow: 0 10px 14px -8px rgba(0, 0, 0, 0.4); z-index: 2; }
+  .b-out { left: 23%; width: 54%; top: 77.5%; height: 40%; }
+  /* B and C share a drawn red button */
+  .rbtn { position: absolute; width: 10%; aspect-ratio: 1; border-radius: 50%; border: 0; padding: 0; cursor: pointer; translate: -50% -50%;
+    background: radial-gradient(circle at 50% 45%, #e5e6e7, #9a9da0 62%, #6c6f72); box-shadow: 0 2px 3px rgba(0, 0, 0, 0.3); }
+  .rbtn i { position: absolute; inset: 13%; border-radius: 50%; background: radial-gradient(circle at 42% 32%, #ef6a55, #c9372a 45%, #8c1f16); box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.3), inset 0 2px 3px rgba(255, 255, 255, 0.4), 0 3px 4px rgba(60, 0, 0, 0.45); transition: translate 0.06s, box-shadow 0.06s; }
+  .rbtn.down i { translate: 0 6%; box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.3), inset 0 2px 3px rgba(255, 255, 255, 0.25), 0 1px 1px rgba(60, 0, 0, 0.4); }
+  .rbtn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .ready .rbtn { animation: invite 1.8s ease-in-out 2; }
+  .lamp { position: absolute; width: 2%; aspect-ratio: 1; border-radius: 50%; translate: -50% -50%; background: radial-gradient(circle at 45% 40%, #d9d3c9, #b0a99c 70%); box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3); }
+  .lamp i { position: absolute; inset: 22%; border-radius: 50%; transition: background 0.25s, box-shadow 0.25s; }
+  .b .rbtn { left: 84%; top: 60%; }
+  .b .lamp { left: 50%; top: 56.5%; }
+
+  /* ---------- C: a teleprinter. You type on the line at the roller; the answer types out above it. ---------- */
+  .c .machine { aspect-ratio: 1100 / 470; }
+  .c-paper { position: absolute; left: 13%; width: 74%; bottom: calc(100% - 12%); height: clamp(150px, 26cqi, 190px); z-index: 2; overflow: hidden;
+    -webkit-mask: linear-gradient(180deg, transparent, #000 28%); mask: linear-gradient(180deg, transparent, #000 28%); }
+  .c-roll { position: absolute; left: 0; right: 0; bottom: 0; background: var(--paper); color: var(--paper-ink); padding: 0 clamp(14px, 3cqi, 22px) 10px; font: 400 clamp(13px, 2.3cqi, 16px) / 1.6 var(--mono); box-shadow: 0 0 20px -8px rgba(0,0,0,0.25);
+    background-image: linear-gradient(90deg, transparent calc(100% - 1px), rgba(0,0,0,0.03) 0); }
+  .c-roll .ln { min-height: 1.6em; white-space: pre-wrap; }
+  .c-roll .ln.me { color: var(--paper-ink); }
+  .c-roll .ln.it { color: #3d3a35; }
+  .c-roll .ln.it::before { content: "› "; color: var(--red); }
+  .c-roll .perf { height: 8px; margin: 4px -24px 6px; background: radial-gradient(circle, var(--studio) 1.6px, transparent 2px) 0 50% / 9px 8px repeat-x; opacity: 0.8; }
+  .c-input { display: flex; gap: 0; align-items: baseline; }
+  .c-input textarea { flex: 1; min-width: 0; height: 1.6em; border: 0; padding: 0; resize: none; background: transparent; outline: none; font: inherit; color: var(--paper-ink); caret-color: var(--red); overflow: hidden; }
+  .c-input textarea::placeholder { color: var(--paper-ghost); }
+  .c-roller { position: absolute; left: 9%; right: 9%; top: 9%; height: 11%; border-radius: 999px; z-index: 3;
+    background: linear-gradient(180deg, #4d4a45 0%, #2a2826 35%, #151413 70%, #3a3733 100%); box-shadow: 0 6px 10px -4px rgba(0,0,0,0.5); overflow: hidden; }
+  .c-roller::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(180deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 7px); background-position: 0 var(--roll, 0px); }
+  .c-knob { position: absolute; top: 7%; width: 6%; height: 15%; border-radius: 40%; background: linear-gradient(180deg, #e7e2da, #b8b0a3); box-shadow: inset 0 -3px 4px rgba(0,0,0,0.2), 0 3px 5px rgba(0,0,0,0.25); z-index: 4; }
+  .c-knob.l { left: 4%; } .c-knob.r { right: 4%; }
+  .c-body { position: absolute; inset: 16% 3% 6% 3%; border-radius: 5% / 11%; z-index: 1;
+    background: linear-gradient(180deg, #ece6dc 0%, #e3dccf 50%, #cfc6b8 100%); box-shadow: 0 30px 40px -24px rgba(30,26,20,0.45), inset 0 2px 0 rgba(255,255,255,0.8), inset 0 -3px 6px rgba(0,0,0,0.12); }
+  .c-panel { position: absolute; left: 7%; right: 7%; top: 40%; bottom: 16%; border-radius: 2.4% / 7%; z-index: 1; background: linear-gradient(180deg, #d6cec2, #ddd6cb); box-shadow: inset 0 2px 3px rgba(0,0,0,0.14), 0 1px 0 rgba(255,255,255,0.7); }
+  .c-name { position: absolute; left: 14%; top: 58%; z-index: 2; font: 500 clamp(6px, 1.3cqi, 10px) / 1.3 var(--mono); letter-spacing: 0.08em; color: #6e6a63; text-shadow: 0 1px 0 rgba(255,255,255,0.6); }
+  .c-key { position: absolute; left: 80%; top: 62%; width: 17%; height: 18%; translate: -50% -50%; z-index: 2; border: 0; padding: 0; cursor: pointer; border-radius: 10px; background: linear-gradient(180deg, #a9a194, #8b8377); box-shadow: inset 0 2px 4px rgba(0,0,0,0.35); }
+  .c-key i { position: absolute; inset: 0 0 12% 0; border-radius: 10px; background: linear-gradient(180deg, #e3523f, #c9372a 55%, #a52c21); box-shadow: inset 0 2px 1px rgba(255,255,255,0.35), 0 3px 0 #7d1f17; display: grid; place-items: center; font: 600 clamp(6px, 1.3cqi, 10px) var(--mono); letter-spacing: 0.2em; color: rgba(255,255,255,0.85); transition: translate 0.06s, box-shadow 0.06s; }
+  .c-key.down i { translate: 0 10%; box-shadow: inset 0 2px 1px rgba(255,255,255,0.25), 0 1px 0 #7d1f17; }
+  .c-key:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .ready .c-key { animation: invite 1.8s ease-in-out 2; }
+  .c .lamp { left: 10%; top: 60%; z-index: 2; }
+
+  /* ---------- printed strip: bleeds to the window's edges, aligned with the column ---------- */
+  .results { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .results[hidden] { display: none; }
+  .rhead { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 16px; flex-wrap: wrap; }
+  .rhead h2 { margin: 0; font: 600 clamp(22px, 3vw, 30px) / 1.12 var(--sans); letter-spacing: -0.03em; }
+  .rhead span { font: 500 12.5px var(--mono); color: var(--ink-2); }
+  .bleed { margin-inline: calc(50% - 50vw); }
+  .strip {
+    --cw: min(560px, calc(100vw - 48px));
+    display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    padding: 6px max(16px, calc(50vw - 490px + 16px)) 28px; scroll-padding-inline: max(16px, calc(50vw - 490px + 16px));
+  }
+  .strip::-webkit-scrollbar { display: none; }
+  .strip > li { list-style: none; flex: none; scroll-snap-align: start; }
+  .strip > li.wait { visibility: hidden; }
+  .deck { display: flex; align-items: center; gap: 12px; }
+  .deck button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--rule); background: var(--chip); color: var(--ink); cursor: pointer; display: grid; place-items: center; transition: border-color 0.2s, opacity 0.2s; }
+  .deck button:hover:not(:disabled) { border-color: var(--ink); }
+  .deck button:disabled { opacity: 0.35; cursor: default; }
+  .deck output { font: 500 13px var(--mono); font-variant-numeric: tabular-nums; min-width: 4.5em; text-align: center; }
+  .ticks { display: flex; gap: 10px; }
+  .ticks span { display: flex; gap: 3px; }
+  .ticks i { width: 14px; height: 4px; border-radius: 2px; background: var(--rule); transition: background 0.25s; }
+  .ticks i.on { background: var(--ink); }
+  .again { justify-self: start; min-height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid var(--ink); background: var(--ink); color: var(--studio); font: 600 14px var(--sans); cursor: pointer; }
+
+  /* flying sheet layer */
+  #fly { position: absolute; left: 0; top: 0; width: 0; height: 0; z-index: 50; pointer-events: none; }
+  #fly .card { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+
+  /* notes */
+  .notes { display: grid; gap: 14px; border-top: 1px solid var(--rule); padding-top: 20px; }
+  .notes h2 { margin: 0; font: 600 20px/1.2 var(--sans); letter-spacing: -0.02em; }
+  .notes dl { margin: 0; display: grid; grid-template-columns: 7.5em 1fr; gap: 8px 16px; }
+  .notes dt { font: 500 12px var(--mono); color: var(--ink-2); padding-top: 2px; }
+  .notes dd { margin: 0; min-width: 0; }
+  .ctls { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .ctl { min-height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--rule); background: var(--chip); color: var(--ink-2); font: 500 13px var(--sans); cursor: pointer; }
+  .ctl[aria-pressed="true"] { color: var(--ink); border-color: var(--ink); }
+  @media (max-width: 560px) { .notes dl { grid-template-columns: 1fr; gap: 2px; } .notes dd { margin-bottom: 8px; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  .rm *, .rm *::before, .rm *::after { animation: none !important; transition: none !important; }
+</style>
+
+<div class="page" id="page">
+  <header class="top"><b>Chongbo Ning</b><span>visual and motion review · prototype</span></header>
+
+  <div class="lede">
+    <p class="eyebrow">Printed to order</p>
+    <h1>三个机器方向</h1>
+    <p>在纸上写一句，或者直接按红按钮（空着会用示例）。打印中再按一次可以停下。下面的纸张只是占位，真实页面里是案例卡本身。</p>
+  </div>
+
+  <div class="switch">
+    <div class="seg" role="group" aria-label="Direction">
+      <button type="button" data-dir="a" aria-pressed="true"><small>A</small>做真这台</button>
+      <button type="button" data-dir="b" aria-pressed="false"><small>B</small>阅读机</button>
+      <button type="button" data-dir="c" aria-pressed="false"><small>C</small>电传机</button>
+    </div>
+  </div>
+
+  <!-- A -->
+  <section class="dir a" data-d="a" aria-label="Direction A">
+    <div class="stage">
+      <div class="machine" data-lamp="off">
+        <div class="feed a-feed"><div class="sheetin">
+          <textarea id="brief-a" rows="3" aria-label="Describe the role or paste a job description."></textarea>
+          <div class="ghost" aria-hidden="true"></div>
+          <ul class="steps" hidden></ul>
+        </div></div>
+        <img class="a-photo" src="printer.webp" alt="" draggable="false" />
+        <div class="a-plate" aria-hidden="true"><span>CHONGBO NING</span><span>DESIGN ENGINEER</span></div>
+        <span class="a-lens" aria-hidden="true"><i></i></span>
+        <span class="a-socket" aria-hidden="true"></span>
+        <span class="cap-halo" aria-hidden="true"></span>
+        <button class="a-cap press" type="button" aria-label="Print"><img src="printer.webp" alt="" /></button>
+        <span class="a-label" aria-hidden="true">Print</span>
+        <div class="out a-out" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- B -->
+  <section class="dir b" data-d="b" aria-label="Direction B" hidden>
+    <div class="stage">
+      <div class="machine" data-lamp="off">
+        <div class="b-body" aria-hidden="true"></div>
+        <div class="feed b-feed"><div class="sheetin">
+          <textarea id="brief-b" rows="3" aria-label="Describe the role or paste a job description."></textarea>
+          <div class="ghost" aria-hidden="true"></div>
+        </div></div>
+        <span class="b-light" aria-hidden="true"></span>
+        <span class="b-slot" aria-hidden="true"></span>
+        <div class="b-panel" aria-hidden="true"></div>
+        <div class="b-display" aria-live="polite">Ready</div>
+        <div class="b-name" aria-hidden="true">CHONGBO NING<br />DESIGN ENGINEER</div>
+        <span class="lamp" aria-hidden="true"><i></i></span>
+        <button class="rbtn press" type="button" aria-label="Print"><i></i></button>
+        <span class="b-open" aria-hidden="true"></span>
+        <div class="out b-out" aria-hidden="true"></div>
+        <span class="b-tray" aria-hidden="true"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- C -->
+  <section class="dir c" data-d="c" aria-label="Direction C" hidden>
+    <div class="stage" style="padding-top: clamp(150px, 24vw, 200px)">
+      <div class="machine" data-lamp="off">
+        <div class="c-paper"><div class="c-roll">
+          <div class="c-lines"></div>
+          <div class="c-input"><textarea id="brief-c" rows="1" aria-label="Describe the role or paste a job description." placeholder="A design engineer for our marketing website"></textarea></div>
+        </div></div>
+        <div class="c-body" aria-hidden="true"></div>
+        <span class="c-roller" aria-hidden="true"></span>
+        <span class="c-knob l" aria-hidden="true"></span><span class="c-knob r" aria-hidden="true"></span>
+        <div class="c-panel" aria-hidden="true"></div>
+        <div class="c-name" aria-hidden="true">CHONGBO NING<br />DESIGN ENGINEER</div>
+        <span class="lamp" aria-hidden="true"><i></i></span>
+        <button class="c-key press" type="button" aria-label="Print"><i>PRINT</i></button>
+      </div>
+    </div>
+  </section>
+
+  <div class="ctls">
+    <button class="ctl" type="button" id="rm" aria-pressed="false">预览减少动效</button>
+    <button class="ctl" type="button" id="theme" aria-pressed="false">切换深色</button>
+  </div>
+
+  <section class="results" id="results" hidden aria-labelledby="r-title">
+    <div class="rhead"><h2 id="r-title" tabindex="-1">Accessibility · Motion</h2><span>Picked from my case files.</span></div>
+    <div class="bleed"><ol class="strip" id="strip" tabindex="0" aria-label="Printed sheets"></ol></div>
+    <div class="deck">
+      <button type="button" id="prev" aria-label="Previous sheet"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <output id="count">01 / 04</output>
+      <button type="button" id="next" aria-label="Next sheet"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="m6 3 5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="ticks" id="ticks" aria-hidden="true"></div>
+    </div>
+    <button class="again" type="button" id="again">New request</button>
+  </section>
+
+  <section class="notes" id="notes"></section>
+</div>
+<div id="fly" aria-hidden="true"></div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  let forceRM = false;
+  const reduced = () => forceRM || matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const sleep = (ms) => new Promise((r) => setTimeout(r, reduced() ? 0 : ms));
+  const rnd = (a, b) => a + Math.random() * (b - a);
+
+  // A damped spring sampled into CSS linear(), so things land with weight instead of a stock curve.
+  function spring(k = 190, c = 20) {
+    let x = 0, v = 0; const pts = [0]; const dt = 1 / 60;
+    for (let i = 0; i < 240; i++) { const a = -k * (x - 1) - c * v; v += a * dt; x += v * dt; pts.push(+x.toFixed(4)); if (Math.abs(x - 1) < 0.001 && Math.abs(v) < 0.01) break; }
+    pts[pts.length - 1] = 1;
+    return { easing: `linear(${pts.join(",")})`, duration: Math.round((pts.length - 1) * dt * 1000) };
+  }
+  let linearOK = true;
+  try { document.createElement("div").animate([{ opacity: 0 }, { opacity: 1 }], { duration: 1, easing: "linear(0, 1)" }); } catch { linearOK = false; }
+  const SP = (k, c) => { const s = spring(k, c); return linearOK ? s : { easing: "cubic-bezier(0.34, 1.4, 0.64, 1)", duration: s.duration }; };
+  const anim = (el, kf, o) => reduced() ? (Object.assign(el.style, kf[kf.length - 1]), Promise.resolve()) : el.animate(kf, { fill: "forwards", ...o }).finished.catch(() => {});
+
+  const EXAMPLES = ["A design engineer for our marketing website, strong in React and motion", "Someone to own our design system across web and mobile", "Paste a job description"];
+  const CARDS = [
+    { p: "Helen Hamlyn Centre Data Platform", t: "Accessibility as the starting point" },
+    { p: "Helen Hamlyn Centre Data Platform", t: "Accessibility – keyboard navigation" },
+    { p: "One Design System, Three Products, Any Brand", t: "The same lightness on every hue" },
+    { p: "One Design System, Three Products, Any Brand", t: "Readable with any customer's colour" },
+  ];
+  const runs = (() => { const out = []; const seen = {}; CARDS.forEach((c) => { seen[c.p] = (seen[c.p] || 0) + 1; out.push(seen[c.p]); }); return out.map((n, i) => `${n} of ${CARDS.filter((c) => c.p === CARDS[i].p).length}`); })();
+  const cardHTML = (c, i) => `<div class="card"><div class="ct"><span><b>${c.p}</b> · ${runs[i]}</span></div><h3>${c.t}</h3><div class="ev">case card evidence<br />(the original, unchanged)</div><div class="cf"><span>Case file</span><u>Read it in context →</u></div></div>`;
+
+  // ---------- ghost examples: twice round, then they rest on the last one ----------
+  function ghost(sheet) {
+    const g = $(".ghost", sheet), ta = $("textarea", sheet);
+    let ex = 0, i = 0, rounds = 0, t;
+    const tick = () => {
+      if (sheet.classList.contains("typed")) return;
+      const s = EXAMPLES[ex];
+      if (reduced()) { g.textContent = EXAMPLES[EXAMPLES.length - 1]; return; }
+      if (i < s.length) { g.textContent = s.slice(0, ++i); t = setTimeout(tick, 50); return; }
+      if (ex === EXAMPLES.length - 1 && ++rounds >= 2) return;
+      t = setTimeout(() => { ex = (ex + 1) % EXAMPLES.length; i = 0; g.textContent = ""; tick(); }, 1700);
+    };
+    ta.addEventListener("input", () => { sheet.classList.toggle("typed", ta.value.length > 0); setReady(); });
+    tick();
+    return () => clearTimeout(t);
+  }
+
+  // ---------- state ----------
+  let dir = "a", busy = false, abort = false;
+  const D = () => $(`.dir[data-d="${dir}"]`);
+  const M = () => $(".machine", D());
+  const brief = () => $("textarea", D());
+  function setReady() { const m = M(); if (busy) return; const r = brief().value.trim().length > 0; m.classList.toggle("ready", r); m.dataset.lamp = r ? "ready" : "off"; }
+
+  // ---------- press: the cap goes down on pointerdown and comes up with a spring ----------
+  function wirePress(btn) {
+    const isA = btn.classList.contains("a-cap");
+    const down = () => {
+      btn.classList.add("down");
+      if (isA && !reduced()) btn.animate([{ translate: "-50% -50%" }, { translate: "-50% calc(-50% + 3.6%)" }], { duration: 60, easing: "ease-out", fill: "forwards" });
+    };
+    const up = () => {
+      btn.classList.remove("down");
+      if (isA && !reduced()) { const s = SP(420, 16); btn.animate([{ translate: "-50% calc(-50% + 3.6%)" }, { translate: "-50% -50%" }], { duration: s.duration, easing: s.easing, fill: "forwards" }); }
+    };
+    btn.addEventListener("pointerdown", down);
+    btn.addEventListener("pointerup", up);
+    btn.addEventListener("pointerleave", () => btn.classList.contains("down") && up());
+    btn.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { down(); setTimeout(up, 110); } });
+    btn.addEventListener("click", () => run());
+  }
+  $$(".press").forEach(wirePress);
+  $$("textarea").forEach((t) => t.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); run(); } }));
+
+  // The machine takes the knock, differently each time; then a faint hum while it works.
+  const thunk = () => anim(M(), [{ translate: "0 0", rotate: "0deg" }, { translate: `0 ${rnd(1, 2)}px`, rotate: `${rnd(-0.2, 0.2)}deg`, offset: 0.3 }, { translate: "0 0", rotate: "0deg" }], { duration: 380, easing: "cubic-bezier(0.34,1.56,0.64,1)", fill: "none" });
+  let humAnim = null;
+  const hum = (on) => { if (humAnim) { humAnim.cancel(); humAnim = null; } if (on && !reduced()) humAnim = M().animate([{ translate: "0 0" }, { translate: "0.4px 0" }, { translate: "-0.3px 0.2px" }, { translate: "0 0" }], { duration: 120, iterations: Infinity, easing: "steps(4)" }); };
+
+  // ---------- the strip ----------
+  const strip = $("#strip"), results = $("#results");
+  let cur = 0;
+  function buildStrip() {
+    strip.innerHTML = CARDS.map((c, i) => `<li class="wait">${cardHTML(c, i)}</li>`).join("");
+    const groups = {}; CARDS.forEach((c, i) => (groups[c.p] ||= []).push(i));
+    $("#ticks").innerHTML = Object.values(groups).map((g) => `<span>${g.map((i) => `<i data-i="${i}"></i>`).join("")}</span>`).join("");
+    setCur(0);
+  }
+  function setCur(i) {
+    cur = Math.max(0, Math.min(CARDS.length - 1, i));
+    $("#count").textContent = `${String(cur + 1).padStart(2, "0")} / ${String(CARDS.length).padStart(2, "0")}`;
+    $$("#ticks i").forEach((t) => t.classList.toggle("on", +t.dataset.i === cur));
+    $("#prev").disabled = cur === 0; $("#next").disabled = cur === CARDS.length - 1;
+  }
+  const go = (i) => { const li = strip.children[Math.max(0, Math.min(CARDS.length - 1, i))]; strip.scrollTo({ left: li.offsetLeft - strip.children[0].offsetLeft, behavior: reduced() ? "auto" : "smooth" }); setCur(i); };
+  $("#prev").onclick = () => go(cur - 1); $("#next").onclick = () => go(cur + 1);
+  strip.addEventListener("scroll", () => { const x = strip.scrollLeft; let b = 0; $$("li", strip).forEach((li, i) => { if (Math.abs(li.offsetLeft - strip.children[0].offsetLeft - x) < Math.abs($$("li", strip)[b].offsetLeft - strip.children[0].offsetLeft - x)) b = i; }); setCur(b); });
+  strip.addEventListener("keydown", (e) => { if (e.key === "ArrowRight") { e.preventDefault(); go(cur + 1); } if (e.key === "ArrowLeft") { e.preventDefault(); go(cur - 1); } });
+
+  // Smooth page scroll on its own clock, so the sheet's flight and the page move together.
+  function scrollTo(y, ms) {
+    if (reduced()) { window.scrollTo(0, y); return Promise.resolve(); }
+    const y0 = window.scrollY, t0 = performance.now();
+    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    return new Promise((res) => { const f = (now) => { const p = Math.min(1, (now - t0) / ms); window.scrollTo(0, y0 + (y - y0) * ease(p)); p < 1 ? requestAnimationFrame(f) : res(); }; requestAnimationFrame(f); });
+  }
+
+  // ---------- emerge on the tray, then lift into the strip ----------
+  async function printOut() {
+    const out = $(".out", D());
+    buildStrip();
+    results.hidden = false;
+    const fullW = strip.children[0].firstElementChild.getBoundingClientRect().width || 560;
+    results.hidden = true;
+    let ts, k;
+    if (out) {
+      const ow = out.getBoundingClientRect().width * 0.92;
+      k = ow / fullW;
+      out.innerHTML = `<div class="tray-sheet" style="left:4%;width:${ow}px;height:${(k * fullW * 440) / 560}px"><div style="--cw:${fullW}px;scale:${k};transform-origin:0 0">${cardHTML(CARDS[0], 0)}</div></div>`;
+      ts = out.firstElementChild;
+      // a thermal printer feeds in visible steps
+      await anim(ts, [{ translate: "0 -101%" }, { translate: "0 -2%" }], { duration: 900, easing: "steps(16, end)" });
+      await sleep(220);
+    } else {
+      // C: the torn-off paper is what gets carried
+      ts = $(".c-paper", D());
+      k = ts.getBoundingClientRect().width / fullW;
+    }
+    // the results appear below; the first sheet is picked up off the tray and carried there
+    results.hidden = false;
+    const target = strip.children[0];
+    const from = ts.getBoundingClientRect();
+    const sx = from.left + window.scrollX, sy = from.top + window.scrollY;
+    const r0 = target.getBoundingClientRect();
+    const tx = r0.left + window.scrollX, ty = r0.top + window.scrollY;
+    const fly = $("#fly");
+    fly.innerHTML = cardHTML(CARDS[0], 0);
+    const fc = fly.firstElementChild; fc.style.setProperty("--cw", `${fullW}px`);
+    if (out) out.innerHTML = "";
+    const tilt = rnd(-1.6, 1.6);
+    const s = SP(150, 19);
+    const flight = anim(fc, [
+      { transform: `translate(${sx}px, ${sy}px) scale(${k}) rotate(0deg)`, boxShadow: "0 4px 10px -6px rgba(0,0,0,0.4)", opacity: dir === "c" ? 0 : 1 },
+      { transform: `translate(${(sx + tx) / 2}px, ${(sy + ty) / 2 - 30}px) scale(${(k + 1) / 2 + 0.06}) rotate(${tilt}deg)`, boxShadow: "0 50px 60px -30px rgba(0,0,0,0.45)", opacity: 1, offset: 0.45 },
+      { transform: `translate(${tx}px, ${ty}px) scale(1) rotate(0deg)`, boxShadow: "0 24px 40px -28px rgba(30,26,20,0.45)" },
+    ], { duration: Math.max(820, s.duration), easing: "cubic-bezier(0.3, 0.7, 0.1, 1)" });
+    const head = $(".rhead", results).getBoundingClientRect().top + window.scrollY - 16;
+    await Promise.all([flight, scrollTo(Math.min(head, document.documentElement.scrollHeight - innerHeight), 820)]);
+    target.classList.remove("wait");
+    fly.innerHTML = "";
+    // the rest are dealt off the first, as from a stack
+    const lis = $$("li", strip).slice(1);
+    lis.forEach((li, i) => {
+      li.classList.remove("wait");
+      const dx = li.offsetLeft - strip.children[0].offsetLeft;
+      const s2 = SP(170, 21);
+      if (!reduced()) li.animate([{ translate: `${-dx}px 0`, opacity: 0.6 }, { translate: "0 0", opacity: 1 }], { duration: s2.duration, easing: s2.easing, delay: 90 * i, fill: "backwards" });
+    });
+    setCur(0);
+  }
+
+  // ---------- each direction's way of taking the request in ----------
+  async function intakeA(m) {
+    const sheet = $(".sheetin", D()), steps = $(".steps", sheet);
+    const text = brief().value.trim();
+    $("textarea", sheet).hidden = true; $(".ghost", sheet).hidden = true; steps.hidden = false;
+    steps.innerHTML = ["Reading your request", "Accessibility, Motion", "Four sheets from two projects", "Printing"].map((s) => `<li>${s}</li>`).join("");
+    const lis = $$("li", steps);
+    for (let i = 0; i < lis.length; i++) { lis[i].classList.add("on"); if (i) lis[i - 1].classList.add("done"); await sleep(320); if (abort) return false; }
+    lis[lis.length - 1].classList.add("done");
+    // the rollers take the sheet: a small grab, then it is drawn in
+    await anim(sheet, [{ translate: "0 0" }, { translate: "0 6px", offset: 0.12 }, { translate: "0 8px", offset: 0.22 }, { translate: "0 104%" }], { duration: 760, easing: "cubic-bezier(0.55, 0, 0.3, 1)" });
+    return !abort;
+  }
+  async function intakeB(m) {
+    const sheet = $(".sheetin", D()), disp = $(".b-display", D()), light = $(".b-light", D());
+    const say = async (s, ms = 360) => { disp.textContent = s; await sleep(ms); };
+    await say("Reading");
+    light.style.opacity = 1;
+    if (!reduced()) light.animate([{ opacity: 0.55 }, { opacity: 1 }, { opacity: 0.7 }], { duration: 260, iterations: 6 });
+    // the sheet passes the reading head slowly: that is the reading
+    const pass = anim(sheet, [{ translate: "0 0" }, { translate: "0 104%" }], { duration: 1500, easing: "cubic-bezier(0.45, 0, 0.4, 1)" });
+    await say("Reading your request", 500); if (abort) return false;
+    await say("Accessibility, Motion", 500);
+    await pass; light.style.opacity = 0;
+    await say("4 sheets · 2 projects", 420);
+    await say("Printing", 200);
+    return !abort;
+  }
+  async function intakeC(m) {
+    const ta = brief(), lines = $(".c-lines", D()), roll = $(".c-roll", D()), roller = $(".c-roller", D());
+    const text = ta.value.trim() || ta.placeholder;
+    const lh = parseFloat(getComputedStyle(roll).lineHeight);
+    let rollPos = 0;
+    const advance = async () => { rollPos -= 6; roller.style.setProperty("--roll", `${rollPos}px`); if (!reduced()) await roll.animate([{ translate: `0 ${lh}px` }, { translate: `0 ${lh * 0.4}px`, offset: 0.5 }, { translate: "0 0" }], { duration: 160, easing: "steps(2, end)" }).finished; };
+    // your line is struck into ink, letter by letter
+    const me = document.createElement("div"); me.className = "ln me";
+    me.innerHTML = [...text].map((ch) => `<span>${ch === " " ? " " : ch.replace(/[<&]/g, "")}</span>`).join("");
+    lines.appendChild(me); ta.value = ""; ta.placeholder = "";
+    if (!reduced()) $$("span", me).forEach((s, i) => s.animate([{ translate: "0 -1px", opacity: 0.35 }, { translate: "0 0.6px", opacity: 1, offset: 0.6 }, { translate: "0 0", opacity: 1 }], { duration: 90, delay: i * 9, fill: "backwards" }));
+    await sleep(text.length * 9 + 120);
+    await advance();
+    for (const reply of ["Reading your request", "Accessibility, Motion", "Four sheets from two projects"]) {
+      if (abort) return false;
+      const ln = document.createElement("div"); ln.className = "ln it"; lines.appendChild(ln);
+      for (const ch of reply) { ln.textContent += ch; if (!reduced()) await new Promise((r) => setTimeout(r, 16)); }
+      await sleep(140); await advance();
+    }
+    const perf = document.createElement("div"); perf.className = "perf"; lines.appendChild(perf);
+    await advance();
+    return !abort;
+  }
+  async function resetIntake(aborted) {
+    const d = D(), m = M();
+    if (dir === "c") {
+      const paper = $(".c-roll", d);
+      if (!aborted && !reduced()) {
+        // the printed part tears off at the perforation and is carried into the strip with the first sheet
+        await anim(paper, [{ translate: "0 0", opacity: 1 }, { translate: "0 -30px", opacity: 0, rotate: `${rnd(-2, 2)}deg` }], { duration: 300, easing: "ease-in" });
+      }
+      $(".c-lines", d).innerHTML = ""; paper.getAnimations().forEach((a) => a.cancel());
+      const ta = brief(); ta.placeholder = "A design engineer for our marketing website";
+      return;
+    }
+    const sheet = $(".sheetin", d);
+    sheet.getAnimations().forEach((a) => a.cancel());
+    const ta = $("textarea", sheet); ta.hidden = false; if (!aborted) ta.value = "";
+    const g = $(".ghost", sheet); if (g) { g.hidden = false; g.textContent = aborted ? g.textContent : "Paste a job description"; }
+    sheet.classList.toggle("typed", ta.value.length > 0);
+    const st = $(".steps", sheet); if (st) { st.hidden = true; st.innerHTML = ""; }
+    // a fresh sheet rises out of the slot (or the same one comes back, if printing was stopped)
+    const s = SP(210, 22);
+    await anim(sheet, [{ translate: "0 104%" }, { translate: "0 0" }], { duration: s.duration, easing: s.easing });
+    sheet.getAnimations().forEach((a) => a.cancel());
+  }
+
+  async function run() {
+    if (busy) { abort = true; return; }
+    const ta = brief();
+    if (!ta.value.trim() && dir !== "c") { ta.value = EXAMPLES[0]; $(".sheetin", D()).classList.add("typed"); }
+    busy = true; abort = false;
+    const m = M();
+    m.classList.remove("ready"); m.dataset.lamp = "busy";
+    $("#r-title").textContent = "Accessibility · Motion";
+    results.hidden = true; $("#fly").innerHTML = "";
+    thunk();
+    const ok = await (dir === "a" ? intakeA(m) : dir === "b" ? intakeB(m) : intakeC(m));
+    if (!ok) {
+      // stopped: the request comes back as it was
+      hum(false); if (dir === "b") { $(".b-display", D()).textContent = "Stopped"; $(".b-light", D()).style.opacity = 0; }
+      await resetIntake(true);
+      busy = false; abort = false; setReady(); return;
+    }
+    hum(true);
+    await sleep(380);
+    hum(false);
+    const outTask = printOut();
+    if (dir === "c") await resetIntake(false);
+    await outTask;
+    if (dir !== "c") await resetIntake(false);
+    if (dir === "b") $(".b-display", D()).textContent = "Ready";
+    busy = false; setReady();
+    $("#r-title").focus({ preventScroll: true });
+  }
+  $("#again").onclick = () => { results.hidden = true; scrollTo(0, 500); brief().focus({ preventScroll: true }); };
+
+  // ---------- switching direction ----------
+  const NOTES = {
+    a: { h: "A · 同一台机器，做真", rows: [
+      ["形", "保留现在的打印机。新渲染：2400px 宽、同一机位；灯罩不亮；名牌空白且大一些；按钮帽、按钮座、前口出纸位都是单独图层。"],
+      ["动", "请求纸被滚轮吸进顶缝（先一顿再拉进去），机身微震，前口一格一格吐纸，纸被拿起放大，跟着页面滚动落到第一格，其余几张从它下面发出来。新纸弹回顶缝。"],
+      ["这里模拟了", "按钮帽是从原照片里切出的一块，下面垫了暗色按钮座，所以能真的按下去；灯是盖了一个不亮的灯罩。新素材到位后效果会更干净。"],
+      ["成本", "素材 L（一套分层渲染），代码 M。风险最低：结构、坐标和测试都能沿用。"],
+    ] },
+    b: { h: "B · 文件阅读机", rows: [
+      ["形", "更低更宽的机身，纸斜靠在后面的托板上；顶上一条读取缝，前面板有一块小显示屏，前口和出纸托盘在下面。"],
+      ["动", "纸慢慢穿过读取缝，一道光扫过纸面：这就是\"读你的职位描述\"。步骤显示在屏幕上，不再写在纸上。"],
+      ["好处", "对\"粘贴 JD\"的比喻最强；显示屏让状态更像产品。"],
+      ["代价", "步骤从纸上挪到屏幕，是对已批准纸张设计的改动；斜放的纸在手机上可读性略差。素材 L，代码 M。"],
+    ] },
+    c: { h: "C · 电传机", rows: [
+      ["形", "滚筒在上，纸从滚筒往上走；最后一行就是输入行，像聊天框在底部，上面是对话记录。红色宽键是 PRINT。"],
+      ["动", "你的那行字被一个个\"敲\"成墨色，滚筒棘轮一格一格进纸，机器把回答逐字打出来，最后沿虚线撕下，飞到纸张条。"],
+      ["好处", "最像 AI 对话产品：输入在下，回答在上，一眼就懂。"],
+      ["代价", "离现在的纸张设计最远，机器更高，首屏更挤；电传机的复古感比另外两个重。素材 L，代码 L。"],
+    ] },
+  };
+  function showNotes() { const n = NOTES[dir]; $("#notes").innerHTML = `<h2>${n.h}</h2><dl>${n.rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join("")}</dl>`; }
+  $$(".seg button").forEach((b) => b.addEventListener("click", () => {
+    if (busy) return;
+    dir = b.dataset.dir;
+    $$(".seg button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    $$(".dir").forEach((d) => (d.hidden = d.dataset.d !== dir));
+    results.hidden = true; showNotes(); setReady();
+  }));
+  $$(".dir").forEach((d) => { const s = $(".sheetin", d); if (s) ghost(s); });
+  $("#brief-c").addEventListener("input", setReady);
+
+  $("#rm").onclick = (e) => { forceRM = !forceRM; e.currentTarget.setAttribute("aria-pressed", String(forceRM)); document.documentElement.classList.toggle("rm", forceRM); };
+  $("#theme").onclick = (e) => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    root.dataset.theme = dark ? "light" : "dark";
+    e.currentTarget.textContent = dark ? "切换深色" : "切换浅色";
+  };
+  showNotes();
+})();
+</script>
