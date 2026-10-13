@@ -86,13 +86,16 @@
 
   /* paper: a fine grain, and the top edge cut by the tear bar */
   .sheet::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: url(shell/paper-grain.png) 0 0 / 256px; mix-blend-mode: soft-light; opacity: 0.55; }
-  /* a printed sheet was cut off by the tear bar: its trailing (bottom) edge is serrated. The card on it is unchanged. */
-  .card { -webkit-mask: linear-gradient(#000, #000) 0 0 / 100% calc(100% - 5px) no-repeat, url(shell/cut-edge-mask.png) 0 100% / 105px 6px repeat-x;
-    mask: linear-gradient(#000, #000) 0 0 / 100% calc(100% - 5px) no-repeat, url(shell/cut-edge-mask.png) 0 100% / 105px 6px repeat-x; border-radius: 4px 4px 0 0; }
+  /* a printed sheet is cut from the roll at both ends: its top and bottom edges are serrated. The card on it is unchanged. */
+  .card { -webkit-mask: url(shell/cut-edge-mask-up.png) 0 0 / 105px 6px repeat-x, linear-gradient(#000, #000) 0 5px / 100% calc(100% - 10px) no-repeat, url(shell/cut-edge-mask.png) 0 100% / 105px 6px repeat-x;
+    mask: url(shell/cut-edge-mask-up.png) 0 0 / 105px 6px repeat-x, linear-gradient(#000, #000) 0 5px / 100% calc(100% - 10px) no-repeat, url(shell/cut-edge-mask.png) 0 100% / 105px 6px repeat-x; border-radius: 0; }
   /* the mask would cut off a box-shadow, so the shadow comes from the sheet's own outline */
   .strip > li, #fly, .tray-sheet { filter: drop-shadow(0 18px 18px rgba(30, 26, 20, 0.22)) drop-shadow(0 1px 1px rgba(0, 0, 0, 0.06)); }
   .card { box-shadow: none !important; }
 
+  .not-found { margin: -2px 0 4px; max-width: 64ch; color: var(--ink-2); font-size: 15px; }
+  .not-found i { font-style: normal; color: var(--ink); }
+  .ctls .try { display: inline-flex; gap: 6px; align-items: center; }
   /* after a jam: the way out, under the machine */
   .jam-note { margin: 0 auto; max-width: 46ch; text-align: center; font-size: 15px; color: var(--ink-2); }
   .jam-note a { color: var(--ink); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
@@ -111,8 +114,8 @@
     background: radial-gradient(48% 18% at 50% 86%, var(--floor), transparent 70%), radial-gradient(60% 62% at 50% 70%, var(--pool), transparent 72%); }
   .machine { position: relative; z-index: 2; aspect-ratio: 1979 / 595; container-type: inline-size; }
   /* the render, cut out; the floor shadow is CSS so it follows the theme */
-  :root[data-theme="dark"] .photo { filter: brightness(0.86) drop-shadow(0 18px 18px rgba(0, 0, 0, 0.45)) !important; }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .photo { filter: brightness(0.86) drop-shadow(0 18px 18px rgba(0, 0, 0, 0.45)) !important; } }
+  :root[data-theme="dark"] .photo { filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.55)) !important; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .photo { filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.55)) !important; } }
   .photo { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; -webkit-user-drag: none; z-index: 1;
     filter: drop-shadow(0 18px 18px rgba(30, 26, 20, 0.2)) drop-shadow(0 3px 3px rgba(30, 26, 20, 0.18)); }
   .body { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
@@ -312,10 +315,12 @@
     <button class="ctl" type="button" id="slow" aria-pressed="false">慢速网络（3 秒）</button>
     <button class="ctl" type="button" id="rm" aria-pressed="false">预览减少动效</button>
     <button class="ctl" type="button" id="jam" aria-pressed="false">模拟出错</button>
+    <button class="ctl" type="button" id="tryName">试试输入名字</button>
   </div>
 
   <section class="results" id="results" hidden aria-labelledby="r-title">
     <div class="rhead"><h2 id="r-title" tabindex="-1">Accessibility · Motion</h2><span>Picked from my case files.</span></div>
+    <p class="not-found" id="notFound" hidden></p>
     <div class="bleed"><ol class="strip" id="strip" tabindex="0" aria-label="Printed sheets"></ol></div>
     <div class="deck">
       <button type="button" id="prev" aria-label="Previous sheet"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -367,6 +372,8 @@
       <dt>卡纸</dt><dd>请求失败时机器换成卡纸那张图，屏幕写 Paper jam / Try again in a moment，你的请求原样退回纸上，机器下面出现一行：Something jammed. Try again in a moment, browse all work, or email me.（都是文案提案）卡纸会一直留着，直到下一次按 PRINT。和 404 是两回事：404 是页面不存在，这里是打印失败。</dd>
       <dt>图标和分享图</dt><dd>红键做手机桌面图标和浏览器标签图标。分享图用代码合成：摄影棚背景 + 定稿打印机 + 网站自己的文字，所以字永远清楚，每个案例自动生成。</dd>
       <dt>AI 分析</dt><dd>和 v3 一样的五步：读、等、懂、找、印。</dd>
+      <dt>没读懂</dt><dd>输入里找不到任何角色或技能时（比如名字、"hello"、乱打的字），屏幕先说 No role or skill found，再打三张"从这里开始"的纸，标题上面一行写清楚：<i>I couldn’t find a role or a skill in “…”. Here are three places to start. For a closer match, pick a skill above or describe the role, for example “design systems for a fintech app”.</i> 如果输入看起来就是一个名字，开头换成 <i>Nice to meet you, Sarah.</i>（都是文案提案）。名字不保存、不发给统计。现在线上的网站遇到这种输入只会默默打三张，不解释。点"试试输入名字"可以看。</dd>
+      <dt>夜间机器</dt><dd>GPT 那张把机器重新画了（两端变圆、底座和部件位置都变了），对不上叠加的位置，所以没用。我把白天那张重新打光：暖色台灯从左上照下来，右端暗一点，顶边一道冷色轮廓光，形状完全不变。</dd>
     </dl>
   </section>
 </div>
@@ -407,14 +414,21 @@
   ];
   const PROJECTS = ["Helen Hamlyn Centre", "Components for Any Data", "One Design System", "Nike Athletes Closet"];
   const TOTAL = 41;
-  const CARDS = [
+  const MATCH = [
     { p: "Helen Hamlyn Centre Data Platform", t: "Accessibility as the starting point" },
     { p: "Helen Hamlyn Centre Data Platform", t: "Accessibility – keyboard navigation" },
     { p: "One Design System, Three Products, Any Brand", t: "The same lightness on every hue" },
     { p: "One Design System, Three Products, Any Brand", t: "Readable with any customer's colour" },
   ];
-  const runs = CARDS.map((c, i) => `${CARDS.slice(0, i + 1).filter((x) => x.p === c.p).length} of ${CARDS.filter((x) => x.p === c.p).length}`);
-  const cardHTML = (c, i) => `<div class="card"><div class="ct"><b>${c.p}</b> · ${runs[i]}</div><h3>${c.t}</h3><div class="ev">case card evidence<br />(the original, unchanged)</div><div class="cf"><span>Case file</span><u>Read it in context →</u></div></div>`;
+  // the site's own three places to start, printed when the request names no role or skill
+  const START = [
+    { p: "Helen Hamlyn Centre Data Platform", t: "Two arrangements of the same map" },
+    { p: "Components for Any Data", t: "A component promises a shape, not field names" },
+    { p: "Nike Athletes Closet", t: "Redesigning the creative system first" },
+  ];
+  let CARDS = MATCH;
+  const run1 = (c, i) => `${CARDS.slice(0, i + 1).filter((x) => x.p === c.p).length} of ${CARDS.filter((x) => x.p === c.p).length}`;
+  const cardHTML = (c, i) => `<div class="card"><div class="ct"><b>${c.p}</b> · ${run1(c, i)}</div><h3>${c.t}</h3><div class="ev">case card evidence<br />(the original, unchanged)</div><div class="cf"><span>Case file</span><u>Read it in context →</u></div></div>`;
 
   const m = $("#machine"), sheet = $("#sheet"), ta = $("#brief"), ghostEl = $(".ghost", sheet), readEl = $(".read", sheet);
   const light = $(".slot-light"), key = $("#key"), results = $("#results"), strip = $("#strip");
@@ -479,9 +493,12 @@
   function ask(text) {
     const found = [];
     TERMS.forEach(([re, label]) => { if (re.test(text) && !found.includes(label)) found.push(label); re.lastIndex = 0; });
-    const asked = found.length ? found.slice(0, 2) : ["Accessibility", "Motion"];
     const ms = slowNet ? 3000 : rnd(500, 1300);
-    return new Promise((r) => setTimeout(() => r({ asked, match: 9, sheets: CARDS.length, projects: 2 }), reduced() ? 0 : ms));
+    // nothing about a role or a skill in it: the printer says so and prints where to start (the site's own three defaults)
+    const answer = found.length
+      ? { asked: found.slice(0, 2), match: 9, sheets: CARDS.length, projects: 2 }
+      : { asked: [], startHere: true, match: 3, sheets: 3, projects: 3 };
+    return new Promise((r) => setTimeout(() => r(answer), reduced() ? 0 : ms));
   }
 
   // ---------- the strip ----------
@@ -566,6 +583,12 @@
     // 2. wait: if the answer is still out, the screen leafs through the case files
     let n = 0;
     while (!answer) { if (abort) return null; disp("Reading your request", PROJECTS[n++ % PROJECTS.length], 0, true); await new Promise((r) => setTimeout(r, 110)); }
+    if (answer.startHere) {
+      // 3'. understood nothing: a shake of the head on the screen, then the three places to start
+      disp("No role or skill found", "In your request", 1); await sleep(900); if (abort) return null;
+      disp("Printing where to start", "Three sheets", 3);
+      return answer;
+    }
     // 3. understand: each capability locks in
     let got = "";
     for (const a of answer.asked) { got = got ? `${got}, ${a}` : a; disp(got, "Understood", 1); await sleep(380); if (abort) return null; }
@@ -593,7 +616,7 @@
     if (busy) { abort = true; return; }
     if (!ta.value.trim()) { ta.value = EXAMPLES[0]; sheet.classList.add("typed"); }
     busy = true; abort = false; clearTimeout(restT);
-    if (!$("#jamNote").hidden) { $("#jamNote").hidden = true; const ph = $(".photo"); ph.src = "shell/printer-v3.webp"; ph.srcset = "shell/printer-v3-1x.webp 990w, shell/printer-v3.webp 1979w"; }
+    if (!$("#jamNote").hidden) { $("#jamNote").hidden = true; syncPhoto(); }
     ta.blur(); state("working"); results.hidden = true; $("#fly").innerHTML = "";
     thunk();
     if (jamSim) {
@@ -615,17 +638,28 @@
       busy = false; abort = false; state(ta.value.trim() ? "ready" : "idle");
       restT = setTimeout(() => !busy && setReady(), 2200); return;
     }
-    $("#r-title").textContent = answer.asked.join(" · ");
+    const asked = ta.value.trim();
+    CARDS = answer.startHere ? START : MATCH;
+    $("#r-title").textContent = answer.startHere ? "Where to start." : answer.asked.join(" · ");
+    const nf = $("#notFound");
+    if (answer.startHere) {
+      // a name on its own reads as an introduction, so the reply says hello; anything else is quoted back
+      const name = /^[A-Z][a-z'’-]+(?: [A-Z][a-z'’-]+){0,2}$/.test(asked) ? asked.split(" ")[0] : "";
+      nf.innerHTML = (name ? `Nice to meet you, ${esc(name)}. ` : `I couldn’t find a role or a skill in “${esc(asked.slice(0, 60))}”. `)
+        + `Here are three places to start. For a closer match, pick a skill above or describe the role, for example <i>“design systems for a fintech app”</i>.`;
+      nf.hidden = false;
+    } else nf.hidden = true;
     hum(true); await sleep(360); hum(false);
     await printOut();
     await restore(false);
-    disp("Printed: four sheets", "From two projects");
+    disp(answer.startHere ? "Printed: three sheets" : "Printed: four sheets", answer.startHere ? "Where to start" : "From two projects");
     busy = false; state("idle");
     restT = setTimeout(() => !busy && setReady(), 3200);
     $("#r-title").focus({ preventScroll: true });
   }
   $("#again").onclick = () => { results.hidden = true; scrollTo(0, 500); ta.focus({ preventScroll: true }); };
 
+  $("#tryName").onclick = () => { ta.value = "Sarah Jones"; sheet.classList.add("typed"); setReady(); scrollTo(0, 300); };
   $("#slow").onclick = (e) => { slowNet = !slowNet; e.currentTarget.setAttribute("aria-pressed", String(slowNet)); };
   $("#rm").onclick = (e) => { forceRM = !forceRM; e.currentTarget.setAttribute("aria-pressed", String(forceRM)); document.documentElement.classList.toggle("rm", forceRM); };
   // ---------- the lamp: light and dark ----------
@@ -637,9 +671,18 @@
   const system = () => (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   const current = () => store.get() ?? system();
   let noteT;
+  // the machine is lit by the room: the day render in light mode, the lamp-lit render in dark mode
+  function syncPhoto() {
+    const ph = $(".photo"), cap = $("#key img"), night = current() === "dark";
+    if (!$("#jamNote").hidden) return;
+    const base = night ? "shell/printer-v3-night" : "shell/printer-v3";
+    ph.src = `${base}.webp`; ph.srcset = `${base}-1x.webp 990w, ${base}.webp 1979w`;
+    cap.src = `${base}-key.webp`;
+  }
   function applyTheme() {
     const chosen = store.get();
     chosen ? (root.dataset.theme = chosen) : delete root.dataset.theme;
+    syncPhoto();
     tsw.setAttribute("aria-label", `Switch to ${current() === "dark" ? "light" : "dark"} mode`);
   }
   function toggleTheme() {
