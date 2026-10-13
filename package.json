@@ -26,6 +26,7 @@
     "geist": "^1.7.2",
     "lottie-web": "^5.13.0",
     "next": "^16.4.0",
+    "posthog-js": "^1.438.9",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "server-only": "^0.0.1",
