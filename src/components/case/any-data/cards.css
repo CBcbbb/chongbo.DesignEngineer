@@ -1011,19 +1011,6 @@
   }
 }
 
-/* windows up to about 900px tall: the three strips sit tighter, so 01.1 stays inside one screen */
-@media (min-width: 761px) {
-  .ac-shapes {
-    gap: 10px;
-  }
-  .ac-cell {
-    padding: 10px 12px 9px;
-  }
-  .ac-strip header {
-    padding: 6px 14px;
-  }
-}
-
 /* wide but short windows (1280 × 720, 1366 × 768): tighter evidence, so each card stays close to one screen */
 @media (min-width: 761px) {
   .ac-shapes {

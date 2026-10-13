@@ -194,24 +194,6 @@
   text-transform: uppercase;
   color: var(--paper-dim);
 }
-.t-title {
-  font: 600 22px/1.25 var(--sans);
-  letter-spacing: -0.015em;
-  margin: 6px 0 8px;
-  text-wrap: balance;
-}
-.t-body {
-  font-size: 15.5px;
-  line-height: 1.55;
-  color: var(--paper-body);
-  margin: 0;
-}
-.t-asked {
-  font-family: var(--mono);
-  font-size: 13.5px;
-  margin-top: 6px;
-  overflow-wrap: anywhere;
-}
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -291,102 +273,16 @@
   transform: rotate(-4deg);
   text-transform: uppercase;
 }
-@keyframes stamp {
-  0% {
-    transform: rotate(-9deg) scale(1.35);
-    opacity: 0;
-  }
-  70% {
-    transform: rotate(-3deg) scale(0.97);
-    opacity: 1;
-  }
-  100% {
-    transform: rotate(-4deg) scale(1);
-  }
-}
-.ticket-error .t-num {
-  color: var(--stamp);
-}
-
-.tear {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0 18px;
-  border-radius: 999px;
-  border: 1px solid var(--ink);
-  background: var(--ink);
-  color: var(--studio);
-  font: 600 14px var(--sans);
-  text-decoration: none;
-  cursor: pointer;
-  transition: transform 0.15s var(--ease);
-}
-.tear:active {
-  transform: translateY(1px);
-}
 
 /* The skip link moves focus to <main>; it is a landmark, not a control, so no ring. */
 main:focus {
   outline: none;
-}
-.mini {
-  --focus: var(--paper-ink);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  background: var(--paper);
-  color: var(--paper-ink);
-  padding: 20px 20px 36px;
-  text-decoration: none;
-}
-.mini:focus-visible {
-  outline: 2px solid var(--paper-ink);
-  outline-offset: -6px;
-}
-.mini .n {
-  font: 700 40px/0.9 var(--sans);
-  letter-spacing: -0.04em;
-}
-.mini h3 {
-  margin: 0;
-  font: 600 18px/1.25 var(--sans);
-  letter-spacing: -0.01em;
-}
-.mini p {
-  margin: 0;
-  font-size: 14.5px;
-  line-height: 1.5;
-  color: var(--paper-body);
-  flex: 1;
 }
 .meta {
   font: 500 11.5px/1.4 var(--mono);
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--paper-dim);
-}
-.mini .go {
-  transition: color 0.15s;
-}
-.mini:hover .go {
-  color: var(--stamp);
-}
-.earlier {
-  margin: 30px 0 0;
-  color: var(--ink-2);
-  font-size: 15px;
-  max-width: 80ch;
-}
-.earlier b {
-  color: var(--ink);
-  font-weight: 600;
-}
-.earlier a {
-  color: var(--ink);
-  text-underline-offset: 3px;
 }
 
 /* ---------- paper card (case file) ---------- */
@@ -914,21 +810,6 @@ main:focus {
   font: 600 clamp(22px, 3vw, 27px) / 1.2 var(--sans);
   letter-spacing: -0.02em;
   text-wrap: balance;
-}
-.next-file {
-  max-width: 460px;
-}
-.next-file .n {
-  font-size: 34px;
-}
-.next-title {
-  font: 600 20px/1.2 var(--sans);
-  letter-spacing: -0.01em;
-}
-.next-one {
-  font-size: 14.5px;
-  line-height: 1.5;
-  color: var(--paper-body);
 }
 
 /* ---------- about ---------- */

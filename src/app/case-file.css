@@ -138,7 +138,6 @@
   color: var(--accent);
 }
 .cf-toc-part > ol {
-  margin-top: 0.45rem;
   border-left: 1px solid var(--rule);
 }
 .cf-toc-part > ol {
@@ -230,29 +229,6 @@
 .cf-idx {
   font: 500 0.75rem/1 var(--mono);
   color: var(--accent);
-}
-.cf-kind {
-  font: 400 0.75rem/1 var(--mono);
-  color: var(--case-dim);
-}
-/* a short label beside the index, where a project's story turns on it (Section.tag) */
-.cf-tag {
-  align-self: center;
-  margin-left: 0.6rem;
-  padding: 4px 7px 3px;
-  border-radius: 999px;
-  box-shadow: inset 0 0 0 1px currentColor;
-  font: 500 0.65625rem/1 var(--mono);
-  letter-spacing: 0.04em;
-  color: var(--case-dim);
-}
-.cf-tag.is-strong {
-  box-shadow: none;
-  background: var(--accent-strong);
-  color: var(--on-accent);
-}
-.cf-sheet.is-dark .cf-tag {
-  color: var(--on-dark-2);
 }
 .cf-h3 {
   font-size: clamp(1.45rem, 2.6vw, 2rem);
@@ -529,41 +505,12 @@
   transition-duration: 0.55s, 0.6s, 0.3s;
   transition-delay: calc(var(--i) * 70ms);
 }
-.cf-deck-read {
-  display: grid;
-  justify-items: center;
-}
-.cf-deck-read p {
-  grid-area: 1 / 1;
-  max-width: 46ch;
-  font-size: 15.5px;
-  line-height: 1.5;
-  text-align: center;
-  color: var(--case-body);
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.25s var(--ease), visibility 0.25s;
-}
-.cf-deck-read p[data-on] {
-  visibility: visible;
-  opacity: 1;
-}
-.cf-deck-read strong {
-  font-weight: 600;
-  color: var(--case-ink);
-}
 /* a wide figure: the words beside the hand, not under it */
 @container (min-width: 36rem) {
   .cf-deck-in {
     grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
     gap: clamp(1.25rem, 3cqi, 2.25rem);
     align-items: center;
-  }
-  .cf-deck-read {
-    justify-items: start;
-  }
-  .cf-deck-read p {
-    text-align: left;
   }
 }
 /* what the hand is, centred under it */
@@ -573,13 +520,6 @@
   font: 500 11px/1.4 var(--mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--case-dim);
-}
-.cf-deck-count {
-  display: block;
-  margin-bottom: 4px;
-  font: 500 11px/1.4 var(--mono);
-  letter-spacing: 0.06em;
   color: var(--case-dim);
 }
 
@@ -627,55 +567,6 @@
 .cf-pipe-n {
   font: 500 11.5px/1 var(--mono);
   color: var(--case-dim);
-}
-.cf-pipe-caption {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0 14px;
-}
-.cf-pipe-text {
-  font-size: clamp(1.05rem, 1.7vw, 1.25rem);
-  font-weight: 500;
-  line-height: 1.35;
-  letter-spacing: -0.01em;
-  color: var(--case-ink);
-}
-.cf-pipe-nav {
-  display: flex;
-  flex: none;
-  gap: 8px;
-}
-.cf-pipe-nav button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-width: 44px;
-  height: 44px;
-  padding: 0 12px;
-  border: 1px solid var(--case-line);
-  border-radius: 999px;
-  background: var(--case-bg);
-  color: var(--case-ink);
-  font: 500 14px/1 var(--sans);
-  cursor: pointer;
-  transition: background-color 0.2s, opacity 0.2s;
-}
-.cf-pipe-nav button.is-next {
-  padding: 0 14px 0 18px;
-  border-color: var(--case-ink);
-  background: var(--case-ink);
-  color: var(--case-bg);
-}
-.cf-pipe-nav button:disabled {
-  opacity: 0.35;
-  cursor: default;
-}
-.cf-pipe-nav svg {
-  width: 16px;
-  height: 16px;
 }
 .cf-pipe-stage {
   display: flex;
@@ -857,10 +748,6 @@
     flex-direction: column;
     gap: 4px;
     font-size: 13px;
-  }
-  .cf-pipe-caption {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }
 
@@ -1224,14 +1111,6 @@
 .cf-ico-ad {
   --i-cat: #6250d6;
   --i-val: #eb6834;
-}
-.cf-ico-ad .i-cat {
-  stroke: var(--i-cat);
-  stroke-width: 2.2;
-}
-.cf-ico-ad .i-val {
-  stroke: var(--i-val);
-  stroke-width: 2.2;
 }
 .cf-ico-ad .i-cat-dot {
   fill: var(--i-cat);
@@ -2365,22 +2244,6 @@
   text-decoration-color: #b9b6c4;
 }
 
-/* ---------- next ---------- */
-.cf-next {
-  display: grid;
-  gap: 0.5rem;
-  margin-top: clamp(1.5rem, 4vw, 3rem);
-  text-decoration: none;
-  transition: border-color 0.2s;
-}
-.cf-next:hover,
-.cf-next:focus-visible {
-  border-color: var(--accent);
-}
-.cf-next .cf-kind {
-  font: 400 0.75rem/1 var(--mono);
-  color: var(--case-dim);
-}
 /* a short label beside the index, where a project's story turns on it (Section.tag) */
 .cf-tag {
   align-self: center;
@@ -2448,11 +2311,6 @@
   }
   .cf-sheet[data-size="auto"] .cf-evidence .cf-row {
     width: 100%;
-  }
-  /* a screenshot at the card's foot is never taller than the screen leaves room for: it narrows, keeping its
-     ratio, and the panel of the product's white stays round it */
-  .cf-bleed img {
-    width: min(100%, calc((var(--cf-card-h) - 15rem) * var(--r)));
   }
   .cf-evidence {
     height: 100%;
@@ -2539,7 +2397,6 @@
     grid-template-rows: minmax(0, 1fr);
     place-items: stretch;
   }
-
 
 }
 /* side layout (`pair`): a column of text on the left, the evidence beside it. For a text-heavy card whose evidence
