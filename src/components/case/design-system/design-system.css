@@ -192,7 +192,8 @@
 .dsm .ds-f2c-tabs button { font: 500 12px/1 var(--mono); color: #8b949e; background: none; border: 0; padding: 10px 12px; cursor: pointer; white-space: nowrap; border-right: 1px solid var(--w-line); }
 .dsm .ds-f2c-tabs button[aria-selected="true"] { color: #e6edf3; background: var(--w-bg); box-shadow: inset 0 2px 0 var(--ds-mark, #f2c94c); }
 .dsm .ds-f2c-tabs button:focus-visible { outline: 2px solid var(--ds-mark, #f2c94c); outline-offset: -2px; }
-.dsm .ds-f2c-src { margin: 0; padding: 14px 0; overflow: auto; font: 400 12.5px/1.6 var(--mono); color: #e6edf3; counter-reset: ln; tab-size: 2; min-height: 380px; }
+/* one size whichever file is open: the longest (20 lines) sets it */
+.dsm .ds-f2c-src { margin: 0; padding: 9px 0; overflow: auto; font: 400 12.5px/1.4 var(--mono); color: #e6edf3; counter-reset: ln; tab-size: 2; min-height: calc(20 * 12.5px * 1.4 + 18px); }
 .dsm .ds-f2c-src:focus-visible { outline: 2px solid var(--ds-mark, #f2c94c); outline-offset: -2px; }
 .dsm .ds-f2c-src .ln { display: block; padding: 0 16px 0 52px; position: relative; white-space: pre; }
 .dsm .ds-f2c-src .ln::before { counter-increment: ln; content: counter(ln); position: absolute; left: 0; width: 36px; text-align: right; color: #484f58; }
@@ -451,6 +452,11 @@
 .dsm .ds-layers2 .o-numt { font: 600 16.75px var(--mono); fill: var(--case-ink); }
 .dsm .ds-layers2 .o-ln { font: 600 17.5px var(--sans); fill: var(--case-ink); }
 .dsm .ds-layers2 .o-ls { font: 500 16.75px var(--mono); fill: var(--case-dim); }
+/* 02.2 on computers: a short claim, so the reasoning takes the wider column and runs a line shorter over the window */
+@media (min-width: 1000px) {
+  [data-palette="design-system"] :is([data-card="in-code"], #in-code) > .cf-head { grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr); }
+  [data-palette="design-system"] :is([data-card="in-code"], #in-code) > .cf-evidence { margin-top: 0.875rem; }
+}
 /* 01.3 on computers: the build rises beside the text. Its tall left end (the first product's users) stands under the
    claim, and the reasoning sits over its open top right, so the card is the drawing's height, not the text's plus the
    drawing's. Both share the card's one grid cell; the drawing is dropped by a share of its own width, so the gap holds

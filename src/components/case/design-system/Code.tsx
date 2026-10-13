@@ -150,15 +150,8 @@ export function InCode() {
   };
   return (
     <div className="ds-f2c">
+      {/* no title bar: the window's one slim bar is its tabs and address (playbook §6: no fake window buttons) */}
       <div className="ide fx-win is-dark" role="group" aria-label="The system in code: its source files and what they render">
-        <div className="fx-bar">
-          <span className="fx-dots" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </span>
-          <span className="fx-file">design-system</span>
-        </div>
         <div className="ide-body">
           <div className="ds-f2c-editor">
             <div className="ds-f2c-tabs" role="tablist" aria-label="Source files">
