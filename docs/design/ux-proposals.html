@@ -78,6 +78,7 @@ code { font: 400 0.92em var(--mono); }
 .seg { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--sheet); box-shadow: inset 0 0 0 1px var(--rule); max-width: 100%; overflow-x: auto; }
 .seg button { min-height: 34px; padding: 0 12px; border: 0; border-radius: 999px; background: transparent; color: var(--ink-2); font: 500 13px var(--sans); cursor: pointer; white-space: nowrap; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--studio); }
+.seg .ok::after { content: "Approved"; margin-left: 6px; font: 600 10px var(--mono); padding: 2px 5px; border-radius: 999px; background: var(--rec-bg); color: var(--rec); }
 .seg .r::after { content: "Rec."; margin-left: 6px; font: 600 10px var(--mono); padding: 2px 5px; border-radius: 999px; background: var(--rec-bg); color: var(--rec); }
 button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .d-btn { min-height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--rule); background: var(--sheet); color: var(--ink); font: 500 13px var(--sans); cursor: pointer; }
@@ -134,7 +135,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
 [data-v="now"] [data-show]:not([data-show~="now"]),
 [data-v="a"] [data-show]:not([data-show~="a"]),
 [data-v="b"] [data-show]:not([data-show~="b"]),
-[data-v="c"] [data-show]:not([data-show~="c"]) { display: none !important; }
+[data-v="c"] [data-show]:not([data-show~="c"]),
+[data-v="d"] [data-show]:not([data-show~="d"]) { display: none !important; }
 
 .d-table-wrap { overflow-x: auto; margin-top: 16px; }
 .d-table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px; }
@@ -292,7 +294,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
 /* the next case file: one control on every project (the shell's, not the project's) */
 .nx { text-decoration: none; display: grid; grid-template-columns: auto minmax(48px, 1fr) minmax(0, auto); align-items: center; column-gap: 18px; margin-top: 56px; padding-block: 34px 38px; border-top: 1px solid var(--rule); color: var(--ink); cursor: pointer; }
 .nx .lab { font: 500 12px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; transition: color .2s; }
-.nx .ga { width: 100%; color: var(--ink); }
+.nx .ga { width: 100%; height: 68px; color: var(--ink); }
 .nx .ttl { justify-self: end; max-width: 13em; text-align: right; font: 700 46px/0.98 var(--sans); letter-spacing: -0.03em; text-transform: uppercase; text-wrap: balance; }
 .nx:hover .lab, .nx:focus-visible .lab { color: var(--ink); }
 @container vp (max-width: 700px) {
@@ -356,29 +358,30 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
 /* footer: Now */
 .s-foot { margin-top: 48px; padding-block: 32px 48px; border-top: 1px solid var(--rule); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; font-size: 14px; color: var(--ink-2); }
 .s-foot .note { font: 400 12px var(--mono); }
-/* footer: proposed */
-.ft { margin-top: 56px; padding-block: 40px 36px; border-top: 1px solid var(--rule); display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 28px 64px; color: var(--ink-2); }
-.ft .ai { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; align-items: start; max-width: 600px; cursor: default; }
-.ft .chip { width: 34px; height: 34px; border-radius: 8px; display: grid; place-items: center; background: var(--paper); color: var(--paper-ink); font: 600 11px var(--mono); letter-spacing: .02em;
-  box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 0 0 1px rgba(60,50,40,.1), 0 2px 0 #d6d2ca, 0 8px 14px -8px rgba(40,30,20,.4); }
-.ft .ai p { margin: 0; font: 400 21px/1.38 var(--sans); letter-spacing: -0.015em; text-wrap: pretty; }
-.ft .promise { position: relative; display: inline; color: var(--ink); font-weight: 500; }
-.ft .sig { position: absolute; left: -2%; width: 104%; bottom: -10px; height: 14px; overflow: visible; fill: none; stroke: var(--red); stroke-width: 1.7; stroke-linecap: round; pointer-events: none; }
-.ft .w { display: inline-block; white-space: pre; }
-.ft .hl .w { transition: background-color .25s, box-shadow .25s; border-radius: 3px; }
-.ft .hl .w.on { background-color: var(--hl); box-shadow: 0 0 0 2px var(--hl); }
-.ft .contact { display: grid; gap: 6px; align-content: start; justify-items: start; }
-.ft .k { font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
-.ft .mail { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.ft .mail span { font: 500 21px var(--sans); letter-spacing: -0.015em; color: var(--ink); user-select: all; overflow-wrap: anywhere; }
-.ft .mini { display: inline-flex; align-items: center; min-height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--rule); background: transparent; color: var(--ink); font: 500 12.5px var(--sans); cursor: pointer; }
-.ft .links { display: flex; gap: 18px; margin-top: 8px; font: 500 14px var(--sans); color: var(--ink); }
-.ft .base { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 12px; padding-top: 18px; border-top: 1px solid var(--rule); font-size: 13px; }
+/* footer, round three: one line */
+#live-foot .ft3 { margin-top: 0; }
+@media (max-width: 700px) { #live-foot .ft3 { flex-direction: column; align-items: flex-start; gap: 8px; } }
+.ft3 { margin-top: 56px; padding-block: 22px 30px; border-top: 1px solid var(--rule); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 32px; font: 400 14px/1.5 var(--sans); color: var(--ink-2); }
+.ft3 .note3 { margin: 0; cursor: default; outline-offset: 4px; }
+.ft3 [data-line] { display: none; }
+.ft3:not([data-l]) [data-line="a"], .ft3[data-l="a"] [data-line="a"], .ft3[data-l="b"] [data-line="b"], .ft3[data-l="c"] [data-line="c"], .ft3[data-l="d"] [data-line="d"] { display: inline; }
+.ft3 .claim { position: relative; display: inline-block; color: var(--ink); font-weight: 500; }
+.ft3 .sig { position: absolute; left: -3%; width: 106%; bottom: -6px; height: 8px; overflow: visible; fill: none; stroke: var(--red); stroke-width: 1.6; stroke-linecap: round; pointer-events: none; }
+.ft3 .mail3 { display: inline-flex; align-items: center; gap: 4px; }
+.ft3 .mail3 a { color: var(--ink); font-weight: 500; text-decoration: underline; text-decoration-color: var(--rule); text-decoration-thickness: 1px; text-underline-offset: 4px; transition: text-decoration-color .2s; }
+.ft3 .mail3 a:hover { text-decoration-color: var(--ink); }
+.ft3 .cp { position: relative; width: 34px; height: 34px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 8px; background: transparent; color: var(--ink-2); cursor: pointer; transition: color .2s, background-color .2s; }
+.ft3 .cp:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 7%, transparent); }
+.ft3 .cp svg { width: 18px; height: 18px; overflow: visible; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.ft3 .cp .back { transition: translate .3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.ft3 .cp:hover .back { translate: 1px -1px; }
+.ft3 .slip { position: absolute; bottom: calc(100% + 2px); right: 0; padding: 6px 10px 10px; background: var(--paper); color: var(--paper-ink); font: 500 11px var(--mono); letter-spacing: .06em; white-space: nowrap; pointer-events: none;
+  box-shadow: 0 8px 14px -8px rgba(40,30,20,.45); clip-path: inset(100% 0 0 0);
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 8px 100%; mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 8px 100%; }
+.ft3 .slip .nw { background: none; box-shadow: none; }
 @container vp (max-width: 700px) {
-  .ft { grid-template-columns: minmax(0, 1fr); gap: 28px; }
-  .ft .ai p { font-size: 18px; }
-  .ft .mail span { font-size: 18px; }
-  .ft .base { flex-direction: column; }
+  .ft3 { flex-direction: column; align-items: flex-start; gap: 8px; padding-block: 20px 28px; }
+  .ft3 .cp { width: 40px; height: 40px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -388,7 +391,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
 
 <div class="d-page" id="top">
   <header class="d-top">
-    <div><b>Portfolio UX proposals</b><small>round two · branch docs/ux-proposals · 13 Oct 2026</small></div>
+    <div><b>Portfolio UX proposals</b><small>round three · branch docs/ux-proposals · 13 Oct 2026</small></div>
     <div class="d-controls">
       <div class="seg" role="group" aria-label="Theme">
         <button type="button" data-theme-set="system" aria-pressed="true">System</button>
@@ -401,8 +404,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
 
   <section class="d-intro">
     <div>
-      <h1>Round two: one hand, every detail</h1>
-      <p>Your notes on round one, built in. The thread through all of it: the site's controls should feel drawn by one hand. One hand-drawn arrow for every way on, covers made as a set, and the footer doing the work that the extra contact lines were doing. The micro-interactions on this page are live: hover them, or scroll to them on a phone.</p>
+      <h1>Round three: a smaller footer, a looser hand</h1>
+      <p>Your notes from this evening, built in. The covers and the eyes are settled. The arrow on 03 now draws all the way to the name, with more curve and now and then a loop. The footer is redesigned from what it should hold: one quiet line, the email and a note about AI that claims the work, not the words, with four ways to say it. Everything on this page still moves: hover it, or scroll to it on a phone.</p>
       <div class="d-legend">
         <span><i class="nw-key"></i> proposed wording</span>
         <span><span class="rec-key">Rec.</span> recommended</span>
@@ -411,24 +414,24 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
       </div>
     </div>
     <ol class="d-sum">
-      <li><a href="#p1"><span class="n">01</span><b>Covers, made as one set</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>A field and one drawing each; for /work now, the home row later</em></a></li>
+      <li><a href="#p1"><span class="n">01</span><b>Covers, made as one set</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Approved. A field and one drawing each, with their motion</em></a></li>
       <li><a href="#p2"><span class="n">02</span><b>/work, 2 × 2</b><span class="cost"><i class="on"></i><i class="on"></i><i></i></span><em>Rec. A: each cover moves on hover; the drawn arrow after the title</em></a></li>
-      <li><a href="#p3"><span class="n">03</span><b>Next case file, one control</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Your layout: label and arrow, the title in capitals; the arrow draws out</em></a></li>
+      <li><a href="#p3"><span class="n">03</span><b>Next case file, one control</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Updated: the arrow draws further, with more curve</em></a></li>
       <li><a href="#p4"><span class="n">04</span><b>Share this print</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Rec. B: in the results header; the deck bar gets its styles back</em></a></li>
-      <li><a href="#p5"><span class="n">05</span><b>The footer, done properly</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Rec. A: the promise is signed as you hover it</em></a></li>
-      <li><a href="#p6"><span class="n">06</span><b>The eyes, take two</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Rec. C: the same drawing, looking up, the ovals touching</em></a></li>
+      <li><a href="#p5"><span class="n">05</span><b>The footer, two things only</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Redone: one line, the email and the AI note. Pick the wording</em></a></li>
+      <li><a href="#p6"><span class="n">06</span><b>The eyes, take two</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Chosen: B, looking up, with brows</em></a></li>
       <li><a href="#p7"><span class="n">07</span><b>One arrow for every way on</b><span class="cost"><i class="on"></i><i></i><i></i></span><em>Where the drawn arrow replaces "→"</em></a></li>
     </ol>
   </section>
 
   <section class="decided" aria-labelledby="dec-t">
-    <h2 id="dec-t">Settled in round one</h2>
+    <h2 id="dec-t">Settled so far</h2>
     <ul>
-      <li><b>On hold</b><span>The covers row on the home page (1 B), with the smaller printer. Kept for later; shown below only to check the covers at that size.</span></li>
-      <li><b>Dropped</b><span>The CV, for now. The contact line on case pages: the footer carries the email instead (05).</span></li>
-      <li><b>Approved</b><span>No full sentences in mono. Built into every mock below.</span></li>
-      <li><b>Changed</b><span>The end of a print: a small share link, not a stub (04).</span></li>
-      <li><b>Changed</b><span>/work: no circled arrow (02). Almond eyes: out (06).</span></li>
+      <li><b>Approved</b><span>01: the covers as one set, with their motion. 06: the eyes, B. No full sentences in mono.</span></li>
+      <li><b>On hold</b><span>The covers row on the home page (1 B), with the smaller printer. Shown in 01 only to check the covers at that size.</span></li>
+      <li><b>Dropped</b><span>The CV, for now. The contact line on case pages. "Every word in them is mine": AI helped with the wording, so the claim is the work (05).</span></li>
+      <li><b>Changed</b><span>03: the arrow draws further and looser. 05: the footer, redone from its content.</span></li>
+      <li><b>Open</b><span>02 A or B, 04 A or B, and the footer's wording.</span></li>
       <li><b>Filled in</b><span>HHCD: 2025–2026. Nike: 2023, still to confirm.</span></li>
     </ul>
   </section>
@@ -443,7 +446,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
       </div>
       <div class="seg" role="group" aria-label="Variant">
         <button type="button" data-set="now" aria-pressed="false">Round one</button>
-        <button type="button" data-set="a" class="r" aria-pressed="true">Field and drawing</button>
+        <button type="button" data-set="a" class="ok" aria-pressed="true">Field and drawing</button>
       </div>
     </div>
     <div class="cover-set">
@@ -534,7 +537,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
       </ol>
     </div>
     <div data-show="a">
-      <div class="d-cap" style="margin-top:24px"><span>At its real size · <span class="hov-key">hover it</span> · keyboard focus does the same</span></div>
+      <div class="d-cap" style="margin-top:24px"><span>At its real size · <span class="hov-key">hover it a few times</span> · the line is different each time · keyboard focus does the same</span></div>
       <a class="nx live" href="#p3" data-arrow="grow"><span class="lab">Next case file</span><svg class="ga" aria-hidden="true"></svg><span class="ttl">Components for Any Data</span></a>
     </div>
     <div class="d-frames">
@@ -543,7 +546,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
     </div>
     <div class="d-notes">
       <div><h3>The details</h3>
-        <ul><li>On the studio, after the last card, under one hairline: the shell's colours and Geist, never the project's.</li><li>Capitals at 700, tracking −0.03em, balanced over at most two lines. Long names wrap: "One Design System, Three Products, Any Brand".</li><li>The arrow: a 22px stub at rest. On hover it draws out to the name in 0.4s, then its head in 0.18s; one of three hand-drawn lines each time; on leaving it draws back.</li></ul>
+        <ul><li>On the studio, after the last card, under one hairline: the shell's colours and Geist, never the project's.</li><li>Capitals at 700, tracking −0.03em, balanced over at most two lines. Long names wrap: "One Design System, Three Products, Any Brand".</li><li>The arrow: a 28px stub at rest. On hover it draws all the way to the name in 0.7s: a wave, a bow or, now and then, a small loop. Its head follows the line's last direction and is drawn in 0.24s. On leaving it draws back.</li></ul>
       </div>
       <div><h3>Why</h3>
         <ul><li>Every case file ends the same way, so the site reads as one piece.</li><li>The arrow is the back pill's line, turned forward: it already exists in <code>Pill.tsx</code> (<code>BACK_LINES</code>), unused since the nav went plain.</li><li>Playbook §7 keeps play out of case files. This control sits outside the last card and belongs to the shell; I'd add one line to §7 saying so.</li></ul>
@@ -590,35 +593,48 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
     <div class="d-head">
       <div>
         <div class="k">Proposal 05 · Every page</div>
-        <h2>The footer, done properly</h2>
-        <p>The footer now does two jobs: it keeps the promise about AI, and it is the contact on every page, which is why the case pages need no line of their own. The promise keeps its words exactly. Three ways for it to answer the pointer, in the family of the hammer.</p>
+        <h2>The footer, two things only</h2>
+        <p>Everything the footer could hold, sorted by one question: does a reader need it at the foot of every page? Two things pass. The note about AI, because the printer is on the site. And the email, because the case pages now rely on the footer for contact. The rest is already in the header or on About. What's left fits on one line at 14px.</p>
       </div>
-      <div class="seg" role="group" aria-label="Variant">
+      <div class="seg" role="group" aria-label="Wording">
         <button type="button" data-set="now" aria-pressed="false">Now</button>
-        <button type="button" data-set="a" class="r" aria-pressed="true">A · Signed</button>
-        <button type="button" data-set="b" aria-pressed="false">B · Found</button>
-        <button type="button" data-set="c" aria-pressed="false">C · Knocked</button>
+        <button type="button" data-set="a" class="r" aria-pressed="true">A · Finding</button>
+        <button type="button" data-set="b" aria-pressed="false">B · Printer</button>
+        <button type="button" data-set="c" aria-pressed="false">C · Good dog</button>
+        <button type="button" data-set="d" aria-pressed="false">D · Only mine</button>
       </div>
     </div>
+    <div class="d-table-wrap"><table class="d-table">
+      <thead><tr><th>In the old footer</th><th>Where else it is</th><th>Here</th></tr></thead>
+      <tbody>
+        <tr><td>Chongbo Ning · Design Engineer · London</td><td>The header, on every page</td><td>Out</td></tr>
+        <tr><td>The site's name</td><td>The address bar</td><td>Out</td></tr>
+        <tr><td>LinkedIn</td><td>About</td><td>Out</td></tr>
+        <tr><td>Email</td><td>About only; nowhere on a case page</td><td><b>In</b>, as a link, with Copy</td></tr>
+        <tr><td>The note about AI</td><td>Nowhere else</td><td><b>In</b>, rewritten: the claim is the work, not the words</td></tr>
+      </tbody>
+    </table></div>
+    <div class="d-cap" style="margin-top:28px"><span>At its real size · <span class="hov-key">hover the note, press Copy</span></span></div>
+    <div id="live-foot"></div>
     <div class="d-frames">
-      <div><div class="d-cap"><span>1440 wide · <span class="hov-key">hover the AI line</span></span></div><div class="frame" data-tpl="t-foot" data-w="1440"></div></div>
+      <div><div class="d-cap"><span>1440 wide</span></div><div class="frame" data-tpl="t-foot" data-w="1440"></div></div>
       <div class="phone-col"><div class="d-cap"><span>390 wide · plays once in view</span></div><div class="frame phone" data-tpl="t-foot" data-w="390"></div></div>
     </div>
     <div class="d-notes">
-      <div><h3>The footer</h3>
-        <p data-show="a b c">Left, the promise, in sans at 21px with the "AI" key from the skills cards. Right, "Write to me" (the About ticket's label), the address as selectable text with Copy, and LinkedIn. Under a rule, the name line.</p>
-        <p data-show="now">Today: one line of name and email, and the promise in 12px mono.</p>
+      <div><h3>The wording</h3>
+        <p data-show="a">"AI does the finding. I did the work." Plain, a little dry, and short enough to read in passing. My pick.</p>
+        <p data-show="b">"The printer runs on AI. The work it prints is mine." Ties the note to the machine on the home page; longer.</p>
+        <p data-show="c">"AI fetches the pages, like a good dog. The work on them is mine." The funniest, and the joke carries the meaning: it fetches, it doesn't make. Maybe one wink too many next to the hammer and the eyes.</p>
+        <p data-show="d">"Ask the machine anything. It only knows what I've made." Says how it works (it chooses only from my work), but claims the work less directly.</p>
+        <p data-show="now">Today: name, role, city and email on one line, and the note in 12px mono under it.</p>
+        <p data-show="a b c d">All four are honest: AI helps people find the work, and the work is mine. None claims the words.</p>
       </div>
       <div><h3>The motion</h3>
-        <p data-show="a">A red line is drawn under "Every word in them is mine." like a signature: one of three strokes, 0.5s, drawn back on leaving. The red is the button's red, the one red on the page.</p>
-        <p data-show="b">A highlighter runs word by word over "the parts of my case files that match your question", as the AI does, then lifts. More literal, and busier.</p>
-        <p data-show="c">The promise's words are knocked down in turn and spring back, with the hammer's own values. Closest to the hammer, but it shakes the one sentence meant to feel steady.</p>
-        <p data-show="now">Switch to A, B or C.</p>
+        <p data-show="a b c d">Hover the note: a red line is drawn under the claim, like a signature (one of three strokes, 0.45s, drawn back on leaving). The red is the button's red.</p>
+        <p data-show="a b c d">Copy the address: a small slip prints up out of the button saying "Copied", in the printer's stepped motion, and feeds back down. The address itself opens an email.</p>
+        <p data-show="now">Switch to A, B, C or D.</p>
       </div>
-      <div><h3>Recommendation and cost</h3>
-        <p data-show="a b c">A: it says "mine" without moving the words, and gives the red one more meaning: the button prints, the line signs. A quarter of a day in <code>SiteFooter.tsx</code>; on phones it plays once in view; keyboard focus on the address does the same.</p>
-        <p data-show="now">None.</p>
-      </div>
+      <div><h3>Cost</h3><p data-show="a b c d">A quarter of a day in <code>SiteFooter.tsx</code> and <code>components.css</code>. On phones the note and the address stack, and the signature draws once in view.</p><p data-show="now">None.</p></div>
     </div>
   </section>
 
@@ -634,12 +650,12 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
     <div class="spec">
       <div><div class="lab"><span>Now</span><span>at rest</span></div><div class="big" data-eyes="now"></div><div class="navrow"><span data-eyes="now"></span><span>About</span></div><p>Centred dots in ovals: Geist Mono's 0, twice.</p></div>
       <div><div class="lab"><span>A · Looking up</span></div><div class="big" data-eyes="a"></div><div class="navrow"><span data-eyes="a"></span><span>About</span></div><p>Same ovals. The pupils rest high and to the right, towards the word, and touch the rim.</p></div>
-      <div><div class="lab"><span>B · Looking up, with brows</span></div><div class="big" data-eyes="b"></div><div class="navrow"><span data-eyes="b"></span><span>About</span></div><p>A, plus two short drawn brows. Large, a face; at 20px the brows read as accents, "ōō".</p></div>
-      <div><div class="lab"><span>C · Looking up, touching</span><span class="rec-key">Rec.</span></div><div class="big" data-eyes="c"></div><div class="navrow"><span data-eyes="c"></span><span>About</span></div><p>A, with the ovals touching: the shape of the "eyes" emoji, which people already read as looking. Digits never touch.</p></div>
+      <div><div class="lab"><span>B · Looking up, with brows</span><span class="rec-key">Chosen</span></div><div class="big" data-eyes="b"></div><div class="navrow"><span data-eyes="b"></span><span>About</span></div><p>A, plus two drawn brows, now arched and tilted outward so that at 20px they don't read as accents.</p></div>
+      <div><div class="lab"><span>C · Looking up, touching</span></div><div class="big" data-eyes="c"></div><div class="navrow"><span data-eyes="c"></span><span>About</span></div><p>A, with the ovals touching: the shape of the "eyes" emoji, which people already read as looking. Digits never touch.</p></div>
     </div>
     <div class="d-notes">
       <div><h3>On phones</h3><p>No hover, so the eyes keep themselves alive: a blink every 6 to 9 seconds and a glance towards the last tap, both under 0.3s, still with reduced motion. You can see the blink here.</p></div>
-      <div><h3>Why C</h3><p>It keeps your hand-drawn ovals, the blink and the pointer-following, and changes only what made them digits: the centred dot and the gap. A is the smallest change if C feels too cute.</p></div>
+      <div><h3>Chosen: B</h3><p>It keeps your hand-drawn ovals, the blink and the pointer-following. The brows were flat in round two; at 20px they looked like the accent in "ō". Arched and tilted outward, they read as brows.</p></div>
       <div><h3>Cost</h3><p>A quarter of a day in <code>Pill.tsx</code>: new rest positions, two paths, the idle timer for touch screens.</p></div>
     </div>
   </section>
@@ -664,7 +680,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
       </tbody>
     </table></div>
     <div class="d-notes">
-      <div><h3>The rules</h3><ul><li>One stroke: 1.8, round ends, as the nav icons.</li><li>Three hand-drawn lines, one picked at random each time.</li><li>Draw out 0.4s, the head 0.18s after; back 0.26s. Focus does what hover does.</li></ul></div>
+      <div><h3>The rules</h3><ul><li>One stroke: 1.8, round ends, as the nav icons.</li><li>Short arrows: a wave or a bow, picked at random, 0.3s. The next case file's long arrow can also loop, 0.7s.</li><li>The head follows the line's last direction. Focus does what hover does.</li></ul></div>
       <div><h3>Where it stops</h3><p>Not inside case cards: their controls stay serious (playbook §7). The sheets' foot and the next case file are the shell's, so they qualify.</p></div>
       <div><h3>Cost</h3><p>Half a day for the component and the swaps, once 03 exists. <code>Pill.tsx</code>'s <code>BACK_LINES</code> becomes the shared source.</p></div>
     </div>
@@ -682,7 +698,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
     <span class="s-who"><b>Chongbo Ning</b><span>Design Engineer, London</span></span>
     <nav class="s-nav">
       <span class="s-pill" data-cur="work"><svg class="ico" viewBox="0 0 24 24"><path d="M4.4 19.7c2.6-3.3 5.5-6.4 8.7-9.3"/><path d="M13.4 3.6c2.2 2.1 4.4 4.3 6.5 6.5-1.1 1-2.1 2-3.2 3.1-2.2-2.1-4.3-4.3-6.4-6.5 1-1.1 2-2.1 3.1-3.1z"/></svg>Work</span>
-      <span class="s-pill" data-cur="about"><span data-eyes="c" class="nav-eyes"></span>About</span>
+      <span class="s-pill" data-cur="about"><span data-eyes="b" class="nav-eyes"></span>About</span>
     </nav>
   </header>
 </template>
@@ -767,17 +783,14 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
   <footer class="s-foot"><span>Chongbo Ning · Design Engineer · London · ningchongbo2000@gmail.com</span><span class="note">AI helps you find the parts of my case files that match your question. Every word in them is mine.</span></footer>
 </template>
 <template id="t-foot-new">
-  <footer class="ft">
-    <div class="ai" tabindex="0" data-foot>
-      <span class="chip">AI</span>
-      <p><span class="hl"><span class="w">AI helps you find </span><span class="w">the </span><span class="w">parts </span><span class="w">of </span><span class="w">my </span><span class="w">case </span><span class="w">files </span><span class="w">that </span><span class="w">match </span><span class="w">your </span><span class="w">question. </span></span><span class="promise"><span class="w">Every </span><span class="w">word </span><span class="w">in </span><span class="w">them </span><span class="w">is </span><span class="w">mine.</span><svg class="sig" viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true"><path d="M2 8.5 C 50 4.8, 120 11.6, 198 6.4" pathLength="1" style="stroke-dasharray:1;stroke-dashoffset:1"/></svg></span></p>
-    </div>
-    <div class="contact">
-      <span class="k">Write to me</span>
-      <div class="mail"><span>ningchongbo2000@gmail.com</span><button type="button" class="mini" data-copy="ningchongbo2000@gmail.com" data-done="Copied"><span class="nw">Copy</span></button></div>
-      <div class="links"><a href="#p5" data-arrow="out" style="display:inline-flex;align-items:center;gap:6px">LinkedIn<svg class="ga" style="width:20px;height:20px" aria-hidden="true"></svg></a></div>
-    </div>
-    <div class="base"><span>Chongbo Ning · Design Engineer · London</span><span>chongboning.com</span></div>
+  <footer class="ft3">
+    <p class="note3" tabindex="0" data-foot>
+      <span class="nw" data-line="a">AI does the finding. <b class="claim">I did the work.<svg class="sig" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 6 C 30 3.4, 64 8.6, 98 4.6" style="stroke-dasharray:1 3;stroke-dashoffset:1.6"/></svg></b></span>
+      <span class="nw" data-line="b">The printer runs on AI. <b class="claim">The work it prints is mine.<svg class="sig" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 6 C 30 3.4, 64 8.6, 98 4.6" style="stroke-dasharray:1 3;stroke-dashoffset:1.6"/></svg></b></span>
+      <span class="nw" data-line="c">AI fetches the pages, like a good dog. <b class="claim">The work on them is mine.<svg class="sig" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 6 C 30 3.4, 64 8.6, 98 4.6" style="stroke-dasharray:1 3;stroke-dashoffset:1.6"/></svg></b></span>
+      <span class="nw" data-line="d">Ask the machine anything. <b class="claim">It only knows what I've made.<svg class="sig" viewBox="0 0 100 10" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 6 C 30 3.4, 64 8.6, 98 4.6" style="stroke-dasharray:1 3;stroke-dashoffset:1.6"/></svg></b></span>
+    </p>
+    <span class="mail3"><a href="#p5">ningchongbo2000@gmail.com</a><button type="button" class="cp" data-copy="ningchongbo2000@gmail.com" aria-label="Copy email address"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="back" d="M8.6 7.7c-.1-1.3 0-2.7.1-4 3.6-.2 7.2-.2 10.8 0 .2 3.7.2 7.4 0 11.1-1.3.1-2.6.1-3.9 0"/><path d="M4.6 8.8c3.7-.2 7.3-.2 11 0 .2 3.8.2 7.6 0 11.4-3.7.2-7.3.2-11 0-.2-3.8-.2-7.6 0-11.4z"/></svg><span class="slip" aria-hidden="true"><span class="nw">Copied</span></span></button></span>
   </footer>
 </template>
 
@@ -832,7 +845,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
     vp.querySelectorAll("slot-foot").forEach((s) => {
       const holder = document.createElement("div");
       const o = document.createElement("div"); o.dataset.show = "now"; o.appendChild(tpl("t-foot-old"));
-      const n = document.createElement("div"); n.dataset.show = f.dataset.tpl === "t-foot" ? "a b c" : "a b c"; n.appendChild(tpl("t-foot-new"));
+      const n = document.createElement("div"); n.dataset.show = "a b c d"; n.appendChild(tpl("t-foot-new"));
       holder.append(o, n);
       s.replaceWith(holder);
     });
@@ -841,6 +854,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
     f.appendChild(vp);
     frames.push({ f, vp, w });
   });
+  const lf = document.getElementById("live-foot");
+  if (lf) { lf.appendChild(tpl("t-foot-new")); lf.querySelector(".ft3").classList.add("live"); }
   const fit = () => frames.forEach(({ f, vp, w }) => {
     const k = f.clientWidth / w;
     vp.style.transform = `scale(${k})`;
@@ -863,7 +878,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
   const EYES = {
     now: { r: 1.75, p: [[7.1, 12.1], [17.2, 11.9]], extra: "", shift: 0 },
     a: { r: 2.05, p: [[8.3, 10.2], [18.4, 10.0]], extra: "", shift: 0 },
-    b: { r: 2.05, p: [[8.3, 10.6], [18.4, 10.4]], extra: '<path d="M4.3 3.7c1.4-1 3-1.3 4.7-.7"/><path d="M14.9 3.1c1.6-.8 3.2-.8 4.8 0"/>', shift: 0 },
+    b: { r: 2.05, p: [[8.3, 10.6], [18.4, 10.4]], extra: '<path d="M3.2 3.4c1.3-1.4 3.3-1.9 5.6-1.2"/><path d="M15.4 1.8c2.3-.5 4.2.2 5.4 1.7"/>', shift: 0 },
     c: { r: 2.05, p: [[8.3, 10.2], [15.4, 10.0]], extra: "", shift: -3 },
   };
   const eyeSvg = (k) => {
@@ -896,13 +911,26 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
   }
 
   /* ---------- the hand-drawn arrow ---------- */
-  const LINES = [
-    (L) => `M2 12 C ${L * 0.35} 9.6, ${L * 0.62} 14.6, ${L} 11.8`,
-    (L) => `M2 12.4 C ${L * 0.3} 14.8, ${L * 0.66} 9.2, ${L} 12`,
-    (L) => `M2 11.4 C ${L * 0.42} 10.2, ${L * 0.55} 13.8, ${L} 11.6`,
-  ];
-  const headAt = (x, y) => `M${x - 7} ${y - 5.2} C ${x - 4.4} ${y - 3}, ${x - 1.6} ${y - 1}, ${x + 0.6} ${y} C ${x - 1.8} ${y + 1.4}, ${x - 4.4} ${y + 3.2}, ${x - 6.6} ${y + 5.4}`;
-  const STUB = { grow: 22, nudge: 22, appear: 0, out: 14 };
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+  function shape(v, L, H, kind) {
+    const m = H / 2, amp = clamp(L * 0.034, 1.4, kind === "grow" ? 17 : 3.2);
+    if (v === 1) return `M2 ${m + 1.5} C ${L * 0.3} ${m - amp * 1.5}, ${L * 0.7} ${m - amp * 1.3}, ${L} ${m - 0.5}`;
+    if (v === 2) {
+      const x = Math.min(L * 0.28, 120), t = (L - x) ;
+      return `M2 ${m + 2} C ${x * 0.5} ${m + 3}, ${x - 8} ${m + 5}, ${x + 10} ${m - 1}` +
+        ` C ${x + 24} ${m - 12}, ${x + 14} ${m - 31}, ${x + 2} ${m - 25}` +
+        ` C ${x - 9} ${m - 19}, ${x - 5} ${m + 7}, ${x + 16} ${m + 7}` +
+        ` C ${x + t * 0.35} ${m + 7}, ${x + t * 0.7} ${m - amp * 0.8}, ${L} ${m}`;
+    }
+    return `M2 ${m + 1} C ${L * 0.2} ${m - amp}, ${L * 0.38} ${m + amp}, ${L * 0.58} ${m + 0.2} S ${L * 0.88} ${m - amp * 0.7}, ${L} ${m - 0.4}`;
+  }
+  function headPath(path, at, size) {
+    const tip = path.getPointAtLength(at), back = path.getPointAtLength(Math.max(0, at - 7));
+    const ang = Math.atan2(tip.y - back.y, tip.x - back.x), c = Math.cos(ang), sn = Math.sin(ang);
+    const P = (dx, dy) => `${(tip.x + (dx * c - dy * sn) * size).toFixed(2)} ${(tip.y + (dx * sn + dy * c) * size).toFixed(2)}`;
+    return `M${P(-9.6, -6.4)} Q ${P(-4, -2.4)} ${P(0.6, 0)} Q ${P(-4.6, 2.9)} ${P(-8.8, 6.8)}`;
+  }
+  const STUB = { grow: 28, nudge: 22, appear: 0, out: 14 };
   const mk = (cls) => { const p = document.createElementNS(NS, "path"); p.setAttribute("class", cls); return p; };
   function setupArrow(host) {
     const svg = host.querySelector("svg.ga");
@@ -919,27 +947,30 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
     host.addEventListener("focus", () => { if (host.matches(":focus-visible")) enter(); });
     host.addEventListener("blur", leave);
   }
-  function geometry(host) {
-    const a = host._arrow, w = a.svg.clientWidth || parseFloat(getComputedStyle(a.svg).width) || 40;
-    const L = a.kind === "grow" ? Math.max(30, Math.min(w - 6, 360)) : a.kind === "out" ? 18 : w - 6;
-    a.svg.setAttribute("viewBox", a.kind === "out" ? "0 0 24 24" : `0 0 ${Math.max(w, 24)} 24`);
-    return L;
-  }
   function layoutArrow(host) {
     const a = host._arrow; if (!a) return;
-    const L = geometry(host);
+    const cs = getComputedStyle(a.svg);
+    const w = a.svg.clientWidth || parseFloat(cs.width) || 40, H = a.svg.clientHeight || parseFloat(cs.height) || 24;
+    let L = a.kind === "out" ? 18 : Math.max(24, w - 8);
+    const ttl = a.kind === "grow" && host.querySelector(".ttl");
+    if (ttl) {
+      const sr = a.svg.getBoundingClientRect(), k = sr.width / w || 1;
+      const rg = document.createRange(); rg.selectNodeContents(ttl);
+      const rects = Array.from(rg.getClientRects());
+      if (rects.length && rects[0].top < sr.bottom) L = Math.max(24, (Math.min(...rects.map((r) => r.left)) - sr.left) / k - 20);
+    }
+    a.svg.setAttribute("viewBox", a.kind === "out" ? "0 0 24 24" : `0 0 ${Math.max(w, 24)} ${H}`);
     const shaft = a.svg.querySelector(".ga-shaft"), head = a.svg.querySelector(".ga-head"), sh = a.svg.querySelector(".ga-stubhead");
-    shaft.setAttribute("d", LINES[a.v](L));
-    head.setAttribute("d", headAt(L, LINES[a.v](L).trim().split(" ").pop() * 1));
-    const total = shaft.getTotalLength(), stub = STUB[a.kind];
-    const ht = head.getTotalLength();
+    shaft.setAttribute("d", shape(a.v, L, a.kind === "out" ? 24 : H, a.kind));
+    const total = shaft.getTotalLength(), size = a.kind === "grow" ? 1.4 : 0.85;
+    head.setAttribute("d", headPath(shaft, total, size));
+    const ht = head.getTotalLength(), stub = STUB[a.kind];
     shaft.style.strokeDasharray = `${total} ${total}`;
     head.style.strokeDasharray = `${ht} ${ht}`;
     if (!a.out) {
       shaft.style.strokeDashoffset = Math.max(0, total - stub);
       head.style.strokeDashoffset = ht;
-      const p = stub ? shaft.getPointAtLength(stub) : null;
-      sh.setAttribute("d", p ? headAt(p.x, p.y) : "");
+      sh.setAttribute("d", stub ? headPath(shaft, stub, size * 0.9) : "");
       sh.style.opacity = stub ? 1 : 0;
     }
     a.total = total; a.ht = ht; a.stub = stub;
@@ -948,18 +979,19 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
     const a = host._arrow; if (!a || a.out === out) return;
     a.out = out;
     const shaft = a.svg.querySelector(".ga-shaft"), head = a.svg.querySelector(".ga-head"), sh = a.svg.querySelector(".ga-stubhead");
+    const long = a.kind === "grow";
     if (reduce()) { shaft.style.strokeDashoffset = out ? 0 : a.total - a.stub; head.style.strokeDashoffset = out ? 0 : a.ht; sh.style.opacity = out || !a.stub ? 0 : 1; return; }
     if (out) {
-      a.v = Math.floor(Math.random() * LINES.length);
-      layoutArrow(host); a.out = true;
-      shaft.style.strokeDashoffset = a.total - a.stub; head.style.strokeDashoffset = a.ht;
+      const choices = long && a.total > 160 ? [0, 1, 2, 0, 1, 2] : [0, 1];
+      let v; do { v = choices[Math.floor(Math.random() * choices.length)]; } while (v === a.v && Math.random() < 0.6);
+      a.v = v; a.out = false; layoutArrow(host); a.out = true;
       sh.style.opacity = 0;
-      shaft.animate([{ strokeDashoffset: a.total - a.stub }, { strokeDashoffset: 0 }], { duration: a.kind === "grow" ? 420 : 300, easing: OUT, fill: "forwards" });
-      head.animate([{ strokeDashoffset: a.ht }, { strokeDashoffset: 0 }], { duration: 180, delay: a.kind === "grow" ? 300 : 200, easing: OUT, fill: "forwards" });
+      shaft.animate([{ strokeDashoffset: a.total - a.stub }, { strokeDashoffset: 0 }], { duration: long ? 700 : 300, easing: "cubic-bezier(0.3, 0.75, 0.25, 1)", fill: "forwards" });
+      head.animate([{ strokeDashoffset: a.ht }, { strokeDashoffset: 0 }], { duration: long ? 240 : 170, delay: long ? 600 : 220, easing: OUT, fill: "forwards" });
     } else {
-      head.animate([{ strokeDashoffset: 0 }, { strokeDashoffset: a.ht }], { duration: 120, easing: "ease-in", fill: "forwards" });
-      const anim = shaft.animate([{ strokeDashoffset: 0 }, { strokeDashoffset: a.total - a.stub }], { duration: 260, delay: 60, easing: "ease-in", fill: "forwards" });
-      anim.onfinish = () => { if (!a.out) sh.style.opacity = a.stub ? 1 : 0; };
+      head.animate([{ strokeDashoffset: 0 }, { strokeDashoffset: a.ht }], { duration: 140, easing: "ease-in", fill: "forwards" });
+      const anim = shaft.animate([{ strokeDashoffset: 0 }, { strokeDashoffset: a.total - a.stub }], { duration: long ? 380 : 260, delay: 60, easing: "ease-in", fill: "forwards" });
+      anim.onfinish = () => { if (!a.out) { sh.setAttribute("d", a.stub ? headPath(shaft, a.stub, (long ? 1.4 : 0.85) * 0.9) : ""); sh.style.opacity = a.stub ? 1 : 0; } };
     }
   }
   const layoutArrows = () => document.querySelectorAll("[data-arrow]").forEach((h) => { if (h._arrow && !h._arrow.out) layoutArrow(h); });
@@ -968,7 +1000,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
   /* deck bar buttons: the stub, both ways */
   document.querySelectorAll("[data-deck] button").forEach((b, i) => {
     const back = b.getAttribute("aria-label").startsWith("Prev");
-    b.innerHTML = `<svg viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;${back ? "transform:scaleX(-1)" : ""}"><path d="M3.5 12.2c5.1-.4 10.3-.3 15.6.1"/><path d="${headAt(19.4, 12.3)}"/></svg>`;
+    b.innerHTML = `<svg viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;${back ? "transform:scaleX(-1)" : ""}"><path d="M3.5 12.6c3.2-1.6 6.6 1.2 9.8-.4 2-1 3.9-.5 5.8-.1"/><path d="M13.6 7.2c2.2 1.4 3.9 3 5.7 5 -1.9 1.5-3.6 3.1-5.4 4.9"/></svg>`;
   });
 
   /* ---------- share: the arrow leaves the tray; pressed, the label is knocked into "Link copied" ---------- */
@@ -990,6 +1022,13 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
     if (!b) return;
     e.preventDefault();
     copyText(b.dataset.copy);
+    if (b.classList.contains("cp")) {
+      const slip = b.querySelector(".slip");
+      if (reduce()) { slip.style.clipPath = "inset(0 0 0 0)"; clearTimeout(b._t); b._t = setTimeout(() => (slip.style.clipPath = ""), 1400); return; }
+      slip.getAnimations().forEach((x) => x.cancel());
+      slip.animate([{ clipPath: "inset(100% 0 0 0)" }, { clipPath: "inset(0 0 0 0)", offset: 0.25 }, { clipPath: "inset(0 0 0 0)", offset: 0.82 }, { clipPath: "inset(100% 0 0 0)" }], { duration: 1900, easing: "steps(18, end)" });
+      return;
+    }
     const label = b.querySelector(".pl") || b;
     const inner = label.querySelector("span") || label;
     if (b._was === undefined) b._was = inner.innerHTML;
@@ -999,34 +1038,25 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
     b._t = setTimeout(() => { inner.innerHTML = b._was; }, 1800);
   });
 
-  /* ---------- the footer's promise ---------- */
-  const SIGS = ["M2 8.5 C 50 4.8, 120 11.6, 198 6.4", "M2 7 C 60 11.4, 110 3.6, 198 8.2", "M2 9.2 C 40 6.2, 150 9.8, 198 5.6"];
-  function footVariant(ai) { const sec = ai.closest("#p5"); return sec ? sec.dataset.v : "a"; }
-  function footIn(ai) {
+  /* ---------- the footer: the claim is signed ---------- */
+  const SIGS = ["M2 6 C 30 3.4, 64 8.6, 98 4.6", "M2 4.6 C 34 8.6, 60 2.2, 98 6.2", "M2 7 C 22 4.4, 70 7.6, 98 3.6"];
+  const sigOf = (el) => { const l = el.closest(".ft3"); const k = (l && l.dataset.l) || "a"; return el.querySelector(`[data-line="${k}"] .sig path`); };
+  function footIn(el) {
     if (reduce()) return;
-    const v = footVariant(ai);
-    if (v === "a") {
-      const p = ai.querySelector(".sig path");
-      p.setAttribute("d", SIGS[Math.floor(Math.random() * SIGS.length)]);
-      p.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 520, easing: OUT, fill: "forwards" });
-    } else if (v === "b") {
-      const ws = ai.querySelectorAll(".hl .w");
-      ws.forEach((w, i) => { clearTimeout(w._t); w._t = setTimeout(() => w.classList.add("on"), 120 + i * 70); });
-      ai._clear = setTimeout(() => ws.forEach((w, i) => setTimeout(() => w.classList.remove("on"), i * 30)), 120 + ws.length * 70 + 900);
-    } else if (v === "c") {
-      ai.querySelectorAll(".promise .w").forEach((w, i) => w.animate([{ translate: "0 0", rotate: "0deg" }, { translate: `${rnd(-1.2, 1.2)}px ${rnd(-3.4, -1.4)}px`, rotate: `${rnd(-5, 5)}deg`, offset: 0.3 }, { translate: "0 0", rotate: "0deg" }], { duration: 520, delay: 120 + i * 70, easing: SPRING }));
-      ai.querySelector(".chip").animate([{ scale: 1 }, { scale: 0.9, offset: 0.3 }, { scale: 1 }], { duration: 300, easing: SPRING });
-    }
+    const p = sigOf(el); if (!p) return;
+    p.setAttribute("d", SIGS[Math.floor(Math.random() * SIGS.length)]);
+    p.animate([{ strokeDashoffset: 1.6 }, { strokeDashoffset: 0 }], { duration: 450, easing: OUT, fill: "forwards" });
   }
-  function footOut(ai) {
-    const v = footVariant(ai);
-    if (v === "a" && !reduce()) ai.querySelector(".sig path").animate([{ strokeDashoffset: 0 }, { strokeDashoffset: 1 }], { duration: 280, easing: "ease-in", fill: "forwards" });
+  function footOut(el) {
+    if (reduce()) return;
+    const p = sigOf(el); if (!p) return;
+    p.animate([{ strokeDashoffset: 0 }, { strokeDashoffset: 1.6 }], { duration: 260, easing: "ease-in", fill: "forwards" });
   }
-  document.querySelectorAll("[data-foot]").forEach((ai) => {
-    ai.addEventListener("pointerenter", (e) => { if (e.pointerType !== "touch") footIn(ai); });
-    ai.addEventListener("pointerleave", (e) => { if (e.pointerType !== "touch") footOut(ai); });
-    ai.addEventListener("focus", () => footIn(ai));
-    ai.addEventListener("blur", () => footOut(ai));
+  document.querySelectorAll("[data-foot]").forEach((el) => {
+    el.addEventListener("pointerenter", (e) => { if (e.pointerType !== "touch") footIn(el); });
+    el.addEventListener("pointerleave", (e) => { if (e.pointerType !== "touch") footOut(el); });
+    el.addEventListener("focus", () => footIn(el));
+    el.addEventListener("blur", () => footOut(el));
   });
 
   /* ---------- phones and touch: each thing plays once as it comes into view ---------- */
@@ -1052,7 +1082,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-o
   const applyVariant = (sec) => {
     const v = sec.dataset.v;
     sec.querySelectorAll(".wc").forEach((c) => c.classList.toggle("mv", sec.id === "p2" ? v === "a" : false));
-    sec.querySelectorAll(".sig path").forEach((p) => p.animate([{ strokeDashoffset: 1 }], { duration: 0, fill: "forwards" }));
+    if (sec.id === "p5") sec.querySelectorAll(".ft3").forEach((f) => (f.dataset.l = v === "now" ? "a" : v));
   };
   document.querySelectorAll("[data-v]").forEach((sec) => {
     applyVariant(sec);
