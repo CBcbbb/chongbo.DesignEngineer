@@ -1,7 +1,7 @@
 import type { Project } from "../schema";
 
 /**
- * Copy: docs/case-studies/components-for-any-data/copy.md (draft 2, approved 11 October 2026). Every fact traces to
+ * Copy: docs/case-studies/components-for-any-data/copy.md (as live, 12 October 2026). Every fact traces to
  * docs/case-studies/components-for-any-data/inventory.md → "Facts and their sources".
  *
  * Confidentiality (playbook §9): never name the employer, its products (the store's real name included), its
