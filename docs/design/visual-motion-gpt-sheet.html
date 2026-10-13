@@ -1,0 +1,152 @@
+<title>GPT Detail Sheet</title>
+<meta name="description" content="Five detail images for the chongboning.com shell, each with its prompt ready to copy into GPT." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" />
+<style>
+  /* Layout: one reading column; one sheet of paper per image, the prompt in a mono block with its own copy button. */
+  :root {
+    --studio: #e9e7e2;
+    --paper: #fbfaf7;
+    --ink: #1c1b19;
+    --ink-2: #5b5853;
+    --rule: #dcd8d0;
+    --code: #f1eee8;
+    --red: #c9372a;
+    --green: #2f8f5b;
+    --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --studio: #1a1918; --paper: #23211f; --ink: #eeece8; --ink-2: #aba79f; --rule: #3a3835; --code: #1c1b19; --green: #6fcf9a; color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --studio: #1a1918; --paper: #23211f; --ink: #eeece8; --ink-2: #aba79f; --rule: #3a3835; --code: #1c1b19; --green: #6fcf9a; color-scheme: dark; }
+  body { margin: 0; background: var(--studio); color: var(--ink); font: 400 15px/1.55 var(--sans); -webkit-font-smoothing: antialiased; }
+  .page { max-width: 760px; margin: 0 auto; padding: 28px 16px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .eyebrow { margin: 0; font: 500 11.5px var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); }
+  h1 { margin: 4px 0 0; font: 600 clamp(26px, 5vw, 36px) / 1.08 var(--sans); letter-spacing: -0.03em; }
+  .lede { margin: 8px 0 0; color: var(--ink-2); max-width: 60ch; }
+  .how { margin: 0; padding: 14px 16px; border-radius: 8px; background: var(--paper); box-shadow: 0 0 0 1px var(--rule); display: grid; gap: 4px; }
+  .how b { font-weight: 600; }
+  .sheet { background: var(--paper); border-radius: 6px; padding: 20px; display: grid; gap: 12px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 18px 32px -24px rgba(30, 26, 20, 0.4); }
+  .top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .top h2 { margin: 0; font: 600 19px/1.2 var(--sans); letter-spacing: -0.015em; }
+  .top span { font: 500 12px var(--mono); color: var(--ink-2); }
+  dl { margin: 0; display: grid; grid-template-columns: 6.5em minmax(0, 1fr); gap: 4px 12px; font-size: 14px; }
+  dt { color: var(--ink-2); }
+  dd { margin: 0; min-width: 0; }
+  dd code { font: 500 12.5px var(--mono); background: var(--code); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+  .prompt { position: relative; }
+  pre { margin: 0; padding: 14px 14px 52px; border-radius: 6px; background: var(--code); box-shadow: inset 0 0 0 1px var(--rule); font: 400 13px/1.55 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .copy { position: absolute; right: 10px; bottom: 10px; min-height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--ink); background: var(--ink); color: var(--studio); font: 600 13px var(--sans); cursor: pointer; }
+  .copy.done { background: var(--green); border-color: var(--green); color: #fff; }
+  .copy:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .avoid { margin: 0; font-size: 13.5px; color: var(--ink-2); }
+  .avoid b { color: var(--ink); font-weight: 600; }
+  .not { margin: 0; padding: 14px 16px; border-left: 2px solid var(--red); background: var(--paper); border-radius: 0 6px 6px 0; font-size: 14px; }
+  @media (max-width: 520px) { dl { grid-template-columns: 1fr; gap: 0; } dd { margin-bottom: 6px; } }
+</style>
+
+<div class="page">
+  <header>
+    <p class="eyebrow">Printed to order · detail images</p>
+    <h1>给 GPT 的五张细节图</h1>
+    <p class="lede">机器已经定了。这五张让整页从"一张好看的图"变成"一个完整的物件世界"：晚上的灯光、拍摄背景、纸的质感、热敏纸的切口、和图标。</p>
+  </header>
+
+  <p class="how"><b>怎么用：</b>每张都在 GPT 里新开一个对话。需要上传参考图的，先上传，再点"复制提示词"粘贴发送。出来的图直接发给我，抠图、调色、做成无缝、量坐标都由我来。</p>
+
+  <section class="sheet" aria-labelledby="h1a">
+    <div class="top"><h2 id="h1a">1 · 夜间的机器（深色模式）</h2><span>printer-v3-night.png</span></div>
+    <dl>
+      <dt>用在</dt><dd>深色模式下的首页机器。现在深色下还是白天的光，奶油色在黑底上太亮、像贴上去的。</dd>
+      <dt>上传</dt><dd>你上次给我的定稿渲染（奶油色、罗纹底座、滚花红键那张）</dd>
+      <dt>尺寸</dt><dd>和原图一样，横版最大尺寸</dd>
+    </dl>
+    <div class="prompt"><pre id="p1">Edit the attached product photograph. Keep the machine, the camera, the framing and every part exactly where it is and at exactly the same size. Change only the lighting.
+
+The same machine photographed at night on a dark desk, lit by one warm desk lamp from the upper left (about 3000K), with a soft falloff so the right end of the body is a little darker than the left. A thin, cool rim light runs along the top edge and separates the machine from the background.
+
+The cream body stays cream, the red key stays red, the ribbed base stays dark. The display stays switched off and completely blank: no text, no pixels, no glow.
+
+Background: flat solid #1a1918. No floor and no shadow under the machine. No text or logos anywhere. Sharp at every edge.</pre><button class="copy" type="button" data-for="p1">复制提示词</button></div>
+    <p class="avoid"><b>避免：</b>换角度或改大小；屏幕亮起；整台机器变成暗灰色（要的是暖光照着的奶油色，不是关灯）。</p>
+  </section>
+
+  <section class="sheet" aria-labelledby="h2a">
+    <div class="top"><h2 id="h2a">2 · 拍摄背景（浅色和深色各一张）</h2><span>studio-light.jpg · studio-dark.jpg</span></div>
+    <dl>
+      <dt>用在</dt><dd>全站背景。现在是纯色加一圈渐变；换成真的摄影棚无缝纸，机器和纸张才像真的放在那里。</dd>
+      <dt>上传</dt><dd>不用</dd>
+      <dt>尺寸</dt><dd>横版最大尺寸。深色那张：把提示词里的颜色换成括号里的</dd>
+    </dl>
+    <div class="prompt"><pre id="p2">A photographic studio backdrop for a website background: a seamless paper sweep in warm light grey (close to #e9e7e2), lit by one large softbox from above and slightly to the left, so the top centre is a little brighter (close to #f5f4f0) and the corners fall off very gently.
+
+An extremely subtle paper fibre texture, visible only up close. Nothing else in the frame: no objects, no horizon line, no visible curve of the sweep, no vignette. Even, calm and premium, like the background of a high-end product photograph.
+
+(Dark version: warm charcoal close to #1a1918, the top centre close to #2a2826.)</pre><button class="copy" type="button" data-for="p2">复制提示词</button></div>
+    <p class="avoid"><b>避免：</b>桌面、墙角、地平线；明显的暗角；任何物件。</p>
+  </section>
+
+  <section class="sheet" aria-labelledby="h3a">
+    <div class="top"><h2 id="h3a">3 · 纸的质感</h2><span>paper-grain.png</span></div>
+    <dl>
+      <dt>用在</dt><dd>输入的那张纸、打印出来的纸（纸边，不进卡片内容）、技能卡、About 收据、404。很淡，大约 4%，只在近看时感觉得到。</dd>
+      <dt>上传</dt><dd>不用</dd>
+      <dt>尺寸</dt><dd>正方形最大尺寸。做成无缝贴图是我的事</dd>
+    </dl>
+    <div class="prompt"><pre id="p3">A flat, straight-on scan of premium uncoated thermal receipt paper, off-white (close to #fbfaf7), evenly lit, with no shadows, no gradient, no edges, no folds and no print.
+
+Only the paper's fine fibres and a very faint tooth, low in contrast. The paper fills the whole square frame.</pre><button class="copy" type="button" data-for="p3">复制提示词</button></div>
+    <p class="avoid"><b>避免：</b>褶皱、污渍、打印痕迹、纸边、光影变化。</p>
+  </section>
+
+  <section class="sheet" aria-labelledby="h4a">
+    <div class="top"><h2 id="h4a">4 · 热敏纸的锯齿切口</h2><span>cut-edge.png</span></div>
+    <dl>
+      <dt>用在</dt><dd>About 收据和 404 的底边（替换现在 CSS 画的锯齿），输入纸的顶边。打印出来的纸不加，保证和案例卡完全一样。</dd>
+      <dt>上传</dt><dd>不用</dd>
+      <dt>尺寸</dt><dd>横版最大尺寸</dd>
+    </dl>
+    <div class="prompt"><pre id="p4">A macro photograph of the bottom edge of a strip of off-white thermal receipt paper, cut by a serrated tear bar: a crisp, regular row of small sawtooth points across the full width, with a few slightly lifted fibres at the tips.
+
+Shot straight on with flat, even lighting. The paper fills the top two thirds of the frame; below its edge the background is flat pure black (#000000). No print and no text.</pre><button class="copy" type="button" data-for="p4">复制提示词</button></div>
+    <p class="avoid"><b>避免：</b>撕得不规则的边；纸卷曲或倾斜；阴影。</p>
+  </section>
+
+  <section class="sheet" aria-labelledby="h5a">
+    <div class="top"><h2 id="h5a">5 · 红键图标</h2><span>key-icon.png</span></div>
+    <dl>
+      <dt>用在</dt><dd>手机收藏到桌面的图标（180px）、浏览器标签图标（32px）。16px 那一档还用现在的矢量图。</dd>
+      <dt>上传</dt><dd>定稿渲染（同第 1 张），让按键和机器上的一模一样</dd>
+      <dt>尺寸</dt><dd>正方形最大尺寸</dd>
+    </dl>
+    <div class="prompt"><pre id="p5">A product photograph of the round red push key from the attached printer, on its own: the same glossy, gently domed red cap (close to #c9372a) in the same polished chrome bezel with a fine knurled edge.
+
+Seen straight from the front, centred, filling about 80% of a square frame. One clean highlight at the upper left, soft light, sharp edges.
+
+Background: flat warm grey #e9e7e2. No text, no symbols on the key, no shadow on the background.</pre><button class="copy" type="button" data-for="p5">复制提示词</button></div>
+    <p class="avoid"><b>避免：</b>斜着拍；按键上有字或符号；和机器上的按键颜色不一样。</p>
+  </section>
+
+  <p class="not"><b>GPT 不适合做的：</b>所有会动的东西（按键、出纸、屏幕、读取光，都是代码）；精确的颜色和无缝拼接（我在后期调）；分享图（你说不需要，不做了）。</p>
+</div>
+
+<script>
+  document.querySelectorAll(".copy").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const pre = document.getElementById(btn.dataset.for);
+      const text = pre.textContent;
+      let ok = false;
+      try { await navigator.clipboard.writeText(text); ok = true; } catch (e) { ok = false; }
+      if (!ok) {
+        const r = document.createRange(); r.selectNodeContents(pre);
+        const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        btn.textContent = "已选中，请手动复制";
+      } else {
+        btn.textContent = "已复制";
+        btn.classList.add("done");
+      }
+      setTimeout(() => { btn.textContent = "复制提示词"; btn.classList.remove("done"); }, 2200);
+    });
+  });
+</script>
