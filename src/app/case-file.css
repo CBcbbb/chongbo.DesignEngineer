@@ -2882,3 +2882,34 @@
     text-align: left;
   }
 }
+
+/* ---------- 01.5 data collection: 665px → 628px at 1180px and up ---------- */
+/* Previous and Next join the tabs on one row, the step's sentence under them; the stage keeps its size */
+@media (min-width: 761px) {
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-evidence {
+    margin-top: 0.5rem;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: clamp(1rem, 2.4cqi, 1.5rem);
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe > * {
+    grid-column: 1 / -1;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-caption {
+    display: contents;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-nav {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+  }
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-text {
+    grid-column: 1 / -1;
+    padding: 10px 0 12px;
+  }
+}
