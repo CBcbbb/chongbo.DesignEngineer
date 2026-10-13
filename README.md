@@ -46,6 +46,14 @@ Playwright uses a system Chromium at `/opt/pw-browsers/chromium-1194/chrome-linu
 | `NEXT_PUBLIC_SITE_URL` | build + server | Public URL for canonical links, sitemap and Open Graph images, e.g. `https://chongbo.dev`. Defaults to `http://localhost:3000`. |
 | `ASK_RATE_LIMIT` | server, optional | Questions per IP per minute (default 12). |
 | `ASK_DAILY_CAP` | server, optional | Best-effort daily cap on model calls per server instance (default 1500). Past the cap, answers come from the fallback. |
+| `NEXT_PUBLIC_POSTHOG_KEY` | build | Turns on visitor analytics (PostHog, EU cloud, cookieless). Without it nothing is loaded or sent. |
+| `NEXT_PUBLIC_POSTHOG_DEBUG` | build, optional | `1` logs PostHog's activity in the browser console. |
+
+## Visitor analytics
+
+`src/instrumentation-client.ts` starts PostHog when `NEXT_PUBLIC_POSTHOG_KEY` is set; `src/lib/analytics.ts` lists the events. Cookieless (no cookies or browser storage; turn on "Cookieless server hash mode" in the PostHog project settings, or events are dropped), no session recording, no autocapture, sent through `/ingest` on this site (rewrites in `next.config.ts`).
+
+Events: `$pageview`, `skill_toggled`, `printed` (skills, the brief's length but never its words, the cards printed), `sheet_viewed`, `read_in_context_clicked`, `case_card_viewed` (each case-file card read for 1.5 s or more, with the seconds), `contact_clicked`, `outbound_clicked`. A link sent with an application can carry `?ref=<name>` (e.g. `/ask?topics=accessibility&ref=granola`); it is attached to every event of that visit.
 
 ## How "ask" works
 

@@ -6,6 +6,7 @@ import { getProject, projects, SIGNALS } from "@content";
 import { NikeCase } from "@/components/case/nike/NikeCase";
 import { WildEchoCase } from "@/components/case/wildecho/WildEchoCase";
 import { CaseFile as CaseFileTemplate } from "@/components/casefile/CaseFile";
+import { CardViews } from "@/components/CardViews";
 import { MediaSlot } from "@/components/media/MediaSlot";
 import { PartsRail } from "@/components/PartsRail";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -58,6 +59,7 @@ export default async function CaseFile({ params }: Props) {
         <div className="wrap">
           <SiteFooter />
         </div>
+        <CardViews project={project.slug} />
       </>
     );
   }
@@ -75,6 +77,7 @@ export default async function CaseFile({ params }: Props) {
         <div className="wrap">
           <SiteFooter />
         </div>
+        <CardViews project={project.slug} />
       </>
     );
   }

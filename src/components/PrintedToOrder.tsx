@@ -8,6 +8,7 @@ import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type 
 import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
 import { BROWSE_ALL, EXAMPLES, PICKED_HINT, TOPICS, missingLine, pad2, printedCount, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
 import { Pill } from "./nav/Pill";
+import { track } from "@/lib/analytics";
 import type { PrintedCard } from "./PrintedCard";
 import { Sheet } from "./Sheet";
 
@@ -124,6 +125,7 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
   // ---------- skills cards ----------
   const toggle = (id: string, el?: HTMLElement | null) => {
     if (busyRef.current) return;
+    track("skill_toggled", { skill: topicById(id)?.label ?? id, on: !picked.includes(id) });
     setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
     // A card picked up gets a small random tilt and settles; the layout never moves.
     if (el && !prefersReduced())
@@ -173,6 +175,16 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
     const sheets = outcome.ok
       ? outcome.data.sheets.map((s) => cards[cardKey(s.project, s.section)]).filter((c): c is SheetCard => Boolean(c))
       : [];
+    // what was asked for and what printed; a brief's words are never sent, only how long it was
+    track("printed", {
+      skills: labels,
+      brief_chars: text.trim().length,
+      ok: outcome.ok,
+      source: outcome.ok ? outcome.data.source : null,
+      asked: outcome.ok ? outcome.data.asked : [],
+      cards: sheets.map((c) => cardKey(c.project, c.section)),
+      start_here: startHere,
+    });
     const next = [...list];
     if (!labels.length && outcome.ok && !startHere) next[1] = outcome.data.asked.slice(0, 2).map((s) => SIGNALS[s]).join(", ");
     next[2] = !outcome.ok
@@ -276,6 +288,14 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
       window.removeEventListener("resize", fit);
     };
   }, [result]);
+
+  // Which sheet is at the front of the strip, once it has stayed there a moment (not each one swiped past).
+  useEffect(() => {
+    const c = result?.cards[cur];
+    if (!c) return;
+    const t = setTimeout(() => track("sheet_viewed", { card: cardKey(c.project, c.section), index: cur + 1, of: result!.cards.length }), 800);
+    return () => clearTimeout(t);
+  }, [cur, result]);
 
   // The sheets sit side by side on wide screens: arrows, keys and swiping move along the strip; the counter follows the scroll.
   const n = result?.cards.length ?? 0;

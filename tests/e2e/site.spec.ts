@@ -243,3 +243,18 @@ test.describe("layout", () => {
     expect(small).toEqual([]);
   });
 });
+
+test.describe("analytics", () => {
+  test("without an analytics key nothing is sent and nothing is stored", async ({ page, context }) => {
+    const sent: string[] = [];
+    page.on("request", (r) => {
+      if (/\/ingest\/|posthog/.test(r.url())) sent.push(r.url());
+    });
+    await page.goto("/?ref=test");
+    await printAccessibility(page);
+    await page.locator(".sheets .sheet").first().locator(".full").click();
+    await page.waitForTimeout(1500);
+    expect(sent).toEqual([]);
+    expect(await context.cookies()).toEqual([]);
+  });
+});
