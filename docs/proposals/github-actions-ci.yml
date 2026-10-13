@@ -1,0 +1,68 @@
+# Proposal, not active: GitHub only runs workflows from .github/workflows/.
+# To turn it on, move this file to .github/workflows/ci.yml.
+#
+# Runs the same gates as a local check before a push (README, "Quality gates") on every pull request and on every
+# push to a branch other than main, so a branch is known green before it is merged. It never deploys anything;
+# Vercel still deploys main (and preview) on its own.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches-ignore: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      # No model key in CI: the e2e tests exercise the keyword fallback, as they do locally.
+      ANTHROPIC_API_KEY: ""
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint (no warnings)
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Contrast (WCAG AA, light and dark)
+        run: npm run contrast
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Chromium for Playwright
+        run: |
+          npx playwright install --with-deps chromium
+          echo "PW_CHROMIUM=$(node -e "console.log(require('playwright').chromium.executablePath())")" >> "$GITHUB_ENV"
+
+      - name: End-to-end tests (Playwright + axe)
+        run: npm run test:e2e -- --project=desktop --project=mobile
+
+      - name: Keep the Playwright output when something fails
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-output
+          path: test-results/
+          retention-days: 7

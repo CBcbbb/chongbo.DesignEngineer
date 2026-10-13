@@ -11,7 +11,7 @@ The portfolio of Chongbo Ning, a design engineer in London. A red ticket printer
 
 ## Stack
 
-Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS v4 · Zod · Anthropic TypeScript SDK · Geist and Geist Mono (self-hosted via the `geist` package) · Vitest · Playwright + axe-core.
+Next.js 16 (App Router) · TypeScript (strict) · Tailwind CSS v4 · Zod · Anthropic TypeScript SDK · Geist and Geist Mono (self-hosted via the `geist` package; the design-system and WildEcho case files add their own faces from `@fontsource-variable`, self-hosted too) · PostHog (optional) · Vitest · Playwright + axe-core.
 
 Motion is plain CSS and the Web Animations API (no animation library): the thermal-printer feed is a `steps()` height transition, and the shell's capsule links (`src/components/nav/Pill.tsx`) animate with `element.animate()`, so the client bundle stays small.
 
@@ -26,7 +26,7 @@ npm run dev                  # http://localhost:3000
 Quality gates:
 
 ```bash
-npm run lint
+npm run lint        # fails on any warning
 npm run typecheck
 npm test            # unit tests (Vitest)
 npm run build
@@ -43,7 +43,7 @@ Playwright uses a system Chromium at `/opt/pw-browsers/chromium-1194/chrome-linu
 | Name | Where | Purpose |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | server only | Lets Claude choose the answer cards. Optional: without it the keyword fallback answers everything. |
-| `NEXT_PUBLIC_SITE_URL` | build + server | Public URL for canonical links, sitemap and Open Graph images, e.g. `https://chongbo.dev`. Defaults to `http://localhost:3000`. |
+| `NEXT_PUBLIC_SITE_URL` | build + server | Public URL for canonical links, sitemap and Open Graph images, e.g. `https://chongboning.com`. Without it, Vercel builds use the project's production domain (`VERCEL_PROJECT_PRODUCTION_URL`) and local builds `http://localhost:3000`. |
 | `ASK_RATE_LIMIT` | server, optional | Questions per IP per minute (default 12). |
 | `ASK_DAILY_CAP` | server, optional | Best-effort daily cap on model calls per server instance (default 1500). Past the cap, answers come from the fallback. |
 | `NEXT_PUBLIC_POSTHOG_KEY` | build | Turns on visitor analytics (PostHog, EU cloud, cookieless). Without it nothing is loaded or sent. |
@@ -131,14 +131,21 @@ Images and video referenced by content live in `public/assets/<path>`. Missing f
 ## Project layout
 
 ```
-content/              typed content: the single source of truth
-src/app/              routes, metadata, OG images, sitemap, robots
-src/app/tokens.css    design tokens (light + dark)
-src/app/components.css component styles (Tailwind components layer)
-src/components/       Machine (client), Ticket, Tray, MediaSlot, diagrams
-src/lib/ask/          schema, catalogue, model, fallback, sanitise, rate limit
-scripts/contrast.ts   WCAG contrast check
-tests/unit/           Vitest
-tests/e2e/            Playwright + axe, screenshots
-docs/design/          the approved prototype and reference screens
+content/                    typed content: the single source of truth (schema.ts, one file per project)
+src/app/                    routes, metadata, OG images, sitemap, robots, /api/ask
+src/app/tokens.css          design tokens (light + dark)
+src/app/printer.css         the home page's printer, skills cards and sheet deck, and the case-file parts rail
+src/app/shell.css           the shell: drawn arrow, covers, /work, next case file, sharing a print, footer
+src/app/case-file.css       the shared case-file template; case-palettes.css holds each project's palette
+src/app/components.css      base layout and component styles (Tailwind components layer)
+src/components/             PrintedToOrder (the home page's client), Sheet, PrintedCard, header and footer
+src/components/casefile/    the case-file template (CaseFile.tsx) and its blocks
+src/components/case/        bespoke cases (nike, wildecho) and each project's own modules
+src/components/shell/       the shell's drawn arrow, next case file, covers, share link
+src/lib/ask/                schema, catalogue, model, fallback, sanitise, arrange, rate limit
+src/lib/printed.ts          the skills cards and the wording around a print
+scripts/                    asset manifest, contrast check, printer eval, README GIF, the old Wix page scraper
+tests/unit/                 Vitest
+tests/e2e/                  Playwright + axe, card heights, screenshots
+docs/case-studies/          the playbook and each project's notes; docs/design/ the prototypes
 ```
