@@ -26,15 +26,14 @@ export const analyticsKey = (): string => process.env.NEXT_PUBLIC_POSTHOG_KEY ??
  * PostHog, once instrumentation-client.ts has loaded it (only when there is a key, so the library stays off the page
  * otherwise). Kept on window: instrumentation-client is bundled apart from the app, so a module variable could be two.
  */
-type WithAnalytics = Window & { __analytics?: PostHog };
 export function setAnalytics(instance: PostHog): void {
-  (window as WithAnalytics).__analytics = instance;
+  window.__analytics = instance;
 }
 
 /** Send one event. Safe to call anywhere on the client; does nothing without a key or before PostHog has loaded. */
 export function track(event: AnalyticsEvent, props: Props = {}): void {
   if (typeof window === "undefined") return;
-  const ph = (window as WithAnalytics).__analytics;
+  const ph = window.__analytics;
   if (!ph) return;
   try {
     ph.capture(event, props);

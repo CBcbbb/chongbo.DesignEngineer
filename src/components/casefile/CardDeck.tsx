@@ -5,7 +5,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type CSSProperties,
   type KeyboardEvent,
 } from "react";
 
@@ -83,7 +82,7 @@ export function CardDeck({
   return (
     <figure
       className="cf-figure cf-deck"
-      style={{ "--n": cards.length, "--ar": ar } as CSSProperties}
+      style={{ "--n": cards.length, "--ar": ar }}
     >
       <div className="cf-deck-in">
         <div
@@ -109,7 +108,7 @@ export function CardDeck({
                   "--i": i,
                   "--o": i - mid,
                   "--o2": (i - mid) * (i - mid),
-                } as CSSProperties
+                }
               }
               onClick={() => pick(i)}
               onPointerEnter={(e) => {

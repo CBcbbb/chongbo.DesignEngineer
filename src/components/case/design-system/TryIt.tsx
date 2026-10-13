@@ -53,7 +53,7 @@ export function TryIt() {
         </div>
         <div className="tp-right">
           <div className="ds-seg" role="radiogroup" aria-label="Mode">
-            {(["light", "dark"] as Mode[]).map((m) => (
+            {(["light", "dark"] satisfies Mode[]).map((m) => (
               <label key={m}>
                 <input type="radio" name="ds-tp-mode" value={m} checked={mode === m} onChange={() => setMode(m)} />
                 {m === "light" ? "Light" : "Dark"}
@@ -67,7 +67,7 @@ export function TryIt() {
       </div>
       <div
         className={`tp-app ui${show ? " show-ratios" : ""}`}
-        style={{ ...styleOf(t), "--font": c.font, "--r": c.r, "--btn-r": c.btn, colorScheme: mode } as React.CSSProperties}
+        style={{ ...styleOf(t), "--font": c.font, "--r": c.r, "--btn-r": c.btn, colorScheme: mode }}
       >
         <div className="tp-head">
           <span className="tp-logo" aria-hidden="true">

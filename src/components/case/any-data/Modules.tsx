@@ -535,7 +535,7 @@ export function AxisPickers() {
     setSt(suggest(streamById(id).fields!));
   };
   const pick = (role: RoleKey) => (field: string) =>
-    setSt((x) => ({ mapping: { ...x.mapping, [role]: field } as Mapping, confs: { ...x.confs, [role]: "manual" } }));
+    setSt((x) => ({ mapping: { ...x.mapping, [role]: field }, confs: { ...x.confs, [role]: "manual" } }));
   const missing = missingRoles(s, st.mapping);
   const base = useId();
   const ax = (role: RoleKey) => (

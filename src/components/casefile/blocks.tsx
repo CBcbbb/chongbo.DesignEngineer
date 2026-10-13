@@ -1,5 +1,4 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
 import type { Check, Media, Metric, Section, Specimen, Step } from "@content";
 import { assetExists, imageSize } from "@/lib/assets";
 import { CodeBlock } from "@/components/media/CodeBlock";
@@ -266,10 +265,10 @@ function Row({ items }: { items: { asset: string; alt: string; need?: string; la
     <div className="cf-cq">
       <div
         className="cf-row"
-        style={{ "--sum": sum.toFixed(3), "--inv": r.reduce((a, b) => a + 1 / b, 0).toFixed(3), "--gaps": `${(items.length - 1) * 24}px` } as CSSProperties}
+        style={{ "--sum": sum.toFixed(3), "--inv": r.reduce((a, b) => a + 1 / b, 0).toFixed(3), "--gaps": `${(items.length - 1) * 24}px` }}
       >
         {items.map((it, i) => (
-          <div key={it.asset} className="cf-row-item" style={{ "--r": r[i]!.toFixed(3) } as CSSProperties}>
+          <div key={it.asset} className="cf-row-item" style={{ "--r": r[i]!.toFixed(3) }}>
             <Shot asset={it.asset} alt={it.alt} need={it.need} sizes="(min-width: 1100px) 460px, 100vw" />
             {it.label && <p className="cf-label">{it.label}</p>}
           </div>
@@ -312,7 +311,7 @@ export function CaseMedia({
               sizes="(min-width: 1100px) 860px, 100vw"
               priority={priority}
               quality={Q}
-              style={{ "--r": (dim.width / dim.height).toFixed(4) } as CSSProperties}
+              style={{ "--r": (dim.width / dim.height).toFixed(4) }}
             />
           </figure>
         );

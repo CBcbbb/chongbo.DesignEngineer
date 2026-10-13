@@ -195,7 +195,7 @@ export function InCode() {
               </span>
               <span className="ide-addr">localhost:3000/preview</span>
               <span className="fx-seg" role="radiogroup" aria-label="Preview mode">
-                {(["light", "dark"] as Mode[]).map((m) => (
+                {(["light", "dark"] satisfies Mode[]).map((m) => (
                   <label key={m}>
                     <input type="radio" name="ds-pv-mode" value={m} checked={mode === m} onChange={() => setMode(m)} />
                     {m === "light" ? "Light" : "Dark"}

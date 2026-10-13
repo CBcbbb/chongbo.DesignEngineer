@@ -16,7 +16,7 @@ import { ASKED_MAX, BRIEF_MAX, MAX_SHEETS, RANKED_MAX, withLegacy, type AskReque
  * (near the timeout) and added weaker cards; at its default effort it timed out on the job description.
  */
 export const MODEL = "claude-sonnet-5-5";
-export const MODEL_EFFORT = "low";
+export const MODEL_EFFORT: "low" | "medium" | "high" = "low";
 export const MODEL_TIMEOUT_MS = 10000;
 /**
  * Room for the whole answer. 800 was too tight once the catalogue grew: answers were cut off mid-JSON and every
@@ -91,7 +91,7 @@ const SYSTEM_PROMPT = buildSystemPrompt();
 
 /** The slice of the SDK we use; lets tests inject a fake. */
 export type ParseClient = {
-  messages: { parse: (params: never, options?: { timeout?: number; maxRetries?: number; signal?: AbortSignal }) => Promise<{ parsed_output?: unknown; stop_reason?: string | null }> };
+  messages: { parse: (params: Parameters<Anthropic["messages"]["parse"]>[0], options?: { timeout?: number; maxRetries?: number; signal?: AbortSignal }) => Promise<{ parsed_output?: unknown; stop_reason?: string | null }> };
 };
 
 let defaultClient: Anthropic | null = null;
@@ -99,7 +99,7 @@ function getClient(): ParseClient | null {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return null;
   defaultClient ??= new Anthropic({ apiKey });
-  return defaultClient as unknown as ParseClient;
+  return defaultClient;
 }
 
 export function userMessage(req: Pick<AskRequest, "brief" | "topics">): string {
@@ -128,7 +128,7 @@ export async function askModel(
       messages: [{ role: "user" as const, content: userMessage(req) }],
       output_config: { format: zodOutputFormat(ModelOutput), effort: MODEL_EFFORT },
     };
-    const message = await client.messages.parse(params as never, {
+    const message = await client.messages.parse(params, {
       timeout: timeoutMs,
       maxRetries: 0,
       signal: controller.signal,

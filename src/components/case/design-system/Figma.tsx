@@ -82,7 +82,7 @@ export function FigmaLibrary() {
           <div className="fx-vars" role="group" aria-label="Variables">
             <small>Variables</small>
             <div className="fx-modes" role="radiogroup" aria-label="Mode">
-              {(["light", "dark"] as Mode[]).map((m) => (
+              {(["light", "dark"] satisfies Mode[]).map((m) => (
                 <label key={m}>
                   <input type="radio" name="ds-fx-mode" value={m} checked={mode === m} onChange={() => setMode(m)} />
                   {m === "light" ? "Light" : "Dark"}

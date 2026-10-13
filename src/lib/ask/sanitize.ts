@@ -16,7 +16,7 @@ const hasMarkup = (t: string) => /[<>]|https?:\/\/|www\./i.test(t);
 export function sanitizeAsked(raw: unknown): Signal[] {
   if (!Array.isArray(raw)) return [];
   const out: Signal[] = [];
-  for (const item of raw) {
+  for (const item of raw as unknown[]) {
     const key = typeof item === "string" ? item.trim() : item;
     if (isSignal(key) && !out.includes(key)) out.push(key);
     if (out.length >= ASKED_MAX) break;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type CSSProperties } from "react";
+import { useState } from "react";
 
 /**
  * The data pipeline, stepped through. The same sample entries move from one stage to the next, so the reader sees
@@ -140,7 +140,7 @@ export function DataFlow({ steps }: { steps: string[] }) {
         </svg>
         {/* step 1: the type comes first and becomes a question; from step 2 the question moves left to take answers */}
         {QUESTIONS.map((q, i) => (
-          <span key={q.kind} className="cf-pipe-type" data-hidden={step !== 0} style={{ top: `${QY[i]}%` } as CSSProperties}>
+          <span key={q.kind} className="cf-pipe-type" data-hidden={step !== 0} style={{ top: `${QY[i]}%` }}>
             <span className="cf-pipe-type-name">
               <span className={`cf-mark cf-mark-${q.kind}`} />
               {q.type}
@@ -153,26 +153,26 @@ export function DataFlow({ steps }: { steps: string[] }) {
             key={q.q}
             className="cf-pipe-q"
             data-hidden={step > 1}
-            style={{ top: `${QY[i]}%`, left: step === 0 ? "23%" : "4%" } as CSSProperties}
+            style={{ top: `${QY[i]}%`, left: step === 0 ? "23%" : "4%" }}
           >
             {q.q}
           </span>
         ))}
         {TABLE_HEAD.map((h) => (
-          <span key={h.label} className="cf-pipe-head" data-hidden={step !== 2} style={{ left: `${h.x}%`, top: "13%" } as CSSProperties}>
+          <span key={h.label} className="cf-pipe-head" data-hidden={step !== 2} style={{ left: `${h.x}%`, top: "13%" }}>
             {h.label}
           </span>
         ))}
         <span className="cf-pipe-strike" data-hidden={step !== 2} />
         {QUESTIONS.map((q) => (
-          <span key={q.kind} className="cf-pipe-head is-col" data-hidden={step !== 3} style={{ left: `${COLS[q.kind]}%`, top: "15%" } as CSSProperties}>
+          <span key={q.kind} className="cf-pipe-head is-col" data-hidden={step !== 3} style={{ left: `${COLS[q.kind]}%`, top: "15%" }}>
             <span className={`cf-mark cf-mark-${q.kind}`} />
             {q.type}
           </span>
         ))}
         {CHIPS.map((c) => {
           const here = c.at[step];
-          const last = [...c.at.slice(0, step + 1)].reverse().find(Boolean) ?? c.at.find(Boolean)!;
+          const last = [...c.at.slice(0, step + 1)].reverse().find(Boolean) ?? c.at.find(Boolean);
           const at = here ?? last!;
           return (
             <span
@@ -183,7 +183,7 @@ export function DataFlow({ steps }: { steps: string[] }) {
               data-dup={c.dup || undefined}
               data-fix={(c.fixed && step === 2) || undefined}
               data-typed={typed || undefined}
-              style={{ left: `${at.x}%`, top: `${at.y}%` } as CSSProperties}
+              style={{ left: `${at.x}%`, top: `${at.y}%` }}
             >
               <span className={`cf-mark cf-mark-${c.kind}`} />
               {c.fixed && step >= 3 ? c.fixed : c.label}

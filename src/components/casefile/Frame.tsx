@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 
 /**
  * A browser window round a screenshot or recording of the live product (playbook §6: recordings are shown whole in a
@@ -8,7 +8,7 @@ import type { CSSProperties, ReactNode } from "react";
 export function BrowserFrame({ url, ratio, bar, children }: { url: string; ratio: number; bar?: ReactNode; children: ReactNode }) {
   return (
     <div className="cf-cq">
-      <div className="cf-browser" style={{ "--ar": ratio } as CSSProperties}>
+      <div className="cf-browser" style={{ "--ar": ratio }}>
         <div className="cf-browser-bar">
           <span className="cf-url">{url}</span>
           {bar}

@@ -178,7 +178,7 @@ function SplitLayer({ mode }: { mode: Mode }) {
       {HUES.map(([h, name]) => (
         <div key={h} className="ds-split-row">
           <span>{name}</span>
-          <i className="is-border" style={{ "--c": S[h]["200"] } as React.CSSProperties}>
+          <i className="is-border" style={{ "--c": S[h]["200"] }}>
             <span className="sr-only">border</span>
           </i>
           <i style={{ color: S[h]["600"] }}>
@@ -215,7 +215,7 @@ export function Split() {
       <div
         ref={stage}
         className={`ds-split-stage${dragging ? " is-dragging" : ""}`}
-        style={{ "--split": `${v}%` } as React.CSSProperties}
+        style={{ "--split": `${v}%` }}
         onPointerDown={(e) => {
           setDragging(true);
           e.currentTarget.setPointerCapture(e.pointerId);
@@ -293,7 +293,7 @@ export function CustomerColour() {
         </div>
       </div>
       <div className="cc-modes">
-        {(["light", "dark"] as Mode[]).map((mode) => {
+        {(["light", "dark"] satisfies Mode[]).map((mode) => {
           const t = theme(hex, mode, rule);
           return (
             <div key={mode} className="cc-pane ui" style={{ ...styleOf(t), colorScheme: mode }}>

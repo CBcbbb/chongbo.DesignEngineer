@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, type CSSProperties } from "react";
+import { useRef } from "react";
 
 /**
  * A picture the reader can open larger: the thumbnail is a button with a small "enlarge" badge, and it opens a
@@ -29,7 +29,7 @@ export function Zoom({
   const close = () => ref.current?.close();
   return (
     <>
-      <button type="button" className="cf-zoom" onClick={open} aria-haspopup="dialog" style={{ "--ar": `${width} / ${height}` } as CSSProperties}>
+      <button type="button" className="cf-zoom" onClick={open} aria-haspopup="dialog" style={{ "--ar": `${width} / ${height}` }}>
         <Image src={src} alt={alt} width={width} height={height} quality={quality} sizes={sizes} />
         <span className="cf-zoom-badge" aria-hidden="true">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
@@ -46,7 +46,7 @@ export function Zoom({
           if (e.target === e.currentTarget) close();
         }}
       >
-        <figure style={{ "--w": `${Math.round(width / 2)}px`, "--ar": `${width} / ${height}` } as CSSProperties}>
+        <figure style={{ "--w": `${Math.round(width / 2)}px`, "--ar": `${width} / ${height}` }}>
           <Image src={src} alt={alt} width={width} height={height} quality={quality} sizes={`${Math.round(width / 2)}px`} />
         </figure>
         <button type="button" className="cf-lightbox-close" onClick={close}>

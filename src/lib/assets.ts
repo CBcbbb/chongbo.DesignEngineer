@@ -4,7 +4,7 @@ import manifest from "@/generated/asset-manifest.json";
  * Asset lookups come from a manifest generated at build time (scripts/asset-manifest.mjs), not from fs.
  * Reading public/ with fs makes Vercel bundle the whole asset folder into every server function.
  */
-const assets = manifest as Record<string, { width: number; height: number } | null>;
+const assets: Record<string, { width: number; height: number } | null> = manifest;
 
 export function assetExists(asset: string): boolean {
   return Object.hasOwn(assets, asset);

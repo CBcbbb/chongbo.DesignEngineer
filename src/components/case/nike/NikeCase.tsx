@@ -231,7 +231,7 @@ function Opener({ part }: { part: ContentsPart }) {
  * are printed; `data-card` is never prefixed.
  */
 export function nikeCards(project: Project, pre = ""): Record<string, ReactNode> {
-  const s = Object.fromEntries(project.sections.map((x) => [x.id, x])) as Record<string, Section>;
+  const s = Object.fromEntries(project.sections.map((x) => [x.id, x] as const));
   const sec = (id: string) => {
     const found = s[id];
     if (!found) throw new Error(`Nike case file: missing section "${id}"`);
@@ -305,7 +305,7 @@ export function nikeCards(project: Project, pre = ""): Record<string, ReactNode>
       <Head s={sec("retouching")} idx="01.3" />
       <figure className="nk-ev nk-ev-one">
         <div className="nk-box nk-field nk-retouch">
-          <div className="nk-cq" style={{ ["--ar" as string]: "0.666" }}>
+          <div className="nk-cq" style={{ "--ar": "0.666" }}>
             <Compare
               label="Compare photo 1, original and retouched"
               labels={["Original", "Retouched"]}
@@ -314,7 +314,7 @@ export function nikeCards(project: Project, pre = ""): Record<string, ReactNode>
               over={<Image quality={Q} src={A("retouch-1-original.jpg")} alt="Photo 1, the original before retouching." width={1332} height={2000} sizes="(min-width: 761px) 420px, 90vw" />}
             />
           </div>
-          <div className="nk-cq" style={{ ["--ar" as string]: "0.666" }}>
+          <div className="nk-cq" style={{ "--ar": "0.666" }}>
             <Compare
               label="Compare photo 2, original and retouched"
               labels={["Original", "Retouched"]}
@@ -481,7 +481,7 @@ export function nikeCards(project: Project, pre = ""): Record<string, ReactNode>
           </div>
           <ul className="nk-sv-notes">
             {SV_NOTES.map((n) => (
-              <li key={n.title} className={n.side === "l" ? "is-l" : "is-r"} style={{ ["--y" as string]: String(n.y) }}>
+              <li key={n.title} className={n.side === "l" ? "is-l" : "is-r"} style={{ "--y": String(n.y) }}>
                 <i aria-hidden="true" />
                 <span>
                   <b>{n.title}</b>

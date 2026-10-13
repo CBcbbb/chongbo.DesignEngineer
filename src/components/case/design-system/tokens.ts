@@ -268,5 +268,5 @@ export function pagePalette(hex: string): { L: Theme; D: Theme } {
 
 /** CSS custom properties from a token map, for a `style` prop. */
 export function styleOf(t: Theme): React.CSSProperties {
-  return t as unknown as React.CSSProperties;
+  return t;
 }

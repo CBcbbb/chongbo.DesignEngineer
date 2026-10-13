@@ -85,7 +85,7 @@ export function SeenAs() {
         </label>
       ))}
       <i className="ds-or" aria-hidden="true" />
-      <label className="ds-seen-own" style={{ "--own": state.own } as React.CSSProperties}>
+      <label className="ds-seen-own" style={{ "--own": state.own }}>
         <input type="radio" name="ds-seen" value="own" checked={own} onChange={() => pick("own")} aria-label="Or your own colour" />
         <i className="ds-rainbow" aria-hidden="true" />
         <span className="ds-own-t">{own ? "Your own" : "Or your own"}</span>

@@ -176,7 +176,7 @@ export function RecordingPlayer({ chapters, full }: { chapters: Moment[]; full: 
                       <button
                         type="button"
                         aria-current={current === c ? "true" : undefined}
-                        style={current === c ? { ["--cp" as string]: String(within) } : undefined}
+                        style={current === c ? { "--cp": String(within) } : undefined}
                         onClick={() => jump(c.start)}
                       >
                         <span className="nk-t">{clock(c.start)}</span>
@@ -199,8 +199,8 @@ export function SeekButton({ moment }: { moment: Moment }) {
   const btn = useRef<HTMLButtonElement>(null);
   // Only one clip open at a time.
   useEffect(() => {
-    const other = (e: Event) => {
-      if ((e as CustomEvent<number>).detail !== moment.start) setOpen(false);
+    const other = (e: CustomEvent<number>) => {
+      if (e.detail !== moment.start) setOpen(false);
     };
     window.addEventListener("nk-clip", other);
     return () => window.removeEventListener("nk-clip", other);
@@ -382,7 +382,7 @@ export function Compare({
 }) {
   const [x, setX] = useState(50);
   return (
-    <div className="nk-compare" style={{ ["--x" as string]: `${x}%`, aspectRatio: ratio }}>
+    <div className="nk-compare" style={{ "--x": `${x}%`, aspectRatio: ratio }}>
       {under}
       <div className="nk-compare-top">{over}</div>
       <span className="nk-lab l" aria-hidden="true">
@@ -587,7 +587,7 @@ export function Pip({
   return (
     <div className="nk-pip nk-box">
       <div className="nk-pip-main">
-        <div className="nk-pip-canvas" style={{ ["--ar" as string]: String(ratio) }}>
+        <div className="nk-pip-canvas" style={{ "--ar": String(ratio) }}>
           {big.image}
           <button
             type="button"
@@ -595,7 +595,7 @@ export function Pip({
             aria-label={`Show the ${small.label.toLowerCase()} large`}
             onClick={() => setSwapped((v) => !v)}
           >
-            <span className="nk-pip-thumb" aria-hidden="true" style={{ ["--iar" as string]: String(insetRatio) }}>
+            <span className="nk-pip-thumb" aria-hidden="true" style={{ "--iar": String(insetRatio) }}>
               {small.image}
             </span>
             <span className="nk-pip-lbl" aria-hidden="true">
@@ -627,7 +627,7 @@ export function GiftBox({ src, label }: { src: string; label: string }) {
     loading.current = (async () => {
       const [{ default: lottie }, data] = await Promise.all([
         import("lottie-web/build/player/lottie_light"),
-        fetch(src).then((r) => r.json()),
+        fetch(src).then((r): Promise<unknown> => r.json()),
       ]);
       const a = lottie.loadAnimation({
         container: box.current!,

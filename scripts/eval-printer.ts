@@ -34,10 +34,9 @@ for (const c of CASES) {
     const client: ParseClient = {
       messages: {
         parse: async (params, options) => {
-          const p: Record<string, unknown> = { ...(params as Record<string, unknown>), model };
-          p.output_config = { ...(p.output_config as object), effort };
-          const message = await sdk.messages.parse(p as never, options);
-          usage = message.usage as Usage;
+          const p = { ...params, model, output_config: { ...params.output_config, effort: effort as typeof MODEL_EFFORT } };
+          const message = await sdk.messages.parse(p, options);
+          usage = message.usage;
           return message as never;
         },
       },

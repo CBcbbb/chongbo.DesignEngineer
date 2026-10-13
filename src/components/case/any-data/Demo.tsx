@@ -32,10 +32,10 @@ const KINDS = [
   ["table", "Table"],
 ] as const;
 
-function start(stream: Stream) {
+function start(stream: Stream): { mapping: Mapping; confs: Confidences } {
   return stream.fields
     ? suggest(stream.fields)
-    : { mapping: { category: "", value: "" } as Mapping, confs: { category: null, value: null } as Confidences };
+    : { mapping: { category: "", value: "" }, confs: { category: null, value: null } };
 }
 
 /**
@@ -65,7 +65,7 @@ export function Demo() {
     choose("courier", STREAMS);
   };
 
-  const groups = { fits: [] as Stream[], partly: [] as Stream[], other: [] as Stream[] };
+  const groups: Record<"fits" | "partly" | "other", Stream[]> = { fits: [], partly: [], other: [] };
   for (const s of all) groups[fitOf(s).group].push(s);
   const roleOf = (name: string) => ROLES.find((r) => mapping[r.key] === name);
 
