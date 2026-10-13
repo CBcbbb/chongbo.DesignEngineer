@@ -10,7 +10,7 @@ import "./design-system.css";
 import { useEffect, useRef } from "react";
 
 /*
- * 01.1: three products from one company that share one blue and one logo, and nothing else. Each is drawn at
+ * 01.1: three products in one ecosystem, each with its own name and mark, that share one blue and nothing else. Each is drawn at
  * 560 × 360 and scaled to its card: a light workspace (Geist), a light network map (IBM Plex Sans), a dark builder
  * (Inter). Every name and value is invented.
  */
@@ -40,12 +40,33 @@ export function Pi({ n, className = "" }: { n: IconName; className?: string }) {
   );
 }
 
-/** One company, one mark: every product carries the same logo; only the name after it changes. */
-function Mark() {
+/**
+ * Each product's own mark, in the one blue they still share. The marks follow each product's character: Manifest's soft
+ * tile with a list, Compass's round needle, Beacon's square-cut signal. All invented.
+ */
+function Mark({ of }: { of: "manifest" | "compass" | "beacon" }) {
   return (
     <svg className="pf-mark" viewBox="0 0 24 24" aria-hidden="true">
-      <rect width="24" height="24" rx="6" fill="#3453d3" />
-      <path d="M7.5 7l5 5-5 5M12.5 7l5 5-5 5" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+      {of === "manifest" && (
+        <>
+          <rect width="24" height="24" rx="7" fill="#3453d3" />
+          <path d="M7 8h10M7 12h10M7 16h6" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" />
+        </>
+      )}
+      {of === "compass" && (
+        <>
+          <circle cx="12" cy="12" r="12" fill="#3453d3" />
+          <path d="M12 4.6l3 7.4-3 7.4-3-7.4z" fill="#fff" />
+          <path d="M12 12l3 0-3 7.4-3-7.4z" fill="#abc3ff" />
+        </>
+      )}
+      {of === "beacon" && (
+        <>
+          <rect width="24" height="24" rx="2.5" fill="#3453d3" />
+          <circle cx="12" cy="15.5" r="2" fill="#fff" />
+          <path d="M8 12.2a5.6 5.6 0 0 1 8 0M5.4 9.3a9.4 9.4 0 0 1 13.2 0" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="square" />
+        </>
+      )}
     </svg>
   );
 }
@@ -75,7 +96,7 @@ function Manifest() {
     <div className="pf pf-1">
       <aside className="p1-side">
         <div className="p1-logo">
-          <Mark />
+          <Mark of="manifest" />
           Manifest
         </div>
         <nav>
@@ -136,7 +157,7 @@ function Compass() {
     <div className="pf pf-2">
       <aside className="p2-tree">
         <div className="p2-logo">
-          <Mark />
+          <Mark of="compass" />
           <b>Compass</b>
         </div>
         <div className="p2-search">
@@ -218,7 +239,7 @@ function Beacon() {
     <div className="pf pf-3">
       <header className="p3-top">
         <span className="p3-logo">
-          <Mark />
+          <Mark of="beacon" />
           Beacon
         </span>
         <nav>
@@ -280,7 +301,7 @@ export function Products() {
     <div
       className="ds-fan"
       role="img"
-      aria-label="Three products that share one blue and one logo, and nothing else: a light workspace with a sidebar and cards, a light network map, and a dark builder"
+      aria-label="Three products, each with its own name and mark, that share one blue and nothing else: a light workspace with a sidebar and cards, a light network map, and a dark builder"
     >
       <figure className="ds-fan-card is-1">
         <span className="ds-tag">First product</span>

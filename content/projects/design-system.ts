@@ -7,7 +7,8 @@ import type { Project } from "../schema";
  * Confidentiality (playbook §9): never name the employer, its products, its customers or its storage technology
  * anywhere in this file, the case file's modules or the AI's knowledge. Every product, customer, value and screen on
  * the page is invented and rebuilt in code; the brand's scales follow the real system's rules.
- * One term per thing: product, client (a customer company), user, role, step, hue, the shared package.
+ * One term per thing: ecosystem (the products together, never "the company"), product, client (a customer company), user,
+ * role, step, hue, the shared package.
  * The Problem / Need / Solution tags are a recorded exception to the playbook (DECISIONS.md, item 13).
  */
 export const designSystem: Project = {
@@ -19,7 +20,7 @@ export const designSystem: Project = {
   client: "Logistics infrastructure company",
   role: "Design Engineer",
   roleSplit: [{ with: "solo", what: "Figma library, colour scales and code", note: "on my own" }],
-  outcome: "One design system across the company's products, which every client and user can customise on top.",
+  outcome: "One design system across the ecosystem's products, which every client and user can customise on top.",
   stack: ["Figma", "React", "TypeScript", "Tailwind", "shadcn/ui", "OKLCH colour"],
   links: [],
   tier: "main",
@@ -55,9 +56,9 @@ export const designSystem: Project = {
       tag: { label: "Problem" },
       part: "one-system",
       layout: "stack",
-      title: "Three products from one company, drifting apart",
+      title: "Three products in one ecosystem, drifting apart",
       body: [
-        "The company began with one product and its own colours and design tokens. New products took only those first tokens with them, and each needed things the first didn't have.",
+        "The ecosystem began with one product and its own colours and design tokens. New products took only those first tokens with them, and each needed things the first didn't have.",
         "Built fast by different teams, much of it with AI coding tools, each product changed or dropped what didn't fit. With every release they looked less alike.",
       ],
       signals: ["cross-platform", "design-systems", "judgement"],
