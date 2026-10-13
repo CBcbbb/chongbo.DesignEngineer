@@ -70,8 +70,8 @@ function LightChart() {
   const W = 760;
   const left = 150;
   const right = 20;
-  const rowH = 42;
-  const top = 14;
+  const rowH = 35;
+  const top = 10;
   const x0 = 0.4;
   const x1 = 1.0;
   const Hh = top + STEPS.length * rowH + 34;
@@ -99,7 +99,7 @@ function LightChart() {
               {st}
             </text>
             <line className="ax" x1={left} x2={W - right} y1={y} y2={y} />
-            <rect className="band" x={X(mn) - 11} y={y - 16} width={X(mx) - X(mn) + 22} height="32" rx="16" />
+            <rect className="band" x={X(mn) - 11} y={y - 15} width={X(mx) - X(mn) + 22} height="30" rx="15" />
             {hs.map((h, j) => {
               const dy = (j - (hs.length - 1) / 2) * 4.4;
               return (

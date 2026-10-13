@@ -330,11 +330,12 @@
 .dsm .ds-wall-c small { font: 500 11px/1 var(--mono); }
 .dsm .ds-wall-row { display: contents; }
 /* ---------- 02.2 lightness, on the dark sheet ---------- */
-.dsm .ds-light { display: grid; gap: clamp(18px, 3vw, 28px); }
+.dsm .ds-light { display: grid; gap: clamp(12px, 1vw, 16px); }
 .dsm .ds-light svg { display: block; width: 100%; height: auto; overflow: visible; }
 .dsm .ds-light .ax { stroke: var(--case-rule); }
-.dsm .ds-light .tick text, .dsm .ds-light .lbl { font: 500 12px var(--mono); fill: var(--case-dim); }
-.dsm .ds-light .row-l { font: 600 13px var(--sans); fill: var(--case-ink); }
+/* drawn 760 wide and shown about 750 wide: labels at 13.25 read at 13px (playbook §6) */
+.dsm .ds-light .tick text, .dsm .ds-light .lbl { font: 500 13.25px var(--mono); fill: var(--case-dim); }
+.dsm .ds-light .row-l { font: 600 13.5px var(--sans); fill: var(--case-ink); }
 .dsm .ds-light .band { fill: none; stroke: var(--accent); stroke-width: 1.5; }
 .dsm .ds-light circle { stroke: var(--case-bg); stroke-width: 1.5; }
 .dsm .ds-light-chart { overflow-x: auto; }
@@ -343,7 +344,7 @@
 }
 .dsm .ds-metrics { list-style: none; margin: 0; padding: 14px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; border-top: 1px solid var(--case-rule); }
 .dsm .ds-metrics li { display: grid; gap: 6px; min-width: 0; }
-.dsm .ds-metrics li b { font: 600 clamp(2.6rem, 7vw, 5.4rem)/0.95 var(--sans); letter-spacing: -0.045em; color: var(--accent); font-variant-numeric: tabular-nums; }
+.dsm .ds-metrics li b { font: 600 clamp(2.6rem, 7vw, 5rem)/0.95 var(--sans); letter-spacing: -0.045em; color: var(--accent); font-variant-numeric: tabular-nums; }
 .dsm .ds-metrics li:last-child b { color: var(--case-ink); }
 .dsm .ds-metrics span { font: 500 12.5px/1.35 var(--mono); color: var(--case-dim); }
 @media (max-width: 600px) {
@@ -456,6 +457,10 @@
 @media (min-width: 1000px) {
   [data-palette="design-system"] :is([data-card="in-code"], #in-code) > .cf-head { grid-template-columns: minmax(0, 0.62fr) minmax(0, 1.38fr); }
   [data-palette="design-system"] :is([data-card="in-code"], #in-code) > .cf-evidence { margin-top: 0.875rem; }
+}
+/* 03.2 on computers: the readout follows the claim a step closer */
+@media (min-width: 1000px) {
+  [data-palette="design-system"] :is([data-card="fixed-lightness"], #fixed-lightness) > .cf-evidence { margin-top: 0.875rem; }
 }
 /* 01.3 on computers: the build rises beside the text. Its tall left end (the first product's users) stands under the
    claim, and the reasoning sits over its open top right, so the card is the drawing's height, not the text's plus the
@@ -604,7 +609,7 @@
 .dsm .ide-nav { display: none; }
 }
 /* 03.2: one OKLCH value read part by part; the lightness is the part that stays */
-.dsm .ds-oklch { display: grid; gap: 8px; padding-bottom: 16px; margin-bottom: 4px; border-bottom: 1px solid var(--case-rule); }
+.dsm .ds-oklch { display: grid; gap: 8px; padding-bottom: 14px; margin-bottom: 4px; border-bottom: 1px solid var(--case-rule); }
 .dsm .ok-row { display: grid; grid-template-columns: 22px auto 1fr; align-items: center; gap: 12px; }
 .dsm .ok-row i { width: 22px; height: 22px; border-radius: 6px; box-shadow: 0 0 0 1px rgb(255 255 255 / .15); }
 .dsm .ok-row code { font: 500 clamp(15px, 1.9vw, 19px)/1 var(--mono); color: var(--case-ink); letter-spacing: -.01em; }
@@ -616,6 +621,13 @@
 .dsm .ok-row em { font: 600 13px/1 var(--mono); font-style: normal; color: var(--case-ink); margin-left: 8px; }
 .dsm .ok-key { display: flex; gap: 18px; padding-left: 34px; font: 500 11px/1 var(--mono); color: var(--case-dim); }
 .dsm .ok-key .l { color: var(--accent); }
+/* on computers the key stands between the two values and their contrast, so the readout is two lines tall */
+@media (min-width: 1000px) {
+.dsm .ds-oklch { grid-template-columns: 22px auto minmax(0, 1fr) auto; align-items: center; gap: 8px 12px; }
+.dsm .ok-row { display: contents; }
+.dsm .ok-row span { grid-column: 4; }
+.dsm .ok-key { grid-column: 3; grid-row: 1 / span 2; flex-direction: column; gap: 7px; padding-left: clamp(12px, 3vw, 40px); }
+}
 @media (max-width: 760px) {
 .dsm .ok-row { grid-template-columns: 22px 1fr; }
 .dsm .ok-row span { grid-column: 2; justify-self: start; }
