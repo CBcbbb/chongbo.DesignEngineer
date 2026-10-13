@@ -5,7 +5,10 @@ import localFont from "next/font/local";
 
    Both are self-hosted from @fontsource-variable (the Google Fonts files, latin subset), so a build never
    fetches fonts.googleapis.com. Each weight the page used to ask Google for is its own face on the same
-   variable file, so the browser renders the same instances as before. Font loader options must be literals. */
+   variable file, so the browser renders the same instances as before. Font loader options must be literals.
+
+   No preload: these faces belong to the [slug] route, so a preload would make every case page (and every
+   printed sheet that prefetches one) download them, though only the hidden WildEcho page uses them. */
 export const wixHeading = localFont({
   src: [
     { path: "../../../node_modules/@fontsource-variable/nunito-sans/files/nunito-sans-latin-wght-normal.woff2", weight: "700", style: "normal" },
@@ -14,6 +17,7 @@ export const wixHeading = localFont({
   ],
   variable: "--wix-nunito",
   display: "swap",
+  preload: false,
 });
 export const wixBody = localFont({
   src: [
@@ -23,6 +27,7 @@ export const wixBody = localFont({
   ],
   variable: "--wix-open",
   display: "swap",
+  preload: false,
 });
 
 /** Class names that expose both font variables to a page's root element. */
