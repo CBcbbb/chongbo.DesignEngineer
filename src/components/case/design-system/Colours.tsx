@@ -90,10 +90,8 @@ function LightChart() {
         const mn = Math.min(...ls);
         const mx = Math.max(...ls);
         const hs = order.filter((h) => REAL_L[st][h] != null);
-        // only the text steps are held to one lightness: they are the claim; the other steps are drawn faint, free
-        const isText = st === "600" || st === "700";
         return (
-          <g key={st} className={isText ? "is-text" : "is-free"}>
+          <g key={st}>
             <text className="row-l" x="0" y={y + 4}>
               {job}
             </text>
@@ -137,18 +135,12 @@ export function Lightness() {
           <code>
             oklch(<b className="l">0.50</b> <b className="c">0.20</b> <b className="h">268</b>)
           </code>
-          <span>
-            Brand text on white <em>6.3:1</em>
-          </span>
         </div>
         <div className="ok-row">
           <i style={{ background: "oklch(0.5 0.145 148)" }} aria-hidden="true" />
           <code>
             oklch(<b className="l">0.50</b> <b className="c">0.145</b> <b className="h">148</b>)
           </code>
-          <span>
-            Green text on white <em>5.6:1</em>
-          </span>
         </div>
         <div className="ok-key">
           <span className="l">L lightness, the same</span>

@@ -338,12 +338,6 @@
 .dsm .ds-light .row-l { font: 600 13.5px var(--sans); fill: var(--case-ink); }
 .dsm .ds-light .band { fill: none; stroke: var(--accent); stroke-width: 1.5; }
 .dsm .ds-light circle { stroke: var(--case-bg); stroke-width: 1.5; }
-/* the text steps are the claim: full colour, a firm band and ink labels. The other steps are free to move, so they
-   stand back: faint dots, a dashed band, labels in the dim tone (still AA on the dark sheet) */
-.dsm .ds-light .is-text .band { stroke-width: 2; }
-.dsm .ds-light .is-free .band { stroke: var(--case-dim); stroke-width: 1; stroke-dasharray: 3 4; opacity: .55; }
-.dsm .ds-light .is-free circle { opacity: .38; }
-.dsm .ds-light .is-free .row-l { fill: var(--case-dim); font-weight: 500; }
 .dsm .ds-light-chart { overflow-x: auto; }
 @media (max-width: 760px) {
 .dsm .ds-light-chart svg { min-width: 640px; }
@@ -624,20 +618,16 @@
 /* the lightness, ringed rather than filled, so it reads on the dark sheet in any brand's colour */
 .dsm .ok-row code b.l { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--accent) 55%, transparent); color: var(--accent); }
 .dsm .ok-row code b.c, .dsm .ok-row code b.h { opacity: .7; }
-.dsm .ok-row span { font: 400 13px/1.3 var(--sans); color: var(--case-dim); justify-self: end; }
-.dsm .ok-row em { font: 600 13px/1 var(--mono); font-style: normal; color: var(--case-ink); margin-left: 8px; }
 .dsm .ok-key { display: flex; gap: 18px; padding-left: 34px; font: 500 11px/1 var(--mono); color: var(--case-dim); }
 .dsm .ok-key .l { color: var(--accent); }
-/* on computers the key stands between the two values and their contrast, so the readout is two lines tall */
+/* on computers the key stands beside the two values, so the readout is two lines tall */
 @media (min-width: 1000px) {
-.dsm .ds-oklch { grid-template-columns: 22px auto minmax(0, 1fr) auto; align-items: center; gap: 8px 12px; }
+.dsm .ds-oklch { grid-template-columns: 22px auto minmax(0, 1fr); align-items: center; gap: 8px 12px; }
 .dsm .ok-row { display: contents; }
-.dsm .ok-row span { grid-column: 4; }
 .dsm .ok-key { grid-column: 3; grid-row: 1 / span 2; flex-direction: column; gap: 7px; padding-left: clamp(12px, 3vw, 40px); }
 }
 @media (max-width: 760px) {
 .dsm .ok-row { grid-template-columns: 22px 1fr; }
-.dsm .ok-row span { grid-column: 2; justify-self: start; }
 .dsm .ok-key { padding-left: 0; flex-wrap: wrap; }
 }
 
