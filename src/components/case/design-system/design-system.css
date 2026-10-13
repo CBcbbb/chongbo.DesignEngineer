@@ -107,16 +107,18 @@
 .dsm .ds-check { display: inline-flex; align-items: center; gap: 8px; font: 500 12.5px/1 var(--sans); color: var(--case-dim); cursor: pointer; }
 .dsm .ds-check input { accent-color: var(--case-ink); width: 16px; height: 16px; margin: 0; }
 /* ---------- 01.1 three products, fanned like printouts on a desk ---------- */
-.dsm .ds-fan { position: relative; height: clamp(300px, 34vw, 380px); margin-top: 8px; }
-.dsm .ds-fan-card { position: absolute; top: 0; width: 46%; margin: 0; display: grid; gap: 8px; transition: transform 0.35s var(--ease); }
-.dsm .ds-fan-card.is-1 { left: 0.5%; transform: rotate(-3deg) translateY(18px); z-index: 1; }
-.dsm .ds-fan-card.is-2 { left: 26.5%; transform: rotate(0.5deg); z-index: 2; }
-.dsm .ds-fan-card.is-3 { left: 52.5%; transform: rotate(3deg) translateY(26px); z-index: 3; }
+/* the three sit in one grid cell, so the fan is as tall as its tallest printout (never a fixed height with empty paper
+   under it); the padding leaves room for the turn and the drop of the outer two */
+.dsm .ds-fan { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; margin-top: 8px; padding-bottom: 38px; }
+.dsm .ds-fan-card { position: relative; grid-area: 1 / 1; width: 46%; margin: 0; display: grid; gap: 8px; transition: transform 0.35s var(--ease); }
+.dsm .ds-fan-card.is-1 { margin-left: 0.5%; transform: rotate(-3deg) translateY(18px); z-index: 1; }
+.dsm .ds-fan-card.is-2 { margin-left: 26.5%; transform: rotate(0.5deg); z-index: 2; }
+.dsm .ds-fan-card.is-3 { margin-left: 52.5%; transform: rotate(3deg) translateY(26px); z-index: 3; }
 .dsm .ds-fan-card .pfw, .dsm .ds-fan-card .mp { box-shadow: 0 0 0 1px rgb(0 0 0 / 0.08), 0 18px 40px -18px rgb(0 0 0 / 0.35); }
 .dsm .ds-tag { justify-self: start; padding: 4px 7px; border-radius: 4px; background: var(--case-ink); color: var(--case-bg); }
 @media (max-width: 760px) {
-.dsm .ds-fan { height: auto; display: grid; gap: 18px; }
-.dsm .ds-fan-card { position: static; width: 100%; transform: none !important; }
+.dsm .ds-fan { height: auto; display: grid; gap: 18px; padding-bottom: 0; }
+.dsm .ds-fan-card { position: static; grid-area: auto; width: 100%; margin-left: 0 !important; transform: none !important; }
 }
 .dsm .mp { --mp-brand: #3453d3; --mp-ink: #18181b; --mp-dim: #6b6b74; --mp-rule: #e4e4e7; --mp-bg: #ffffff; --mp-tint: #f1f5ff;
   background: var(--mp-bg); color: var(--mp-ink); border-radius: 10px; overflow: hidden; font-family: var(--mp-font); font-size: 13px; min-width: 0; }
@@ -456,8 +458,8 @@
 .dsm .ds-ico .s { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .dsm .ds-ico .o { fill: none; stroke: currentColor; stroke-width: 1.8; }
 /* the clients sit side by side, square to the page, so the three looks can be compared */
-.dsm .ds-fan.is-clients { height: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.dsm .ds-fan.is-clients .ds-fan-card { position: static; width: auto; transform: none; }
+.dsm .ds-fan.is-clients { height: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-bottom: 0; }
+.dsm .ds-fan.is-clients .ds-fan-card { position: static; grid-area: auto; width: auto; margin-left: 0; transform: none; }
 @media (max-width: 760px) {
 .dsm .ds-fan.is-clients { grid-template-columns: minmax(0, 1fr); }
 }
