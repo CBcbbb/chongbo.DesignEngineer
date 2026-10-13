@@ -7,7 +7,8 @@ import { useCallback, useEffect, useRef, type FocusEvent, type PointerEvent as R
  * The shell's own links (nav, the browse link): a word with a small drawn icon that does what the word
  * means on hover and on keyboard focus:
  *   work  – a hammer knocks the letters about; they spring back
- *   about – the eyes look at the pointer
+ *   about – the eyes look at the pointer; at rest they look up at the word, under two drawn brows (so they never
+ *           read as Geist Mono's dotted "00"); on touch screens they blink now and then and glance at each tap
  *   all   – the asterisk turns
  *   back  – a hand-drawn line draws out to the left and, on leaving, draws back (unused for now)
  * A little randomness each time, short (≤ 0.6 s), nothing changes layout, and with
@@ -28,6 +29,8 @@ type Props = {
 const reduce = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const rnd = (a: number, b: number) => a + Math.random() * (b - a);
 const SPRING = "cubic-bezier(0.34, 1.56, 0.64, 1)";
+/** From the pupils' resting place (up and to the right) back to the middle of each eye. */
+const REST_TO_MIDDLE: [number, number] = [-1.2, 1.5];
 const OUT = "cubic-bezier(0.16, 1, 0.3, 1)";
 
 /** Three hand-drawn return lines; one is picked at random each time. */
@@ -90,10 +93,11 @@ export function Pill({ kind, href, label, current, className }: Props) {
       eyes.forEach((p) => p.animate([{ translate: "0 0" }], { duration: 300, easing: OUT, fill: "forwards" }));
       return;
     }
+    // The pupils rest up and to the right; looking is measured from the middle of each eye (REST_TO_MIDDLE).
     const m = Math.min(1, dist / 90) * 1.8;
     const a = Math.atan2(dy, dx);
-    const tx = (Math.cos(a) * m).toFixed(2);
-    const ty = (Math.sin(a) * m * 0.9).toFixed(2);
+    const tx = (REST_TO_MIDDLE[0] + Math.cos(a) * m).toFixed(2);
+    const ty = (REST_TO_MIDDLE[1] + Math.sin(a) * m * 0.9).toFixed(2);
     eyes.forEach((p) => p.animate([{ translate: `${tx}px ${ty}px` }], { duration: 120, easing: OUT, fill: "forwards" }));
   }, []);
 
@@ -126,21 +130,43 @@ export function Pill({ kind, href, label, current, className }: Props) {
     });
   }, []);
 
-  /** Keyboard focus: a glance left, right, centre. */
+  /** Keyboard focus: a glance left and back to the word. */
   const glance = useCallback(() => {
-    const dir = Math.random() < 0.5 ? -1 : 1;
     ref.current?.querySelectorAll<SVGCircleElement>(".ico-pupil").forEach((p) => {
       p.animate(
         [
           { translate: "0 0" },
-          { translate: `${1.7 * dir}px 0.2px`, offset: 0.3 },
-          { translate: `${-1.7 * dir}px 0.2px`, offset: 0.7 },
+          { translate: "-2.4px 1.3px", offset: 0.35 },
+          { translate: "-2.4px 1.3px", offset: 0.6 },
           { translate: "0 0" },
         ],
-        { duration: 600, easing: "ease-in-out" },
+        { duration: 700, easing: "ease-in-out" },
       );
     });
   }, []);
+
+  // Touch screens: no hover, so the eyes keep themselves alive: a blink every 6 to 9 seconds, and a glance at each tap.
+  useEffect(() => {
+    if (kind !== "about" || reduce() || !window.matchMedia("(hover: none)").matches) return;
+    let timer: ReturnType<typeof setTimeout>;
+    let back: ReturnType<typeof setTimeout>;
+    const idle = () => {
+      blink();
+      timer = setTimeout(idle, rnd(6000, 9000));
+    };
+    timer = setTimeout(idle, rnd(2500, 4000));
+    const tap = (e: PointerEvent) => {
+      look(e.clientX, e.clientY, true);
+      clearTimeout(back);
+      back = setTimeout(() => look(-1e5, -1e5), 900);
+    };
+    window.addEventListener("pointerdown", tap, { passive: true });
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(back);
+      window.removeEventListener("pointerdown", tap);
+    };
+  }, [kind, blink, look]);
 
   // ---- all: the asterisk ----
   const turn = useCallback(() => {
@@ -265,8 +291,10 @@ function Icon({ kind }: { kind: PillKind }) {
           <g className="ico-lid" style={{ transformOrigin: "17.2px 12px" }}>
             <path d="M17.2 6.2c2.1.1 3.5 2.7 3.4 5.8-.1 3-1.6 5.5-3.6 5.4-2-.1-3.4-2.7-3.3-5.7.1-3 1.5-5.6 3.5-5.5z" />
           </g>
-          <circle className="ico-pupil" cx="7.1" cy="12.1" r="1.75" />
-          <circle className="ico-pupil" cx="17.2" cy="11.9" r="1.75" />
+          <path className="ico-brow" d="M3.2 3.4c1.3-1.4 3.3-1.9 5.6-1.2" />
+          <path className="ico-brow" d="M15.4 1.8c2.3-.5 4.2.2 5.4 1.7" />
+          <circle className="ico-pupil" cx="8.3" cy="10.6" r="2.05" />
+          <circle className="ico-pupil" cx="18.4" cy="10.4" r="2.05" />
         </svg>
       );
     case "all":

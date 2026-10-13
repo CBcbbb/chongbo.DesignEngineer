@@ -1,9 +1,7 @@
 import { Fragment } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import type { Project, Section } from "@content";
 import { pad2 } from "@/lib/printed";
-import { projectNumber } from "@/lib/site";
 import { imageSize } from "@/lib/assets";
 import { CaseMedia, CardTitle, Facts, Keys, StepsRow } from "./blocks";
 import { CaseContents, type ContentsPart } from "./CaseContents";
@@ -13,6 +11,7 @@ import { CoverWires } from "@/components/case/any-data";
 import { CoverLayers } from "@/components/case/design-system";
 import { BrowserFrame } from "./Frame";
 import { CapabilityIcon, OutArrow, WhoIcon } from "./icons";
+import { NextCase } from "@/components/shell/NextCase";
 
 /**
  * The canvas (a dot field that is the card itself, not a box) sits under the live product's windows and phone
@@ -376,13 +375,7 @@ export function CaseFile({ project, next }: { project: Project; next: Project })
             );
           })}
 
-          <nav aria-label="Next case file">
-            <Link href={`/work/${next.slug}`} className="cf-sheet cf-next">
-              <span className="cf-kind">Next case file · {projectNumber(next)}</span>
-              <strong>{next.title}</strong>
-              <span>{next.oneLiner}</span>
-            </Link>
-          </nav>
+          <NextCase next={next} />
         </article>
       </div>
     </div>

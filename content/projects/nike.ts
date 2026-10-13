@@ -11,6 +11,7 @@ export const nike: Project = {
   oneLiner: "Style stories from fashion influencers, designed to be read, shopped and returned to.",
   context: "Nike App, China · UI design internship at an advertising agency",
   role: "UI Designer",
+  period: "2023",
   outcome: "Launched across China as a section of the Nike App's home screen. On the strength of the first season, Nike renewed the agency's contract for the seasons that followed.",
   client: "Nike China",
   stack: ["Figma", "Photoshop", "Lottie"],

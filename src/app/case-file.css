@@ -2355,6 +2355,2126 @@
   text-decoration-color: #b9b6c4;
 }
 
+/* a short label beside the index, where a project's story turns on it (Section.tag) */
+.cf-tag {
+  align-self: center;
+  margin-left: 0.6rem;
+  padding: 4px 7px 3px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px currentColor;
+  font: 500 0.65625rem/1 var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--case-dim);
+}
+.cf-tag.is-strong {
+  box-shadow: none;
+  background: var(--accent-strong);
+  color: var(--on-accent);
+}
+.cf-sheet.is-dark .cf-tag {
+  color: var(--on-dark-2);
+}
+.cf-h3 {
+  font-size: clamp(1.45rem, 2.6vw, 2rem);
+  font-weight: 500 !important;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+.cf-h3 .cf-h3-pre {
+  color: var(--case-dim);
+}
+.cf-body {
+  display: grid;
+  gap: 0.9rem;
+  padding-top: 1.55rem;
+}
+.cf-body p {
+  max-width: 60ch;
+  color: var(--case-body);
+}
+/* a paragraph that asks questions (Section.asks): the lead, then each question numbered on its own rule */
+.cf-body p.cf-asks {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.55rem 1.5rem;
+  max-width: none;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.cf-asks-lead {
+  font-size: 0.9375rem;
+  color: var(--case-dim);
+}
+.cf-asks-q {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--case-ink);
+  font-size: clamp(1.05rem, 1.55vw, 1.2rem);
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+  color: var(--case-ink);
+}
+.cf-asks-q::before {
+  content: attr(data-n);
+  font: 500 0.75rem/1 var(--mono);
+  letter-spacing: 0;
+  color: var(--accent);
+}
+.cf-evidence {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+  margin-top: 0.5rem;
+}
+/* labelled facts: the closing card's Context and Team */
+.cf-notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem clamp(1.25rem, 3vw, 2.5rem);
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--case-rule);
+}
+.cf-notes div {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+}
+.cf-notes dt {
+  font: 400 0.75rem/1.5 var(--mono);
+  color: var(--case-dim);
+}
+.cf-notes dd {
+  max-width: 40ch;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--case-ink);
+}
+/* a short numbered list set large (results) */
+.cf-points {
+  display: grid;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--case-ink);
+}
+.cf-points li {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1rem;
+  align-items: baseline;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--case-rule);
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--case-ink);
+}
+.cf-points li:last-child {
+  border-bottom: 0;
+}
+.cf-points-n {
+  font: 500 0.75rem/1 var(--mono);
+  letter-spacing: 0;
+  color: var(--accent);
+}
+
+/* the canvas: a dot field that is the card itself, not a box. It runs under the evidence to the card's left,
+   right and bottom edges and fades in from above, so the evidence keeps one edge. Behind product screens,
+   prototypes and diagrams; never behind photos, tables or numbers. */
+.cf-sheet[data-canvas] .cf-evidence,
+.cf-work[data-canvas] .cf-plate {
+  position: relative;
+  isolation: isolate;
+}
+.cf-sheet[data-canvas] .cf-evidence::before,
+.cf-work[data-canvas] .cf-plate::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0 calc(-1 * var(--cf-pad)) calc(-1 * var(--cf-pad-y));
+  background-image: radial-gradient(var(--cf-dot) 1px, transparent 1.4px);
+  background-size: 16px 16px;
+  background-position: center bottom;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 clamp(2.5rem, 7vw, 5rem));
+  mask-image: linear-gradient(to bottom, transparent, #000 clamp(2.5rem, 7vw, 5rem));
+  pointer-events: none;
+}
+
+/* top layout: the evidence opens the card and the text follows it. A screenshot runs to the card's top and side
+   edges; a window stays inside the margins. */
+.cf-sheet.is-card[data-layout="top"] .cf-evidence {
+  order: -1;
+  margin: 0 0 clamp(0.5rem, 2vw, 1.25rem);
+}
+.cf-sheet.is-card[data-layout="top"] .cf-evidence:has(.cf-bleed) {
+  margin: calc(-1 * var(--cf-pad-y)) calc(-1 * var(--cf-pad)) clamp(0.75rem, 2.4vw, 1.5rem);
+}
+.cf .cf-sheet[data-layout="top"] .cf-bleed,
+.cf .cf-sheet[data-layout="top"] .cf-evidence[data-fit] > .cf-figure.cf-bleed {
+  margin: 0;
+  border-top: 0;
+  border-bottom: 1px solid var(--cf-hair);
+}
+
+/* wide layout: the claim runs across the card, the reasoning under it in two columns, then the evidence */
+.cf-sheet[data-layout="wide"] .cf-head {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+}
+.cf-sheet[data-layout="wide"] .cf-h3 {
+  max-width: 24ch;
+  font-size: clamp(1.6rem, 3.1vw, 2.35rem);
+}
+.cf-sheet[data-layout="wide"] .cf-body {
+  padding-top: clamp(1rem, 2.4vw, 1.5rem);
+}
+@media (min-width: 761px) {
+  .cf-sheet[data-layout="wide"] .cf-body p {
+    max-width: none;
+    column-count: 2;
+    column-gap: clamp(1.75rem, 3.4vw, 3rem);
+  }
+}
+
+/* a card without evidence (the closing card): the claim, then the body set large as a statement, then the facts */
+.is-text .cf-head {
+  grid-template-columns: minmax(0, 1fr);
+}
+.is-text .cf-body {
+  padding: clamp(2.25rem, 6vw, 4.5rem) 0 clamp(1.25rem, 3vw, 2.25rem);
+}
+.is-text .cf-body p {
+  max-width: 26ch;
+  font-size: clamp(1.5rem, 2.9vw, 2.35rem);
+  line-height: 1.22;
+  letter-spacing: -0.025em;
+  color: var(--case-ink);
+}
+/* the statement is the first paragraph; what follows explains it at reading size */
+.is-text .cf-body p + p {
+  max-width: 58ch;
+  margin-top: clamp(0.75rem, 2vw, 1.25rem);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: var(--case-body);
+}
+
+/* a screenshot that runs the card's full width at its foot, on the product's own white: as large as the card allows */
+.cf .cf-bleed,
+.cf .cf-evidence[data-fit] > .cf-figure.cf-bleed {
+  display: block;
+  height: auto;
+  margin: 0 calc(-1 * var(--cf-pad)) calc(-1 * var(--cf-pad-y));
+  background: #ffffff;
+  border-top: 1px solid var(--cf-hair);
+}
+.cf-bleed img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+
+/* a hand of role cards: dealt into a fan when it comes into view; the picked card lifts, its words under the hand */
+.cf-deck {
+  container-type: inline-size;
+}
+.cf-deck-in {
+  display: grid;
+  gap: 12px;
+}
+.cf-deck-hand {
+  --cw: min(104px, 21cqi);
+  /* room for the outer cards' tilt, so no corner leaves the card */
+  --pad: calc(var(--cw) * 0.55);
+  position: relative;
+  height: calc(var(--cw) * var(--ar) + 86px);
+}
+.cf-evidence[data-split="deck"] {
+  row-gap: clamp(1.5rem, 3vw, 2.25rem);
+}
+.cf-evidence[data-fit] > .cf-figure.cf-deck {
+  height: auto;
+  grid-template-rows: auto auto;
+}
+.cf-deck-card {
+  position: absolute;
+  bottom: 26px;
+  left: calc(var(--pad) + var(--i) * (100% - 2 * var(--pad) - var(--cw)) / (var(--n) - 1));
+  z-index: calc(var(--i) + 1);
+  width: var(--cw);
+  padding: 0;
+  border: 0;
+  border-radius: 9% / 5.4%;
+  background: none;
+  cursor: pointer;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.08)) drop-shadow(0 8px 12px rgb(0 0 0 / 0.12));
+  transform-origin: 50% 150%;
+  transform: translateY(calc(var(--o2) * 2.2px)) rotate(calc(var(--o) * 3.5deg));
+  transition:
+    transform 0.45s var(--ease),
+    left 0.6s var(--ease),
+    filter 0.3s var(--ease);
+}
+.cf-deck-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.cf-deck-card:hover {
+  transform: translateY(calc(var(--o2) * 2.2px - 10px)) rotate(calc(var(--o) * 3.5deg));
+}
+.cf-deck-card[aria-checked="true"] {
+  z-index: 20;
+  filter: drop-shadow(0 2px 2px rgb(0 0 0 / 0.1)) drop-shadow(0 16px 22px rgb(0 0 0 / 0.2));
+  transform: translateY(-22px) rotate(0deg) scale(1.1);
+}
+.cf-deck-card:focus-visible {
+  outline: 2px solid var(--case-ink);
+  outline-offset: 4px;
+}
+/* before the deal: one stack in the middle, slightly fanned like a pile; then each card goes to its place in turn */
+.cf-deck-hand.is-stacked .cf-deck-card {
+  left: calc(50% - var(--cw) / 2);
+  transform: translateY(24px) rotate(calc(var(--o) * 1.6deg));
+}
+.cf-deck-hand.is-dealing .cf-deck-card {
+  transition-duration: 0.55s, 0.6s, 0.3s;
+  transition-delay: calc(var(--i) * 70ms);
+}
+.cf-deck-read {
+  display: grid;
+  justify-items: center;
+}
+.cf-deck-read p {
+  grid-area: 1 / 1;
+  max-width: 46ch;
+  font-size: 15.5px;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--case-body);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease), visibility 0.25s;
+}
+.cf-deck-read p[data-on] {
+  visibility: visible;
+  opacity: 1;
+}
+.cf-deck-read strong {
+  font-weight: 600;
+  color: var(--case-ink);
+}
+/* a wide figure: the words beside the hand, not under it */
+@container (min-width: 36rem) {
+  .cf-deck-in {
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: clamp(1.25rem, 3cqi, 2.25rem);
+    align-items: center;
+  }
+  .cf-deck-read {
+    justify-items: start;
+  }
+  .cf-deck-read p {
+    text-align: left;
+  }
+}
+.cf-deck-count {
+  display: block;
+  margin-bottom: 4px;
+  font: 500 11px/1.4 var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--case-dim);
+}
+
+/* the data pipeline, stepped through: one stage, the same sample entries moving between five shapes */
+.cf-pipe {
+  display: grid;
+  container-type: inline-size;
+}
+.cf-pipe-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cf-pipe-tabs button {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  align-items: baseline;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 0 6px;
+  border: 0;
+  border-top: 2px solid var(--case-rule);
+  background: none;
+  color: var(--case-dim);
+  font: 500 14.5px/1.2 var(--sans);
+  text-align: left;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.cf-pipe-tabs button:hover {
+  color: var(--case-ink);
+}
+.cf-pipe-tabs button[data-done] {
+  border-top-color: var(--case-dim);
+}
+.cf-pipe-tabs button[aria-current="step"] {
+  border-top-color: var(--case-ink);
+  color: var(--case-ink);
+  font-weight: 600;
+}
+.cf-pipe-n {
+  font: 500 11.5px/1 var(--mono);
+  color: var(--case-dim);
+}
+.cf-pipe-caption {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0 14px;
+}
+.cf-pipe-text {
+  font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--case-ink);
+}
+.cf-pipe-nav {
+  display: flex;
+  flex: none;
+  gap: 8px;
+}
+.cf-pipe-nav button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--case-line);
+  border-radius: 999px;
+  background: var(--case-bg);
+  color: var(--case-ink);
+  font: 500 14px/1 var(--sans);
+  cursor: pointer;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+.cf-pipe-nav button.is-next {
+  padding: 0 14px 0 18px;
+  border-color: var(--case-ink);
+  background: var(--case-ink);
+  color: var(--case-bg);
+}
+.cf-pipe-nav button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.cf-pipe-nav svg {
+  width: 16px;
+  height: 16px;
+}
+.cf-pipe-stage {
+  display: flex;
+  flex-direction: column;
+  height: calc(clamp(250px, 37cqi, 300px) + 40px);
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--case-bg);
+  box-shadow: 0 0 0 1px var(--cf-hair);
+}
+/* the figure's label: what this step shows (left), sample labels (right) */
+.cf-pipe-meta {
+  display: flex;
+  flex: none;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 40px;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--case-rule);
+}
+.cf-pipe-scroller {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.cf-pipe-canvas {
+  position: relative;
+  height: 100%;
+  min-width: 720px;
+}
+.cf-pipe-canvas > * {
+  position: absolute;
+  transition:
+    left 0.7s var(--ease),
+    top 0.7s var(--ease),
+    transform 0.7s var(--ease),
+    opacity 0.45s var(--ease);
+}
+.cf-pipe-canvas [data-hidden="true"] {
+  opacity: 0;
+}
+.cf-pipe-links {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.cf-pipe-stage[data-step="4"] .cf-pipe-links {
+  opacity: 1;
+}
+.cf-pipe-links line {
+  stroke: var(--case-line);
+  stroke-width: 1.25;
+}
+.cf-pipe-q {
+  left: 4%;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--case-ink);
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+/* step 1: type on the left, an arrow, then the question it becomes */
+.cf-pipe-type {
+  left: 4%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 16%;
+  font-size: 14px;
+  color: var(--case-body);
+  white-space: nowrap;
+  transform: translateY(-50%);
+}
+.cf-pipe-type-name {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+}
+.cf-pipe-to {
+  color: var(--case-dim);
+}
+.cf-pipe-head {
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--case-dim);
+  transform: translateY(-50%);
+}
+.cf-pipe-head.is-col {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  font: 600 14px/1 var(--sans);
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--case-ink);
+  transform: translate(-50%, -50%);
+}
+.cf-pipe-strike {
+  top: 78%;
+  left: 1.5%;
+  width: 95%;
+  height: 1.5px;
+  background: var(--miss, #b42318);
+}
+.cf-pipe-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--case-bg);
+  box-shadow: 0 0 0 1px var(--case-line);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--case-ink);
+  transform: translate(0, -50%);
+}
+.cf-pipe-chip[data-centre] {
+  transform: translate(-50%, -50%);
+}
+/* the type's mark appears when the rows are split by type */
+.cf-pipe-chip .cf-mark {
+  max-width: 0;
+  margin-right: 0;
+  opacity: 0;
+  transition: max-width 0.4s var(--ease), margin 0.4s var(--ease), opacity 0.4s var(--ease);
+}
+.cf-pipe-chip[data-typed] .cf-mark {
+  max-width: 12px;
+  margin-right: 7px;
+  opacity: 1;
+}
+.cf-pipe-chip[data-dup] {
+  color: var(--case-dim);
+  text-decoration: line-through;
+  box-shadow: 0 0 0 1px var(--case-rule);
+}
+.cf-pipe-chip[data-fix] {
+  box-shadow: 0 0 0 1.5px var(--case-ink);
+  font-weight: 600;
+}
+.cf-pipe-note {
+  font: 600 11.5px/1.3 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--case-ink);
+}
+.cf-pipe-sample {
+  flex: none;
+  font: 400 10.5px/1.3 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--case-dim);
+}
+/* the stage scrolls sideways when the card is narrower than the picture; a hint says so */
+.cf-pipe-scroll {
+  display: none;
+  margin-top: 8px !important;
+  font: 400 11px/1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--case-dim);
+}
+@container (max-width: 45rem) {
+  .cf-pipe-scroll {
+    display: block;
+  }
+}
+@container (max-width: 34rem) {
+  .cf-pipe-tabs button {
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13px;
+  }
+  .cf-pipe-caption {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* the dual view: the two views side by side, joined by the shortcut; under each, how it works with each input */
+.cf-dual {
+  display: grid;
+}
+.cf-dual-panes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: clamp(10px, 1.6vw, 16px);
+  align-items: center;
+}
+.cf-dual-pane {
+  display: grid;
+  gap: 10px;
+}
+.cf-dual-name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--case-ink);
+}
+.cf-dual-shot {
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px var(--cf-hair);
+}
+.cf-dual-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.cf-dual-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+  color: var(--case-body);
+}
+.cf-dual-modes li {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+.cf-dual-mark {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--pass, #0a7a48);
+  color: var(--case-bg);
+}
+.cf-dual-modes li[data-state="hard"] .cf-dual-mark {
+  background: var(--miss, #b42318);
+}
+.cf-dual-mark svg {
+  width: 9px;
+  height: 9px;
+}
+.cf-dual-join {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  color: var(--case-dim);
+}
+.cf-dual-join svg {
+  width: 26px;
+  height: auto;
+}
+.cf-dual-keys {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+.cf-dual-keys > span {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+.cf-dual-keys kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--case-line);
+  border-bottom-width: 2px;
+  border-radius: 7px;
+  background: var(--case-inset);
+  font: 400 12px/1 var(--mono);
+  color: var(--case-ink);
+}
+.cf-dual-keys .plus {
+  font: 400 11px/1 var(--mono);
+  color: var(--case-dim);
+}
+@media (max-width: 600px) {
+  .cf-dual-panes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cf-dual-join {
+    grid-auto-flow: column;
+    padding-top: 0;
+  }
+  .cf-dual-keys,
+  .cf-dual-keys > span {
+    grid-auto-flow: column;
+    align-items: center;
+  }
+}
+
+/* ---------- cover: one design for every project (playbook §7) ----------
+ * Three groups, held apart by space rather than more rules: who and what (client, title), the one line with the
+ * live link at its right, then the facts (Role and Outcome under one rule, the labels under them). The title
+ * stands alone; the line under it steps back in tone; the live link's right edge is the end of the rule below,
+ * so it lines up instead of floating. Fits the first screen at 1280 × 720.
+ */
+.cf-cover {
+  container: cf-cover / inline-size;
+  gap: 0;
+  padding-block: clamp(1.75rem, 4.2vw, 3rem);
+}
+.cf-cover-top {
+  position: relative;
+  display: grid;
+}
+.cf-cover-top > .cf-h1 {
+  margin-top: clamp(1rem, 2.2vw, 1.5rem);
+}
+.cf-cover-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  margin-top: clamp(0.9rem, 2vw, 1.5rem);
+}
+.cf-cover-line > .cf-cover-act {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  align-items: center;
+  margin-top: 1.25rem;
+}
+.cf-cover-act .cf-btn {
+  min-height: 44px;
+  font-size: 0.9375rem;
+}
+.cf-client {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  font: 500 0.8125rem/1 var(--mono);
+  color: var(--on-field-2);
+}
+.cf-client .cf-marks {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+.cf-client .cf-marks .cf-mark {
+  background: var(--on-field);
+}
+/* the shared title scale; a long title breaks where its name does ("Helen Hamlyn Centre / Data Platform") */
+.cf-cover .cf-h1 {
+  max-width: 10em;
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  font-weight: 600;
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+  text-wrap: wrap;
+}
+.cf-lede {
+  max-width: 40ch;
+  font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--on-field-2) !important;
+}
+/* role and outcome in one row under a rule */
+.cf-cover > .cf-facts {
+  margin-top: clamp(1.75rem, 4.4vw, 3rem);
+}
+.cf-cover > .cf-cover-foot {
+  margin-top: clamp(1rem, 2vw, 1.4rem);
+}
+.cf-facts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 1rem clamp(1.25rem, 3vw, 2.5rem);
+  padding-top: 1rem;
+  border-top: 1px solid var(--on-field);
+}
+.cf-facts div {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+}
+.cf-facts dt {
+  font: 400 0.75rem/1.5 var(--mono);
+  color: var(--on-field-2);
+}
+.cf-facts dd {
+  max-width: 44ch;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--on-field);
+}
+/* computers: the live link sits at the right of the line, centred on it, its right edge on the end of the rule */
+@container cf-cover (min-width: 46rem) {
+  .cf-cover-line {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 2rem;
+  }
+  .cf-cover-line > .cf-cover-act {
+    margin-top: 0;
+  }
+}
+/* cover art "network": the map's marks gather in the top-right corner, run off the sheet and fade before the
+   title; nothing sits on top of them */
+.cf-cover-top > :not(.cf-cover-net) {
+  position: relative;
+  z-index: 1;
+}
+.cf-cover-net {
+  position: absolute;
+  top: calc(-1 * clamp(1.75rem, 4.2vw, 3rem) - 1.75rem);
+  right: calc(-1 * var(--cf-pad) - 2.25rem);
+  bottom: 0;
+  width: min(calc((100% + 2 * var(--cf-pad)) * 0.62), 520px);
+  overflow: hidden;
+  pointer-events: none;
+}
+.cf-cover-net-art {
+  aspect-ratio: 520 / 240;
+  -webkit-mask-image: radial-gradient(ellipse 78% 100% at 100% 0%, #000 45%, rgb(0 0 0 / 0.5) 72%, transparent 100%);
+  mask-image: radial-gradient(ellipse 78% 100% at 100% 0%, #000 45%, rgb(0 0 0 / 0.5) 72%, transparent 100%);
+  animation: cf-net-in 0.6s var(--ease) both;
+}
+@media (max-width: 600px) {
+  .cf-cover-net {
+    display: none;
+  }
+}
+@keyframes cf-net-in {
+  from {
+    opacity: 0;
+  }
+}
+.cf-cover-net svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.cf-cover-net .nl line {
+  stroke: #d6d4dc;
+  stroke-width: 1;
+}
+.cf-cover-net .nm-people {
+  fill: var(--mark-people);
+}
+.cf-cover-net .nm-partners {
+  fill: var(--mark-partners);
+}
+.cf-cover-net .nm-projects {
+  fill: var(--mark-projects);
+}
+.cf-cover-net .nm-methods {
+  fill: var(--mark-methods);
+}
+
+/* the role: the job title, then what was done and with whom, each line with a small icon */
+.cf-facts.has-split {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+}
+.cf-role-title {
+  display: block;
+  font-weight: 600;
+}
+.cf-role-split {
+  display: grid;
+  gap: 0.3rem;
+  margin: 0.45rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.cf-role-split li {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+.cf-role-split .cf-ico {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-top: 0.1rem;
+  color: var(--on-field-2);
+}
+.cf-role-note {
+  font-weight: 400;
+  color: var(--on-field-2);
+}
+.cf-cover-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  align-items: center;
+  justify-content: space-between;
+}
+/* "What this shows": capability labels on one line, not links (playbook §7) */
+.cf-shows {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.9rem;
+  align-items: center;
+}
+.cf-shows p {
+  font: 400 0.75rem/1 var(--mono);
+  color: var(--on-field-2);
+}
+.cf-shows ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cf-shows li {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  padding: 0.38rem 0.7rem 0.38rem 0.55rem;
+  border-radius: 999px;
+  background: var(--on-field);
+  color: var(--field);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.cf-ico {
+  flex: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cf-ico-marks {
+  stroke: none;
+}
+/* a role's colour, at its light-theme value: the label behind it stays white in both themes */
+.cf-ico-ad {
+  --i-cat: #6250d6;
+  --i-val: #eb6834;
+}
+.cf-ico-ad .i-cat {
+  stroke: var(--i-cat);
+  stroke-width: 2.2;
+}
+.cf-ico-ad .i-val {
+  stroke: var(--i-val);
+  stroke-width: 2.2;
+}
+.cf-ico-ad .i-cat-dot {
+  fill: var(--i-cat);
+  stroke: none;
+}
+.cf-ico-ad .i-val-dot {
+  fill: var(--i-val);
+  stroke: none;
+}
+.cf-ico .i-fill {
+  fill: currentColor;
+}
+.cf-ico-marks .m-people {
+  fill: var(--mark-people);
+}
+.cf-ico-marks .m-projects {
+  fill: var(--mark-projects);
+}
+.cf-ico-marks .m-methods {
+  fill: var(--mark-methods);
+}
+.cf-ico-marks .m-partners {
+  fill: var(--mark-partners);
+}
+.cf-out {
+  flex: none;
+  width: 0.95em;
+  height: 0.95em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 48px;
+  padding: 0 1.15rem 0 1.3rem;
+  border-radius: 999px;
+  background: var(--on-field);
+  color: var(--field) !important;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+.cf-btn:hover,
+.cf-btn:focus-visible {
+  background: color-mix(in srgb, var(--on-field) 82%, var(--field));
+}
+.cf-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+}
+
+/* ---------- the work: the product itself, straight after the cover ---------- */
+.cf-work {
+  gap: 1rem;
+}
+.cf-work-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+/* a line under the work's title (Project.work.note), e.g. that it is a rebuild */
+.cf-work-head:has(.cf-work-note) {
+  display: block;
+}
+.cf-work-note {
+  max-width: 62ch;
+  margin: 0.6rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--on-field-2);
+}
+.cf-work-head h2 {
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+.cf-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+  color: var(--case-ink);
+}
+.cf-legend li {
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* ---------- part openers ---------- */
+.cf-opener {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: end;
+  gap: 1rem 2rem;
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+  padding-block: clamp(1.25rem, 3vw, 2rem);
+}
+.cf-opener .cf-num {
+  font-size: clamp(4.5rem, 13vw, 9rem);
+  font-weight: 600;
+  line-height: 0.78;
+  letter-spacing: -0.07em;
+  font-variant-numeric: tabular-nums;
+  color: var(--on-field);
+}
+.cf-opener h2 {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+.cf-opener .cf-cards {
+  margin-top: 0.6rem;
+  font: 400 0.8125rem/1.5 var(--mono);
+  color: var(--on-field-2);
+}
+/* openers on the studio ground: a chapter page, not a sheet */
+.cf-opener.is-ground {
+  display: grid;
+  margin-top: clamp(2rem, 6vw, 4.5rem);
+  padding: 1.1rem 0 clamp(1.25rem, 3vw, 2rem);
+  border-top: 1.5px solid var(--ink);
+  scroll-margin-top: 1.5rem;
+}
+.cf-opener.is-ground .cf-num,
+.cf-opener.is-ground h2 {
+  color: var(--ink);
+}
+.cf-opener.is-ground .cf-cards {
+  color: var(--ink-2);
+}
+.cf-opener-marks {
+  display: flex;
+  gap: 0.45rem;
+  align-self: start;
+  padding-top: 0.35rem;
+}
+.cf-opener.is-ground {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+/* ---------- keycaps ---------- */
+.cf-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.cf-keys kbd {
+  display: inline-grid;
+  place-items: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--case-line);
+  border-bottom-width: 2px;
+  background: var(--case-inset);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--case-ink);
+}
+.cf-keys .plus {
+  align-self: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--case-dim);
+}
+
+/* ---------- plates: evidence straight on the card, whole and at its own ratio, with one hairline edge ---------- */
+.cf-figure {
+  margin: 0;
+  min-width: 0;
+}
+.cf-plate {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.cf-plate-shot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 0;
+}
+.cf-plate-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px var(--cf-hair);
+}
+.cf-label {
+  margin-top: 10px;
+  text-transform: uppercase;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  color: var(--case-dim);
+}
+
+/* a row of images, each whole: one shared height, each as wide as its own ratio makes it (never cropped);
+   the label sits above its image */
+.cf-row {
+  display: grid;
+  gap: clamp(14px, 2.4vw, 24px);
+  width: 100%;
+  margin-inline: auto;
+}
+.cf-row-item {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+}
+.cf-row-item .cf-label {
+  order: -1;
+  margin: 0 0 10px;
+}
+@media (min-width: 640px) {
+  .cf-row {
+    display: flex;
+    align-items: flex-start;
+  }
+  .cf-row-item {
+    flex: var(--r) 1 0;
+  }
+}
+
+/* phones: two screens side by side on the mount, each whole */
+.cf-phones {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 5vw, 56px);
+  align-items: end;
+  justify-items: center;
+  padding-inline: clamp(0px, 4%, 40px);
+}
+.cf-phone {
+  display: grid;
+  justify-items: center;
+  min-width: 0;
+  margin: 0;
+}
+.cf-phone .cf-zoom img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* small enough that the screen's own corners (the logo, the tabs) stay whole */
+  border-radius: clamp(6px, 1vw, 10px);
+  box-shadow: 0 0 0 1px var(--cf-hair);
+}
+.cf-phone .cf-label {
+  text-align: center;
+}
+
+/* a picture that opens larger: the thumbnail is the button; a small badge says it can be pressed */
+.cf-zoom {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  cursor: zoom-in;
+}
+.cf-zoom img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.cf-zoom-badge {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.92);
+  color: #22212a;
+  box-shadow: 0 0 0 1px rgb(34 33 42 / 0.12);
+  transition: background-color 0.2s, color 0.2s;
+}
+.cf-zoom-badge svg {
+  width: 14px;
+  height: 14px;
+}
+.cf-zoom:hover .cf-zoom-badge,
+.cf-zoom:focus-visible .cf-zoom-badge {
+  background: #22212a;
+  color: #ffffff;
+}
+.cf-phone .cf-zoom-badge {
+  right: 12px;
+  bottom: 12px;
+}
+.cf-lightbox {
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+}
+.cf-lightbox::backdrop {
+  background: rgb(20 19 24 / 0.9);
+}
+.cf-lightbox figure {
+  width: min(var(--w), 92vw, calc(88vh * (var(--ar))));
+  margin: 0;
+}
+.cf-lightbox figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+.cf-lightbox-close {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #22212a;
+  cursor: pointer;
+}
+.cf-lightbox-close svg {
+  width: 16px;
+  height: 16px;
+}
+.cf-lightbox-close:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 3px;
+}
+
+/* ---------- browser frame: the product's own window, round screenshots and recordings ---------- */
+.cf-cq {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-width: 0;
+}
+.cf-browser {
+  --bar: 32px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 0 0 1px var(--cf-hair);
+}
+.cf-browser-bar {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  height: var(--bar);
+  padding: 0 14px;
+  background: #ffffff;
+  border-bottom: 1px solid #ecebf0;
+  color: #5b5966;
+}
+.cf-url {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font: 400 11px/1.4 var(--mono);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #5b5966;
+}
+.cf-browser-screen {
+  position: relative;
+  background: #ffffff;
+}
+.cf-browser-screen img,
+.cf-browser-screen video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- recordings: the whole screen plays and pauses; the toolbar holds the scrubber and the time ---------- */
+.cf-rec-bar {
+  display: flex;
+  flex: 1.4;
+  gap: 10px;
+  align-items: center;
+  min-width: 96px;
+}
+.cf-browser-bar:has(.cf-rec-bar) .cf-url {
+  flex: 1;
+  max-width: 46%;
+}
+.cf-track {
+  position: relative;
+  flex: 1;
+  display: grid;
+  align-items: center;
+  height: 24px;
+}
+.cf-track-bar {
+  position: relative;
+  height: 4px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #d9d8df;
+  transition: height 0.2s var(--ease);
+}
+.cf-track:hover .cf-track-bar {
+  height: 6px;
+}
+.cf-track-bar i {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #5b5966, #22212a);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.25s linear;
+}
+/* the slider itself is invisible over the bar; its thumb shows on hover and focus */
+.cf-track input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+.cf-track input::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+.cf-track input::-moz-range-track {
+  background: transparent;
+}
+.cf-track input::-webkit-slider-thumb {
+  width: 13px;
+  height: 13px;
+  margin-top: 5.5px;
+  border: 0;
+  border-radius: 50%;
+  appearance: none;
+  background: #22212a;
+  box-shadow: 0 0 0 3px rgb(34 33 42 / 0.18);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.cf-track input::-moz-range-thumb {
+  width: 13px;
+  height: 13px;
+  border: 0;
+  border-radius: 50%;
+  background: #22212a;
+  box-shadow: 0 0 0 3px rgb(34 33 42 / 0.18);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.cf-track:hover input::-webkit-slider-thumb,
+.cf-track input:focus-visible::-webkit-slider-thumb {
+  opacity: 1;
+}
+.cf-track:hover input::-moz-range-thumb,
+.cf-track input:focus-visible::-moz-range-thumb {
+  opacity: 1;
+}
+.cf-track input:focus-visible {
+  outline: 2px solid #22212a;
+  outline-offset: 1px;
+  border-radius: 4px;
+}
+.cf-clock {
+  flex: none;
+  font: 500 11px/1 var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: #22212a;
+}
+.cf-clock i {
+  font-style: normal;
+  color: #5b5966;
+}
+.cf-screen {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.cf-screen:focus-visible {
+  outline: 2px solid #22212a !important;
+  outline-offset: -4px !important;
+}
+/* flat ink, the platform's own colour */
+.cf-bigplay {
+  display: grid;
+  place-items: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: #22212a;
+  color: #ffffff;
+  box-shadow: 0 10px 30px -12px rgb(0 0 0 / 0.5);
+  transition:
+    opacity 0.3s var(--ease),
+    transform 0.3s var(--ease),
+    background-color 0.2s;
+}
+.cf-screen:hover .cf-bigplay,
+.cf-screen:focus-visible .cf-bigplay {
+  background: #3a3946;
+  transform: scale(1.05);
+}
+.cf-screen:active .cf-bigplay {
+  transform: scale(0.94);
+}
+/* playing: the glyph has become pause; it fades away, and comes back on hover or focus */
+.cf-rec.is-playing .cf-bigplay {
+  opacity: 0;
+}
+.cf-rec.is-playing .cf-screen:hover .cf-bigplay,
+.cf-rec.is-playing .cf-screen:focus-visible .cf-bigplay {
+  opacity: 1;
+}
+/* play ↔ pause: two halves of the triangle slide apart into bars */
+.cf-morph {
+  position: relative;
+  display: block;
+  width: 1.05rem;
+  height: 1.2rem;
+}
+.cf-rec:not(.is-playing) .cf-morph {
+  margin-left: 0.22rem;
+}
+.cf-morph::before,
+.cf-morph::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  transition: clip-path 0.3s var(--ease);
+}
+.cf-morph::before {
+  clip-path: polygon(0 0, 51% 25.5%, 51% 74.5%, 0 100%);
+}
+.cf-morph::after {
+  clip-path: polygon(50% 25%, 100% 50%, 100% 50%, 50% 75%);
+}
+.cf-morph.is-pause::before {
+  clip-path: polygon(4% 0, 36% 0, 36% 100%, 4% 100%);
+}
+.cf-morph.is-pause::after {
+  clip-path: polygon(64% 0, 96% 0, 96% 100%, 64% 100%);
+}
+
+/* ---------- compare: the reader switches ---------- */
+.cf-compare {
+  display: grid;
+  gap: 14px;
+}
+.cf-seg {
+  justify-self: start;
+  display: inline-flex;
+  flex: none;
+  margin: 0;
+  padding: 3px;
+  border: 0;
+  border-radius: 999px;
+  background: #f1f0f3;
+}
+.cf-browser:has(.cf-seg) {
+  --bar: 46px;
+}
+/* narrow windows: the switch keeps the bar to itself */
+@media (max-width: 600px) {
+  .cf-browser-bar:has(.cf-seg) .cf-url {
+    display: none;
+  }
+  .cf-browser-bar .cf-seg {
+    margin-inline: auto;
+  }
+}
+.cf-seg legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.cf-seg label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #5b5966;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s, box-shadow 0.2s;
+}
+.cf-seg label:hover {
+  color: #22212a;
+}
+.cf-seg label:has(input:checked) {
+  background: #22212a;
+  color: #ffffff;
+}
+.cf-seg label:has(input:focus-visible) {
+  outline: 2px solid #22212a;
+  outline-offset: 2px;
+}
+.cf-seg input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  appearance: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.cf-seg svg {
+  width: 15px;
+  height: 15px;
+  overflow: visible;
+}
+.cf-stack {
+  position: relative;
+  display: grid;
+}
+.cf-stack > * {
+  grid-area: 1 / 1;
+}
+.cf-stack .cf-layer {
+  transition: opacity 0.35s var(--ease);
+}
+.cf-stack .cf-layer[data-hidden="true"] {
+  opacity: 0;
+}
+.cf-stack video {
+  pointer-events: none;
+}
+
+/* ---------- steps with pictures (the workshop walls), each picture whole ---------- */
+.cf-steps {
+  display: grid;
+  gap: clamp(24px, 3vw, 32px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cf-steps li {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+}
+@media (min-width: 760px) {
+  .cf-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto auto auto auto;
+    column-gap: clamp(16px, 2.4vw, 28px);
+    row-gap: 0;
+  }
+  .cf-steps li {
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+  }
+}
+.cf-step-img {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+}
+.cf-step-img .cf-zoom img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+.cf-step-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 0 !important;
+}
+.cf-step-label::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--case-rule);
+}
+.cf-steps h4 {
+  margin: 6px 0 0;
+  font-size: 17px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  color: var(--case-ink);
+}
+.cf-steps p:not(.cf-step-label) {
+  margin: 4px 0 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--case-body);
+}
+
+/* a picture beside its steps, each step a row */
+@media (min-width: 761px) {
+  .cf-evidence[data-split=""] {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(1.25rem, 2.6vw, 2rem);
+    align-items: center;
+  }
+  /* the picture keeps its own size on a mount that hugs it, centred against the steps */
+  .cf-evidence[data-split=""] > .cf-figure {
+    height: auto !important;
+    align-self: center;
+  }
+  .cf-evidence[data-split=""] .cf-plate,
+  .cf-evidence[data-split=""] .cf-plate-shot {
+    height: auto !important;
+  }
+  .cf-evidence[data-split=""] .cf-plate-shot img {
+    width: 100% !important;
+    max-height: none !important;
+  }
+  .cf-evidence[data-split=""] > .cf-steps {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: none;
+    row-gap: clamp(0.75rem, 1.6vw, 1.1rem);
+    align-content: center;
+  }
+  .cf-evidence[data-split=""] > .cf-steps li {
+    grid-row: auto;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr;
+    column-gap: 14px;
+    align-content: start;
+  }
+  .cf-evidence[data-split=""] .cf-step-img {
+    grid-row: 1 / span 3;
+    align-self: start;
+  }
+  .cf-evidence[data-split=""] .cf-step-label {
+    margin-top: 0 !important;
+  }
+  .cf-evidence[data-split=""] .cf-steps h4 {
+    margin-top: 2px;
+  }
+  .cf-evidence[data-split=""] .cf-steps p:not(.cf-step-label) {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+}
+
+/* ---------- metrics ---------- */
+.cf-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--case-ink);
+}
+.cf-metrics li {
+  padding: 20px 20px 4px 0;
+}
+.cf-metrics li + li {
+  padding-left: 20px;
+  border-left: 1px solid var(--case-rule);
+}
+@media (max-width: 639px) {
+  .cf-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .cf-metrics li,
+  .cf-metrics li + li {
+    padding: 18px 14px 6px 0;
+    border-left: 0;
+    border-bottom: 1px solid var(--case-rule);
+  }
+  /* phones: the shares stay as one bar across the top, the numbers in two columns under it */
+  .cf-metrics.is-parts {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    row-gap: 0;
+  }
+  .cf-metrics.is-parts li,
+  .cf-metrics.is-parts li + li {
+    padding: 16px 12px 10px 0;
+    border-top-width: 6px;
+    border-bottom: 0;
+  }
+  .cf-metrics.is-parts li.is-total {
+    grid-column: 1 / -1;
+    margin-left: 0;
+    padding-top: 16px;
+  }
+}
+.cf-metric-value {
+  display: block;
+  font-size: clamp(3.25rem, 10vw, 9rem);
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+/* the map's make-up: each type's column is as wide as its share of the entries, topped by a bar in its colour,
+   so the row of numbers is also the chart; the total (connections) stands apart on a hairline */
+.cf-metrics.is-parts {
+  column-gap: 4px;
+  border-top: 0;
+}
+.cf-metrics.is-parts .cf-metric-value {
+  font-size: clamp(2.5rem, 5.4vw, 5rem);
+  line-height: 0.9;
+}
+.cf-metrics.is-parts li,
+.cf-metrics.is-parts li + li {
+  min-width: 0;
+  padding: 22px 8px 4px 0;
+  border-left: 0;
+  border-top: 8px solid var(--case-ink);
+}
+.cf-metrics.is-parts li.is-people {
+  border-top-color: var(--mark-people);
+}
+.cf-metrics.is-parts li.is-partners {
+  border-top-color: var(--mark-partners);
+}
+.cf-metrics.is-parts li.is-projects {
+  border-top-color: var(--mark-projects);
+}
+.cf-metrics.is-parts li.is-methods {
+  border-top-color: var(--mark-methods);
+}
+.cf-metrics.is-parts li.is-total {
+  margin-left: clamp(1rem, 3.5vw, 2.75rem);
+  padding-top: 29px;
+  border-top: 1px solid var(--case-rule);
+}
+.cf-metric-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--case-body);
+}
+.cf-metric-note {
+  display: block;
+  margin-top: 6px;
+}
+.cf-type-people {
+  color: var(--type-people);
+}
+.cf-type-partners {
+  color: var(--type-partners);
+}
+.cf-type-projects {
+  color: var(--type-projects);
+}
+.cf-type-methods {
+  color: var(--type-methods);
+}
+
+/* figures that mean something (testing): grouped by what they measured; red for a number that looked right but
+   missed something, green for one that can be trusted; each group's checks under it */
+.cf-tally {
+  display: grid;
+  gap: clamp(1.5rem, 3.4vw, 2.25rem);
+}
+@media (min-width: 640px) {
+  .cf-tally {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1.25rem, 3vw, 2.5rem);
+  }
+}
+.cf-tally-group {
+  --tone: var(--pass, #0a7a48);
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  padding-top: 14px;
+  border-top: 3px solid var(--tone);
+}
+/* a group whose figures looked right but missed something: the figures stay neutral, only its "Missed" line is red */
+.cf-tally-group[data-tone="miss"] {
+  --tone: var(--case-ink);
+  border-top-color: var(--case-line);
+}
+.cf-tally-group[data-tone="miss"] .cf-tally-dot {
+  background: var(--case-dim);
+}
+.cf-tally-head {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font: 500 11.5px/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--case-dim);
+}
+.cf-tally-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--tone);
+}
+.cf-tally-figures {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cf-tally-figures li {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+.cf-tally-value {
+  font-size: clamp(3.25rem, 7vw, 5.75rem);
+  font-weight: 600;
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  font-variant-numeric: tabular-nums;
+  color: var(--tone);
+}
+.cf-tally-label {
+  max-width: 20ch;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--case-body);
+}
+.cf-tally-checks {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 14px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--case-rule);
+}
+.cf-tally-checks li {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  font-size: 14.5px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--case-ink);
+}
+.cf-tally-mark {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--pass, #0a7a48);
+  color: var(--case-bg);
+}
+.cf-tally-checks li[data-tone="miss"] .cf-tally-mark {
+  background: var(--miss, #b42318);
+}
+.cf-tally-mark svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* type marks: the platform's own shapes */
+.cf-mark {
+  flex: none;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+}
+.cf-mark-people {
+  border-radius: 50%;
+  background: var(--mark-people);
+}
+.cf-mark-partners {
+  background: var(--mark-partners);
+}
+.cf-mark-projects {
+  width: 9px;
+  height: 9px;
+  transform: rotate(45deg);
+  background: var(--mark-projects);
+}
+.cf-mark-methods {
+  width: 11px;
+  height: 10px;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  background: var(--mark-methods);
+}
+
+/* ---------- specimens: the product's own white surface, in both themes ---------- */
+.cf-specimens {
+  --mark-people: #5f5ba3;
+  overflow: hidden;
+  border-radius: var(--cf-radius);
+  background: #ffffff;
+  color: #22212a;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06);
+}
+.cf-spec-head,
+.cf-spec-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  padding: 18px clamp(16px, 3vw, 28px);
+}
+@media (min-width: 760px) {
+  .cf-spec-head,
+  .cf-spec-row {
+    grid-template-columns: 112px minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+}
+.cf-spec-head {
+  padding-top: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #ecebf0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5b5966;
+}
+.cf-spec-row + .cf-spec-row {
+  border-top: 1px solid #f1f0f4;
+}
+.cf-spec-type {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: #5b5966;
+}
+.cf-spec-head span:first-child {
+  display: none;
+}
+@media (min-width: 760px) {
+  .cf-spec-type {
+    display: inline-flex;
+  }
+  .cf-spec-head span:first-child {
+    display: block;
+  }
+}
+.cf-spec-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(19px, 2vw, 22px);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.cf-spec-small {
+  font-size: 14px;
+  font-weight: 500;
+}
+.cf-ratio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #5b5966;
+}
+.cf-pass {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #eef6f4;
+  color: #005c58;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+.cf-pass svg {
+  width: 11px;
+  height: 11px;
+}
+.cf-spec-fail {
+  color: #5b5966;
+  text-decoration: line-through;
+  text-decoration-color: #b9b6c4;
+}
+
 /* ---------- next ---------- */
 .cf-next {
   display: grid;
@@ -2389,17 +4509,6 @@
 }
 .cf-sheet.is-dark .cf-tag {
   color: var(--on-dark-2);
-}
-.cf-next strong {
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  line-height: 1.05;
-  letter-spacing: -0.035em;
-  font-weight: 600;
-  color: var(--case-ink);
-}
-.cf-next span:last-child {
-  font-size: 0.9375rem;
-  color: var(--case-body);
 }
 
 /* ---------- reduced motion: everything stands still ---------- */

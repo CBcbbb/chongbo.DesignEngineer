@@ -192,7 +192,7 @@ Rules:
 
 **Interaction and motion:**
 
-- **Playful micro-interactions belong to the site, not the case files.** Buttons that do more than change colour (letters knocked about, icons that act, a little randomness each time) are for the portfolio's own shell: the home page, navigation, the printer. Inside a case file they compete with the work.
+- **Playful micro-interactions belong to the site, not the case files.** Buttons that do more than change colour (letters knocked about, icons that act, a little randomness each time) are for the portfolio's own shell: the home page, navigation, the printer. Inside a case file they compete with the work. The next case file control at the end of every case file sits outside the last card and belongs to the shell: it uses the shell's drawn arrow (`src/components/shell/NextCase.tsx`, approved 13 October 2026).
 - **In a case file, controls are serious and well made:** they work fully (a recording can be scrubbed, paused, muted; one thing plays at a time), look finished (Nike: a lit orange gradient on the play buttons, a gradient progress fill, a ring that fills as a clip plays), and guide where needed (a small hint, "Tap to listen · 0:05", until the first play).
 - **Obvious affordances:** what can be pressed looks pressable (Nike's wireframe inset sits on the canvas's top-right corner and overhangs it). A swap keeps both boxes still: the inset has the same place and size whichever image is large.
 - **Restraint and access:** transitions short (0.35s or less for controls); focus behaves like hover; everything stands still with reduced motion.

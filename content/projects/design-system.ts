@@ -19,6 +19,7 @@ export const designSystem: Project = {
   context: "Logistics infrastructure company · current role",
   client: "Logistics infrastructure company",
   role: "Design Engineer",
+  period: "Current role",
   roleSplit: [{ with: "solo", what: "Figma library, colour scales and code", note: "on my own" }],
   outcome: "One design system across the ecosystem's products, which every client and user can customise on top.",
   stack: ["Figma", "React", "TypeScript", "Tailwind", "shadcn/ui", "OKLCH colour"],

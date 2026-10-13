@@ -8,6 +8,8 @@ import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type 
 import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
 import { BROWSE_ALL, EXAMPLES, PICKED_HINT, TOPICS, missingLine, pad2, printedCount, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
 import { Pill } from "./nav/Pill";
+import { DrawnArrow } from "./shell/DrawnArrow";
+import { ShareLink } from "./shell/ShareLink";
 import type { PrintedCard } from "./PrintedCard";
 import { Sheet } from "./Sheet";
 
@@ -21,7 +23,17 @@ type Props = {
   topics?: Topic[];
 };
 
-type Result = { title: string; asked: string; cards: SheetCard[]; missing: string; provenance: string; byModel?: boolean; error?: boolean };
+type Result = {
+  title: string;
+  asked: string;
+  cards: SheetCard[];
+  missing: string;
+  provenance: string;
+  byModel?: boolean;
+  /** The signal keys the printer understood: the shared link (`/ask?topics=`) is built from these. */
+  topics?: string[];
+  error?: boolean;
+};
 
 /** Per step of the paper's checklist. Four steps plus the feed: under two seconds, long enough to read. */
 const STEP_MS = 320;
@@ -203,6 +215,7 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
           missing: missingLine(outcome.data.missing),
           provenance: provenanceLine(outcome.data.source, sheets.length),
           byModel: outcome.data.source === "model",
+          topics: [...outcome.data.asked],
         }
       : { title: outcome.message, asked: quoteBrief(text), cards: [], missing: "", provenance: "", error: true };
     introRef.current = true;
@@ -434,18 +447,19 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
                 {result.title}
               </h2>
               {result.asked && <p>{result.asked}</p>}
+              {result.provenance && (
+                <p className="provenance">
+                  {result.provenance}
+                  {result.byModel && (
+                    <>
+                      {" "}
+                      <Link href="/work">{BROWSE_ALL}</Link>
+                    </>
+                  )}
+                </p>
+              )}
             </div>
-            {result.provenance && (
-              <p className="provenance">
-                {result.provenance}
-                {result.byModel && (
-                  <>
-                    {" "}
-                    <Link href="/work">{BROWSE_ALL}</Link>
-                  </>
-                )}
-              </p>
-            )}
+            {result.cards.length > 0 && result.topics && <ShareLink topics={result.topics} />}
           </div>
           {result.cards.length > 0 && (
             <ol
@@ -471,13 +485,13 @@ export function PrintedToOrder({ cards, printed, labelledBy, topics = TOPICS }: 
           {n > 1 && (
             <div className="deckbar">
               <button type="button" aria-label="Previous sheet" disabled={cur === 0} onClick={() => goSheet(cur - 1)}>
-                ←
+                <DrawnArrow kind="still" className="ga-back" />
               </button>
               <span>
                 {pad2(cur + 1)} / {pad2(n)}
               </span>
               <button type="button" aria-label="Next sheet" disabled={cur === n - 1} onClick={() => goSheet(cur + 1)}>
-                →
+                <DrawnArrow kind="still" />
               </button>
             </div>
           )}

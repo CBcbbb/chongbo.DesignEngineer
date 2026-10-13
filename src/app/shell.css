@@ -1,0 +1,632 @@
+/*
+ * The shell's shared pieces, from the approved UX proposals (docs/case-studies/ux-proposals.md):
+ * the drawn arrow (07), the cover set (01), /work (02), the next case file (03), sharing a print and the deck bar (04),
+ * and the footer (05). Shell only: nothing here reaches inside a case-file card (playbook §7).
+ */
+
+/* ---------- the drawn arrow ---------- */
+.ga {
+  display: block;
+  flex: none;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---------- covers: one set ---------- */
+.pc {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  max-width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  contain: paint;
+  border-radius: 6px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+.pc > svg {
+  width: 70%;
+  height: 64%;
+  overflow: visible;
+}
+/* HHCD: the map's marks on map paper, running off the edges */
+.pc-hhcd {
+  background: #ffffff;
+}
+.pc-hhcd::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle, #d4d1db 1px, transparent 1.3px) 0 0 / 14px 14px;
+}
+.pc-hhcd > svg {
+  width: 92%;
+  height: 92%;
+}
+.pc-any {
+  background: #1d4fd7;
+}
+.pc-any > svg {
+  width: 74%;
+}
+.pc-any text {
+  font-family: var(--mono);
+}
+.pc-ds {
+  background: #f2c94c;
+}
+.pc-nike {
+  background: #0e0d0b;
+}
+.pc-nike img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.pc-plain {
+  background: var(--paper-current);
+}
+
+/* the motion: each drawing does what its project is about, on hover, or once in view on touch screens */
+.pc-hhcd svg > :not(g) {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.pc-hhcd svg > g {
+  opacity: 0.85;
+  transition: opacity 0.4s;
+}
+.pc-any svg path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+.pc-ds svg > g,
+.pc-ds svg > g > g {
+  transition: translate 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.pc-nike img {
+  transition:
+    scale 0.6s var(--ease-out),
+    translate 0.6s var(--ease-out);
+}
+@media (hover: hover) {
+  [data-play-host]:hover .pc-hhcd svg > :not(g) {
+    animation: pc-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+  [data-play-host]:hover .pc-hhcd svg > g {
+    opacity: 1;
+  }
+  [data-play-host]:hover .pc-any svg path {
+    animation: pc-redraw 0.8s var(--ease-out) both;
+  }
+  [data-play-host]:hover .pc-ds svg > g {
+    translate: 0 -3px;
+  }
+  [data-play-host]:hover .pc-ds svg > g > g {
+    translate: 0 -11px;
+  }
+  [data-play-host]:hover .pc-ds svg > g > g + g {
+    translate: 0 -19px;
+  }
+  [data-play-host]:hover .pc-nike img {
+    scale: 1.05;
+    translate: 0 -2%;
+  }
+}
+[data-play-host]:focus-visible .pc-hhcd svg > :not(g),
+.is-play .pc-hhcd svg > :not(g) {
+  animation: pc-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+[data-play-host]:focus-visible .pc-any svg path,
+.is-play .pc-any svg path {
+  animation: pc-redraw 0.8s var(--ease-out) both;
+}
+[data-play-host]:focus-visible .pc-ds svg > g,
+.is-play .pc-ds svg > g {
+  translate: 0 -3px;
+}
+[data-play-host]:focus-visible .pc-ds svg > g > g,
+.is-play .pc-ds svg > g > g {
+  translate: 0 -11px;
+}
+[data-play-host]:focus-visible .pc-ds svg > g > g + g,
+.is-play .pc-ds svg > g > g + g {
+  translate: 0 -19px;
+}
+[data-play-host]:focus-visible .pc-nike img,
+.is-play .pc-nike img {
+  scale: 1.05;
+  translate: 0 -2%;
+}
+/* a ripple: the marks go one after another */
+.pc-hhcd svg > :nth-child(7n + 2) {
+  animation-delay: 0ms;
+}
+.pc-hhcd svg > :nth-child(7n + 3) {
+  animation-delay: 45ms;
+}
+.pc-hhcd svg > :nth-child(7n + 4) {
+  animation-delay: 90ms;
+}
+.pc-hhcd svg > :nth-child(7n + 5) {
+  animation-delay: 135ms;
+}
+.pc-hhcd svg > :nth-child(7n + 6) {
+  animation-delay: 180ms;
+}
+.pc-hhcd svg > :nth-child(7n) {
+  animation-delay: 225ms;
+}
+.pc-hhcd svg > :nth-child(7n + 1) {
+  animation-delay: 270ms;
+}
+.pc-any svg path:nth-of-type(2) {
+  animation-delay: 70ms;
+}
+.pc-any svg path:nth-of-type(3) {
+  animation-delay: 140ms;
+}
+.pc-any svg path:nth-of-type(4) {
+  animation-delay: 210ms;
+}
+.pc-any svg path:nth-of-type(5) {
+  animation-delay: 280ms;
+}
+@keyframes pc-pop {
+  40% {
+    scale: 1.35;
+  }
+}
+@keyframes pc-redraw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+/* ---------- /work: two by two ---------- */
+.work-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+  max-width: 1104px;
+  margin: 36px auto 0;
+  padding: 0;
+  list-style: none;
+}
+.work-list > li {
+  display: flex;
+}
+.work-card {
+  --focus: var(--paper-ink);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--paper-ink);
+  text-decoration: none;
+  box-shadow:
+    0 0 0 1px rgba(60, 50, 40, 0.07),
+    0 22px 36px -24px rgba(40, 30, 20, 0.5);
+  transition:
+    translate 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+@media (hover: hover) {
+  .work-card:hover {
+    translate: 0 -4px;
+    box-shadow:
+      0 0 0 1px rgba(60, 50, 40, 0.1),
+      0 32px 46px -26px rgba(40, 30, 20, 0.55);
+  }
+}
+.work-card:focus-visible {
+  translate: 0 -4px;
+}
+.work-tx {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 12px 10px;
+}
+.work-meta {
+  font: 500 11.5px var(--mono);
+  letter-spacing: 0.04em;
+  color: var(--paper-dim);
+}
+.work-card h2 {
+  margin: 0;
+  font: 600 24px/1.15 var(--sans);
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+.work-one {
+  max-width: 48ch;
+  margin-bottom: 10px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--paper-body);
+}
+/* the foot: role and period, on one line across each row of cards */
+.work-role {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--paper-rule);
+  font: 500 14px var(--sans);
+}
+.work-period {
+  font: 400 13px var(--mono);
+  color: var(--paper-dim);
+}
+@media (max-width: 760px) {
+  .work-list {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .work-tx {
+    padding: 14px 8px 8px;
+  }
+  .work-card h2 {
+    font-size: 21px;
+  }
+}
+
+/* ---------- the next case file: one control on every project ---------- */
+.nx-wrap {
+  /* The shell's own type, whatever the case file around it sets (the design system's case swaps --sans). */
+  --nx-sans: var(--font-geist-sans), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --nx-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  margin-top: clamp(2.25rem, 5vw, 3.5rem);
+}
+.nx-wrap .nx {
+  display: grid;
+  grid-template-columns: auto minmax(48px, 1fr) minmax(0, auto);
+  align-items: center;
+  column-gap: 18px;
+  padding-block: 30px 0;
+  border-top: 1px solid var(--rule);
+  color: var(--ink);
+  font-family: var(--nx-sans);
+  text-decoration: none;
+  transition: scale 0.15s var(--ease);
+}
+.nx:active {
+  scale: 0.985;
+}
+.nx-cv {
+  display: none;
+}
+.nx-lab {
+  font: 500 12px var(--nx-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.nx:hover .nx-lab,
+.nx:focus-visible .nx-lab {
+  color: var(--ink);
+}
+.nx-wrap .nx-ga {
+  width: 100%;
+  height: 68px;
+  color: var(--ink);
+}
+.nx-ttl {
+  justify-self: end;
+  max-width: 13em;
+  font: 700 clamp(28px, 3.6vw, 46px) / 0.98 var(--nx-sans);
+  color: var(--ink);
+  letter-spacing: -0.03em;
+  text-align: right;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+/* phones: no arrow; the next cover beside the label and the name */
+@media (max-width: 700px) {
+  .nx-wrap .nx {
+    grid-template-columns: 112px minmax(0, 1fr);
+    column-gap: 14px;
+    row-gap: 6px;
+    padding-block: 24px 0;
+  }
+  .nx-wrap .nx-ga {
+    display: none;
+  }
+  .nx-cv {
+    display: grid;
+    grid-row: 1 / span 2;
+    grid-column: 1;
+    width: 112px;
+    border-radius: 5px;
+  }
+  .nx-lab {
+    grid-column: 2;
+    align-self: end;
+  }
+  .nx-ttl {
+    grid-column: 2;
+    justify-self: start;
+    align-self: start;
+    font-size: 22px;
+    line-height: 1;
+    text-align: left;
+  }
+}
+
+/* ---------- after a print: the header, sharing, the deck bar ---------- */
+.rhead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 8px 16px;
+  max-width: 1100px;
+  /* one block over the sheet, so the whole sheet fits under it on a laptop screen */
+  margin: 0 auto var(--s2);
+}
+.rhead .provenance {
+  margin: 4px 0 0;
+  font: 400 14px/1.5 var(--sans);
+  color: var(--ink-2);
+}
+.missing {
+  font: 400 14px/1.5 var(--sans);
+}
+.share-wrap {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  justify-self: end;
+}
+.share {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 16px 0 12px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: 500 14px var(--sans);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.share:hover {
+  border-color: var(--ink);
+}
+.share-ico {
+  width: 20px;
+  height: 20px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.share-ico .out,
+.share-ico .head {
+  stroke-dasharray: 1;
+}
+.share-label {
+  display: inline-flex;
+}
+.share-label i {
+  display: inline-block;
+  font-style: normal;
+}
+.share-manual {
+  min-height: 44px;
+  width: min(100%, 22rem);
+  padding: 0 12px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--paper-ink);
+  font: 400 13px var(--mono);
+}
+@media (max-width: 700px) {
+  .rhead {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .share-wrap {
+    justify-self: start;
+  }
+}
+.deckbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: var(--s2);
+}
+.deckbar button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    opacity 0.2s;
+}
+.deckbar button:hover:not([disabled]) {
+  border-color: var(--ink);
+}
+.deckbar button[disabled] {
+  opacity: 0.35;
+  cursor: default;
+}
+.deckbar .ga {
+  width: 22px;
+  height: 22px;
+}
+.deckbar .ga-back {
+  transform: scaleX(-1);
+}
+.deckbar span {
+  font: 500 13px var(--mono);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+/* "Read it in context": the arrow draws a little further on hover */
+.full .full-ga {
+  width: 28px;
+  height: 18px;
+  margin-left: 8px;
+}
+/* About's links out */
+.out-ga {
+  width: 14px;
+  height: 14px;
+  transform: rotate(-45deg);
+  color: var(--paper-dim);
+}
+
+/* ---------- footer: two things only ---------- */
+.foot {
+  font-family: var(--sans);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px 32px;
+  margin-top: var(--s6);
+  padding-block: 22px 30px;
+  border-top: 1px solid var(--rule);
+  font: 400 14px/1.5 var(--sans);
+  color: var(--ink-2);
+}
+.ft-note {
+  margin: 0;
+}
+.ft-claim {
+  position: relative;
+  display: inline-block;
+  font-weight: 500;
+  color: var(--ink);
+}
+.ft-sig {
+  position: absolute;
+  left: -3%;
+  bottom: -6px;
+  width: 106%;
+  height: 8px;
+  overflow: visible;
+  pointer-events: none;
+  fill: none;
+  stroke: var(--red);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.ft-sig path {
+  stroke-dasharray: 1 3;
+  stroke-dashoffset: 1.6;
+}
+.ft-mail {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.ft-mail a {
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: var(--rule);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.2s;
+}
+.ft-mail a:hover {
+  text-decoration-color: var(--ink);
+}
+.ft-copy {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+.ft-copy:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+}
+.ft-copy svg {
+  width: 18px;
+  height: 18px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ft-copy-back {
+  transition: translate 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.ft-copy:hover .ft-copy-back {
+  translate: 1px -1px;
+}
+/* the slip that prints up out of the button */
+.ft-slip {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 2px);
+  padding: 6px 10px 10px;
+  background: var(--paper);
+  color: var(--paper-ink);
+  font: 500 11px var(--mono);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  pointer-events: none;
+  clip-path: inset(100% 0 0 0);
+  box-shadow: 0 8px 14px -8px rgba(40, 30, 20, 0.45);
+  -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 8px 100%;
+  mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 8px 100%;
+}
+@media (max-width: 700px) {
+  .foot {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding-block: 20px 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc *,
+  .work-card,
+  .nx {
+    animation: none !important;
+    transition: none !important;
+  }
+}

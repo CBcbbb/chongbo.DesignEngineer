@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import Link from "next/link";
+import { NextCase } from "@/components/shell/NextCase";
 import { notFound } from "next/navigation";
 import { getProject, projects, SIGNALS } from "@content";
 import { NikeCase } from "@/components/case/nike/NikeCase";
@@ -212,21 +213,7 @@ export default async function CaseFile({ params }: Props) {
               })}
             </div>
 
-            <nav aria-label="Next case file" className="paper-drop mt-14 max-w-[460px]">
-              <Link href={`/work/${next.slug}`} className="mini torn-sm next-file">
-                <span className="meta">Next case file</span>
-                <span className="flex items-baseline gap-3">
-                  <span className="n" aria-hidden="true">
-                    {projectNumber(next)}
-                  </span>
-                  <span className="next-title">{next.title}</span>
-                </span>
-                <span className="next-one">{next.oneLiner}</span>
-                <span className="meta go" aria-hidden="true">
-                  Open case file →
-                </span>
-              </Link>
-            </nav>
+            <NextCase next={next} />
             </div>
           </article>
         </div>

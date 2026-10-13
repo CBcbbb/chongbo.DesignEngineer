@@ -5,6 +5,7 @@ import { printedCards } from "@/components/PrintedCard";
 import { Sheet } from "@/components/Sheet";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { ShareLink } from "@/components/shell/ShareLink";
 import { answerAsk } from "@/lib/ask/answer";
 import { askLimiter, clientKey } from "@/lib/ask/rate-limit";
 import {
@@ -72,16 +73,17 @@ export default async function AskPage({ searchParams }: Props) {
               <div>
                 <h1 id="r-title">{title}</h1>
                 {brief.trim() && <p>{quoteBrief(brief)}</p>}
+                <p className="provenance">
+                  {provenanceLine(result.source, sheets.length)}
+                  {result.source === "model" && sheets.length > 0 && (
+                    <>
+                      {" "}
+                      <Link href="/work">{BROWSE_ALL}</Link>
+                    </>
+                  )}
+                </p>
               </div>
-              <p className="provenance">
-                {provenanceLine(result.source, sheets.length)}
-                {result.source === "model" && sheets.length > 0 && (
-                  <>
-                    {" "}
-                    <Link href="/work">{BROWSE_ALL}</Link>
-                  </>
-                )}
-              </p>
+              {sheets.length > 0 && <ShareLink topics={result.asked} />}
             </div>
             <h2 id="sheets-title" className="sr-only">
               Printed sheets

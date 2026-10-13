@@ -389,25 +389,6 @@ main:focus {
   text-underline-offset: 3px;
 }
 
-/* ---------- footer ---------- */
-.foot {
-  padding-block: var(--s6) var(--s7);
-  border-top: 1px solid var(--rule);
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 12px 24px;
-  font-size: 14px;
-  color: var(--ink-2);
-}
-.foot a {
-  text-underline-offset: 3px;
-}
-.note {
-  font-family: var(--mono);
-  font-size: 12px;
-}
-
 /* ---------- paper card (case file) ---------- */
 .card {
   --focus: var(--paper-ink);

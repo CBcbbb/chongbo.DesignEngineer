@@ -1,13 +1,20 @@
 import { profile } from "@content";
+import { CopyEmail, FooterNote } from "./shell/FooterParts";
 
+/**
+ * Two things only (docs/case-studies/ux-proposals.md, 05): the note about AI, because the printer is on the site,
+ * and the email, because case pages rely on the footer for contact. Name, role and city are in the header; LinkedIn
+ * is on About.
+ */
 export function SiteFooter() {
+  const { email } = profile.contact;
   return (
     <footer className="foot">
-      <span>
-        {profile.name} · {profile.title} · {profile.location} ·{" "}
-        <a href={`mailto:${profile.contact.email}`}>{profile.contact.email}</a>
+      <FooterNote lead="AI fetches the work." claim="I made it." />
+      <span className="ft-mail">
+        <a href={`mailto:${email}`}>{email}</a>
+        <CopyEmail email={email} />
       </span>
-      <span className="note">AI helps you find the parts of my case files that match your question. Every word in them is mine.</span>
     </footer>
   );
 }

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { NextCase } from "@/components/shell/NextCase";
 import type { ReactNode } from "react";
 import type { Project, Section } from "@content";
 import { ChipIcon, Compare, Contents, GiftBox, Pip, PosterStrip, RecordingPlayer, SeekButton, Switcher, VoiceTeaser, type ContentsPart, type Moment } from "./NikeClient";
@@ -610,10 +610,7 @@ export function NikeCase({ project, next }: { project: Project; next: Project })
             {cards["outcome"]}
 
 
-            <nav className="nk-next" aria-label="Next case file">
-              <span>Next case file</span>
-              <Link href={`/work/${next.slug}`}>{next.title}</Link>
-            </nav>
+            <NextCase next={next} />
           </div>
         </div>
     </div>

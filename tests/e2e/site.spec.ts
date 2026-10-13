@@ -107,7 +107,10 @@ test.describe("printing", () => {
     await page.keyboard.press("Enter");
     await expect(page.locator("#r-title")).toBeFocused({ timeout: 10_000 });
     await expect(page.locator("#r-title")).toHaveText(/Design systems/);
-    // Tab reaches the strip of sheets, then, past any controls on the card itself, the first sheet's link.
+    // Tab reaches "Share this print" beside the title, then the strip of sheets, then, past any controls on the
+    // card itself, the first sheet's link.
+    await page.keyboard.press("Tab");
+    await expect(page.getByRole("button", { name: "Share this print" })).toBeFocused();
     await page.keyboard.press("Tab");
     await expect(page.locator(".sheets")).toBeFocused();
     for (let i = 0; i < 12; i++) {
@@ -241,5 +244,54 @@ test.describe("layout", () => {
         .filter((x) => x.h < 44),
     );
     expect(small).toEqual([]);
+  });
+});
+
+test.describe("shell (approved UX proposals)", () => {
+  test("the share link reopens the same sheets on /ask", async ({ page, context, browserName }, info) => {
+    test.skip(info.project.name !== "desktop", "touch screens open the share sheet instead");
+    test.skip(browserName !== "chromium");
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await page.goto("/");
+    await printAccessibility(page);
+    const printed = await page.locator(".sheets .full").evaluateAll((els) => els.map((e) => e.getAttribute("href")));
+    await page.getByRole("button", { name: "Share this print" }).click();
+    await expect(page.locator(".share-wrap [aria-live]")).toHaveText("Link copied");
+    const url = await page.evaluate(() => navigator.clipboard.readText());
+    expect(url).toMatch(/\/ask\?topics=[a-z-]+(,[a-z-]+)*$/);
+    await page.goto(url);
+    const reprinted = await page.locator(".sheet-list .full").evaluateAll((els) => els.map((e) => e.getAttribute("href")));
+    expect(reprinted).toEqual(printed);
+  });
+
+  test("/work: four cards, the role and period lined up at the foot of each row", async ({ page }) => {
+    await page.goto("/work");
+    const cards = page.locator(".work-card");
+    await expect(cards).toHaveCount(projects.filter((p) => p.tier === "main").length);
+    const feet = await page.locator(".work-role").evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().bottom)));
+    const tops = await cards.evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().top)));
+    for (let i = 1; i < feet.length; i++) if (tops[i] === tops[i - 1]) expect(Math.abs(feet[i]! - feet[i - 1]!)).toBeLessThanOrEqual(1);
+  });
+
+  test("every case file ends with the same next-case control", async ({ page }, info) => {
+    const phone = info.project.name === "mobile";
+    for (const p of projects) {
+      await page.goto(`/work/${p.slug}`);
+      const nx = page.locator(".nx");
+      await expect(nx).toHaveCount(1);
+      await expect(nx).toHaveAttribute("href", /^\/work\/[a-z-]+$/);
+      await expect(nx.locator(".nx-lab")).toHaveText("Next case file");
+      await expect(nx.locator(".nx-ga")).toBeVisible({ visible: !phone });
+      await expect(nx.locator(".nx-cv")).toBeVisible({ visible: phone });
+    }
+  });
+
+  test("the footer holds the note about AI and the email, nothing else", async ({ page }) => {
+    await page.goto("/about");
+    const foot = page.locator("footer.foot");
+    await expect(foot.locator(".ft-note")).toHaveText("AI fetches the work. I made it.");
+    await expect(foot.locator(".ft-mail a")).toHaveAttribute("href", /^mailto:/);
+    await expect(foot.getByRole("button", { name: "Copy email address" })).toBeVisible();
+    await expect(foot.locator("a")).toHaveCount(1);
   });
 });
