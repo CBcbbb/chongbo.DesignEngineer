@@ -10,7 +10,7 @@ Playbook §8 step 4. Every line traces to "Facts and their sources" in `inventor
 
 **Draft 3 (playbook §4–5 pass, 12 Oct):** two parts (building the system · accessibility); 02.1 merged into one claim about shipping code; bodies no longer restate headings; the cover's outcome and the closing card no longer repeat each other; "I" in every card that is my decision.
 
-**Story.** The company began with one product. New products took only its first tokens, and were built fast by different teams, so each drifted further from the others. I moved the colours, roles and component styles into one shared package with layers for each product and each customer, and built the system in Figma so ideas are sketched in it before they're built in code. Accessibility sits in the colours themselves: text steps at almost one lightness on every hue, a dark mode tuned step by step, and the same rule applied to customer colours, which first passed straight through.
+**Story.** The ecosystem began with one product. New products took only its first tokens, and were built fast by different teams, so each drifted further from the others. I moved the colours, roles and component styles into one shared package with layers for each product and each customer, and built the system in Figma so ideas are sketched in it before they're built in code. Accessibility sits in the colours themselves: text steps at almost one lightness on every hue, a dark mode tuned step by step, and the same rule applied to customer colours, which first passed straight through.
 
 ---
 
@@ -23,14 +23,14 @@ Logistics infrastructure company
 Started in Figma, shipped as code, and layered so anyone can restyle it without breaking contrast.
 
 - **Role:** Design Engineer · Figma library, colour scales and code · on my own
-- **Outcome:** One design system across the company's products, which every client and user can customise on top.
+- **Outcome:** One design system across the ecosystem's products, which every client and user can customise on top.
 - **What this shows:** Design system (C) · Accessibility in the colours (E) · Figma to code (B)
 
 ## Part 1 · One system for every product and client
 
-### 01.1 Three products from one company, drifting apart
+### 01.1 Three products in one ecosystem, drifting apart
 
-The company began with one product and its own colours and design tokens. New products took only those first tokens with them, and each needed things the first didn't have.
+The ecosystem began with one product and its own colours and design tokens. New products took only those first tokens with them, and each needed things the first didn't have.
 
 Built fast by different teams, much of it with AI coding tools, each product changed or dropped what didn't fit. With every release they looked less alike.
 
