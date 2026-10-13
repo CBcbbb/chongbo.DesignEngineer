@@ -2883,33 +2883,65 @@
   }
 }
 
-/* ---------- 01.5 data collection: 665px → 628px at 1180px and up ---------- */
-/* Previous and Next join the tabs on one row, the step's sentence under them; the stage keeps its size */
+/* ---------- 01.5 data collection: 665px → 636px at 1180px and up ---------- */
+/* the five tabs are the control, drawn as one segmented control so they read as pressable; Previous and Next go.
+   The step's sentence keeps its own row, with room above and below it */
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-nav {
+  display: none;
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs {
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--case-ink) 5%, transparent);
+  box-shadow: inset 0 0 0 1px var(--cf-hair);
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button {
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--case-body);
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:hover {
+  background: color-mix(in srgb, var(--case-ink) 7%, transparent);
+  color: var(--case-ink);
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[aria-current="step"] {
+  background: var(--case-bg);
+  color: var(--case-ink);
+  box-shadow: 0 0 0 1px var(--cf-hair), 0 1px 3px rgb(0 0 0 / 0.1);
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button:focus-visible {
+  outline: 2px solid var(--case-ink);
+  outline-offset: 2px;
+}
+[data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-caption {
+  padding: 16px 0 14px;
+}
 @media (min-width: 761px) {
   [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-evidence {
-    margin-top: 0.5rem;
+    margin-top: 0.75rem;
   }
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe {
-    grid-template-columns: minmax(0, 1fr) auto;
-    column-gap: clamp(1rem, 2.4cqi, 1.5rem);
+  /* the stage 12px shorter; every step's picture still fits whole */
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-stage {
+    height: 240px;
   }
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe > * {
-    grid-column: 1 / -1;
+}
+@media (min-width: 1180px) {
+  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-evidence {
+    margin-top: 1rem;
   }
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs {
-    grid-column: 1;
-    grid-row: 1;
+}
+/* dark: the picked tab is lighter than its track, so it still reads as raised */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[aria-current="step"] {
+    background: color-mix(in srgb, var(--case-ink) 14%, var(--case-bg));
   }
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-caption {
-    display: contents;
-  }
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-nav {
-    grid-column: 2;
-    grid-row: 1;
-    align-self: end;
-  }
-  [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-text {
-    grid-column: 1 / -1;
-    padding: 10px 0 12px;
-  }
+}
+:root[data-theme="dark"] [data-palette="hhcd"] :is([data-card="four-types"], #four-types) .cf-pipe-tabs button[aria-current="step"] {
+  background: color-mix(in srgb, var(--case-ink) 14%, var(--case-bg));
 }
