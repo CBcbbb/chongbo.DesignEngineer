@@ -39,7 +39,8 @@
 [data-palette="design-system"] .cf-sheet.is-dark .cf-idx { background: var(--accent-on-dark); color: var(--dark); }
 /* ---------- cover: the brand's own buttons in the corner, and "Seen as" ---------- */
 /* cover art: the three layers, stacked in the corner; the top one wears the brand */
-[data-palette="design-system"] .cf-cover-top > .ds-cover-layers { position: absolute; z-index: 0; top: calc(-1 * clamp(0.75rem, 2vw, 1.5rem)); right: calc(-1 * var(--cf-pad) + 14px); width: min(31%, 280px); pointer-events: none;
+/* beside the title's shorter second and third lines, so it never sits under a word (playbook §7, cover art) */
+[data-palette="design-system"] .cf-cover-top > .ds-cover-layers { position: absolute; z-index: 0; top: clamp(5.8rem, 10vw, 7.7rem); right: calc(-1 * var(--cf-pad) + 14px); width: min(28%, 250px); pointer-events: none;
   -webkit-mask-image: none; mask-image: none; }
 [data-palette="design-system"] .ds-cover-layers svg { display: block; width: 100%; height: auto; overflow: visible; }
 [data-palette="design-system"] .ds-cover-layers .cl-base { fill: color-mix(in srgb, var(--on-field) 6%, transparent); stroke: var(--on-field); stroke-width: 0.8; stroke-dasharray: 4 4; }
@@ -51,7 +52,8 @@
 [data-palette="design-system"] .ds-cover-layers .cl-pin.is-on { stroke: var(--on-field); stroke-width: 1.1; stroke-dasharray: none; }
 [data-palette="design-system"] .ds-cover-layers .cl-tick { stroke: var(--on-field-2); stroke-width: 1; }
 [data-palette="design-system"] .ds-cover-layers text { font: 500 13px var(--mono); fill: var(--on-field-2); }
-@media (max-width: 900px) {
+/* below 1000px the "Seen as" row reaches under the corner, so the art steps out */
+@media (max-width: 999px) {
 [data-palette="design-system"] .cf-cover-top > .ds-cover-layers { display: none; }
 }
 [data-palette="design-system"] .cf-cover-top .cf-h1 { max-width: none; }
