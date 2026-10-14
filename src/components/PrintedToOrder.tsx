@@ -5,9 +5,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from "react";
 import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type AskResponse } from "@/lib/ask/schema";
 import { markPattern } from "@/lib/ask/keys";
-import { profile } from "@content";
-import { cardKey, type CardIndex, type SheetCard } from "@/lib/cards";
-import { BROWSE_ALL, EXAMPLES, JAM_LINE, NUM, PICKED_HINT, SIGNAL_SHORT, TOPICS, missingLine, notUnderstoodLine, pad2, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
+import type { CardIndex, SheetCard } from "@/lib/cards";
+import { BROWSE_ALL, EXAMPLES, JAM_LINE, NUM, PICKED_HINT, SIGNAL_SHORT, TOPICS, cardKey, missingLine, notUnderstoodLine, pad2, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
 import { Pill } from "./nav/Pill";
 import { track } from "@/lib/analytics";
 import { DrawnArrow } from "./shell/DrawnArrow";
@@ -18,6 +17,7 @@ import { Display, type DisplayState } from "./printer/Display";
 
 type Props = {
   cards: CardIndex;
+  contactEmail: string;
   /** id of the page h1, which names the paper form. */
   labelledBy: string;
   /** The skills cards to offer: those some shown project has work for (default: all). */
@@ -116,7 +116,7 @@ async function ask(brief: string, topics: string[]): Promise<Outcome> {
   }
 }
 
-export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
+export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPICS }: Props) {
   const [brief, setBrief] = useState("");
   const [picked, setPicked] = useState<string[]>([]);
   const [focused, setFocused] = useState(false);
@@ -808,7 +808,7 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
               {JAM_LINE.before}
               <Link href="/work">{JAM_LINE.all}</Link>
               {JAM_LINE.or}
-              <a href={`mailto:${profile.contact.email}`}>{JAM_LINE.email}</a>
+              <a href={`mailto:${contactEmail}`}>{JAM_LINE.email}</a>
               {JAM_LINE.after}
             </>
           )}

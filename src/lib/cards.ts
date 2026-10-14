@@ -1,5 +1,5 @@
 import { projects, SIGNALS, type Signal } from "@content";
-import { TOPICS, type Topic } from "./printed";
+import { cardKey, TOPICS, type Topic } from "./printed";
 import { caseHref } from "./site";
 
 /** The slice of a section a printed sheet needs. Passed to the client instead of the whole content tree. */
@@ -19,7 +19,7 @@ export type SheetCard = {
 
 export type CardIndex = Record<string, SheetCard>;
 
-export const cardKey = (project: string, section: string) => `${project}#${section}`;
+export { cardKey } from "./printed";
 
 export function buildCardIndex(): CardIndex {
   const index: CardIndex = {};

@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { Profile, Project } from "./schema";
 import { hhcd } from "./projects/hhcd";
 import { anyData } from "./projects/components-for-any-data";

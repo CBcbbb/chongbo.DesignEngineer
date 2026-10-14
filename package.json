@@ -8,13 +8,14 @@
     "dev": "next dev",
     "prebuild": "node scripts/asset-manifest.mjs",
     "build": "next build",
+    "postbuild": "node --conditions=react-server --import tsx scripts/check-hidden-bundle.ts",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:e2e": "playwright test",
+    "test:e2e": "NODE_OPTIONS=--conditions=react-server playwright test",
     "contrast": "tsx scripts/contrast.ts",
-    "screenshots": "playwright test --project=screenshots",
+    "screenshots": "NODE_OPTIONS=--conditions=react-server playwright test --project=screenshots",
     "eval:printer": "NODE_OPTIONS=--conditions=react-server tsx --env-file=.env.local scripts/eval-printer.ts"
   },
   "dependencies": {

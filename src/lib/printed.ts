@@ -6,6 +6,9 @@ import type { Signal } from "@content/schema";
 
 export type Topic = { id: string; label: string; signals: Signal[] };
 
+/** A printed card's identifier, usable by the client without importing the project catalogue. */
+export const cardKey = (project: string, section: string) => `${project}#${section}`;
+
 /**
  * The skills cards, in order. Each maps to the content signals it stands for, the first weighing most. A card lists
  * only signals some shown project carries: a print made from cards alone never says something is missing

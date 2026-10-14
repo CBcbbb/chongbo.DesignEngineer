@@ -39,7 +39,7 @@ export default function Home() {
           <b>I&apos;m Chongbo, a design engineer in {profile.location}.</b> Pick what your role needs, or paste the job description,
           and my printer turns out the parts of my work that match.
         </p>
-        <PrintedToOrder cards={buildCardIndex()} labelledBy="home-title" topics={shownTopics()} />
+        <PrintedToOrder cards={buildCardIndex()} contactEmail={profile.contact.email} labelledBy="home-title" topics={shownTopics()} />
       </main>
       <SiteFooter />
       <script

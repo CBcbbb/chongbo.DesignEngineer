@@ -38,6 +38,10 @@ node scripts/printing-gif.mjs  # writes docs/screenshots/printing.gif (needs ffm
 
 Playwright uses a system Chromium at `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` by default. Elsewhere, run `npx playwright install chromium` and set `PW_CHROMIUM` to that binary (or remove `executablePath` from `playwright.config.ts`).
 
+`content/index.ts` is server-only. The browser-test scripts set Node's `react-server` condition so tests can read the catalogue. For direct Playwright commands, use `NODE_OPTIONS=--conditions=react-server npx playwright test`.
+
+Every `npm run build` also checks `.next/static` for hidden project titles and body text. The build fails if any is found, including escaped text in JavaScript or source maps.
+
 ## Environment variables
 
 | Name | Where | Purpose |
