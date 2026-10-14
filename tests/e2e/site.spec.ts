@@ -85,6 +85,23 @@ test.describe("printing", () => {
     await expect(page.locator("#r-title")).toHaveText("Design systems", { timeout: 10_000 });
   });
 
+  test("after a print the strip swipes along: the next sheet snaps into place", async ({ page }, info) => {
+    test.skip(info.project.name !== "desktop", "the sheets sit side by side only on wide screens");
+    await page.goto("/");
+    await page.getByRole("button", { name: "Data", exact: true }).click();
+    await page.getByRole("button", { name: "Print" }).click();
+    await expect(page.locator("#r-title")).toHaveText("Data", { timeout: 10_000 });
+    // past the feed, the flight and the deal
+    await page.waitForTimeout(3_000);
+    const strip = page.locator(".sheets");
+    const start = await strip.evaluate((s) => s.scrollLeft);
+    const box = (await strip.boundingBox())!;
+    await page.mouse.move(box.x + 40, box.y + 20);
+    for (let i = 0; i < 8; i++) await page.mouse.wheel(70, 0);
+    await expect.poll(() => strip.evaluate((s) => s.scrollLeft)).toBeGreaterThan(start + 400);
+    await expect(page.locator(".deckbar span")).toHaveText(/^02 \//);
+  });
+
   test("cards from one project in a mixed print read as a group", async ({ page }) => {
     await page.goto("/");
     await page.getByRole("button", { name: "Design systems", exact: true }).click();
