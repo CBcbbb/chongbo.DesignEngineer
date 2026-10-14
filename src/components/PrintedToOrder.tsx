@@ -564,7 +564,10 @@ export function PrintedToOrder({ cards, labelledBy, topics = TOPICS }: Props) {
       items.slice(1).forEach((li, i) => {
         li.style.zIndex = String(items.length - i);
         const dx = li.offsetLeft - first.offsetLeft;
-        li.animate([{ translate: `${-dx}px 0` }, { translate: "0 0" }], { duration: DEAL.duration, easing: DEAL.easing, delay: 90 * i, fill: "backwards" });
+        // The paper moves, not the list item: the item is the strip's snap point, and Chrome keeps the snap points it
+        // measured mid-animation (every one at the first sheet), so a moved item left the strip stuck after a swipe.
+        const paper = li.querySelector<HTMLElement>(".s-paper") ?? li;
+        paper.animate([{ translate: `${-dx}px 0` }, { translate: "0 0" }], { duration: DEAL.duration, easing: DEAL.easing, delay: 90 * i, fill: "backwards" });
       });
       first.style.zIndex = String(items.length + 1);
     };
