@@ -24,8 +24,7 @@ test("Granola arrives at the idle home printer, with one optional selection and 
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("What are you looking for?");
   await expect(page.locator(".machine")).toHaveAttribute("data-state", "idle");
   await expect(page.locator(".topic")).toHaveCount(8);
-  await expect(page.locator(".topic").first()).toHaveText(/Picked for Granola/);
-  await expect(page.getByRole("button", { name: "Picked for Granola", exact: true })).toBeInViewport({ ratio: 1 });
+  await expect(page.locator(".topic").last()).toHaveAccessibleName("Picked for Granola");
   await expect(page.getByRole("button", { name: "Picked for Granola", exact: true })).toHaveAttribute("aria-pressed", "false");
   await expect(page.getByRole("button", { name: "Research", exact: true })).toHaveCount(0);
   await expect(page.locator(".sheets")).toHaveCount(0);

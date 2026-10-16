@@ -8,6 +8,7 @@ export type CuratedSelection = {
   label: string;
   replacesTopic: string;
   cards: string[];
+  brand?: { color: string; logo: { src: string; width: number; height: number } };
 };
 
 export type PrintAnswer = Pick<AskResponse, "asked" | "matched" | "missing" | "sheets"> & {

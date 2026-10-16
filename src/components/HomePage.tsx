@@ -11,7 +11,7 @@ import type { CuratedSelection } from "@/lib/curated";
 
 export function HomePage({ selection }: { selection?: CuratedSelection }) {
   const topics = selection
-    ? [{ id: selection.id, label: selection.label, signals: [] }, ...shownTopics().filter((topic) => topic.id !== selection.replacesTopic)]
+    ? [...shownTopics().filter((topic) => topic.id !== selection.replacesTopic), { id: selection.id, label: selection.label, signals: [] }]
     : shownTopics();
   const jsonLd = {
     "@context": "https://schema.org",

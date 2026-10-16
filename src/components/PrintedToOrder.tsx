@@ -699,19 +699,30 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
           Skills
         </h2>
         <ul className="topics" style={{ "--topics": topics.length } as CSSProperties}>
-          {topics.map((t, i) => (
-            <li key={t.id}>
-              <button
-                type="button"
-                className="topic"
-                aria-pressed={picked.includes(t.id)}
-                onClick={(e) => toggle(t.id, e.currentTarget)}
-              >
-                <small aria-hidden="true">{pad2(i + 1)}</small>
-                <b>{t.label}</b>
-              </button>
-            </li>
-          ))}
+          {topics.map((t, i) => {
+            const brand = t.id === selection?.id ? selection.brand : undefined;
+            return (
+              <li key={t.id}>
+                <button
+                  type="button"
+                  className={`topic${brand ? " topic--application" : ""}`}
+                  style={brand ? { "--topic-border": brand.color } as CSSProperties : undefined}
+                  aria-pressed={picked.includes(t.id)}
+                  onClick={(e) => toggle(t.id, e.currentTarget)}
+                >
+                  <small aria-hidden="true">{pad2(i + 1)}</small>
+                  <b className={brand ? "topic-brand" : undefined}>
+                    {brand && selection ? (
+                      <>
+                        <span>Picked for</span>
+                        <Image {...brand.logo} alt={selection.company} unoptimized />
+                      </>
+                    ) : t.label}
+                  </b>
+                </button>
+              </li>
+            );
+          })}
         </ul>
       </section>
 

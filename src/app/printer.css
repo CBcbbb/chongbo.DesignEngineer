@@ -76,7 +76,7 @@
   color: var(--paper-ink);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.7) inset,
-    0 0 0 1px rgba(60, 50, 40, 0.1),
+    0 0 0 1px var(--topic-border, rgba(60, 50, 40, 0.1)),
     0 2px 0 #d6d2ca,
     0 10px 18px -10px rgba(40, 30, 20, 0.35);
   transition:
@@ -99,7 +99,7 @@
 .topic[aria-pressed="true"] {
   transform: translateY(-10px);
   box-shadow:
-    0 0 0 1.5px var(--paper-ink),
+    0 0 0 1.5px var(--topic-border, var(--paper-ink)),
     0 18px 24px -12px rgba(40, 30, 20, 0.45);
 }
 .topic[aria-pressed="true"]::after {
@@ -111,6 +111,26 @@
   height: 7px;
   border-radius: 50%;
   background: var(--red);
+}
+.topic--application {
+  --focus: var(--topic-border);
+}
+.topic--application[aria-pressed="true"]::after {
+  background: var(--topic-border);
+}
+.topic .topic-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.topic-brand span {
+  font: 500 12px/1 var(--sans);
+}
+.topic-brand img {
+  display: block;
+  width: 92px;
+  max-width: 100%;
+  height: auto;
 }
 
 /* ---------- the printer ----------

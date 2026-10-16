@@ -6,6 +6,10 @@ export const applications = {
   granola: {
     company: "Granola",
     replacesTopic: "research",
+    brand: {
+      color: "#5b7000",
+      logo: { src: "/applications/granola.svg", width: 148, height: 32 },
+    },
     cards: [
       "design-system#three-layers", // 01.3
       "design-system#figma-library", // 02.1
@@ -14,7 +18,7 @@ export const applications = {
       "hhcd-data-platform#contrast", // 02.6
     ],
   },
-} satisfies Record<string, { company: string; replacesTopic: string; cards: string[] }>;
+} satisfies Record<string, Omit<CuratedSelection, "id" | "label">>;
 
 export function applicationSelection(name: string): CuratedSelection | null {
   if (!Object.hasOwn(applications, name)) return null;

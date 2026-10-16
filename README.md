@@ -63,7 +63,7 @@ The `/ask` list also sends `printed` and `sheet_viewed`. A sheet counts after at
 
 ## Application links
 
-Send `/for/granola` for Granola's **Design Engineer (Web & Brand)** role. It opens the home-page printer, with **Picked for Granola** replacing the Research option and placed first so it is visible on phones. Nothing is preselected or printed on arrival. Selecting that option and pressing Print produces five hand-picked cards in order: Design system 01.3, 02.1, 02.2; Nike 01.1; HHCD 02.6.
+Send `/for/granola` for Granola's **Design Engineer (Web & Brand)** role. It opens the home-page printer, with **Picked for Granola** replacing the Research option and placed last, using Granola's logo and an olive border. Nothing is preselected or printed on arrival. Selecting that option and pressing Print produces five hand-picked cards in order: Design system 01.3, 02.1, 02.2; Nike 01.1; HHCD 02.6.
 
 Edit `content/applications.ts` to add a company, change its ordered public card keys, or choose which skill option it replaces, then deploy. Only the current company's selection is passed to the printer. Unknown names redirect home; `/for/*` carries both a noindex header and page metadata and stays out of the sitemap.
 
