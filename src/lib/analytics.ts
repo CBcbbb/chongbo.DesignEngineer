@@ -27,8 +27,18 @@ export const analyticsKey = (): string => process.env.NEXT_PUBLIC_POSTHOG_KEY ??
  * otherwise). Kept on window: instrumentation-client is bundled apart from the app, so a module variable could be two.
  */
 type WithAnalytics = Window & { __analytics?: PostHog };
+const READY_EVENT = "portfolio:analytics-ready";
 export function setAnalytics(instance: PostHog): void {
   (window as WithAnalytics).__analytics = instance;
+  window.dispatchEvent(new Event(READY_EVENT));
+}
+
+/** Server-rendered results can hydrate before the optional PostHog import finishes. */
+export function whenAnalyticsReady(callback: () => void): () => void {
+  if (typeof window === "undefined") return () => {};
+  if ((window as WithAnalytics).__analytics) callback();
+  else window.addEventListener(READY_EVENT, callback, { once: true });
+  return () => window.removeEventListener(READY_EVENT, callback);
 }
 
 /** Send one event. Safe to call anywhere on the client; does nothing without a key or before PostHog has loaded. */

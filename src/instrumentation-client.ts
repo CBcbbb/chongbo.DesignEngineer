@@ -31,11 +31,10 @@ async function start(key: string) {
       debug: process.env.NEXT_PUBLIC_POSTHOG_DEBUG === "1",
     });
 
-    setAnalytics(posthog);
-
     const params = new URLSearchParams(window.location.search);
     const ref = (params.get("ref") ?? params.get("utm_source") ?? "").trim().slice(0, 60);
     if (ref) posthog.register({ ref });
+    setAnalytics(posthog);
 
     // Clicks that say a visitor wants more: the email address, links off the site, and a sheet's way into its case file.
     document.addEventListener(

@@ -59,6 +59,16 @@ Every `npm run build` also checks `.next/static` for hidden project titles and b
 
 Events: `$pageview`, `skill_toggled`, `printed` (skills, the brief's length but never its words, the cards printed), `sheet_viewed`, `read_in_context_clicked`, `case_card_viewed` (each case-file card read for 1.5 s or more, with the seconds), `contact_clicked`, `outbound_clicked`. A link sent with an application can carry `?ref=<name>` (e.g. `/ask?topics=accessibility&ref=granola`); it is attached to every event of that visit.
 
+The `/ask` list also sends `printed` and `sheet_viewed`. A sheet counts after at least half its height (or half a viewport for taller sheets) stays visible for 1.5 seconds; `seconds` measures that visible interval, excluding time in a background tab. This is a browsing signal, not proof that someone read or understood a card. `ref` stays in memory during client-side navigation; a full reload of a URL without it loses the label. It labels a link, not a person's identity, company membership, or a forwarding action. Session recording remains off.
+
+## Application links
+
+Send `/for/granola` for Granola's **Design Engineer (Web & Brand)** role. It redirects to `/ask` with topics and `ref=granola`, leading with Nike's brand and reusable component work, followed by engineering and accessibility. Topics-only requests are deterministic and do not call the AI model.
+
+Edit `content/applications.ts` to add a company or change its ordered topics, then deploy. The config stays on the server. Unknown names redirect home, `/for/*` responses carry `X-Robots-Tag: noindex, follow`, and `/ask` is already noindex. A temporary, uncached redirect lets you update a selection without changing a previously sent link.
+
+For your own checks, use `/for/granola?ref=test`; this preserves the selection but labels events `ref=test`. Other incoming query parameters are discarded. In PostHog, filter events by `ref = granola` and exclude `ref = test`. Check `$pageview`, `printed`, `sheet_viewed`, `read_in_context_clicked`, `case_card_viewed` and `contact_clicked`. Receiving events still depends on the production key and PostHog cookieless server hash setting.
+
 ## How "ask" works
 
 All content lives in `content/` (typed by `content/schema.ts`). Each project is an ordered list of section cards, and each card carries **signals** (accessibility, design systems, …). The ask feature never writes the page; it only **chooses** cards.
