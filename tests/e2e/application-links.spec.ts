@@ -150,6 +150,31 @@ test("shared ask results still report their cards and visible time without brief
 
 test.describe("without JavaScript", () => {
   test.use({ javaScriptEnabled: false });
+  test("the sharing crawler receives the company URL, title and image", async ({ page, request }) => {
+    await page.goto("/");
+    await expect(page).toHaveTitle("Chongbo Ning · Design Engineer, London");
+    const siteUrl = new URL((await page.locator('meta[property="og:url"]').getAttribute("content"))!);
+    expect(siteUrl.pathname).toBe("/");
+    const companyUrl = new URL("/for/granola", siteUrl).href;
+    const response = await request.get("/for/granola?ref=test", { headers: { "user-agent": "LinkedInBot/1.0" }, maxRedirects: 0 });
+    expect(response.status()).toBe(200);
+    await page.setContent(await response.text());
+    await expect(page).toHaveTitle("Picked for Granola · Chongbo Ning");
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", companyUrl);
+    await expect(page.locator('meta[property="og:url"]')).toHaveAttribute("content", companyUrl);
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "Picked for Granola · Chongbo Ning");
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+    const imageUrl = new URL((await page.locator('meta[property="og:image"]').getAttribute("content"))!);
+    expect(imageUrl.pathname).toMatch(/^\/for\/granola\/opengraph-image/);
+    const image = await request.get(imageUrl.pathname);
+    expect(image.status()).toBe(200);
+    expect(image.headers()["content-type"]).toBe("image/png");
+    const png = await image.body();
+    expect(png.subarray(1, 4).toString()).toBe("PNG");
+    expect(png.readUInt32BE(16)).toBe(1200);
+    expect(png.readUInt32BE(20)).toBe(630);
+  });
+
   test("the company page keeps the home printer's native text form", async ({ page }) => {
     await page.goto("/for/granola?ref=test");
     await expect(page.locator(".machine")).toBeVisible();
