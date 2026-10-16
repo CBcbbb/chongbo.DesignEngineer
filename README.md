@@ -69,6 +69,8 @@ Edit `content/applications.ts` to add a company, change its ordered public card 
 
 The curated option is exclusive with ordinary skills. Typing a request clears it and uses the existing `/api/ask` flow, including AI selection when configured and available. Ordinary skills still use deterministic topic matching. A curated print is labelled as picked by Chongbo and tracked with `source=curated`; it does not call the model or limit future requests to those five cards.
 
+During client-side navigation, the name, Back Home, and New request links return application visitors to their `/for/<company>` printer and preserve an explicit `ref` (including `ref=test`). The return address lives only in the open page's memory; ordinary visits still return to `/`. Reloading or opening an untagged work/about URL starts without that application context, as does the cookieless analytics attribution. No cookies or browser storage are added.
+
 The clean path supplies `ref=granola` to analytics. For your own checks, use `/for/granola?ref=test` to label events `ref=test`. In PostHog, filter events by `ref = granola` and exclude `ref = test`. Check `$pageview`, `printed`, `sheet_viewed`, `read_in_context_clicked`, `case_card_viewed` and `contact_clicked`. Receiving events still depends on the production key and PostHog cookieless server hash setting.
 
 ## How "ask" works

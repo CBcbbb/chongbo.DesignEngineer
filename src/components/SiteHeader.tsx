@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { HomeLink } from "@/components/nav/HomeLink";
 import { profile } from "@content";
 import { Pill, WorkPill } from "@/components/nav/Pill";
 import { ThemeLamp } from "@/components/nav/ThemeLamp";
@@ -6,12 +6,12 @@ import { ThemeLamp } from "@/components/nav/ThemeLamp";
 export function SiteHeader({ current }: { current?: "work" | "about" }) {
   return (
     <header className="bar">
-      <Link className="who" href="/">
+      <HomeLink className="who">
         <b>{profile.name}</b>
         <span>
           {profile.title}, {profile.location}
         </span>
-      </Link>
+      </HomeLink>
       <nav aria-label="Main">
         <ul>
           <li>

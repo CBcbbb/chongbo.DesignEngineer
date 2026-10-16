@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { HomeLink } from "@/components/nav/HomeLink";
 import { useEffect, useState } from "react";
 
 export type SideNavItem = {
@@ -31,9 +31,9 @@ export function SideNav({ items, className }: { items: SideNavItem[]; className:
     <nav className={className} aria-label="On this page">
       <ul>
         <li>
-          <Link href="/" data-home>
+          <HomeLink data-home>
             Back Home
-          </Link>
+          </HomeLink>
         </li>
         {items.map((n) => (
           <li key={n.href}>

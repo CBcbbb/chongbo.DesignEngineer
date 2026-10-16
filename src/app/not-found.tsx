@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { HomeLink } from "@/components/nav/HomeLink";
 
 export const metadata: Metadata = { title: "Not found", robots: { index: false } };
 
@@ -19,9 +20,9 @@ export default function NotFound() {
             <h1 className="t-num">404</h1>
             <p className="t-reply">This sheet was never printed. The page may have moved.</p>
             <div className="t-cta">
-              <Link className="t-link" href="/">
+              <HomeLink className="t-link">
                 Back to the machine
-              </Link>
+              </HomeLink>
               <Link className="t-link" href="/work">
                 Browse all work
               </Link>

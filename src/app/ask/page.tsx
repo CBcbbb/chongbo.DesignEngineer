@@ -6,6 +6,7 @@ import { printedCards } from "@/components/PrintedCard";
 import { Sheet } from "@/components/Sheet";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { HomeLink } from "@/components/nav/HomeLink";
 import { answerAsk } from "@/lib/ask/answer";
 import { askLimiter, clientKey } from "@/lib/ask/rate-limit";
 import {
@@ -107,7 +108,7 @@ export default async function AskPage({ searchParams }: Props) {
             </ol>
             {result.missing.length > 0 && <p className="missing">{missingLine(result.missing)}</p>}
             <div className="again">
-              <Link href="/">New request</Link>
+              <HomeLink>New request</HomeLink>
             </div>
           </section>
         ) : (

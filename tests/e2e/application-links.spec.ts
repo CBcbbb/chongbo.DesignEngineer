@@ -96,6 +96,37 @@ test("the ordinary homepage keeps its original options and unknown companies go 
   await expect(page.getByRole("button", { name: "Picked for Granola", exact: true })).toHaveCount(0);
 });
 
+test("home controls return an application visitor to Granola across work and about pages", async ({ page }) => {
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await page.goto("/for/granola?ref=test");
+  await expect(page.locator(".who")).toHaveAttribute("href", "/for/granola?ref=test");
+  await page.locator(".who").click();
+  await expect(page).toHaveURL(/\/for\/granola\?ref=test$/);
+  await page.getByRole("link", { name: "Work", exact: true }).click();
+  await expect(page).toHaveURL(/\/work$/);
+  await expect(page.locator(".who")).toHaveAttribute("href", "/for/granola?ref=test");
+  await page.locator('a[href="/work/nike-athletes-closet"]').first().click();
+  await expect(page.locator(".who")).toHaveAttribute("href", "/for/granola?ref=test");
+  await page.locator(".who").click();
+  await expect(page).toHaveURL(/\/for\/granola\?ref=test$/);
+  await page.getByRole("link", { name: "About", exact: true }).click();
+  await expect(page.locator(".who")).toHaveAttribute("href", "/for/granola?ref=test");
+  await page.locator(".who").click();
+  await expect(page).toHaveURL(/\/for\/granola\?ref=test$/);
+  await expect(page.getByRole("button", { name: "Picked for Granola", exact: true })).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test("a fresh ordinary visit still returns to the ordinary homepage", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: "Work", exact: true }).click();
+  await expect(page.locator(".who")).toHaveAttribute("href", "/");
+  await page.locator(".who").click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("button", { name: "Picked for Granola", exact: true })).toHaveCount(0);
+});
+
 test("shared ask results still report their cards and visible time without brief text", async ({ page }) => {
   await page.addInitScript(() => {
     const w = window as unknown as TestWindow;
