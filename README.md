@@ -63,11 +63,13 @@ The `/ask` list also sends `printed` and `sheet_viewed`. A sheet counts after at
 
 ## Application links
 
-Send `/for/granola` for Granola's **Design Engineer (Web & Brand)** role. It redirects to `/ask` with topics and `ref=granola`, leading with Nike's brand and reusable component work, followed by engineering and accessibility. Topics-only requests are deterministic and do not call the AI model.
+Send `/for/granola` for Granola's **Design Engineer (Web & Brand)** role. It opens the home-page printer, with **Picked for Granola** replacing the Research option and placed first so it is visible on phones. Nothing is preselected or printed on arrival. Selecting that option and pressing Print produces five hand-picked cards in order: Design system 01.3, 02.1, 02.2; Nike 01.1; HHCD 02.6.
 
-Edit `content/applications.ts` to add a company or change its ordered topics, then deploy. The config stays on the server. Unknown names redirect home, `/for/*` responses carry `X-Robots-Tag: noindex, follow`, and `/ask` is already noindex. A temporary, uncached redirect lets you update a selection without changing a previously sent link.
+Edit `content/applications.ts` to add a company, change its ordered public card keys, or choose which skill option it replaces, then deploy. Only the current company's selection is passed to the printer. Unknown names redirect home; `/for/*` carries both a noindex header and page metadata and stays out of the sitemap.
 
-For your own checks, use `/for/granola?ref=test`; this preserves the selection but labels events `ref=test`. Other incoming query parameters are discarded. In PostHog, filter events by `ref = granola` and exclude `ref = test`. Check `$pageview`, `printed`, `sheet_viewed`, `read_in_context_clicked`, `case_card_viewed` and `contact_clicked`. Receiving events still depends on the production key and PostHog cookieless server hash setting.
+The curated option is exclusive with ordinary skills. Typing a request clears it and uses the existing `/api/ask` flow, including AI selection when configured and available. Ordinary skills still use deterministic topic matching. A curated print is labelled as picked by Chongbo and tracked with `source=curated`; it does not call the model or limit future requests to those five cards.
+
+The clean path supplies `ref=granola` to analytics. For your own checks, use `/for/granola?ref=test` to label events `ref=test`. In PostHog, filter events by `ref = granola` and exclude `ref = test`. Check `$pageview`, `printed`, `sheet_viewed`, `read_in_context_clicked`, `case_card_viewed` and `contact_clicked`. Receiving events still depends on the production key and PostHog cookieless server hash setting.
 
 ## How "ask" works
 

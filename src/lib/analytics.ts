@@ -22,6 +22,12 @@ type Props = Record<string, string | number | boolean | string[] | null | undefi
 
 export const analyticsKey = (): string => process.env.NEXT_PUBLIC_POSTHOG_KEY ?? "";
 
+/** Clean application URLs carry their attribution in the path; ?ref=test still overrides it. */
+export function attributionRef(search: string, pathname: string): string {
+  const params = new URLSearchParams(search);
+  return (params.get("ref") ?? params.get("utm_source") ?? pathname.match(/^\/for\/([a-z0-9-]+)\/?$/)?.[1] ?? "").trim().slice(0, 60);
+}
+
 /**
  * PostHog, once instrumentation-client.ts has loaded it (only when there is a key, so the library stays off the page
  * otherwise). Kept on window: instrumentation-client is bundled apart from the app, so a module variable could be two.

@@ -3,10 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from "react";
-import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE, type AskResponse } from "@/lib/ask/schema";
+import { AskErrorSchema, AskResponseSchema, BRIEF_MAX, RATE_LIMIT_MESSAGE } from "@/lib/ask/schema";
 import { markPattern } from "@/lib/ask/keys";
 import type { CardIndex, SheetCard } from "@/lib/cards";
-import { BROWSE_ALL, EXAMPLES, JAM_LINE, NUM, PICKED_HINT, SIGNAL_SHORT, TOPICS, cardKey, missingLine, notUnderstoodLine, pad2, projectRuns, provenanceLine, quoteBrief, resultTitle, topicById, topicsToSignals, type Topic } from "@/lib/printed";
+import { BROWSE_ALL, EXAMPLES, JAM_LINE, NUM, PICKED_HINT, SIGNAL_SHORT, TOPICS, cardKey, missingLine, notUnderstoodLine, pad2, projectRuns, provenanceLine, quoteBrief, resultTitle, topicsToSignals, type Topic } from "@/lib/printed";
 import { Pill } from "./nav/Pill";
 import { track } from "@/lib/analytics";
 import { DrawnArrow } from "./shell/DrawnArrow";
@@ -14,6 +14,7 @@ import type { PrintedCard } from "./PrintedCard";
 import { printCards } from "./print-cards";
 import { Sheet } from "./Sheet";
 import { Display, type DisplayState } from "./printer/Display";
+import { curatedAnswer, type CuratedSelection, type PrintAnswer } from "@/lib/curated";
 
 type Props = {
   cards: CardIndex;
@@ -22,6 +23,7 @@ type Props = {
   labelledBy: string;
   /** The skills cards to offer: those some shown project has work for (default: all). */
   topics?: Topic[];
+  selection?: CuratedSelection;
 };
 
 type Result = {
@@ -93,7 +95,7 @@ function markedHtml(text: string): string {
 }
 const say = (n: number) => (NUM[n] ?? String(n)).toUpperCase();
 
-type Outcome = { ok: true; data: AskResponse } | { ok: false; message: string; kind?: "limit" | "offline" };
+type Outcome = { ok: true; data: PrintAnswer } | { ok: false; message: string; kind?: "limit" | "offline" };
 
 async function ask(brief: string, topics: string[]): Promise<Outcome> {
   try {
@@ -116,7 +118,7 @@ async function ask(brief: string, topics: string[]): Promise<Outcome> {
   }
 }
 
-export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPICS }: Props) {
+export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPICS, selection }: Props) {
   const [brief, setBrief] = useState("");
   const [picked, setPicked] = useState<string[]>([]);
   const [focused, setFocused] = useState(false);
@@ -151,7 +153,8 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
 
   // ---------- typed examples on the paper: twice round, then they rest on the last one; a still hint once a skill is picked ----------
   const anyPicked = picked.length > 0;
-  const ghostText = anyPicked ? PICKED_HINT : ghost;
+  const curatedPicked = Boolean(selection && picked.includes(selection.id));
+  const ghostText = curatedPicked ? "Print my picks, or write your own request." : anyPicked ? PICKED_HINT : ghost;
   useEffect(() => {
     if (anyPicked) return;
     if (prefersReduced()) {
@@ -220,8 +223,12 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
   // ---------- skills cards ----------
   const toggle = (id: string, el?: HTMLElement | null) => {
     if (busyRef.current) return;
-    track("skill_toggled", { skill: topicById(id)?.label ?? id, on: !picked.includes(id) });
-    setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+    track("skill_toggled", { skill: topics.find((t) => t.id === id)?.label ?? id, on: !picked.includes(id) });
+    setPicked((p) => {
+      if (p.includes(id)) return p.filter((x) => x !== id);
+      if (id === selection?.id) return [id];
+      return [...p.filter((x) => x !== selection?.id), id];
+    });
     // A card picked up gets a small random tilt and settles; the layout never moves.
     if (el && !prefersReduced())
       el.animate([{ rotate: "0deg" }, { rotate: `${rnd(-2.4, 2.4)}deg`, offset: 0.35 }, { rotate: "0deg" }], { duration: 480, easing: SPRING });
@@ -282,7 +289,8 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
       abortRef.current = true;
       return;
     }
-    const text = brief;
+    const curated = selection && picked.includes(selection.id) ? selection : null;
+    const text = curated ? "" : brief;
     const ids = [...picked];
     if (!text.trim() && !ids.length) {
       textareaRef.current?.focus();
@@ -298,13 +306,16 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
     setJam(null);
     thunk();
     const answer: { o?: Outcome } = {};
-    void ask(text, topicsToSignals(ids)).then((o) => (answer.o = o));
-    const labels = ids.map((id) => topicById(id)?.label ?? id);
+    if (curated) {
+      const data = curatedAnswer(curated, cards);
+      answer.o = data ? { ok: true, data } : { ok: false, message: "Something jammed. Try again, or browse all work." };
+    } else void ask(text, topicsToSignals(ids)).then((o) => (answer.o = o));
+    const labels = ids.map((id) => topics.find((t) => t.id === id)?.label ?? id);
     const stopped = () => abortRef.current;
 
     // 1. read: the request passes the reading light into the slot; the words the printer knows are marked
     setReading(text.trim() ? markedHtml(text.trim()) : "");
-    setDisp({ l1: text.trim().length > 200 ? "Reading the job description" : "Reading your request", seg: 0 });
+    setDisp({ l1: curated ? "Loading my picks" : text.trim().length > 200 ? "Reading the job description" : "Reading your request", seg: 0 });
     setLive("Printing.");
     await sleep(READ_DELAY);
     const light = lightRef.current;
@@ -384,7 +395,12 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
       : Promise.resolve({});
     const projects = new Set(sheets.map((c) => c.project)).size;
 
-    if (startHere) {
+    if (curated) {
+      setDisp({ l1: curated.label, l2: `${say(sheets.length)} sheets selected`, seg: 2 });
+      await sleep(380);
+      if (stopped()) return stop();
+      setDisp({ l1: curated.label, l2: "Printing", seg: 3 });
+    } else if (startHere) {
       // 3'. nothing understood: a hiccup, not a jam. The machine shudders twice and says why, then prints where to start.
       await shake(1.2, 420, 6);
       setDisp({ l1: "No role or skill found", l2: "In your request", seg: 1 });
@@ -432,7 +448,7 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
       cards: sheets,
       printed,
       missing: missingLine(data.missing),
-      provenance: provenanceLine(data.source, sheets.length),
+      provenance: data.source === "curated" ? `Picked by me for ${curated!.company}.` : provenanceLine(data.source, sheets.length),
       byModel: data.source === "model",
       notUnderstood: startHere && text.trim() ? notUnderstoodLine(text) : undefined,
     };
@@ -451,7 +467,7 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
     };
     finish();
     rest(done, 3200);
-  }, [brief, picked, cards, projectNames, total]);
+  }, [brief, picked, cards, projectNames, total, selection, topics]);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -713,7 +729,7 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
             onSubmit={onSubmit}
           >
             <div className="paper" ref={paperRef}>
-              <div className={`field${brief || focused ? " on" : ""}`} hidden={reading !== null}>
+              <div className={`field${(!curatedPicked && brief) || focused ? " on" : ""}`} hidden={reading !== null}>
                 <label htmlFor="brief" className="sr-only">
                   Describe the role or paste a job description.
                 </label>
@@ -722,8 +738,11 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
                   id="brief"
                   name="brief"
                   maxLength={BRIEF_MAX}
-                  value={brief}
-                  onChange={(e) => setBrief(e.target.value)}
+                  value={curatedPicked ? "" : brief}
+                  onChange={(e) => {
+                    setBrief(e.target.value);
+                    setPicked((p) => p.filter((id) => id !== selection?.id));
+                  }}
                   onFocus={() => setFocused(true)}
                   onBlur={() => setFocused(false)}
                   onKeyDown={onKeyDown}
@@ -739,7 +758,7 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
               <input type="hidden" name="topics" value={topicsToSignals(picked).join(",")} />
               <div className="chips" aria-label="Selected skills" role="group" hidden={!picked.length}>
                 {picked.map((id) => {
-                  const label = topicById(id)?.label ?? id;
+                  const label = topics.find((t) => t.id === id)?.label ?? id;
                   return (
                     <button key={id} type="button" aria-label={`Remove ${label}`} disabled={working} onClick={() => toggle(id)}>
                       {label}

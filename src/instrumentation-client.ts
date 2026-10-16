@@ -1,4 +1,4 @@
-import { analyticsKey, setAnalytics, track } from "@/lib/analytics";
+import { analyticsKey, attributionRef, setAnalytics, track } from "@/lib/analytics";
 
 /*
  * Client-side start-up (Next.js runs this before the app becomes interactive). Starts PostHog when
@@ -8,8 +8,8 @@ import { analyticsKey, setAnalytics, track } from "@/lib/analytics";
  *   hash on its servers. "Cookieless server hash mode" must be switched on in the PostHog project's settings.
  * - Sent through /ingest on this site (next.config.ts rewrites it to PostHog's EU cloud), so blockers that drop
  *   third-party analytics domains don't skew the numbers.
- * - A link sent with an application carries ?ref=<name> (e.g. /ask?topics=accessibility&ref=granola): it is kept on
- *   every event of that visit, so each application's opens can be told apart.
+ * - Application attribution comes from /for/<name> or ?ref=<name>: it is kept on every event of that visit,
+ *   so each application's opens can be told apart. ?ref=test overrides the path for self-checks.
  */
 const key = analyticsKey();
 
@@ -31,8 +31,7 @@ async function start(key: string) {
       debug: process.env.NEXT_PUBLIC_POSTHOG_DEBUG === "1",
     });
 
-    const params = new URLSearchParams(window.location.search);
-    const ref = (params.get("ref") ?? params.get("utm_source") ?? "").trim().slice(0, 60);
+    const ref = attributionRef(window.location.search, window.location.pathname);
     if (ref) posthog.register({ ref });
     setAnalytics(posthog);
 

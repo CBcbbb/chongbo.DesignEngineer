@@ -1,17 +1,23 @@
 import "server-only";
-import type { Signal } from "./schema";
+import type { CuratedSelection } from "@/lib/curated";
 
-/** /for/<name>: topics are ordered by importance; the name becomes the analytics ref. */
+/** /for/<name>: the same home-page printer, with one optional set of hand-picked cards. */
 export const applications = {
-  // Granola — Design Engineer (Web & Brand): brand first, then reuse, engineering and accessible interaction.
   granola: {
-    topics: ["brand-storytelling", "reusable-components", "design-eng-gap", "accessibility", "motion-interaction"],
+    company: "Granola",
+    replacesTopic: "research",
+    cards: [
+      "design-system#three-layers", // 01.3
+      "design-system#figma-library", // 02.1
+      "design-system#in-code", // 02.2
+      "nike-athletes-closet#graphic-system", // 01.1
+      "hhcd-data-platform#contrast", // 02.6
+    ],
   },
-} satisfies Record<string, { topics: Signal[] }>;
+} satisfies Record<string, { company: string; replacesTopic: string; cards: string[] }>;
 
-export function applicationHref(name: string, test = false): string {
-  if (!Object.hasOwn(applications, name)) return "/";
+export function applicationSelection(name: string): CuratedSelection | null {
+  if (!Object.hasOwn(applications, name)) return null;
   const application = applications[name as keyof typeof applications];
-  const query = new URLSearchParams({ topics: application.topics.join(","), ref: test ? "test" : name });
-  return `/ask?${query}`;
+  return { ...application, id: `picked-for-${name}`, label: `Picked for ${application.company}` };
 }
