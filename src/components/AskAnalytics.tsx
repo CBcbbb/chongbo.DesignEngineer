@@ -1,63 +1,36 @@
 "use client";
 
-import { useEffect } from "react";
-import { track, whenAnalyticsReady } from "@/lib/analytics";
+import { useEffect, useRef } from "react";
+import { analyticsContext, beginAnalyticsRequest, track } from "@/lib/analytics";
+import { observeVisibleTime } from "@/lib/visible-time";
 
-/** The server-rendered /ask list uses the same event names as the home-page printer. No brief text is passed. */
-export function AskAnalytics({ cards, asked, source, briefChars, startHere }: {
+/** Opening a shared result is distinguishable from submitting a new question to the home printer. */
+export function AskAnalytics({ cards, asked, source, brief, topics, startHere }: {
   cards: string[];
   asked: string[];
   source: string;
-  briefChars: number;
+  brief: string;
+  topics: string[];
   startHere: boolean;
 }) {
+  const request = useRef<{ signature: string; id: string } | null>(null);
   useEffect(() => {
-    const stopReady = whenAnalyticsReady(() => track("printed", {
-      cards, asked, source, brief_chars: briefChars, start_here: startHere, ok: true, from: "/ask",
-    }));
-    if (typeof IntersectionObserver === "undefined") return stopReady;
-
-    const visible = new Set<string>();
-    const since = new Map<string, number>();
-    const send = (card: string) => {
-      const started = since.get(card);
-      since.delete(card);
-      if (started === undefined) return;
-      const ms = performance.now() - started;
-      if (ms >= 1500) track("sheet_viewed", {
-        card, index: cards.indexOf(card) + 1, of: cards.length, seconds: Math.round(ms / 100) / 10, from: "/ask",
+    const signature = JSON.stringify([cards, asked, source, brief, topics, startHere]);
+    if (request.current?.signature !== signature) {
+      const id = beginAnalyticsRequest();
+      request.current = { signature, id };
+      track("request_opened", { request_id: id, brief, brief_chars: brief.length, topics, input_origin: "url" });
+      track("printed", {
+        request_id: id, cards, asked, source, brief_chars: brief.length, start_here: startHere,
+        ok: true, from: "/ask", input_origin: "url",
       });
-    };
-    const observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        const card = (entry.target as HTMLElement).dataset.sheet;
-        if (!card) continue;
-        // A tall sheet on a phone cannot show half its height: half a viewport also counts.
-        const enoughHeight = Math.min(entry.boundingClientRect.height, window.innerHeight) * 0.5;
-        if (entry.isIntersecting && entry.intersectionRect.height >= enoughHeight) {
-          visible.add(card);
-          if (document.visibilityState === "visible" && !since.has(card)) since.set(card, performance.now());
-        } else {
-          visible.delete(card);
-          send(card);
-        }
-      }
-    }, { threshold: Array.from({ length: 21 }, (_, i) => i / 20) });
-    document.querySelectorAll<HTMLElement>(".sheet-list [data-sheet]").forEach((el) => observer.observe(el));
-    const visibility = () => {
-      if (document.visibilityState === "hidden") [...since.keys()].forEach(send);
-      else for (const card of visible) since.set(card, performance.now());
-    };
-    const leave = () => [...since.keys()].forEach(send);
-    document.addEventListener("visibilitychange", visibility);
-    window.addEventListener("pagehide", leave);
-    return () => {
-      stopReady();
-      leave();
-      observer.disconnect();
-      document.removeEventListener("visibilitychange", visibility);
-      window.removeEventListener("pagehide", leave);
-    };
-  }, [cards, asked, source, briefChars, startHere]);
+    }
+    const context = { ...analyticsContext(), request_id: request.current.id, from: "/ask" };
+    const elements = Array.from(document.querySelectorAll<HTMLElement>(".sheet-list [data-sheet]"));
+    return observeVisibleTime(elements, (element, seconds) => {
+      const card = element.dataset.sheet!;
+      track("sheet_viewed", { ...context, card, index: cards.indexOf(card) + 1, of: cards.length, seconds });
+    });
+  }, [cards, asked, source, brief, topics, startHere]);
   return null;
 }

@@ -6,8 +6,12 @@ export function applicationHome(pathname: string, search: string): string | null
   const company = pathname.match(/^\/for\/([a-z0-9-]+)\/?$/)?.[1];
   if (!company) return null;
   const params = new URLSearchParams(search);
-  const ref = params.get("ref") ?? params.get("utm_source");
-  const query = ref === null ? "" : `?${new URLSearchParams({ ref: ref.trim().slice(0, 60) })}`;
+  const kept = new URLSearchParams();
+  for (const key of ["ref", "utm_source", "utm_medium", "utm_campaign"]) {
+    const value = params.get(key)?.trim().slice(0, 60);
+    if (value) kept.set(key, value);
+  }
+  const query = kept.size ? `?${kept}` : "";
   return `/for/${company}${query}`;
 }
 

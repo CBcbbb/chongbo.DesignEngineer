@@ -6,7 +6,7 @@ afterEach(() => vi.unstubAllGlobals());
 it("retains only safe attribution parameters in an application's return address", () => {
   expect(applicationHome("/for/granola", "?ref=test&brief=private&next=https://example.com")).toBe("/for/granola?ref=test");
   expect(applicationHome("/for/granola/", "")).toBe("/for/granola");
-  expect(applicationHome("/for/granola", "?utm_source=mail")).toBe("/for/granola?ref=mail");
+  expect(applicationHome("/for/granola", "?utm_source=mail")).toBe("/for/granola?utm_source=mail");
   expect(applicationHome("//example.com/for/granola", "")).toBeNull();
 });
 

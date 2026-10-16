@@ -8,7 +8,8 @@ import { markPattern } from "@/lib/ask/keys";
 import type { CardIndex, SheetCard } from "@/lib/cards";
 import { BROWSE_ALL, EXAMPLES, JAM_LINE, NUM, PICKED_HINT, SIGNAL_SHORT, TOPICS, cardKey, missingLine, notUnderstoodLine, pad2, projectRuns, provenanceLine, quoteBrief, resultTitle, topicsToSignals, type Topic } from "@/lib/printed";
 import { Pill } from "./nav/Pill";
-import { track } from "@/lib/analytics";
+import { analyticsContext, beginAnalyticsRequest, track } from "@/lib/analytics";
+import { observeVisibleTime } from "@/lib/visible-time";
 import { DrawnArrow } from "./shell/DrawnArrow";
 import type { PrintedCard } from "./PrintedCard";
 import { printCards } from "./print-cards";
@@ -27,6 +28,7 @@ type Props = {
 };
 
 type Result = {
+  requestId: string;
   title: string;
   asked: string;
   cards: SheetCard[];
@@ -129,6 +131,7 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
   const [jam, setJam] = useState<null | { message: string; kind?: "limit" | "offline" }>(null);
   const [ghost, setGhost] = useState(EXAMPLES[0]!);
   const [result, setResult] = useState<Result | null>(null);
+  const [visibleResultId, setVisibleResultId] = useState<string | null>(null);
   const [cur, setCur] = useState(0);
   const [live, setLive] = useState("");
 
@@ -290,12 +293,15 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
       return;
     }
     const curated = selection && picked.includes(selection.id) ? selection : null;
-    const text = curated ? "" : brief;
+    const text = curated ? "" : brief.slice(0, BRIEF_MAX);
     const ids = [...picked];
     if (!text.trim() && !ids.length) {
       textareaRef.current?.focus();
       return;
     }
+    const requestId = beginAnalyticsRequest();
+    const labels = ids.map((id) => topics.find((t) => t.id === id)?.label ?? id);
+    track("request_submitted", { request_id: requestId, brief: text, brief_chars: text.length, selected_options: ids, topics: topicsToSignals(ids), skills: labels, input_origin: "printer" });
     busyRef.current = true;
     abortRef.current = false;
     if (restRef.current) {
@@ -310,7 +316,6 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
       const data = curatedAnswer(curated, cards);
       answer.o = data ? { ok: true, data } : { ok: false, message: "Something jammed. Try again, or browse all work." };
     } else void ask(text, topicsToSignals(ids)).then((o) => (answer.o = o));
-    const labels = ids.map((id) => topics.find((t) => t.id === id)?.label ?? id);
     const stopped = () => abortRef.current;
 
     // 1. read: the request passes the reading light into the slot; the words the printer knows are marked
@@ -335,6 +340,7 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
       if (light) light.style.opacity = "0";
     };
     const stop = async () => {
+      track("request_cancelled", { request_id: requestId });
       lightOff();
       pass?.pause();
       setDisp({ l1: "Stopped", l2: "Your request is back" });
@@ -365,7 +371,7 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
 
     // a failed print: the paper jams, the request comes back, and there's a way out
     if (!o.ok) {
-      track("printed", { skills: labels, brief_chars: text.trim().length, ok: false, source: null, asked: [], cards: [], start_here: false });
+      track("printed", { request_id: requestId, error_kind: o.kind ?? "error", skills: labels, brief_chars: text.length, ok: false, source: null, asked: [], cards: [], start_here: false });
       setJam({ message: o.message, kind: o.kind });
       await shake(1.5, 240, 4);
       setDisp({ l1: "Paper jam", l2: "Try again in a moment" });
@@ -379,16 +385,6 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
     const data = o.data;
     const startHere = data.matched === "start-here";
     const sheets = data.sheets.map((s) => cards[cardKey(s.project, s.section)]).filter((c): c is SheetCard => Boolean(c));
-    // what was asked for and what printed; a brief's words are never sent, only how long it was
-    track("printed", {
-      skills: labels,
-      brief_chars: text.trim().length,
-      ok: true,
-      source: data.source,
-      asked: data.asked,
-      cards: sheets.map((c) => cardKey(c.project, c.section)),
-      start_here: startHere,
-    });
     // The chosen cards are rendered on the server while the display runs. If that fails, a sheet falls back to its words.
     const printing: Promise<Record<string, PrintedCard>> = sheets.length
       ? printCards(sheets.map((c) => cardKey(c.project, c.section))).catch(() => ({}))
@@ -441,7 +437,14 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
     const [printed] = await Promise.all([printing, sleep(360)]);
     hummer?.cancel();
 
+    if (stopped()) return stop();
+    track("printed", {
+      request_id: requestId, skills: labels, brief_chars: text.length, ok: true,
+      source: data.source, asked: data.asked, cards: sheets.map((c) => cardKey(c.project, c.section)),
+      start_here: startHere, input_origin: "printer",
+    });
     const r: Result = {
+      requestId,
       // Cards picked without words: the title is what was picked. Words typed: what the machine understood.
       title: resultTitle({ asked: data.asked, startHere, picked: labels }),
       asked: startHere ? "" : quoteBrief(text),
@@ -495,12 +498,14 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
     const first = items[0];
     const out = outfeedRef.current;
     if (prefersReduced() || !first || !out || !results) {
+      setVisibleResultId(result.requestId);
       focusTitle();
       results?.scrollIntoView({ behavior: "auto", block: "start" });
       return;
     }
     const paperEl = first.querySelector<HTMLElement>(".s-paper");
     if (!paperEl) {
+      setVisibleResultId(result.requestId);
       focusTitle();
       results.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
@@ -586,6 +591,7 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
         paper.animate([{ translate: `${-dx}px 0` }, { translate: "0 0" }], { duration: DEAL.duration, easing: DEAL.easing, delay: 90 * i, fill: "backwards" });
       });
       first.style.zIndex = String(items.length + 1);
+      setVisibleResultId(result.requestId);
     };
     void run();
     return () => {
@@ -633,13 +639,17 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
     };
   }, [result]);
 
-  // Which sheet is at the front of the strip, once it has stayed there a moment (not each one swiped past).
+  // Start after the sheets emerge, then measure actual foreground visibility on both layouts.
   useEffect(() => {
-    const c = result?.cards[cur];
-    if (!c) return;
-    const t = setTimeout(() => track("sheet_viewed", { card: cardKey(c.project, c.section), index: cur + 1, of: result!.cards.length }), 800);
-    return () => clearTimeout(t);
-  }, [cur, result]);
+    if (!result || visibleResultId !== result.requestId || !stripRef.current) return;
+    const context = { ...analyticsContext(), request_id: result.requestId, from: window.location.pathname };
+    const papers = Array.from(stripRef.current.querySelectorAll<HTMLElement>(".s-paper"));
+    return observeVisibleTime(papers, (element, seconds) => {
+      const index = papers.indexOf(element);
+      const card = result.cards[index]!;
+      track("sheet_viewed", { ...context, card: cardKey(card.project, card.section), index: index + 1, of: result.cards.length, seconds });
+    });
+  }, [result, visibleResultId]);
 
   // The sheets sit side by side on wide screens: arrows, keys and swiping move along the strip; the counter follows the scroll.
   const n = result?.cards.length ?? 0;

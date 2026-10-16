@@ -41,7 +41,7 @@ describe("application attribution", () => {
   it("reads the clean path, with explicit test attribution taking priority", () => {
     expect(attributionRef("", "/for/granola")).toBe("granola");
     expect(attributionRef("?ref=test", "/for/granola")).toBe("test");
-    expect(attributionRef("?utm_source=mail", "/for/granola")).toBe("mail");
+    expect(attributionRef("?utm_source=mail", "/for/granola")).toBe("granola");
     expect(attributionRef("", "/")).toBe("");
     expect(attributionRef("", "/work/design-system")).toBe("");
     expect(attributionRef("?ref=" + "x".repeat(80), "/for/granola")).toHaveLength(60);

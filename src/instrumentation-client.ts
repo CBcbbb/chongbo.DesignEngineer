@@ -1,4 +1,4 @@
-import { analyticsKey, attributionRef, setAnalytics, track } from "@/lib/analytics";
+import { analyticsContext, analyticsKey, prepareAnalyticsEvent, setAnalytics, track } from "@/lib/analytics";
 
 /*
  * Client-side start-up (Next.js runs this before the app becomes interactive). Starts PostHog when
@@ -9,13 +9,14 @@ import { analyticsKey, attributionRef, setAnalytics, track } from "@/lib/analyti
  * - Sent through /ingest on this site (next.config.ts rewrites it to PostHog's EU cloud), so blockers that drop
  *   third-party analytics domains don't skew the numbers.
  * - Application attribution comes from /for/<name> or ?ref=<name>: it is kept on every event of that visit,
- *   so each application's opens can be told apart. ?ref=test overrides the path for self-checks.
+ *   independently of the channel (utm_source/referrer). ?ref=test suppresses events for self-checks.
  */
 const key = analyticsKey();
 
 async function start(key: string) {
-  const { default: posthog } = await import("posthog-js");
   try {
+    analyticsContext();
+    const { default: posthog } = await import("posthog-js");
     posthog.init(key, {
       api_host: "/ingest",
       ui_host: "https://eu.posthog.com",
@@ -24,6 +25,7 @@ async function start(key: string) {
       person_profiles: "identified_only",
       capture_pageview: "history_change",
       capture_pageleave: true,
+      before_send: prepareAnalyticsEvent,
       autocapture: false,
       disable_session_recording: true,
       disable_surveys: true,
@@ -31,8 +33,6 @@ async function start(key: string) {
       debug: process.env.NEXT_PUBLIC_POSTHOG_DEBUG === "1",
     });
 
-    const ref = attributionRef(window.location.search, window.location.pathname);
-    if (ref) posthog.register({ ref });
     setAnalytics(posthog);
 
     // Clicks that say a visitor wants more: the email address, links off the site, and a sheet's way into its case file.
@@ -43,7 +43,7 @@ async function start(key: string) {
         if (!a) return;
         const href = a.getAttribute("href") ?? "";
         if (href.startsWith("mailto:")) track("contact_clicked", { from: window.location.pathname });
-        else if (a.classList.contains("full")) track("read_in_context_clicked", { card: href.replace(/^\/work\//, "") });
+        else if (a.classList.contains("full")) track("read_in_context_clicked", { card: href.replace(/^\/work\//, ""), to: href });
         else if (/^https?:\/\//.test(href) && new URL(href).host !== window.location.host)
           track("outbound_clicked", { host: new URL(href).host, from: window.location.pathname });
       },

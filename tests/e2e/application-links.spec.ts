@@ -127,14 +127,14 @@ test("a fresh ordinary visit still returns to the ordinary homepage", async ({ p
   await expect(page.getByRole("button", { name: "Picked for Granola", exact: true })).toHaveCount(0);
 });
 
-test("shared ask results still report their cards and visible time without brief text", async ({ page }) => {
+test("shared ask results report their cards and visible time with a request id", async ({ page }) => {
   await page.addInitScript(() => {
     const w = window as unknown as TestWindow;
     w.__testAnalyticsEvents = [];
     const analytics = { capture: (event: string, props: Record<string, unknown>) => w.__testAnalyticsEvents.push({ event, props }) };
     Object.defineProperty(window, "__analytics", { get: () => analytics, set: () => {}, configurable: true });
   });
-  await page.goto("/ask?topics=brand-storytelling&ref=test");
+  await page.goto("/ask?topics=brand-storytelling&ref=qa-local");
   await expect.poll(() => page.evaluate(() => (window as unknown as TestWindow).__testAnalyticsEvents.filter(e => e.event === "printed").length)).toBe(1);
   const first = page.locator(".sheet-list > .sheet").first();
   await first.scrollIntoViewIfNeeded();
@@ -145,7 +145,9 @@ test("shared ask results still report their cards and visible time without brief
   const printed = events.find(e => e.event === "printed")!;
   expect(printed.props.cards).toHaveLength(await page.locator(".sheet-list > .sheet").count());
   expect(printed.props.brief_chars).toBe(0);
-  expect(printed.props).not.toHaveProperty("brief");
+  expect(printed.props.request_id).toEqual(expect.any(String));
+  const opened = events.find(e => e.event === "request_opened")!;
+  expect(opened.props).toMatchObject({ request_id: printed.props.request_id, brief: "", input_origin: "url" });
 });
 
 test.describe("without JavaScript", () => {

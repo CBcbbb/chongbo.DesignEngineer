@@ -40,6 +40,15 @@ Playwright uses a system Chromium at `/opt/pw-browsers/chromium-1194/chrome-linu
 
 `content/index.ts` is server-only. The browser-test scripts set Node's `react-server` condition so tests can read the catalogue. For direct Playwright commands, use `NODE_OPTIONS=--conditions=react-server npx playwright test`.
 
+The real PostHog SDK browser checks are opt-in so a keyless build can still run the normal suite:
+
+```bash
+NEXT_PUBLIC_POSTHOG_KEY=phc_local_verification npm run build
+ANALYTICS_E2E=1 npm run test:e2e -- tests/e2e/interaction-analytics.spec.ts --project=desktop --project=mobile
+```
+
+Those tests intercept every `/ingest` request and block external requests, so test events never reach a PostHog project.
+
 Every `npm run build` also checks `.next/static` for hidden project titles and body text. The build fails if any is found, including escaped text in JavaScript or source maps.
 
 ## Environment variables
@@ -57,9 +66,16 @@ Every `npm run build` also checks `.next/static` for hidden project titles and b
 
 `src/instrumentation-client.ts` starts PostHog when `NEXT_PUBLIC_POSTHOG_KEY` is set; `src/lib/analytics.ts` lists the events. Cookieless (no cookies or browser storage; turn on "Cookieless server hash mode" in the PostHog project settings, or events are dropped), no session recording, no autocapture, sent through `/ingest` on this site (rewrites in `next.config.ts`).
 
-Events: `$pageview`, `skill_toggled`, `printed` (skills, the brief's length but never its words, the cards printed), `sheet_viewed`, `read_in_context_clicked`, `case_card_viewed` (each case-file card read for 1.5 s or more, with the seconds), `contact_clicked`, `outbound_clicked`. A link sent with an application can carry `?ref=<name>` (e.g. `/ask?topics=accessibility&ref=granola`); it is attached to every event of that visit.
+Events: `$pageview` / `$pageleave`, `skill_toggled`, `request_submitted`, `request_opened`, `request_cancelled`, `printed`, `sheet_viewed`, `read_in_context_clicked`, `case_card_viewed`, `contact_clicked`, and `outbound_clicked`.
 
-The `/ask` list also sends `printed` and `sheet_viewed`. A sheet counts after at least half its height (or half a viewport for taller sheets) stays visible for 1.5 seconds; `seconds` measures that visible interval, excluding time in a background tab. This is a browsing signal, not proof that someone read or understood a card. `ref` stays in memory during client-side navigation; a full reload of a URL without it loses the label. It labels a link, not a person's identity, company membership, or a forwarding action. Session recording remains off.
+- `request_submitted` records the **submitted question verbatim** in `brief` (up to the same 4,000-character input limit as the printer), plus selected `topics` and `skills`. Drafts and keystrokes are not captured. Opening `/ask` records `request_opened` with `input_origin=url`, so a shared result is not counted as a fresh submission.
+- Each request gets a random `request_id`. Its `printed` event carries ordered `cards`, `asked`, `source` (model/fallback/curated), and `ok`. A failure has `ok=false` and `error_kind`; stopping a print emits `request_cancelled`. Subsequent card views, case links, pageviews and contact clicks carry the latest request id. The raw brief is on the request event, not copied onto every later event.
+- `sheet_viewed` and `case_card_viewed` measure foreground visibility on the printer, `/ask`, and case pages. At least half the card on **both axes** (or half the viewport for oversized cards) must remain visible for 1.5 seconds. `seconds` measures each qualifying interval; sum intervals for total visible time. Background time and fast swipes do not count. This measures visibility, not proof of reading.
+- `company` comes from `/for/<company>` or `ref`; `ref` remains available for existing filters. `channel` comes from `utm_source`, or the external referrer when available. `utm_medium` and `utm_campaign` are also kept. A missing referrer is `direct_or_unknown`, never assumed to be LinkedIn. Company labels describe the link, not the visitor's identity or employer.
+- `visit_id` joins events in this open page across client-side navigation. These ids and attribution live **only in memory**: reloads or new tabs start a new visit, and reloading an untagged case URL loses its company/request context. No cookies, browser storage, login, `identify()`, or session recording are added.
+- `ref=test` suppresses **all analytics events**, including automatic pageviews and pageleaves, for the rest of that open-page visit. It does not erase historical test events: exclude `ref=test` when reviewing older data. Early interactions queue briefly in memory while the SDK loads; no key means no event collection.
+
+To inspect a journey in PostHog Activity, filter `company=granola`, then copy a `request_submitted` event's `request_id` into a property filter. This shows the question, printed cards and follow-on interactions; filter `visit_id` to include earlier pageviews and skill selection. Add a `channel` breakdown to compare where links were opened. For a tagged LinkedIn link use `/for/granola?utm_source=linkedin`; keep `/for/granola?ref=test&utm_source=linkedin` for self-checks.
 
 ## Application links
 
@@ -69,9 +85,9 @@ Edit `content/applications.ts` to add a company, change its ordered public card 
 
 The curated option is exclusive with ordinary skills. Typing a request clears it and uses the existing `/api/ask` flow, including AI selection when configured and available. Ordinary skills still use deterministic topic matching. A curated print is labelled as picked by Chongbo and tracked with `source=curated`; it does not call the model or limit future requests to those five cards.
 
-During client-side navigation, the name, Back Home, and New request links return application visitors to their `/for/<company>` printer and preserve an explicit `ref` (including `ref=test`). The return address lives only in the open page's memory; ordinary visits still return to `/`. Reloading or opening an untagged work/about URL starts without that application context, as does the cookieless analytics attribution. No cookies or browser storage are added.
+During client-side navigation, the name, Back Home, and New request links return application visitors to their `/for/<company>` printer and preserve `ref`, `utm_source`, `utm_medium`, and `utm_campaign`. The return address lives only in the open page's memory; ordinary visits still return to `/`. Reloading or opening an untagged work/about URL starts without that application context, as does the cookieless analytics attribution. No cookies or browser storage are added.
 
-The clean path supplies `ref=granola` to analytics. For your own checks, use `/for/granola?ref=test` to label events `ref=test`. In PostHog, filter events by `ref = granola` and exclude `ref = test`. Check `$pageview`, `printed`, `sheet_viewed`, `read_in_context_clicked`, `case_card_viewed` and `contact_clicked`. Receiving events still depends on the production key and PostHog cookieless server hash setting.
+The clean path supplies `company=granola` and `ref=granola` to analytics. For your own checks, use `/for/granola?ref=test` to suppress events. In PostHog, filter events by `company = granola` (or `ref = granola` for older data). Check `$pageview`, `printed`, `sheet_viewed`, `read_in_context_clicked`, `case_card_viewed` and `contact_clicked`. Receiving events still depends on the production key and PostHog cookieless server hash setting.
 
 ## How "ask" works
 

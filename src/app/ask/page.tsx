@@ -71,7 +71,7 @@ export default async function AskPage({ searchParams }: Props) {
         <p className="eyebrow">Printed to order</p>
         {result ? (
           <section className="results" aria-labelledby="r-title">
-            <AskAnalytics cards={sheets.map((c) => cardKey(c.project, c.section))} asked={result.asked} source={result.source} briefChars={brief.length} startHere={result.matched === "start-here"} />
+            <AskAnalytics cards={sheets.map((c) => cardKey(c.project, c.section))} asked={result.asked} source={result.source} brief={brief} topics={topics} startHere={result.matched === "start-here"} />
             <div className="rhead">
               <div>
                 <h1 id="r-title">{title}</h1>
