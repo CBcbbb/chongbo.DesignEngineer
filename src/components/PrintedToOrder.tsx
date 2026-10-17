@@ -660,9 +660,11 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
       if (!strip || !n) return;
       const k = Math.max(0, Math.min(n - 1, i));
       const el = strip.children[k] as HTMLElement | undefined;
-      const first = strip.children[0] as HTMLElement | undefined;
       // along the strip only: the page itself stays where it is, with the title over the sheet
-      if (el && first) strip.scrollTo({ left: el.offsetLeft - first.offsetLeft, behavior: prefersReduced() ? "auto" : "smooth" });
+      if (el) strip.scrollTo({
+        left: strip.scrollLeft + el.getBoundingClientRect().left - strip.getBoundingClientRect().left,
+        behavior: prefersReduced() ? "auto" : "smooth",
+      });
       setCur(k);
       setLive(`Sheet ${k + 1} of ${n}: ${result?.cards[k]?.title ?? ""}`);
     },
@@ -672,14 +674,16 @@ export function PrintedToOrder({ cards, contactEmail, labelledBy, topics = TOPIC
     const strip = stripRef.current;
     if (!strip || !n) return;
     const items = Array.from(strip.children) as HTMLElement[];
-    const x = strip.scrollLeft;
+    const x = strip.getBoundingClientRect().left;
     let best = 0;
     items.forEach((el, i) => {
-      if (Math.abs(el.offsetLeft - x) < Math.abs(items[best]!.offsetLeft - x)) best = i;
+      if (Math.abs(el.getBoundingClientRect().left - x) < Math.abs(items[best]!.getBoundingClientRect().left - x)) best = i;
     });
     setCur(best);
   };
   const onStripKey = (e: KeyboardEvent<HTMLOListElement>) => {
+    // Nested card controls own their arrow keys. Stacked sheets use ordinary page scrolling.
+    if (e.target !== e.currentTarget || !window.matchMedia("(min-width: 1001px)").matches) return;
     if (e.key === "ArrowRight") {
       e.preventDefault();
       goSheet(cur + 1);

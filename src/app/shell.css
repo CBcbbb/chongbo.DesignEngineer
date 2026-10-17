@@ -430,6 +430,12 @@
   color: var(--ink-2);
   font-variant-numeric: tabular-nums;
 }
+@media (max-width: 1000px) {
+  /* Sheets form a vertical list here; horizontal paging controls have no effect. */
+  .deckbar {
+    display: none;
+  }
+}
 /* "Read it in context": the whole arrow, drawn once (a stub at rest read as broken) */
 .full .full-ga {
   width: 28px;

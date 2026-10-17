@@ -85,21 +85,42 @@ test.describe("printing", () => {
     await expect(page.locator("#r-title")).toHaveText("Design systems", { timeout: 10_000 });
   });
 
-  test("after a print the strip swipes along: the next sheet snaps into place", async ({ page }, info) => {
-    test.skip(info.project.name !== "desktop", "the sheets sit side by side only on wide screens");
+  test("after a print the strip swipes along: the next sheet snaps into place", async ({ page, viewport }) => {
+    test.skip((viewport?.width ?? 0) <= 1000, "the sheets sit side by side only on wide screens");
     await page.goto("/");
     await page.getByRole("button", { name: "Data", exact: true }).click();
     await page.getByRole("button", { name: "Print" }).click();
     await expect(page.locator("#r-title")).toHaveText("Data", { timeout: 10_000 });
-    // past the feed, the flight and the deal
-    await page.waitForTimeout(3_000);
+    // The title exists before the feed/flight finishes. Focus marks the handoff to the deal.
+    await expect(page.locator("#r-title")).toBeFocused();
+    await page.evaluate(() => Promise.all(document.getAnimations()
+      .filter(a => a.effect?.getTiming().iterations !== Infinity)
+      .map(a => a.finished.catch(() => undefined))));
     const strip = page.locator(".sheets");
-    const start = await strip.evaluate((s) => s.scrollLeft);
+    const step = await strip.evaluate(s => s.children[1]!.getBoundingClientRect().left - s.children[0]!.getBoundingClientRect().left);
+    const aligned = (i: number) => strip.evaluate((s, index) =>
+      Math.abs(s.children[index]!.getBoundingClientRect().left - s.getBoundingClientRect().left), i);
     const box = (await strip.boundingBox())!;
     await page.mouse.move(box.x + 40, box.y + 20);
-    for (let i = 0; i < 8; i++) await page.mouse.wheel(70, 0);
-    await expect.poll(() => strip.evaluate((s) => s.scrollLeft)).toBeGreaterThan(start + 400);
+    // One complete gesture; wheel() returns before scrolling, so don't queue eight competing gestures.
+    await page.mouse.wheel(step, 0);
+    await expect.poll(() => aligned(1)).toBeLessThan(2);
     await expect(page.locator(".deckbar span")).toHaveText(/^02 \//);
+    await page.mouse.wheel(-step, 0);
+    await expect.poll(() => aligned(0)).toBeLessThan(2);
+    await expect(page.locator(".deckbar span")).toHaveText(/^01 \//);
+
+    await page.getByRole("button", { name: "Next sheet" }).click();
+    await expect.poll(() => aligned(1)).toBeLessThan(2);
+    await strip.focus();
+    await page.keyboard.press("ArrowRight");
+    await expect.poll(() => aligned(2)).toBeLessThan(2);
+    await expect(page.locator(".deckbar span")).toHaveText(/^03 \//);
+    await page.keyboard.press("ArrowLeft");
+    await expect.poll(() => aligned(1)).toBeLessThan(2);
+    await page.getByRole("button", { name: "Previous sheet" }).click();
+    await expect.poll(() => aligned(0)).toBeLessThan(2);
+    await expect(page.getByRole("button", { name: "Previous sheet" })).toBeDisabled();
   });
 
   test("cards from one project in a mixed print read as a group", async ({ page }) => {
@@ -110,6 +131,29 @@ test.describe("printing", () => {
     const runs = page.locator(".sheets .s-run");
     expect(await runs.count()).toBeGreaterThan(1);
     await expect(runs.first()).toHaveText(/· 1 of \d$/);
+  });
+
+  test("stacked sheets scroll naturally without horizontal paging controls", async ({ page, viewport }) => {
+    test.skip((viewport?.width ?? 0) > 1000, "wide screens use a horizontal strip");
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/");
+    await printAccessibility(page);
+    await expect(page.locator("#r-title")).toBeFocused();
+    await expect(page.getByRole("button", { name: "Next sheet" })).toBeHidden();
+    await expect(page.getByRole("button", { name: "Previous sheet" })).toBeHidden();
+    const sheets = page.locator(".sheets .sheet");
+    const rows = await sheets.evaluateAll(els => els.map(el => {
+      const { top, bottom } = el.getBoundingClientRect();
+      return { top, bottom };
+    }));
+    expect(rows.length).toBeGreaterThan(1);
+    for (let i = 1; i < rows.length; i++) expect(rows[i]!.top).toBeGreaterThan(rows[i - 1]!.bottom);
+    const link = sheets.nth(1).locator(".full");
+    await link.scrollIntoViewIfNeeded();
+    await expect(link).toBeInViewport();
+    const href = await link.getAttribute("href");
+    await link.click();
+    await expect.poll(() => new URL(page.url()).pathname + new URL(page.url()).hash).toBe(href);
   });
 
   test("keyboard only: type on the paper, Enter, results title focused, Tab reaches the first sheet's link", async ({ page }) => {
@@ -310,8 +354,8 @@ test.describe("shell (approved UX proposals)", () => {
     for (let i = 1; i < feet.length; i++) if (tops[i] === tops[i - 1]) expect(Math.abs(feet[i]! - feet[i - 1]!)).toBeLessThanOrEqual(1);
   });
 
-  test("every case file ends with the same next-case control", async ({ page }, info) => {
-    const phone = info.project.name === "mobile";
+  test("every case file ends with the same next-case control", async ({ page, viewport }) => {
+    const phone = (viewport?.width ?? 0) <= 700;
     for (const p of projects) {
       await page.goto(`/work/${p.slug}`);
       const nx = page.locator(".nx");
