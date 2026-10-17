@@ -29,14 +29,16 @@ Quality gates:
 npm run lint
 npm run typecheck
 npm test            # unit tests (Vitest)
-npm run build
+NEXT_PUBLIC_POSTHOG_KEY='' npm run build # keyless build for ordinary browser checks
 npm run contrast    # WCAG AA check of every colour pairing in use
-npm run test:e2e    # Playwright + axe at 1440 and 390 (needs `npm run build` first)
+npm run test:e2e -- --project=desktop --project=mobile --project=webkit-desktop --project=webkit-mobile --project=firefox-desktop --project=firefox-mobile
 npm run screenshots # writes docs/screenshots/*.png
 node scripts/printing-gif.mjs  # writes docs/screenshots/printing.gif (needs ffmpeg and `npx next start -p 3100`)
 ```
 
-Playwright uses a system Chromium at `/opt/pw-browsers/chromium-1194/chrome-linux/chrome` by default. Elsewhere, run `npx playwright install chromium` and set `PW_CHROMIUM` to that binary (or remove `executablePath` from `playwright.config.ts`).
+Install the test browsers with `npx playwright install chromium webkit firefox`. Playwright checks each engine at 1440 × 1000 and 390 × 844. WebKit exercises Safari's engine; these are automated desktop/phone-sized checks, not physical-device testing. The optional `PW_CHROMIUM` override (or the sandbox's installed Chromium) takes precedence when that executable exists.
+
+The `Quality checks` GitHub Actions workflow runs lint, types, unit tests, contrast, production builds, and all three browser engines on pushes and pull requests. A separate job checks the real PostHog SDK using a synthetic key and intercepted network requests. Failed browser runs retain screenshots, traces and an HTML report for seven days. CI does not deploy; Vercel's existing Git deployment settings remain responsible for publishing.
 
 `content/index.ts` is server-only. The browser-test scripts set Node's `react-server` condition so tests can read the catalogue. For direct Playwright commands, use `NODE_OPTIONS=--conditions=react-server npx playwright test`.
 

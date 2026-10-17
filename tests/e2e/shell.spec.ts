@@ -39,7 +39,7 @@ test.describe("light switch", () => {
     await expect(page.locator("header [role=status]")).toHaveText("Dark mode, following your system.");
   });
 
-  test("no flash: the stored theme is on <html> before the first paint", async ({ page }) => {
+  test("no flash: the stored theme is on <html> before the first contentful paint", async ({ page }) => {
     await page.emulateMedia({ colorScheme: "light" });
     await page.addInitScript(() => {
       try {
@@ -62,7 +62,8 @@ test.describe("light switch", () => {
       const w = window as unknown as { __themeAt?: number; __bgAtParse?: string };
       // the paint entries can arrive a little after load: wait for them (buffered), up to two seconds
       const fp = await new Promise<PerformanceEntry | undefined>((res) => {
-        const find = () => performance.getEntriesByType("paint").find((e) => e.name === "first-paint");
+        // WebKit and Firefox expose FCP but not Chromium's optional first-paint entry.
+        const find = () => performance.getEntriesByType("paint").find((e) => e.name === "first-contentful-paint");
         if (find()) return res(find());
         const obs = new PerformanceObserver(() => {
           if (find()) {
